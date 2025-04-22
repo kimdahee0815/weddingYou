@@ -1,0 +1,129 @@
+.category-wrapper {
+  display: flex;
+  white-space: nowrap;
+  margin: 1rem 0;
+  justify-content: center;
+}
+
+.category {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 1rem;
+  cursor: pointer;
+  color: #000;
+  transition: color 0.2s ease-in-out;
+}
+
+.category:hover,
+.category.active {
+  color: #105ff1;
+}
+
+.category-image {
+  width: 10rem;
+  height: 10rem;
+  margin-bottom: 1rem;
+  background-color: #e5e5e5;
+}
+
+.category-name {
+  font-size: 1.2rem;
+  font-weight: 400;
+  text-align: center;
+}
+.image-wrapper {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: 250px 250px ;
+  gap: 1rem;
+  margin: 1rem;
+}
+
+.image-wrapper img {
+  width: 100%;
+  margin-bottom: 0.5rem;
+}
+
+.image-wrapper .image-title {
+  font-size: 1rem;
+  font-weight: 400;
+  text-align: center;
+  margin-top: 0.5rem;
+}
+
+.submit-button {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #000;
+  background-color: #f9f5f5;
+  border: none;
+  padding: 0.5rem 1rem;
+  margin: 1rem;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.submit-button:hover {
+  background-color: #105ff1;
+  color: #f9f5f5;
+}
+
+.button-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.post-inputwrap {
+  width: 75%;
+  height: 50%;
+  margin-top: 1rem;
+}
+
+.title-input {
+  width: 100%;
+  height: 40px;
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.content-textarea {
+  width: 100%;
+  height: 200px;
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.button-wrap {
+  display: flex;
+  justify-content: left;
+  margin-left: 10%;
+}
+
+.edit-button,
+.delete-button {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #000;
+  background-color: #f9f5f5;
+  border: none;
+  padding: 0.5rem 1rem;
+  margin-right:1.2rem;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.edit-button:hover {
+  background-color: #105ff1;
+  color: #f9f5f5;
+}
+.delete-button:hover {
+  background-color: #e39393;
+  color: #f9f5f5;
+}

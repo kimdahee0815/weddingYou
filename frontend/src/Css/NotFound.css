@@ -1,0 +1,8 @@
+.accessdenied{
+        font-size: 1.5em;
+        z-index: 1;
+        transform: translateY(40px);
+        font-Family: "Nanum Myeongjo";
+        transition: all  0.7s linear;
+     
+}

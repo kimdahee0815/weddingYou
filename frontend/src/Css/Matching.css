@@ -1,0 +1,50 @@
+.headertxt {
+    text-align: center;
+    font-size: 36px;
+}
+
+.matchingList {
+    background-color: #f6f6f6;
+    width: 100%;
+}
+
+.myPlannerName {
+    margin: 15px;
+    font-size: 36px;
+    width: 300px;
+    display: inline-block;
+}
+
+.plannerProBtn {
+    margin: 15px;
+    color: #000000;
+    background-color: #ffffff;
+    border:solid;
+    font-weight: bold;
+    letter-spacing: 0.1em;
+    height:3em;
+    width:150px;
+    border-radius: 10px;
+    height: 50px;
+    font-size:1.2em;
+    
+}
+
+.matchingBtnList {
+    margin: 0 auto;
+    width: 360px;
+}
+
+.plannerMatchingBtn {
+    margin: 15px;
+    color: #000000;
+    background-color: #ffffff;
+    border:solid;
+    font-weight: bold;
+    letter-spacing: 0.1em;
+    height:3em;
+    width:150px;
+    border-radius: 10px;
+    height: 50px;
+    font-size:1.2em;
+}

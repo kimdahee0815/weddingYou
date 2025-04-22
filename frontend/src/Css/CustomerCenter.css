@@ -1,0 +1,256 @@
+.noticeSection {
+    /* margin-top: 74px; */
+    width: 556px;
+    padding-bottom: 50px;
+    background-color: #F4F4F4;
+}
+
+.QnAsection {
+    width: 556px;
+    padding-bottom: 50px;
+    background-color: #eae9e9;
+}
+
+.customCenterTxt {
+    margin: 15px;
+    font-size: 30px;
+    color: black;
+    text-decoration: none;
+}
+
+.LinkTxt {
+    margin-left: 15px;
+    font-size: 40px;
+    color: black;
+    text-align: center;
+}
+
+.noticeTxt {
+    margin-left: 15px;
+    font-size: 26px;
+    color: black;
+    text-decoration: none;
+    text-align: left;
+    margin-bottom: 10px;
+}
+
+.noticeTxtCenter {
+    font-size: 26px;
+    text-align: center;
+    margin-bottom: 0px;
+}
+
+.searchSection {
+    margin: 0 auto;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.noticeSection2 {
+    width: 556px;
+    padding-bottom: 50px;
+    background-color: #F4F4F4;
+}
+
+.writeBtn {
+    margin: 15px;
+    float: right;
+    width: 120px;
+    height: 50px;
+    font-size: 24px;
+    background-color: white;
+    border-color: gray;
+    border-radius: 15px;
+    color: gray;
+}
+
+.writeBtn:hover {
+    margin: 15px;
+    float: right;
+    width: 120px;
+    height: 50px;
+    font-size: 24px;
+    background-color: white;
+    border-color: black;
+    border-radius: 15px;
+    color: black;
+}
+
+.upAndDelBtn {
+    margin-left: 15px;
+    width: 80px;
+    height: 35px;
+    font-size: 20px;
+    background-color: white;
+    border-color: gray;
+    border-radius: 15px;
+    color: gray;
+}
+
+.upAndDelBtn:hover {
+    margin-left: 15px;
+    width: 80px;
+    height: 35px;
+    font-size: 20px;
+    background-color: white;
+    border-color: black;
+    border-radius: 15px;
+    color: black;
+}
+
+.upAndDelBtn2 {
+    margin-right: 15px;
+    width: 100px;
+    height: 40px;
+    font-size: 24px;
+    background-color: white;
+    border-color: gray;
+    border-radius: 15px;
+    color: gray;
+}
+
+.upAndDelBtn2:hover {
+    margin-right: 15px;
+    width: 100px;
+    height: 40px;
+    font-size: 24px;
+    background-color: white;
+    border-color: black;
+    border-radius: 15px;
+    color: black;
+}
+
+.titleArea {
+    width: 100%;
+}
+
+.titleTxt {
+    padding-top: 20px;
+    padding-left: 15px;
+    font-size: 30px;
+}
+
+.dateTxt {
+    display: inline;
+    font-size: 20px;
+    padding-left: 15px;
+}
+
+.viewCountTxt {
+    display: inline;
+    font-size: 20px;
+    padding-left: 15px;
+}
+
+.ContentArea {
+    width: 100%;
+}
+
+.noticeContxt {
+    font-size: 30px;
+    padding: 10px;
+    padding-bottom: 100px;
+}
+
+.BtnArea {
+    width: 320px;
+    height: 10px;
+    display: inline-block;
+}
+
+.ComentTitle {
+    padding-left: 15px;
+    font-size: 30px;
+    margin-bottom: 0;
+}
+
+.ComentArea {
+    background-color: #f6f6f6;
+}
+
+.nickname {
+    padding-left: 15px;
+    font-size: 20px;
+    display: inline;
+}
+
+.AnsTxt {
+    padding-left: 15px;
+    font-size: 25px;
+    display: inline;
+}
+
+.upAndDelBtn3 {
+    margin-left: 15px;
+    width: 60px;
+    height: 30px;
+    font-size: 18px;
+    background-color: white;
+    border-color: gray;
+    border-radius: 8px;
+    color: gray;
+}
+
+.upAndDelBtn3:hover {
+    margin-left: 15px;
+    width: 60px;
+    height: 30px;
+    font-size: 18px;
+    background-color: white;
+    border-color: rgb(0, 0, 0);
+    border-radius: 8px;
+    color: rgb(0, 0, 0);
+}
+
+.comentinput {
+    margin: 10px;
+    width: 70%;
+    border-radius: 6px;
+    border-color: rgb(230, 230, 230);
+    border-style: solid;
+}
+
+.writeBtn2 {
+    width: 60px;
+    height: 30px;
+    font-size: 18px;
+    background-color: white;
+    border-color: gray;
+    border-radius: 8px;
+    color: gray;
+}
+
+.writeBtn2:hover {
+    width: 60px;
+    height: 30px;
+    font-size: 18px;
+    background-color: white;
+    border-color: rgb(0, 0, 0);
+    border-radius: 8px;
+    color: rgb(0, 0, 0);
+}
+
+.ratingStars {
+    margin-left: 15px;
+    width: 200px;
+    display: inline-block;
+}
+
+.titleinput {
+    margin: 15px 20px 5px 20px;
+    width: 90%;
+}
+
+.contentinput {
+    margin: 10px 20px 5px 20px;
+    width: 90%;
+}
+
+.fileatt {
+    margin-left: 20px;
+}
+
+.writeBtnArea {
+    width: 150px;
+    margin: 0 auto;
+  }

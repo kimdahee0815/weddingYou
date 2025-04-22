@@ -1,0 +1,75 @@
+.logo {
+    margin-top: 50%;
+    margin-bottom: 10%;
+    width: 200px;
+    height: 200px;
+    border-radius: 1.5rem;
+}
+
+.loginmessage {
+    float: right;
+    font-size: xx-small;
+}
+
+.searchmessage {
+    float: right;
+    font-size: small;
+    text-decoration: none;
+}
+
+.signupmessage {
+    text-decoration: none;
+}
+
+h3 {
+    margin-top: 15px;
+}
+
+.inputarea {
+    margin-bottom: 6px;
+    width: 256px;
+    height: 40px;
+    border-radius: 1px;
+    border-width: 1px;
+    border-color: rgba(138, 138, 138, 0.533);
+    background-color: white;
+}
+
+.title {
+    height: 60px;
+    width: 100%;
+    position: relative;
+    bottom: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-bottom: 1px solid grey;
+}
+
+.btn-custom1 {
+    width: 256px;
+    height: 30px;
+    border-radius: 5px;
+    border-width: 1px;
+    border-color: rgba(138, 138, 138, 0.533);
+    background-color: white;
+}
+
+.btn-custom1:hover {
+    border-color: black;
+    border-width: 2px;
+}
+
+.btn-custom-tomain {
+    margin-top: 15px;
+    width: 256px;
+    height: 30px;
+    border-radius: 5px;
+    border-width: 1px;
+    border-color: rgba(138, 138, 138, 0.533);
+    background-color: white;
+}
+
+.form-label {
+    float: left;
+}

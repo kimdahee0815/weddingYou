@@ -1,0 +1,254 @@
+div {
+    box-sizing: border-box;
+}
+
+
+/*공통 폰트사이즈 20px*/
+/*height가 없으므로 내용물 없으면 표시되지 않음.*/
+.adminpage-container {
+        width: 85%;
+        margin: 0 auto;
+        margin-top: 100px; 
+        /* background: coral; */
+        padding: 0.1px 0px;
+}
+
+.adminpage-Administration {
+    height: 50px;
+    width: 100%;
+    transition: all 0.5s;
+    background: white;
+    border-radius: 5px;
+    border: 1px solid #eee;
+    box-shadow: 1px 1px 1px #eee;
+    overflow: hidden;
+    position: relative;
+    margin-top: 10px;
+}
+.rolldown {
+    height: 550px;
+}
+.adminpage-Administration-title {
+    width: 100%;
+    height: 50px;
+    /* background: red; */
+    padding: 0px 20px;
+    display: flex;
+    align-items: center;
+    font-size: 25px;
+}
+.adminpage-Administration-list {
+    width: 100%;
+    height: 500px;
+    /* background: coral; */
+    position: relative;
+}
+
+.adminpage-Administration-list thead td {
+    font-size: 20px;
+    text-align: center;
+    font-weight: bold;
+}
+.adminpage-Administration-list tbody td {
+    text-align: center;
+    border: 1px solid black;
+}
+
+.adminpage-pagingAndResearchBox{
+    width: 100%;
+    height: 100px;
+    /* background: red; */
+    position : absolute;
+    bottom: 0;
+}
+.adminpage-pagingAndResearchBox div {
+    font-size: 20px;
+    display: flex;
+    /* align-items: center; */
+    justify-content: center;
+}
+
+/* .adminpage-pagingAndResearchBox div:nth-child(1){
+    height: 30%;
+}
+.adminpage-pagingAndResearchBox div:nth-child(2){
+    height: 70%;
+    background: red;
+} */
+
+.adminpage-pagingNumber {
+    height: 30%;
+}
+.adminpage-researchBar {
+    height: 70%;
+    /* background: red; */
+}
+
+
+
+
+.adminpage-pagingAndResearchBox .form-control {
+    width: 50%;
+    height: 40px;
+}
+
+
+.adminpage-Administration-list-head-box {
+    width: 100%;
+    /* background: blue; */
+}
+.adminpage-Administration-list-body-box {
+    width: 100%;
+}
+
+.adminpage-Administration-list-head {
+    text-align: center;
+    /* border: 1px solid black; */
+    display: inline-block;
+    font-weight: bold;
+    font-size: 20px;
+}
+.adminpage-Administration-list-body {
+    text-align: center;
+    /* border: 1px solid black; */
+    display: inline-block;
+    font-size: 17px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.adminpage-Administration-list-body-box:hover {
+    font-weight: bold;
+}
+
+
+.form-control-width {
+    width: 200px;
+    display: inline-block;
+}
+
+.page a {
+    color: black;
+    font-size: 20px;
+    text-decoration: none;
+}
+
+.pageing-select {
+    color : blue;
+    text-decoration: underline;
+}
+
+.nonepage {
+    text-decoration: none;
+}
+
+.nonedata {
+    width: 100%;
+    height: 400px;
+    /* background: blue; */
+    font-size: 30px;
+    /* justify-content: center;
+    align-items: center; 
+    display: flex; */
+    padding-left: 140px;
+    padding-top: 150px;
+}
+
+
+
+
+.adminpage-researchBox_ {
+    width: 50%;
+    height: 40px;
+    /* background: blue; */
+    overflow: hidden;
+    border-radius: 10px;
+}
+
+.adminpage-researchBox_ > .form-control {
+    height: 40px;
+    width: 75%;
+    border-radius: 0px;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+
+.adminpage-researchBox_ > .btn {
+    border-radius: 0px;
+    width: 25%;
+    font-size: 15px;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+
+}
+
+.전체보기버튼 {
+    height: 40px;
+    width: 40px;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color : gray
+}
+
+
+.전체보기버튼:hover  i{
+    color: black;
+    animation-name: 빙글빙글;
+    animation-duration: 0.7s;
+}
+
+@keyframes 빙글빙글 {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(-360deg);
+    }
+}
+
+
+.Modal-detail {
+    font-size: 20px;
+}
+
+
+.btnColor {
+    background: #407ef1;
+    color : white
+}
+
+.btnColor:hover {
+    color: #ffffff;
+    background-color: #105ff1;
+    transition:0.5s;
+  }
+
+.matchTrue {
+    color :green;
+    text-decoration: underline;
+}
+.matchFalse {
+    color:  gray;
+}
+
+
+
+
+.button-Box {
+    width: 256px;
+    height: 80px;
+    margin: 0 auto;
+    /* background: gainsboro; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.prevAndNextbtn {
+    display: inline-block;
+    padding: 0px 15px;
+}

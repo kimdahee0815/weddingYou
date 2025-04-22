@@ -1,0 +1,305 @@
+:root {
+    --main-fontsize : 20px
+ }
+ 
+ 
+ div {
+     box-sizing: border-box;
+ }
+ 
+ 
+ .cursor {
+     cursor: pointer;
+ }
+ 
+ 
+ .EstimateListContainer {
+     width: 80%;
+     margin: 0 auto;
+     margin-top: 100px;
+     /* background: coral; */
+ }
+ 
+ 
+ /*검색창*/
+ .EstimateListSearchbarBox {
+     width: 100%;
+     margin-top: 8px;
+     padding-top: 20px;
+     padding-bottom: 10px;
+     position: relative;
+     
+   
+    /*추가*/
+    /* background: red;  */
+     display: flex;
+ }
+ 
+ 
+ .EstimateListContainer input[type=text] {
+     font-size: var(--main-fontsize);
+     border-radius: 20px;
+     text-indent: 40px;
+     width: 100%;
+     
+     
+     /*추가*/
+     border-radius: 0px;
+     border-top-left-radius: 20px;
+     border-bottom-left-radius: 20px;
+     outline: none;
+     border: 1px solid #ced4da;
+     /* border-right: none; */
+ }
+     
+ 
+ 
+ .EstimateListSearchIcon {
+     width: 10%;
+     height: 43px;    
+     transform: translate(10px,-42px);
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     font-size: var(--main-fontsize);
+     position: absolute;
+ 
+     /*추가*/
+     transform: translate(3px,2px);
+ 
+ }
+ /*검색창 끝*/
+ /*정렬*/
+ .EstimateListDataCountAndSortBox {
+     width: 100%;
+     background: cadetblue;
+     font-size: var(--main-fontsize);
+ }
+ 
+ .EstimateListDataCount {
+     width: 50%;
+     float: left;
+     padding: 3px;
+     /* background: cadetblue; */
+ }
+ .EstimateListSort {
+     width: 50%;
+     padding: 3px;
+     float: left;
+     color :rgb(64, 126, 241);
+     text-align: right;
+     cursor: pointer;
+ }
+ /*정렬 끝*/
+ /*완료된 견적서도 같이 보기*/
+ .EstimateListMatchCompleteButton {
+     width: 100%;
+ }
+ /*완료된 견적서도 같이 보기 끝*/
+ 
+ /*견적서 리스트*/
+ .EstimateListDataBox {
+     width: 100%;
+ }
+ 
+ .EstimateListData{
+     width: 100%;
+     height: 150px;
+     background: white;
+     border-radius: 10px;
+     border: 1px solid #ced4da;
+     box-shadow: 1px 1px 1px #eee;
+     margin-top: 10px;
+     position: relative;
+     cursor: pointer;
+     transition: all 0.3s;
+ }
+ 
+ .EstimateListData:hover {
+     box-shadow: 5px 5px 5px #eee;
+     border: 1px solid rgb(64, 126, 241);;
+ }
+ 
+ .EstimateListComplete {
+     position: absolute;
+     width: 100%;
+     height: 100%;
+     background: rgba(0,0,0,0.7);
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     border-radius: 10px;
+     font-size: 20px;
+     color:white;
+ }
+ 
+ 
+ 
+ 
+ .EstimateListDataTitle {
+     width: 100%;
+     height: 33%;
+     /* background: blue; */
+     padding-left: 20px;
+     float: left;
+     display: flex;
+     align-items: center;
+     font-size: 17px;
+     color: rgb(64, 126, 241);
+ }
+ 
+ .EstimateListDataRegion {
+     width: 100%;
+     height: 33%;
+     /* background: coral; */
+     padding-left: 20px;
+     float: left;
+     font-weight: bold;
+     font-size: 20px;
+     color : black;
+     display: flex;
+     align-items: center;
+ }
+ .EstimateListDataBudget {
+     width: 40%;
+     height: 33%;
+     /* background: cornflowerblue; */
+     padding-left: 20px;
+     float: left;
+     font-weight: bold;
+     display: flex;
+     align-items: center;
+ }
+ .EstimateListDataViewCountAndDate {
+     width: 60%;
+     height: 33%;
+     /* background: gold; */
+     float: left;
+     display: flex;
+     align-items: center;
+ }
+ .ViewCountAndDate {
+     width: 50%;
+     height: 100%;
+     /* background: tan; */
+     display: flex;
+     align-items: center;
+     justify-content: center;
+ }
+ 
+ 
+ .filter-body {
+     font-size: 20px;
+ }
+ 
+ .filter-box {
+     width: 100%;
+     height: 100%;
+     position: relative; 
+     padding: 10px;
+     /* background: cornflowerblue; */
+     font-size: 24px;
+ }
+ 
+ .filter-box:hover {
+     color :rgb(64, 126, 241);
+ }
+ 
+ .filter-box-accodian {
+     width: 100%;
+     height: 0px;
+     /* background: coral; */
+     transition: all 0.5s;
+     overflow: hidden;
+     /* border-bottom: 1px solid #eee; */
+ }
+ 
+ /**/
+ /*임시로 만들ㄹ어본 작성버튼*/
+ .estimate-write-btn {
+    width: 50px;
+    height: 50px;
+    border-radius: 20px;
+    background-color: rgba(64, 126, 241, 0.8);
+    bottom: 130px;
+    right:130;
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    font-size: 26px;
+    color:white;
+    z-index: 999;
+    margin-right: 5px;
+}
+.estimate-write-btn i {
+ 
+    z-index: 999;
+}
+
+
+.estimate-write-btn-overlay {
+    
+   visibility: hidden;
+    
+}
+
+
+.estimate-write-btn:hover .estimate-write-btn-overlay  {
+    visibility: visible;
+
+    position: absolute;
+    height: 50px;
+    font-size: 20px;
+    background-color: rgb(64, 126, 241);
+    border-radius: 20px;
+    opacity: 0;
+    transition: all 0.4s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    color: transparent;
+    font-size: 20px;
+    z-index: 999;
+    opacity: 1;
+    width: 130px;
+    color: white;
+    
+    /* white-space: nowrap; 
+     overflow: hidden; */
+     
+}
+
+
+
+
+.scrolltop {
+    width: 50px;
+    height: 50px;
+    border-radius: 20px;
+    background-color: #eee;
+    bottom: 100px;
+    right: 700px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 30px;
+    color:black;
+    z-index: 1;
+    cursor: pointer;
+    margin-top: 7px;
+}
+ 
+ .modal-title {
+     font-size: 35px;
+ }
+ 
+ /*임시 작성버튼 끝*/
+ 
+ .noneSearchData {
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     height: 300px;
+     font-size: 30px;
+ }
