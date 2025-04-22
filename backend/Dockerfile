@@ -2,37 +2,36 @@ FROM maven:3.8.7-eclipse-temurin-17 AS build
 
 WORKDIR /app
 
-# Only copy what's needed to run mvnw (faster builds with caching)
-COPY backend/.mvn/ backend/.mvn
-COPY backend/mvnw backend/pom.xml backend/
+# Copy mvnw and related files first for layer caching
+COPY backend/.mvn /app/backend/.mvn
+COPY backend/mvnw /app/backend/mvnw
+COPY backend/pom.xml /app/backend/pom.xml
 
-# Make sure mvnw is executable
-RUN chmod +x backend/mvnw
+# Make mvnw executable
+RUN chmod +x /app/backend/mvnw
 
-# Download dependencies (cached if pom.xml unchanged)
+# Set JAVA_HOME manually
+ENV JAVA_HOME=/opt/java/openjdk
+
+# Go offline (optional but useful for caching dependencies)
 RUN cd backend && ./mvnw dependency:go-offline
 
-# Now copy the full source
+# Now copy the rest of the source code
 COPY backend /app/backend
 
-# Build the app
+# Build the application
 RUN cd backend && ./mvnw clean package -DskipTests
 
 
-# ---------- Runtime Stage ----------
 FROM eclipse-temurin:17-jdk-alpine
 
 WORKDIR /app
-
-# Copy the built JAR
 COPY --from=build /app/backend/target/*.jar app.jar
 
-# Create upload directories
 RUN mkdir -p /Project/profileImg/user \
     && mkdir -p /Project/profileImg/planner \
-    && mkdir -p /Project/itemImg
-
-RUN chmod -R 777 /Project
+    && mkdir -p /Project/itemImg \
+    && chmod -R 777 /Project
 
 EXPOSE 8080
 
