@@ -23,7 +23,6 @@ yarn-debug.log*
 yarn-error.log*
 
 backend/target/
-backend/.mvn
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
