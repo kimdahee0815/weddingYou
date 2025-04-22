@@ -2,15 +2,12 @@ FROM maven:3.8.7-eclipse-temurin-17 AS build
 
 WORKDIR /app
 
-ENV JAVA_HOME=/usr/local/openjdk-17
-ENV PATH="$JAVA_HOME/bin:$PATH"
-
-COPY . .
+COPY ./backend /app/backend
 
 WORKDIR /app/backend
 
 RUN chmod +x mvnw
-RUN ./mvnw clean package -DskipTests
+RUN mvnw clean package -DskipTests
 
 FROM eclipse-temurin:17-jdk-alpine
 
