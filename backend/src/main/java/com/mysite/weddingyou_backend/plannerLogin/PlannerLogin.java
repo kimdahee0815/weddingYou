@@ -11,6 +11,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 
 import lombok.Getter;
@@ -47,8 +48,13 @@ public class PlannerLogin {
 	@Column(name = "planner_career_years", nullable = false)
 	private String plannerCareerYears;
 
-	@Column(name = "planner_join_date", columnDefinition = "datetime default current_timestamp")
+	@Column(name = "planner_join_date", nullable = false)
 	private LocalDateTime plannerJoinDate;
+
+	@PrePersist
+	protected void onCreate() {
+    this.plannerJoinDate = LocalDateTime.now();
+	}
 	
 
 }

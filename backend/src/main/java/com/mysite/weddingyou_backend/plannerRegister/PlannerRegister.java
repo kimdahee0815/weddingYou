@@ -9,6 +9,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -44,8 +45,13 @@ public class PlannerRegister {
     @Enumerated(EnumType.STRING) // Enum 값을 String 형태로 저장
     private Gender gender;
 
-    @Column(name = "planner_join_date", columnDefinition = "datetime default current_timestamp")
-    private LocalDateTime plannerJoinDate;
+    @Column(name = "planner_join_date", nullable = false)
+	private LocalDateTime plannerJoinDate;
+
+	@PrePersist
+	protected void onCreate() {
+    this.plannerJoinDate = LocalDateTime.now();
+	}
     
     public enum Gender {
     	male,

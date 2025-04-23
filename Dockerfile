@@ -2,10 +2,16 @@ FROM maven:3.8.7-eclipse-temurin-17 AS build
 
 WORKDIR /app
 
-COPY ./backend .
+COPY ./backend /app/backend
 
-RUN chmod +x mvnw
-RUN mvnw clean package -DskipTests
+WORKDIR /app/backend
+
+RUN apt-get update && apt-get install -y dos2unix \
+    && dos2unix mvnw \
+    && chmod +x mvnw \
+    && ./mvnw -v
+
+RUN mvn clean package -DskipTests
 
 FROM eclipse-temurin:17-jdk-alpine
 
