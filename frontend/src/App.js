@@ -39,7 +39,7 @@ import Reviewdetail from "./Pages/reviewdetail";
 import ContentWrite from "./Pages/contentwrite";
 import ImgDetail from "./Pages/ImgDetail";
 
-axios.defaults.baseURL = process.env.REACT_APP_API_URL;
+axios.defaults.baseURL = process.env.REACT_APP_API_URL || 'http://localhost:8080';
 
 function App() {
   return (

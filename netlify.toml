@@ -9,4 +9,4 @@
   status = 200
 
 [context.production.environment]
-  REACT_APP_API_URL = "https://your-railway-backend-url"
+  REACT_APP_API_URL = "https://weddingyou-production.up.railway.app"
