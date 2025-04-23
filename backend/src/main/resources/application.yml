@@ -42,3 +42,14 @@ spring:
       max-request-size: 1000MB
       location: /Project/upload
 
+cloud:
+  aws:
+    credentials:
+      access-key: ${AWS_ACCESS_KEY}
+      secret-key: ${AWS_SECRET_KEY}
+    region:
+      static: us-east-1
+    s3:
+      bucket: dahee-weddingyou-project
+    stack:
+      auto: false

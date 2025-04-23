@@ -53,30 +53,24 @@ const WritePost = () => {
         formData.append("category1", selectedCategory1);
         formData.append("category2", category2);
         formData.append("file", image);
-        formData.append("imgDetailContent", imgDetailContent);
-        axios
-          .post("/item/insertItem", formData)
-          .then((response) => {
-            console.log("성공:", response.data);
-            setItemName("");
-            setContent("");
-            setImgDetailContent("");
-            setImage(null);
-            setPreviewUrl(selectImg);
-            imgFile.current.value = null;
-            alert("아이템 업로드 완료!");
-          })
-          .catch((e) => {
-            console.log("실패:", e);
-            if (e.response.data.message === "파일이 중복됩니다!") {
-              alert("첨부파일이 중복됩니다!");
-            }
-          });
-      } else {
-        alert("이미지를 선택해주세요!");
+        
+        axios.post("/item/insertItem", formData, {
+          headers: { "Content-Type": "multipart/form-data" }
+        })
+        .then(response => {
+          console.log("Success:", response.data);
+          setItemName("");
+          setContent("");
+          setImage(null);
+          setPreviewUrl(selectImg);
+          imgFile.current.value = null;
+          alert("Item uploaded successfully!");
+        })
+        .catch(error => {
+          console.error("Error:", error);
+          alert("Upload failed!");
+        });
       }
-    } else {
-      alert("제목과 내용을 입력하세요!");
     }
   };
   const imgFile = useRef();

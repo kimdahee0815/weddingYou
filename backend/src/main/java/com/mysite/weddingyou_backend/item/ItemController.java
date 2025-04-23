@@ -1,6 +1,5 @@
 package com.mysite.weddingyou_backend.item;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -25,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.mysite.weddingyou_backend.S3Service;
 import com.mysite.weddingyou_backend.item.Item.Category1;
 import com.mysite.weddingyou_backend.item.Item.Category2;
 import com.mysite.weddingyou_backend.like.LikeEntity;
@@ -42,8 +42,8 @@ import com.mysite.weddingyou_backend.userUpdateDelete.UserUpdateDeleteDTO;
 @RequestMapping("/item")
 public class ItemController {
 	
-	
-	private ItemService itemService;
+	private final ItemService itemService;
+	private final S3Service s3Service;
 	
 	@Autowired
 	private UserLoginRepository userRepository;
@@ -54,14 +54,11 @@ public class ItemController {
 	@Autowired
 	private LikeService likeService;
 	
-	public ItemController(ItemService itemService) {
+	public ItemController(ItemService itemService, S3Service s3Service) {
 	       this.itemService = itemService;
-	     
+	       this.s3Service = s3Service;
 	}
 	
-	
-	
-
 	// 이미지 목록 페이지
 	 @GetMapping("/itemList")
 	    public ResponseEntity<List<ItemDTO>> getItemsSortedBy(
@@ -308,49 +305,25 @@ public class ItemController {
 	 }
     
 	 // 새로운 아이템 생성
-	 @RequestMapping("/insertItem")
-	 public ResponseEntity<Item> createItem(@RequestParam("file") MultipartFile file,@RequestParam("category1") Category1 category1, 
-			 @RequestParam("category2") Category2 category2,@RequestParam("itemName") String itemName,
-			 @RequestParam("content")String content ) throws Exception {
-		 	ItemDTO itemDTO = new ItemDTO();
-		 	itemDTO.setCategory1(category1);
-		 	itemDTO.setCategory2(category2);
-		 	itemDTO.setContent(content);
-		 	itemDTO.setItemName(itemName.toLowerCase());
-		 	//itemDTO.setItemWriteDate(LocalDateTime.now());
-		 	//itemDTO.setLikeCount(0);
-		 	try {	
-		 		String path1 = "C:\\Project\\itemImg\\";
-		    	String path2 = "C:\\Project\\itemImg\\"+category1;
-		     	String path3 = "C:\\Project\\itemImg\\"+category1+"\\"+category2;
-		     	File folder1 = new File(path1);
-		    	File folder2 = new File(path2);
-		    	File folder3 = new File(path3);
-		    	if(!folder1.exists() || !folder2.exists() || !folder3.exists()) {
-		    		try {
-		    			folder1.mkdir();
-		    			folder2.mkdir();
-		    			folder3.mkdir();
-		    		}catch(Exception e) {
-		    			e.getStackTrace();
-		    		}
-		    	}
-		    	
-		    	try {
-		    		Files.copy(file.getInputStream(), Paths.get(path3, file.getOriginalFilename())); //request에서 들어온 파일을 uploads 라는 경로에 originalfilename을 String 으로 올림
-		    	}catch(Exception e) {
-		    		throw new Exception("파일이 중복됩니다!");
-		    	}
-
-		        itemDTO.setItemImg(file.getOriginalFilename()); //itemimg에다가 이미지 파일 이름 저장
-		        Item newItem = itemService.createItem(itemDTO); // 이미지파일이름 데이터베이스에 업데이트함
-		        return ResponseEntity.ok(newItem);
-		    } catch (IOException e) {
-		        e.printStackTrace();
-		        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-		    }
-		  
-	}
+	 @PostMapping("/insertItem")
+	 public ResponseEntity<Item> createItem(@RequestParam("file") MultipartFile file,
+	            @RequestParam("category1") Category1 category1,
+	            @RequestParam("category2") Category2 category2,
+	            @RequestParam("itemName") String itemName,
+	            @RequestParam("content") String content) {
+	        
+	        String imageUrl = s3Service.uploadFile(file, "items/" + category1 + "/" + category2);
+	        
+	        ItemDTO itemDTO = new ItemDTO();
+	        itemDTO.setItemName(itemName);
+	        itemDTO.setCategory1(category1);
+	        itemDTO.setCategory2(category2);
+	        itemDTO.setContent(content);
+	        itemDTO.setItemImg(imageUrl);
+	        
+	        Item createdItem = itemService.createItem(itemDTO);
+	        return ResponseEntity.ok(createdItem);
+	    }
 	 
 	
 	 
@@ -417,28 +390,15 @@ public class ItemController {
 	 }
 	 
 	 //아이템 가져오기
-	 @RequestMapping(value="/getitemImg/{itemId}",  produces = MediaType.IMAGE_JPEG_VALUE)
+	 @GetMapping("/getitemImg/{itemId}")
 	 public ResponseEntity<byte[]> getImage(@PathVariable Long itemId) {
-		
-		 Item searchedItem = itemService.getItemById(itemId);
-		 String path = "C:\\Project\\itemImg\\"+searchedItem.getCategory1()+"\\"+searchedItem.getCategory2();
-	     
-	         Path imagePath = Paths.get(path,searchedItem.getItemImg());
-
-	         try {
-	             byte[] imageBytes = Files.readAllBytes(imagePath);
-	             byte[] base64encodedData = Base64.getEncoder().encode(imageBytes);
-	              return ResponseEntity.ok()
-	                      .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + 
-	                    		  searchedItem.getItemImg() + "\"")
-	                      .body(base64encodedData);
-	         } catch (IOException e) {
-	             e.printStackTrace();
-	             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-	         }
-	 
-	    
-	 }
+	        Item item = itemService.getItemById(itemId);
+	        byte[] imageBytes = s3Service.downloadFile(item.getItemImg());
+	        
+	        return ResponseEntity.ok()
+	                .contentType(MediaType.IMAGE_JPEG)
+	                .body(imageBytes);
+	    }
 	 
 	 
 	
