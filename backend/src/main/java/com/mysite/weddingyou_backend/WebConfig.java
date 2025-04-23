@@ -11,9 +11,15 @@ public class WebConfig implements WebMvcConfigurer {
 	@Override
 	public void addCorsMappings(CorsRegistry registry) {
 		registry.addMapping("/**")
-		.allowedOrigins("https://weddingyou-dahee-kim.netlify.app")
-		.allowedMethods("GET", "POST", "PUT", "DELETE")
-		.allowCredentials(true);
+            .allowedOrigins(
+                "https://weddingyou-dahee-kim.netlify.app",
+                "http://localhost:3000"  // For local development
+            )
+            .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+            .allowedHeaders("*")
+            .exposedHeaders("*")
+            .allowCredentials(true)
+            .maxAge(3600);
 		
 	}
 
