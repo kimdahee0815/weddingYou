@@ -118,7 +118,7 @@ const AdminPage = () => {
 
     if (type === "user") {
       axios
-        .post("http://localhost:8080/mypageAdmin/modify", {
+        .post("/mypageAdmin/modify", {
           adminId: id,
           userName: userName,
           userPassword: userPassword,
@@ -136,7 +136,7 @@ const AdminPage = () => {
         });
     } else {
       axios
-        .post("http://localhost:8080/mypageAdmin/modify", {
+        .post("/mypageAdmin/modify", {
           adminId: id,
           plannerName: userName,
           plannerPassword: userPassword,
@@ -175,7 +175,7 @@ const AdminPage = () => {
     setPostSearch("");
     setPostSearchMode("none");
     axios
-      .get("http://localhost:8080/estimate/getcount", {})
+      .get("/estimate/getcount", {})
       .then((res) => {
         console.log("data=>", res.data);
         const { data } = res;
@@ -195,7 +195,7 @@ const AdminPage = () => {
 
   const getPostList = () => {
     axios
-      .post("http://localhost:8080/estimate/pageinglist", {
+      .post("/estimate/pageinglist", {
         page_num: page_num,
         limit: page_size,
       })
@@ -224,7 +224,7 @@ const AdminPage = () => {
   //유저 리스트
   const getUserList = async () => {
     try {
-      let res = await axios.get("http://localhost:8080/mypageAdmin/all", {
+      let res = await axios.get("/mypageAdmin/all", {
         params: { page: 0, size: page_size },
       });
       let { data } = res;
@@ -238,7 +238,7 @@ const AdminPage = () => {
 
   const getUserListCount = async () => {
     try {
-      let res = await axios.get("http://localhost:8080/mypageAdmin/count");
+      let res = await axios.get("/mypageAdmin/count");
       let { data } = res;
       console.log("총 유저 데이터 수", data);
       article_countUser = data; //총 글의 갯수 저장.
@@ -352,7 +352,7 @@ const AdminPage = () => {
       //검색상태 아닐 때
       const fetchData = () => {
         axios
-          .post("http://localhost:8080/estimate/pageinglist", {
+          .post("/estimate/pageinglist", {
             // page_num: parseInt(e.target.id),
             page_num: postPage,
             limit: page_size,
@@ -370,7 +370,7 @@ const AdminPage = () => {
       //검색상태일 때
       const fetchData2 = () => {
         axios
-          .post("http://localhost:8080/estimate/getsearchlistpageing", {
+          .post("/estimate/getsearchlistpageing", {
             // page_num: parseInt(e.target.id),
             page_num: postPage,
             limit: page_size,
@@ -406,7 +406,7 @@ const AdminPage = () => {
     const onUserPageing = (e) => {
       const fetchData = async () => {
         try {
-          let res = await axios.get("http://localhost:8080/mypageAdmin/all", {
+          let res = await axios.get("/mypageAdmin/all", {
             params: {
               page: userPage - 1,
               size: page_size,
@@ -421,7 +421,7 @@ const AdminPage = () => {
       const fetchData2 = async () => {
         try {
           let res = await axios.get(
-            "http://localhost:8080/mypageAdmin/search",
+            "/mypageAdmin/search",
             {
               params: {
                 page: userPage - 1,
@@ -481,7 +481,7 @@ const AdminPage = () => {
     setUserPage(1);
     const onUserSearching = () => {
       axios
-        .get("http://localhost:8080/mypageAdmin/search", {
+        .get("/mypageAdmin/search", {
           params: { search: searchdata, page: 0, size: page_size },
         })
         .then((res) => {
@@ -495,7 +495,7 @@ const AdminPage = () => {
     };
     const onUserSearchCount = () => {
       axios
-        .get("http://localhost:8080/mypageAdmin/searchCount", {
+        .get("/mypageAdmin/searchCount", {
           params: { search: searchdata },
         })
         .then((res) => {
@@ -529,7 +529,7 @@ const AdminPage = () => {
     setPostSearchPageing(postSearch);
     setPostSearchMode("search");
     axios
-      .post("http://localhost:8080/estimate/getsearchlistcount", {
+      .post("/estimate/getsearchlistcount", {
         search: postSearch,
       })
       .then((res) => {
@@ -551,7 +551,7 @@ const AdminPage = () => {
     console.log("start=>", page_num);
     console.log("page_num=>", page_num);
     axios
-      .post("http://localhost:8080/estimate/getsearchlistpageing", {
+      .post("/estimate/getsearchlistpageing", {
         page_num: page_num,
         limit: page_size,
         search: postSearch,
@@ -575,7 +575,7 @@ const AdminPage = () => {
 
   const onPostDelete = (id) => {
     axios
-      .get("http://localhost:8080/estimate/delete", { params: { id: id } })
+      .get("/estimate/delete", { params: { id: id } })
       .then((res) => {
         console.log(res);
         getPostList();
@@ -587,7 +587,7 @@ const AdminPage = () => {
 
   const onUserDelte = (id) => {
     axios
-      .get(`http://localhost:8080/mypageAdmin/delete?adminId=${id}`)
+      .get(`/mypageAdmin/delete?adminId=${id}`)
       .then((res) => {
         userListReset();
       })

@@ -50,7 +50,7 @@ function PlannerProfileDetail() {
   const fetchData = async (selectedEstimateId) => {
     try {
       const response = await axios.get(
-        `http://localhost:8080/estimate/getdetail/${selectedEstimateId}`
+        `/estimate/getdetail/${selectedEstimateId}`
       );
       const { data } = response;
       console.log(data);
@@ -63,7 +63,7 @@ function PlannerProfileDetail() {
       // 이미지 데이터 가져오기
       const imagearray = JSON.parse(data.img);
       const imagePromises = imagearray.map((image) => {
-        return axios.get("http://localhost:8080/estimate/imageview", {
+        return axios.get("/estimate/imageview", {
           params: { image },
           responseType: "blob",
         });
@@ -191,7 +191,7 @@ function PlannerProfileDetail() {
               const fetchData1 = async () => {
                 try {
                   const response = await axios.get(
-                    `http://localhost:8080/estimate/getdetail/${defaultEstimateId}`
+                    `/estimate/getdetail/${defaultEstimateId}`
                   );
                   const { data } = response;
                   console.log(data);
@@ -205,7 +205,7 @@ function PlannerProfileDetail() {
                   const imagearray = JSON.parse(data.img);
                   const imagePromises = imagearray.map((image) => {
                     return axios.get(
-                      "http://localhost:8080/estimate/imageview",
+                      "/estimate/imageview",
                       {
                         params: { image },
                         responseType: "blob",

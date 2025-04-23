@@ -20,7 +20,7 @@ const EstimateModify = () => {
     const fetchData = async () => {
       try {
         let response = await axios.get(
-          `http://localhost:8080/estimate/getdetail/${id}`
+          `/estimate/getdetail/${id}`
         );
         let { data } = response;
         console.log(data);
@@ -59,7 +59,7 @@ const EstimateModify = () => {
 
         const imagearray = JSON.parse(data.img);
         const imagePromises = imagearray.map((image) => {
-          return axios.get("http://localhost:8080/estimate/imageview", {
+          return axios.get("/estimate/imageview", {
             params: { image },
             responseType: "blob",
           });
@@ -373,7 +373,7 @@ const EstimateModify = () => {
         }
       }
       axios
-        .post("http://localhost:8080/estimate/modify", formData)
+        .post("/estimate/modify", formData)
         .then((res) => {
           console.log("성공");
           navigate(`../estimatedetail/${id}`);

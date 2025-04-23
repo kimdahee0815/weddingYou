@@ -42,7 +42,7 @@ const EstimateList = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8080/estimate/getlist")
+      .get("/estimate/getlist")
       .then((res) => {
         let { data } = res;
         setData(data);
@@ -79,7 +79,7 @@ const EstimateList = () => {
 
   const searchResult = () => {
     axios
-      .get("http://localhost:8080/estimate/getsearchlist", {
+      .get("/estimate/getsearchlist", {
         params: { search: search },
       })
       .then((res) => {

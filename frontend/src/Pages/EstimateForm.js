@@ -291,7 +291,7 @@ const EstimateForm = () => {
         }
       }
       axios
-        .post("http://localhost:8080/estimate/write", formData)
+        .post("/estimate/write", formData)
         .then((res) => {
           console.log("성공");
           navigate("/estimatelist");

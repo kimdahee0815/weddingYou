@@ -27,7 +27,7 @@ const EstimateDetail = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8080/estimate/getdetail/${id}`
+          `/estimate/getdetail/${id}`
         );
         const { data } = response;
         console.log(data);
@@ -41,7 +41,7 @@ const EstimateDetail = () => {
         // 이미지 데이터 가져오기
         const imagearray = JSON.parse(data.img);
         const imagePromises = imagearray.map((image) => {
-          return axios.get("http://localhost:8080/estimate/imageview", {
+          return axios.get("/estimate/imageview", {
             params: { image },
             responseType: "blob",
           });
@@ -72,7 +72,7 @@ const EstimateDetail = () => {
     if (window.confirm("견적서 게시글을 삭제하시겠습니까?")) {
       try {
         let response = await axios.get(
-          "http://localhost:8080/estimate/delete",
+          "/estimate/delete",
           { params: { id: estimateData.id } }
         );
         let { data } = response;
