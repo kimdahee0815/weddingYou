@@ -13,7 +13,8 @@ public class WebConfig implements WebMvcConfigurer {
 		registry.addMapping("/**")
             .allowedOrigins(
                 "https://weddingyou-dahee-kim.netlify.app",
-                "http://localhost:3000"  // For local development
+                "http://localhost:3000",
+                "http://localhost:80"  // For local development
             )
             .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
             .allowedHeaders("*")

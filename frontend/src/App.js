@@ -39,7 +39,9 @@ import Reviewdetail from "./Pages/reviewdetail";
 import ContentWrite from "./Pages/contentwrite";
 import ImgDetail from "./Pages/ImgDetail";
 
-axios.defaults.baseURL = process.env.REACT_APP_API_URL || 'http://localhost:8080';
+axios.defaults.baseURL = process.env.REACT_APP_API_URL || 'http://localhost:3000';
+axios.defaults.withCredentials = true;
+axios.defaults.headers.common['Content-Type'] = 'application/json';
 
 function App() {
   return (
