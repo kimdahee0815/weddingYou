@@ -30,27 +30,29 @@ const EditPost = () => {
 
   useEffect(() => {
     axios
-      .post(`/item/getitemImg/${itemId}`)
+      .get(`/item/getitemImg/${itemId}`, {
+        responseType: 'blob'  
+      })
       .then((res) => {
-        const byteCharacters = atob(res.data);
-        const byteNumbers = new Array(byteCharacters.length);
-        for (let i = 0; i < byteCharacters.length; i++) {
-          byteNumbers[i] = byteCharacters.charCodeAt(i);
-        }
-        const byteArray = new Uint8Array(byteNumbers);
-        const blob = new Blob([byteArray], { type: "image/jpeg" });
-        setImage(blob);
+        // const byteCharacters = atob(res.data);
+        // const byteNumbers = new Array(byteCharacters.length);
+        // for (let i = 0; i < byteCharacters.length; i++) {
+        //   byteNumbers[i] = byteCharacters.charCodeAt(i);
+        // }
+        // const byteArray = new Uint8Array(byteNumbers);
+        // const blob = new Blob([byteArray], { type: "image/jpeg" });
+        const imageUrl = URL.createObjectURL(res.data);
+        setImage(imageUrl);
         const reader = new FileReader();
         reader.onload = () => {
-          setPreviewUrl(reader.result);
-          setImage(reader.result);
+          setPreviewUrl(reader.result);       
         };
-        reader.readAsDataURL(blob);
+        reader.readAsDataURL(res.data);
       })
       .catch((e) => {
         console.log(e);
       });
-  }, []);
+  }, [itemId]);
 
   const onChangeItemPicture = (e) => {
     const selectedFile = e.target.files[0];
@@ -68,7 +70,9 @@ const EditPost = () => {
   const updateItem = (e) => {
     const formData = new FormData();
 
-    formData.append("file", selectedFile);
+    if (selectedFile) {
+      formData.append("file", selectedFile);
+    }
     formData.append("itemName", itemName);
     formData.append("content", content);
     formData.append("imgDetailContent", imgDetailContent);

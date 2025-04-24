@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import NavigationBar from "../../Components/NavigationBar";
 import Footer from "../../Components/Footer";
@@ -33,6 +33,7 @@ const selectedCategory = {
 };
 
 const WritePost = () => {
+  const navigate = useNavigate();
   const { category1 } = useParams();
   const [itemName, setItemName] = useState("");
   const [content, setContent] = useState("");
@@ -67,6 +68,7 @@ const WritePost = () => {
             setPreviewUrl(selectImg);
             imgFile.current.value = null;
             alert("Item uploaded successfully!");
+            navigate(`/menu/${category1}`)
           })
           .catch((e) => {
             console.log("실패:", e);

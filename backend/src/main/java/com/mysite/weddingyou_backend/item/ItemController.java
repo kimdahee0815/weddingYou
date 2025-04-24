@@ -1,6 +1,8 @@
 package com.mysite.weddingyou_backend.item;
 
 import java.io.IOException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -116,39 +118,40 @@ public class ItemController {
 	    }
 	 
 	 @RequestMapping(value="/itemList/{category1}/{category2}")
-	 public List<String> getImagesByCategory1AndCategory2(@PathVariable Category1 category1, @PathVariable Category2 category2) {
+	 public List<ItemDTO> getImagesByCategory1AndCategory2(@PathVariable Category1 category1, @PathVariable Category2 category2) {
 		 List<ItemDTO> items =null;
 	        items = itemService.getItemsByCategory1AndCategory2(category1, category2);
 	       
-	        List<String> encodingDatas = new ArrayList<>();
+	    //     List<String> encodingDatas = new ArrayList<>();
 	        
 	        
-	    if(items!=null) {
-	    	for(int i =0;i<items.size();i++) {
-	    		ItemDTO targetItem = items.get(i);
+	    // if(items!=null) {
+	    // 	for(int i =0;i<items.size();i++) {
+	    // 		ItemDTO targetItem = items.get(i);
 	    		
-		    	 String path = "C:/Project/itemImg/"+targetItem.getCategory1()+"/"+targetItem.getCategory2();
-		    	 Path imagePath = Paths.get(path,targetItem.getItemImg());
-		    	 System.out.println(imagePath);
+		  //   	 String path = "C:/Project/itemImg/"+targetItem.getCategory1()+"/"+targetItem.getCategory2();
+		  //   	 Path imagePath = Paths.get(path,targetItem.getItemImg());
+		  //   	 System.out.println(imagePath);
 
-		         try {
-		             byte[] imageBytes = Files.readAllBytes(imagePath);
-		             byte[] base64encodedData = Base64.getEncoder().encode(imageBytes);
+		  //        try {
+		  //            byte[] imageBytes = Files.readAllBytes(imagePath);
+		  //            byte[] base64encodedData = Base64.getEncoder().encode(imageBytes);
 		             
-		             encodingDatas.add(new String(base64encodedData));
+		  //            encodingDatas.add(new String(base64encodedData));
 		             
-		         } catch (IOException e) {
-		             e.printStackTrace();
+		  //        } catch (IOException e) {
+		  //            e.printStackTrace();
 		            
-		         }
-		        encodingDatas.add(String.valueOf(targetItem.getItemId()));
-		        encodingDatas.add(String.valueOf(targetItem.getItemName()));
-		        encodingDatas.add(String.valueOf(targetItem.getContent()));
+		  //        }
+		  //       encodingDatas.add(String.valueOf(targetItem.getItemId()));
+		  //       encodingDatas.add(String.valueOf(targetItem.getItemName()));
+		  //       encodingDatas.add(String.valueOf(targetItem.getContent()));
 		      
-	    	}
+	    // 	}
 	    	
-	    }
-	    return encodingDatas;
+	    // }
+	    //return encodingDatas;
+			return items;
 	    }
 	 
 	//검색
@@ -331,21 +334,21 @@ public class ItemController {
 	 @PostMapping("/updateItem/{itemId}")
 	 public ResponseEntity<Item> updateItem(@RequestParam(value="file", required=false) MultipartFile file,@PathVariable Long itemId,  @RequestParam("itemName") String itemName, 
 			 @RequestParam("content") String content) {
-		 
-		 	try {	
 		 		
 		 		ItemDTO itemDTO = new ItemDTO();
-		 		 Item searchedItem = itemService.getItemById(itemId);
-		    	String path = "C:\\Project\\itemImg\\"+searchedItem.getCategory1()+"\\"+searchedItem.getCategory2();
+		 		  Item searchedItem = itemService.getItemById(itemId);
+		    	//String path = "C:\\Project\\itemImg\\"+searchedItem.getCategory1()+"\\"+searchedItem.getCategory2();
 		    	
-		    	if(file!=null) {
-		    		Item deleteItem = itemService.getItemById(itemId);
-			    	Path deleteFilePath = Paths.get(path, deleteItem.getItemImg());
-			    	Files.delete(deleteFilePath);
-			        Files.copy(file.getInputStream(), Paths.get(path, file.getOriginalFilename()),StandardCopyOption.REPLACE_EXISTING); //request에서 들어온 파일을 uploads 라는 경로에 originalfilename을 String 으로 올림
-			        System.out.println(file.getInputStream());
-			        itemDTO.setItemImg(file.getOriginalFilename()); //itemimg에다가 이미지 파일 이름 저장
-		    	}
+		    	 if(file!=null) {
+		    	// 	Item deleteItem = itemService.getItemById(itemId);
+			    // 	Path deleteFilePath = Paths.get(path, deleteItem.getItemImg());
+			    // 	Files.delete(deleteFilePath);
+			    //     Files.copy(file.getInputStream(), Paths.get(path, file.getOriginalFilename()),StandardCopyOption.REPLACE_EXISTING); //request에서 들어온 파일을 uploads 라는 경로에 originalfilename을 String 으로 올림
+			    //     System.out.println(file.getInputStream());
+			    //     itemDTO.setItemImg(file.getOriginalFilename()); //itemimg에다가 이미지 파일 이름 저장
+		    	String imageUrl = s3Service.uploadFile(file, "items/" + searchedItem.getCategory1() + "/" + searchedItem.getCategory2());
+					itemDTO.setItemImg(imageUrl);
+				}
 		    	
 		        itemDTO.setCategory1(searchedItem.getCategory1());
 		        itemDTO.setCategory2(searchedItem.getCategory2());
@@ -353,10 +356,6 @@ public class ItemController {
 		        itemDTO.setItemName(itemName);
 		        Item updatedItemDTO = itemService.updateItem(itemId,itemDTO); // 이미지파일이름 데이터베이스에 업데이트함
 		        return ResponseEntity.ok().body(updatedItemDTO);
-		    } catch (IOException e) {
-		        e.printStackTrace();
-		        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-		    }
 	
 	 }
 	 
@@ -365,20 +364,14 @@ public class ItemController {
 	 // 아이템 삭제
 	 @PostMapping("/deleteItem/{itemId}")
 	 public ResponseEntity<String> deleteItem(@PathVariable Long itemId) {
-		 try {	
-			 
-	 		 	Item deleteItem = itemService.getItemById(itemId);
-		    	String path = "C:\\Project\\itemImg\\"+deleteItem.getCategory1()+"\\"+deleteItem.getCategory2();
+			 //Item deleteItem = itemService.getItemById(itemId);
+		    	// String path = "C:\\Project\\itemImg\\"+deleteItem.getCategory1()+"\\"+deleteItem.getCategory2();
 
-		    	Path deleteFilePath = Paths.get(path, deleteItem.getItemImg());
-		    	Files.delete(deleteFilePath);
+		    	// Path deleteFilePath = Paths.get(path, deleteItem.getItemImg());
+		    	// Files.delete(deleteFilePath);
 		       
-		        itemService.deleteItem(itemId); // 이미지파일이름 데이터베이스에 업데이트함
-		        return ResponseEntity.ok().body("Item with id " + itemId + " has been deleted.");
-		    } catch (IOException e) {
-		        e.printStackTrace();
-		        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-		    }
+		    itemService.deleteItem(itemId); // 이미지파일이름 데이터베이스에 업데이트함
+		    return ResponseEntity.ok().body("Item with id " + itemId + " has been deleted.");
 	   
 	 }
 	 
@@ -393,11 +386,17 @@ public class ItemController {
 	 @GetMapping("/getitemImg/{itemId}")
 	 public ResponseEntity<byte[]> getImage(@PathVariable Long itemId) {
 	        Item item = itemService.getItemById(itemId);
-	        byte[] imageBytes = s3Service.downloadFile(item.getItemImg());
+					String fullPath = item.getItemImg();
+    
+    			// Extract path after .com/
+    			String key = fullPath.substring(fullPath.indexOf(".com/") + 5);
+	        key = URLDecoder.decode(key, StandardCharsets.UTF_8);
+					byte[] imageBytes = s3Service.downloadFile(key);
 	        
-	        return ResponseEntity.ok()
-	                .contentType(MediaType.IMAGE_JPEG)
-	                .body(imageBytes);
+					HttpHeaders headers = new HttpHeaders();
+        	headers.setContentType(MediaType.IMAGE_JPEG);
+
+	        return new ResponseEntity<>(imageBytes, headers, HttpStatus.OK);
 	    }
 	 
 	 

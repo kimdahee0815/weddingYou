@@ -22,29 +22,8 @@ const Makeup = () => {
   ];
   const [isAdmin, setIsAdmin] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState(category2[0]);
-  const [selectedImage, setSelectedImage] = useState(null);
-  const [selectLikeState, setSelectLikeState] = useState(false);
   const [editMode, setEditMode] = useState(false);
-  const [newTitle, setNewTitle] = useState("");
-  const [newContent, setNewContent] = useState("");
-  const [file, setFile] = useState(null);
-  const [images, setImages] = useState([]);
-
-  const [previewImg, setPreviewImg] = useState([]);
-  const [itemId, setItemId] = useState([]);
-  const [item, setItem] = useState([]);
-  const [itemName, setItemName] = useState([]);
-  const [itemContent, setItemContent] = useState([]);
-  const [keyIndex, setKeyIndex] = useState([]);
-  const [imgDetailContent, setImgDetailContent] = useState([]);
-
-  let keyIndexArr = [];
-  let list = [];
-  let itemDataArr = [];
-  let previewImgArr = [];
-  let itemNameArr = [];
-  let itemContentArr = [];
-  let itemDetailContentArr = [];
+  const [itemList, setItemList] = useState([]);
 
   const modalImg = useRef();
   const modalImgContent = useRef();
@@ -69,55 +48,8 @@ const Makeup = () => {
       .get(`/item/itemList/${title}/${selectedCategory}`)
       .then((res) => {
         const dataList = res.data;
-
-        if (dataList.length !== 0) {
-          let index = 0;
-          for (var i = 0; i < dataList.length; ) {
-            let dataUrl = "data:image/jpeg;base64," + dataList[i];
-            previewImgArr.push(dataUrl);
-            setPreviewImg(previewImgArr);
-            i++;
-
-            let newitemId = dataList[i];
-            list.push(newitemId);
-            setItemId(list);
-            keyIndexArr.push(index);
-            index++;
-            setKeyIndex(keyIndexArr);
-            i++;
-
-            axios
-              .get(`/item/getItemList/${newitemId}`)
-              .then((res) => {
-                let newItem = res.data;
-                itemDataArr.push(newItem);
-                itemDataArr.sort(function (a, b) {
-                  return new Date(b.itemWriteDate) - new Date(a.itemWriteDate);
-                });
-                setItem([...item, newItem]);
-                setItem(itemDataArr);
-              })
-              .catch((e) => {
-                console.log(e);
-              });
-
-            let newitemName = dataList[i];
-            itemNameArr.push(newitemName);
-            setItemName(itemNameArr);
-            i++;
-
-            let newitemContent = dataList[i];
-            itemContentArr.push(newitemContent);
-            setItemContent(itemContentArr);
-            i++;
-            let newItemDetailContent = dataList[i];
-            itemDetailContentArr.push(newItemDetailContent);
-            setImgDetailContent(itemDetailContentArr);
-            i++;
-          }
-        } else {
-          setKeyIndex([]);
-        }
+        const items = [...dataList];
+        setItemList(items);
       })
       .catch((e) => {
         console.log(e);
@@ -215,23 +147,27 @@ const Makeup = () => {
             marginBottom: "100px",
           }}
         >
-          {keyIndex.map((i) => (
-            <img
+            {itemList.map((item) => (
+              <img
               //   key={image.id}
-              src={previewImg[i]}
+              src={item.itemImg}
               alt=""
               onClick={showingDetail}
               data-bs-toggle="modal"
               data-bs-target="#imgDetailModal"
-              style={{ cursor: "pointer", width: "250px", height: "250px" }}
-              data-bs-src={previewImg[i]}
+              style={{
+                cursor: "pointer",
+                width: "250px",
+                height: "250px",
+              }}
+              data-bs-src={item.itemImg}
               data-bs-category="메이크업"
-              data-bs-itemName={itemName[i]}
-              data-bs-itemContent={itemContent[i]}
-              data-bs-itemId={itemId[i]}
-              data-bs-itemDetailContent={imgDetailContent[i]}
-            />
-          ))}
+              data-bs-itemName={item.itemName}
+              data-bs-itemContent={item.content}
+              data-bs-itemId={item.itemId}
+              data-bs-itemDetailContent={item.imgContent}
+              />
+            ))}
         </div>
 
         <Footer />

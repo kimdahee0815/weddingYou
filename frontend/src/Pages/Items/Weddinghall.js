@@ -6,8 +6,6 @@ import Footer from "../../Components/Footer";
 import Sidesection from "../../Components/Sidesection";
 import "../../Css/menuList.css";
 import "../../Css/items.css";
-import wh_1 from "./wh_1.jpg";
-import wh_2 from "./wh_2.jpg";
 
 const Weddinghall = ({ postSubmitted }) => {
   const { category1 } = useParams();
@@ -16,38 +14,14 @@ const Weddinghall = ({ postSubmitted }) => {
   const category2 = ["일반", "호텔", "채플", "스몰", "야외", "전통혼례"];
   const [isAdmin, setIsAdmin] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(category2[0]);
-  const [selectedImage, setSelectedImage] = useState(null);
-  const [selectLikeState, setSelectLikeState] = useState(false);
   const [editMode, setEditMode] = useState(false);
-  const [newTitle, setNewTitle] = useState("");
-  const [newContent, setNewContent] = useState("");
-  // const [itemId, setItemId] = useState(null);
-  const [file, setFile] = useState(null);
-  const [images, setImages] = useState([
-    { id: 1, url: wh_1, title: "1", content: "1" },
-    { id: 2, url: wh_2, title: "2", content: "2" },
-  ]);
 
-  const [previewImg, setPreviewImg] = useState([]);
+  const [itemList, setItemList] = useState([]);
   const [itemId, setItemId] = useState([]);
-  const [item, setItem] = useState([]);
-  const [itemName, setItemName] = useState([]);
-  const [itemContent, setItemContent] = useState([]);
-  const [keyIndex, setKeyIndex] = useState([]);
-  const [imgDetailContent, setImgDetailContent] = useState([]);
-
-  let keyIndexArr = [];
-  let list = [];
-  let itemDataArr = [];
-  let previewImgArr = [];
-  let itemNameArr = [];
-  let itemContentArr = [];
-  let itemDetailContentArr = [];
 
   const modalImg = useRef();
   const modalImgContent = useRef();
   const modalImgTitle = useRef();
-  const modalItemId = useRef();
 
   const [modalImgoriginalTitle, setModalImgoriginalTitle] = useState("");
   const navigate = useNavigate();
@@ -65,58 +39,58 @@ const Weddinghall = ({ postSubmitted }) => {
     axios
       .get(`/item/itemList/${title}/${selectedCategory}`)
       .then((res) => {
-        console.log(res);
         const dataList = res.data;
-        console.log(res.data);
+        const items = [...dataList];
+        setItemList(items);
 
-        if (dataList.length !== 0) {
-          let index = 0;
-          for (var i = 0; i < dataList.length; ) {
-            let dataUrl = "data:image/jpeg;base64," + dataList[i];
-            previewImgArr.push(dataUrl);
-            setPreviewImg(previewImgArr);
-            i++;
+        // if (dataList.length !== 0) {
+        //   let index = 0;
+        //   for (var i = 0; i < dataList.length; ) {
+        //     let dataUrl = "data:image/jpeg;base64," + dataList[i];
+        //     previewImgArr.push(dataUrl);
+        //     setPreviewImg(previewImgArr);
+        //     i++;
 
-            let newitemId = dataList[i];
-            list.push(newitemId);
-            setItemId(list);
-            keyIndexArr.push(index);
-            index++;
-            setKeyIndex(keyIndexArr);
-            i++;
+        //     let newitemId = dataList[i];
+        //     list.push(newitemId);
+        //     setItemId(list);
+        //     keyIndexArr.push(index);
+        //     index++;
+        //     setKeyIndex(keyIndexArr);
+        //     i++;
 
-            axios
-              .get(`/item/getItemList/${newitemId}`)
-              .then((res) => {
-                let newItem = res.data;
-                itemDataArr.push(newItem);
-                itemDataArr.sort(function (a, b) {
-                  return new Date(b.itemWriteDate) - new Date(a.itemWriteDate);
-                });
-                setItem([...item, newItem]);
-                setItem(itemDataArr);
-              })
-              .catch((e) => {
-                console.log(e);
-              });
+        //     axios
+        //       .get(`/item/getItemList/${newitemId}`)
+        //       .then((res) => {
+        //         let newItem = res.data;
+        //         itemDataArr.push(newItem);
+        //         itemDataArr.sort(function (a, b) {
+        //           return new Date(b.itemWriteDate) - new Date(a.itemWriteDate);
+        //         });
+        //         setItem([...item, newItem]);
+        //         setItem(itemDataArr);
+        //       })
+        //       .catch((e) => {
+        //         console.log(e);
+        //       });
 
-            let newitemName = dataList[i];
-            itemNameArr.push(newitemName);
-            setItemName(itemNameArr);
-            i++;
+        //     let newitemName = dataList[i];
+        //     itemNameArr.push(newitemName);
+        //     setItemName(itemNameArr);
+        //     i++;
 
-            let newitemContent = dataList[i];
-            itemContentArr.push(newitemContent);
-            setItemContent(itemContentArr);
-            i++;
-            let newItemDetailContent = dataList[i];
-            itemDetailContentArr.push(newItemDetailContent);
-            setImgDetailContent(itemDetailContentArr);
-            i++;
-          }
-        } else {
-          setKeyIndex([]);
-        }
+        //     let newitemContent = dataList[i];
+        //     itemContentArr.push(newitemContent);
+        //     setItemContent(itemContentArr);
+        //     i++;
+        //     let newItemDetailContent = dataList[i];
+        //     itemDetailContentArr.push(newItemDetailContent);
+        //     setImgDetailContent(itemDetailContentArr);
+        //     i++;
+        //   }
+        // } else {
+        //   setKeyIndex([]);
+        // }
       })
       .catch((e) => {
         console.log(e);
@@ -127,8 +101,6 @@ const Weddinghall = ({ postSubmitted }) => {
     window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
   }, [selectedCategory, update]);
 
-  console.log(itemName);
-  console.log(itemContent);
 
   const showingDetail = (e) => {
     console.log(e.target.dataset);
@@ -162,7 +134,7 @@ const Weddinghall = ({ postSubmitted }) => {
       },
     });
   };
-  console.log(selectedItemId);
+
   const handleDeleteClick = () => {
     axios
       .post(`/item/deleteItem/${selectedItemId}`)
@@ -219,10 +191,10 @@ const Weddinghall = ({ postSubmitted }) => {
             marginBottom: "100px",
           }}
         >
-          {keyIndex.map((i) => (
+          {itemList.map((item) => (
             <img
               //   key={image.id}
-              src={previewImg[i]}
+              src={item.itemImg}
               alt=""
               onClick={showingDetail}
               data-bs-toggle="modal"
@@ -232,12 +204,12 @@ const Weddinghall = ({ postSubmitted }) => {
                 width: "250px",
                 height: "250px",
               }}
-              data-bs-src={previewImg[i]}
+              data-bs-src={item.itemImg}
               data-bs-category="웨딩홀"
-              data-bs-itemName={itemName[i]}
-              data-bs-itemContent={itemContent[i]}
-              data-bs-itemId={itemId[i]}
-              data-bs-itemDetailContent={imgDetailContent[i]}
+              data-bs-itemName={item.itemName}
+              data-bs-itemContent={item.content}
+              data-bs-itemId={item.itemId}
+              data-bs-itemDetailContent={item.imgContent}
             />
           ))}
         </div>

@@ -4,7 +4,7 @@ logging:
 
 spring:
   profiles:
-    active: ${SPRING_PROFILES_ACTIVE:prod}
+    active: ${SPRING_PROFILES_ACTIVE:dev}
   datasource:
     url: ${MYSQL_URL}
     username: ${MYSQL_USER}
