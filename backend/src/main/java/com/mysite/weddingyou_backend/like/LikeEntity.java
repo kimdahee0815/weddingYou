@@ -31,7 +31,7 @@ public class LikeEntity  {
     
     @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "item_id", referencedColumnName = "item_id")
+    @JoinColumn(name = "item_id")
     private Item item;
 	
    

@@ -10,6 +10,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,38 +84,36 @@ public class ItemController {
 		 }
 	 
 	 @RequestMapping(value="/itemList/{category1}")
-	 public List<String> getImagesByCategory1(@PathVariable Category1 category1) {
-		 List<ItemDTO> items =null;
-	        items = itemService.getItemsByCategory1(category1);
-	       
-	        List<String> encodingDatas = new ArrayList<>();
-	        
-	        
-	    if(items!=null) {
-	    	for(int i =0;i<items.size();i++) {
-	    		ItemDTO targetItem = items.get(i);
-	    		Category2 category2 = targetItem.getCategory2();
-	    		
-		    	 String path = "C:/Project/itemImg/"+targetItem.getCategory1()+"/"+category2;
-		    	 Path imagePath = Paths.get(path,targetItem.getItemImg());
-		    	 System.out.println(imagePath);
+	 public List<ItemDTO> getItemsByCategory1(@PathVariable Category1 category1) {
+		List<ItemDTO> items =null;
+	  items = itemService.getItemsByCategory1(category1);
+		System.out.println(items);
+	  	// List<String> encodingDatas = new ArrayList<>();
 
-		         try {
-		             byte[] imageBytes = Files.readAllBytes(imagePath);
-		             byte[] base64encodedData = Base64.getEncoder().encode(imageBytes);
-		             
-		             encodingDatas.add(new String(base64encodedData));
-		             
-		         } catch (IOException e) {
-		             e.printStackTrace();
-		            
-		         }
-		        encodingDatas.add(String.valueOf(targetItem.getItemId()));
-		        System.out.println(targetItem.getItemId());
-	    	}
-	    	
-	    }
-	    return encodingDatas;
+	    // if(items!=null) {
+	    // 	for(int i =0;i<items.size();i++) {
+	    // 		ItemDTO targetItem = items.get(i);
+	    // 		Category2 category2 = targetItem.getCategory2();
+	    		
+		  //   	 String path = "C:/Project/itemImg/"+targetItem.getCategory1()+"/"+category2;
+		  //   	 Path imagePath = Paths.get(path,targetItem.getItemImg());
+
+		  //        try {
+		  //            byte[] imageBytes = Files.readAllBytes(imagePath);
+		  //            byte[] base64encodedData = Base64.getEncoder().encode(imageBytes);
+
+		  //            encodingDatas.add(new String(base64encodedData));
+
+		  //        } catch (IOException e) {
+		  //            e.printStackTrace();
+
+		  //        }
+		  //       encodingDatas.add(String.valueOf(targetItem.getItemId()));
+		  //       System.out.println(targetItem.getItemId());
+	    // 	}
+
+	    // }
+	    	return items;
 	    }
 	 
 	 @RequestMapping(value="/itemList/{category1}/{category2}")
@@ -156,143 +155,108 @@ public class ItemController {
 	 
 	//검색
 	@RequestMapping("/search/{keyword}")
-	public List<String> searchItems(@PathVariable ("keyword") String keyword, @RequestBody likeDTO like) {
+	public HashMap<String, List<Item>> searchItems(@PathVariable ("keyword") String keyword, @RequestBody likeDTO like) {
 			String email = like.getEmail();
-			System.out.println("----------------------------------------------------------"+email);
 			List<Item> items =new ArrayList<>();
-	        items = itemService.searchItems(keyword);
-	        System.out.println(items);
-	        System.out.println("----------------------------------------------------------------------");
+	    items = itemService.searchItems(keyword);
+	    HashMap<String, List<Item>> sortedItemsMap = new HashMap<String, List<Item>>();
 	        
-	        List<Item> sortedItems = new ArrayList<>();
-	        List<Integer> sortedCount = new ArrayList<>();
-	        
-	        List<Item> weddingHallItems = new ArrayList<>();
-	        List<Item> studioItems = new ArrayList<>();
-	        List<Item> dressItems = new ArrayList<>();
-	        List<Item> makeupItems = new ArrayList<>();
-	        List<Item> honeymoonItems = new ArrayList<>();
-	        List<Item> bouquetItems = new ArrayList<>();
-	        
-	        if(items.size()!=0) {
-	        	 for(int i =0;i<items.size();i++) {
-	 	        	Category1 category1 = items.get(i).getCategory1();
-	 	        	if(category1.toString().equals("웨딩홀")) {
-	 	        		weddingHallItems.add(items.get(i));
-	 	        	}else if(category1.toString().equals("스튜디오")) {
-	 	        		studioItems.add(items.get(i));
-	 	        	}else if(category1.toString().equals("의상")) {
-	 	        		dressItems.add(items.get(i));
-	 	        	}else if(category1.toString().equals("메이크업")) {
-	 	        		makeupItems.add(items.get(i));
-	 	        	}else if(category1.toString().equals("신혼여행")) {
-	 	        		honeymoonItems.add(items.get(i));
-	 	        	}else if(category1.toString().equals("부케")) {
-	 	        		bouquetItems.add(items.get(i));
-	 	        	}
-	 	        	
-	 	        }
-	        	Collections.sort(weddingHallItems, (a, b) -> b.getItemWriteDate().compareTo(a.getItemWriteDate()));
-	 	        Collections.sort(studioItems, (a, b) -> b.getItemWriteDate().compareTo(a.getItemWriteDate()));
-	 	        Collections.sort(dressItems, (a, b) -> b.getItemWriteDate().compareTo(a.getItemWriteDate()));
-	 	        Collections.sort(makeupItems, (a, b) -> b.getItemWriteDate().compareTo(a.getItemWriteDate()));
-	 	        Collections.sort(honeymoonItems, (a, b) -> b.getItemWriteDate().compareTo(a.getItemWriteDate()));
-	 	        Collections.sort(bouquetItems, (a, b) -> b.getItemWriteDate().compareTo(a.getItemWriteDate()));
-	 	        
-	 	        Item emptyItem = new Item();
-	 	        emptyItem.setItemId(null);
-	 	        
-	 	        sortedItems.addAll(weddingHallItems);
-	 	        sortedItems.add(emptyItem);
-	 	        sortedItems.addAll(studioItems);
-	 	        sortedItems.add(emptyItem);
-	 	        sortedItems.addAll(dressItems); 
-	 	        sortedItems.add(emptyItem);
-	 	        sortedItems.addAll(makeupItems);
-	 	        sortedItems.add(emptyItem);
-	 	        sortedItems.addAll(honeymoonItems);
-	 	        sortedItems.add(emptyItem);
-	 	        sortedItems.addAll(bouquetItems);
-	 	        sortedItems.add(emptyItem);
-	 	        
-	 	        
-	        }
-	        
-	        List<String> encodingDatas = new ArrayList<>();
-	        
+	    List<Item> weddingHallItems = new ArrayList<>();
+	    List<Item> studioItems = new ArrayList<>();
+	    List<Item> dressItems = new ArrayList<>();
+	    List<Item> makeupItems = new ArrayList<>();
+	    List<Item> honeymoonItems = new ArrayList<>();
+	    List<Item> bouquetItems = new ArrayList<>();
 	        
 	    if(items.size()!=0) {
-	    	for(int i =0;i<items.size()+6;i++) {
-	    		
-	    		Item targetItem = sortedItems.get(i);
-	    		System.out.println(targetItem.getItemId());
-	    		if(targetItem.getItemId()!=null) {
-	    			Category2 category2 = targetItem.getCategory2();
-	    			Long itemId = targetItem.getItemId();
-		    		
-			    	 String path = "C:/Project/itemImg/"+targetItem.getCategory1()+"/"+category2;
-			    	 Path imagePath = Paths.get(path,targetItem.getItemImg());
-			    	 System.out.println(imagePath);
+	        for(int i =0;i<items.size();i++) {
+	 	      Category1 category1 = items.get(i).getCategory1();
+	 	      if(category1.toString().equals("웨딩홀")) {
+	 	        weddingHallItems.add(items.get(i));
+	 	      }else if(category1.toString().equals("스튜디오")) {
+	 	        studioItems.add(items.get(i));
+	 	      }else if(category1.toString().equals("의상")) {
+	 	        dressItems.add(items.get(i));
+	 	      }else if(category1.toString().equals("메이크업")) {
+	 	        makeupItems.add(items.get(i));
+	 	      }else if(category1.toString().equals("신혼여행")) {
+	 	        honeymoonItems.add(items.get(i));
+	 	      }else if(category1.toString().equals("부케")) {
+	 	        bouquetItems.add(items.get(i));
+	 	      }
+	 	        	
+	 	    }
+	      Collections.sort(weddingHallItems, (a, b) -> b.getItemWriteDate().compareTo(a.getItemWriteDate()));
+	 	    Collections.sort(studioItems, (a, b) -> b.getItemWriteDate().compareTo(a.getItemWriteDate()));
+	 	    Collections.sort(dressItems, (a, b) -> b.getItemWriteDate().compareTo(a.getItemWriteDate()));
+	 	    Collections.sort(makeupItems, (a, b) -> b.getItemWriteDate().compareTo(a.getItemWriteDate()));
+	 	    Collections.sort(honeymoonItems, (a, b) -> b.getItemWriteDate().compareTo(a.getItemWriteDate()));
+	 	    Collections.sort(bouquetItems, (a, b) -> b.getItemWriteDate().compareTo(a.getItemWriteDate()));
 
-			         try {
-			             byte[] imageBytes = Files.readAllBytes(imagePath);
-			             byte[] base64encodedData = Base64.getEncoder().encode(imageBytes);
-			             
-			             encodingDatas.add(new String(base64encodedData));
-			             
-			         } catch (IOException e) {
-			             e.printStackTrace();
-			            
-			         }
-			         
-			        
-			        
-			         encodingDatas.add(String.valueOf(targetItem.getItemId()));
-			         encodingDatas.add(String.valueOf(targetItem.getItemName()));
-			         encodingDatas.add(String.valueOf(targetItem.getImgContent()));
-			         encodingDatas.add(String.valueOf(targetItem.getLike().size()));
-			         int res = 0;
-			         if(email==null) { //로그인하지 않았을 경우
-			        	 res = -1;
-			         }else { //로그인했을 경우
-			        	
-					        List<LikeEntity> likeItem = new ArrayList<>();
-					 		if(userRepository.findByEmail(email)!=null) {
-					 			UserLogin user = userRepository.findByEmail(email);
-					 			likeItem = likeService.getLikeListByItemIdAndUser(user, targetItem);
-					 		
-					 			if(likeItem.size()!=0) { //찾은 결과가 있을 때
-					 				res = 1;
-					 				System.out.println("=========================="+likeItem.get(0).getItem().getItemId());
-					 			}else {
-					 				res = 0;
-					 			}
-					 		}else if(plannerRepository.findByEmail(email)!=null) {
-					 			PlannerLogin planner = plannerRepository.findByEmail(email);
-					 			likeItem = likeService.getLikeListByItemIdAndPlanner(planner, targetItem);
-					 			
-					 			if(likeItem.size()!=0) {
-					 				res = 1;
-					 				System.out.println("================================="+likeItem.get(0).getItem().getItemId());
-					 			}else  {
-					 				res = 0;
-					 			}
-					 		
-					 		}
-			         }
-			         encodingDatas.add(String.valueOf(res));
-			         
-			       
-	    		}
-	    		else {
-	    			encodingDatas.add("/");
-	    			
-	    		}
-		       
-	    	}
-	    	
+				sortedItemsMap.put("weddinghall", weddingHallItems);
+				sortedItemsMap.put("studio", studioItems);
+				sortedItemsMap.put("dress", dressItems);
+				sortedItemsMap.put("makeup", makeupItems);
+				sortedItemsMap.put("honeymoon", honeymoonItems);
+				sortedItemsMap.put("bouquet", bouquetItems);	        
 	    }
-	    return encodingDatas;
+
+	    //     List<String> encodingDatas = new ArrayList<>();
+
+	    // if(items.size()!=0) {
+	    // 	for(int i =0;i<items.size()+6;i++) {
+
+	    // 		Item targetItem = sortedItems.get(i);
+	    // 		System.out.println(targetItem.getItemId());
+	    // 		if(targetItem.getItemId()!=null) {
+	    // 			Category2 category2 = targetItem.getCategory2();
+	    // 			Long itemId = targetItem.getItemId();
+
+			//     	 String path = "C:/Project/itemImg/"+targetItem.getCategory1()+"/"+category2;
+			//     	 Path imagePath = Paths.get(path,targetItem.getItemImg());
+			//     	 System.out.println(imagePath);
+
+			//          try {
+			//              byte[] imageBytes = Files.readAllBytes(imagePath);
+			//              byte[] base64encodedData = Base64.getEncoder().encode(imageBytes);
+
+			//              encodingDatas.add(new String(base64encodedData));
+
+			//          } catch (IOException e) {
+			//              e.printStackTrace();
+
+			//          }
+
+			//          encodingDatas.add(String.valueOf(targetItem.getItemId()));
+			//          encodingDatas.add(String.valueOf(targetItem.getItemName()));
+			//          encodingDatas.add(String.valueOf(targetItem.getImgContent()));
+			//          encodingDatas.add(String.valueOf(targetItem.getLike().size()));
+			// int res = 0;
+			// if(email==null) { //로그인하지 않았을 경우
+			//   res = -1;
+			// }else { //로그인했을 경우
+			// 	List<LikeEntity> likeItem = new ArrayList<>();
+			// 	if(userRepository.findByEmail(email)!=null) {
+			// 		UserLogin user = userRepository.findByEmail(email);
+			// 		likeItem = likeService.getLikeListByItemIdAndUser(user, targetItem);
+					
+			// 		if(likeItem.size()!=0) { //찾은 결과가 있을 때
+			// 		 	res = 1;
+			// 		}else {
+			// 		 	res = 0;
+			// 		}
+			// 	}else if(plannerRepository.findByEmail(email)!=null) {
+			// 		PlannerLogin planner = plannerRepository.findByEmail(email);
+			// 		likeItem = likeService.getLikeListByItemIdAndPlanner(planner, targetItem);
+
+			// 		if(likeItem.size()!=0) {
+			// 		 	res = 1;
+			// 		}else  {
+			// 		 	res = 0;
+			// 		}
+			// 	}
+			// }     
+	    return sortedItemsMap;
 		     
 	}
 	        

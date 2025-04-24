@@ -53,5 +53,9 @@ public class likeDTO {
 	
 	private String sortBy;
 
+	public static likeDTO fromEntity(LikeEntity likeEntity) {
+		likeDTO dto = new likeDTO();
+		return dto;
+}
     
 }

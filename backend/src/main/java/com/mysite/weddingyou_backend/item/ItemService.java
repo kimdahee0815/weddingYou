@@ -57,10 +57,15 @@ public class ItemService {
         List<Item> items = itemRepository.findByCategory1(category1);
         List<ItemDTO> itemDTOs = new ArrayList<>();
         for (Item item : items) {
-            itemDTOs.add(ItemDTO.fromEntity(item));
+            Item itemWithLikes = getItemWithLikes(item.getItemId());
+            itemDTOs.add(ItemDTO.fromEntity(itemWithLikes));
         }
         Collections.sort(itemDTOs, (a, b) -> b.getItemWriteDate().compareTo(a.getItemWriteDate()));;
         return itemDTOs;
+    }
+
+    public Item getItemWithLikes(Long itemId) {
+        return itemRepository.findItemWithLikes(itemId);
     }
 
     public Item getItemById(Long itemId) {

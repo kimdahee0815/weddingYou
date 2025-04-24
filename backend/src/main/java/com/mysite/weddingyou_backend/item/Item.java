@@ -6,6 +6,7 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.mysite.weddingyou_backend.like.LikeEntity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -40,10 +41,19 @@ public class Item {
 	private String imgContent;
 	
 	@JsonManagedReference
-	@OneToMany(fetch = FetchType.LAZY)
-	@JoinColumn(name = "item_id")
+	@OneToMany(mappedBy = "item", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<LikeEntity> like;
-	 
+
+	public void addLike(LikeEntity likeEntity) {
+		like.add(likeEntity);
+		likeEntity.setItem(this);
+	}
+
+	public void removeLike(LikeEntity likeEntity) {
+		like.remove(likeEntity);
+		likeEntity.setItem(null);
+	}
+
 	@Column(name = "item_name", nullable = false)
     private String itemName;
 	
