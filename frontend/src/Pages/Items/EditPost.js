@@ -11,7 +11,6 @@ const EditPost = () => {
   const location = useLocation();
   const originalContent = location.state.originalContent;
   const originalimgDetailContent = location.state.originalimgDetailContent;
-  console.log(location.state);
   const originalTitle = location.state.originalTitle;
   const engTitle = location.state.engTitle;
   const navigate = useNavigate();
@@ -34,13 +33,6 @@ const EditPost = () => {
         responseType: 'blob'  
       })
       .then((res) => {
-        // const byteCharacters = atob(res.data);
-        // const byteNumbers = new Array(byteCharacters.length);
-        // for (let i = 0; i < byteCharacters.length; i++) {
-        //   byteNumbers[i] = byteCharacters.charCodeAt(i);
-        // }
-        // const byteArray = new Uint8Array(byteNumbers);
-        // const blob = new Blob([byteArray], { type: "image/jpeg" });
         const imageUrl = URL.createObjectURL(res.data);
         setImage(imageUrl);
         const reader = new FileReader();

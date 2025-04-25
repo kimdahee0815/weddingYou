@@ -34,7 +34,8 @@ function Mypage() {
   const [passwordcheckmessage, setPasswordCheckMessage] = useState("");
 
   const [previewUrl, setPreviewUrl] = useState(null);
-
+  const [image, setImage] = useState(null);
+  
   const { category } = useParams();
 
   const userEmail = window.sessionStorage.getItem("email");
@@ -79,33 +80,31 @@ function Mypage() {
           console.log(e);
         });
       axios
-        .post("/user/getprofileImg", { email: userEmail })
+        .post("/user/getprofileImg", { email: userEmail }, 
+          {
+            responseType: 'blob'  
+          })
         .then((res) => {
-          const byteCharacters = atob(res.data);
-          const byteNumbers = new Array(byteCharacters.length);
-          for (let i = 0; i < byteCharacters.length; i++) {
-            byteNumbers[i] = byteCharacters.charCodeAt(i);
-          }
-          const byteArray = new Uint8Array(byteNumbers);
-          const blob = new Blob([byteArray], { type: "image/jpeg" });
-
+          const imageUrl = URL.createObjectURL(res.data);
+          setImage(imageUrl);
           const reader = new FileReader();
           reader.onload = () => {
-            setPreviewUrl(reader.result);
+            setPreviewUrl(reader.result);       
           };
-          reader.readAsDataURL(blob);
+          reader.readAsDataURL(res.data);
           setFinish(true);
         })
         .catch((e) => {
           setPreviewUrl(profileimage);
           console.log(e);
-          if (e.response.data.message === "프로필 사진이 없습니다!") {
-            setFinish(true);
-          } else if (e.reponse.data.message === "로그인 하세요!") {
-            setFinish(true);
-          } else {
-            setFinish(false);
-          }
+          // if (e.response.data.message === "프로필 사진이 없습니다!") {
+          //   setFinish(true);
+          // } else if (e.reponse.data.message === "로그인 하세요!") {
+          //   setFinish(true);
+          // } else {
+          //   setFinish(false);
+          // }
+          setFinish(true);
         });
     }
     if (category === "planner") {
@@ -124,32 +123,29 @@ function Mypage() {
           console.log(e);
         });
       axios
-        .post("/planner/getprofileImg", { email: userEmail })
+        .post("/planner/getprofileImg", { email: userEmail }, {
+          responseType: 'blob'  
+        })
         .then((res) => {
-          const byteCharacters = atob(res.data);
-          const byteNumbers = new Array(byteCharacters.length);
-          for (let i = 0; i < byteCharacters.length; i++) {
-            byteNumbers[i] = byteCharacters.charCodeAt(i);
-          }
-          const byteArray = new Uint8Array(byteNumbers);
-          const blob = new Blob([byteArray], { type: "image/jpeg" });
-
+          const imageUrl = URL.createObjectURL(res.data);
+          setImage(imageUrl);
           const reader = new FileReader();
           reader.onload = () => {
-            setPreviewUrl(reader.result);
+            setPreviewUrl(reader.result);       
           };
-          reader.readAsDataURL(blob);
+          reader.readAsDataURL(res.data);
           setFinish(true);
         })
         .catch((e) => {
           setPreviewUrl(profileimage);
-          if (e.response.data.message === "프로필 사진이 없습니다!") {
-            setFinish(true);
-          } else if (e.reponse.data.message === "로그인 하세요!") {
-            setFinish(true);
-          } else {
-            setFinish(false);
-          }
+          // if (e.response.data.message === "프로필 사진이 없습니다!") {
+          //   setFinish(true);
+          // } else if (e.reponse.data.message === "로그인 하세요!") {
+          //   setFinish(true);
+          // } else {
+          //   setFinish(false);
+          // }
+          setFinish(true);
         });
     }
   };

@@ -2,6 +2,8 @@ package com.mysite.weddingyou_backend.plannerUpdateDelete;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -20,9 +22,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.mysite.weddingyou_backend.S3Service;
 import com.mysite.weddingyou_backend.like.LikeRepository;
 import com.mysite.weddingyou_backend.plannerLogin.PlannerLoginRepository;
 import com.mysite.weddingyou_backend.userLogin.UserLoginRepository;
+import com.mysite.weddingyou_backend.userUpdateDelete.UserUpdateDelete;
 import com.mysite.weddingyou_backend.userUpdateDelete.UserUpdateDeleteDTO;
 
 @RestController //데이터를 반환
@@ -30,6 +34,13 @@ public class PlannerUpdateDeleteController {
 	
 	@Autowired
 	PlannerUpdateDeleteService service;
+
+	@Autowired
+	private final S3Service s3Service;
+
+	public PlannerUpdateDeleteController(S3Service s3Service) {
+	  this.s3Service = s3Service;
+	}
 	
 	@Autowired
 	PlannerLoginRepository plannerRepository;
@@ -114,30 +125,24 @@ public class PlannerUpdateDeleteController {
 		    }
 		}
 	
-	 
-	 @RequestMapping(value="/planner/getprofileImg",  produces = MediaType.IMAGE_JPEG_VALUE)
-	 public ResponseEntity<byte[]> getImage(@RequestBody UserUpdateDeleteDTO user) {
-		 System.out.println("유저이메일: " + user.getEmail());
-		 PlannerUpdateDelete searchedPlanner = service.getPlannerByEmail(user.getEmail());
-	     if (searchedPlanner != null) {
-	         Path imagePath = Paths.get("C:/Project/profileImg/planner",searchedPlanner.getPlannerImg());
-	         
-	         try {
-	             byte[] imageBytes = Files.readAllBytes(imagePath);
-	             byte[] base64encodedData = Base64.getEncoder().encode(imageBytes);
-	              return ResponseEntity.ok()
-	                      .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + 
-	                    		  searchedPlanner.getPlannerImg() + "\"")
-	                      .body(base64encodedData);
-	         } catch (IOException e) {
-	             e.printStackTrace();
-	             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-	         }
-	      
-	     } else {
-	         return ResponseEntity.notFound().build();
-	     }
-	 }
-	 
+	@RequestMapping(value="/planner/getprofileImg",  produces = MediaType.IMAGE_JPEG_VALUE)
+	public ResponseEntity<byte[]> getImage(@RequestBody UserUpdateDeleteDTO user) {
+		PlannerUpdateDelete searchedPlanner = service.getPlannerByEmail(user.getEmail());
+		if (searchedPlanner != null) {
+			String fullPath = searchedPlanner.getPlannerImg();
+    
+			if(fullPath != null){
+				String key = fullPath.substring(fullPath.indexOf(".com/") + 5);
+				key = URLDecoder.decode(key, StandardCharsets.UTF_8);
+				byte[] imageBytes = s3Service.downloadFile(key);
+	
+				HttpHeaders headers = new HttpHeaders();
+				headers.setContentType(MediaType.IMAGE_JPEG);
+	
+				return new ResponseEntity<>(imageBytes, headers, HttpStatus.OK); 
+			}
+		}
+		return ResponseEntity.notFound().build();
+	}
 
 }

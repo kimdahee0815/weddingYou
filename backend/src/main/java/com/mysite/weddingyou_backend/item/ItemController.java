@@ -7,7 +7,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -24,11 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.mysite.weddingyou_backend.S3Service;
 import com.mysite.weddingyou_backend.item.Item.Category1;
 import com.mysite.weddingyou_backend.item.Item.Category2;
-import com.mysite.weddingyou_backend.like.LikeService;
 import com.mysite.weddingyou_backend.like.likeDTO;
-import com.mysite.weddingyou_backend.plannerLogin.PlannerLoginRepository;
-import com.mysite.weddingyou_backend.userLogin.UserLoginRepository;
-
 @RestController
 @RequestMapping("/item")
 public class ItemController {

@@ -1112,14 +1112,13 @@ function UserUpdate() {
                         class="form-control "
                         id="introduction"
                         ref={introInput}
-                        style={{ overflowY: "scroll" }}
+                        style={{ overflowY: "scroll", fontSize: "1.1em"}}
                         value={introduction}
                         onChange={onChange}
                         placeholder={introduction}
                         autoComplete="off"
                         cols="10"
                         rows="8"
-                        style={{ fontSize: "1.1em" }}
                         maxLength="1000"
                       />
                       <div
@@ -1496,14 +1495,13 @@ function UserUpdate() {
                         class="form-control "
                         id="introduction"
                         ref={introInput}
-                        style={{ overflowY: "scroll" }}
+                        style={{ overflowY: "scroll", fontSize: "1.1em" }}
                         value={introduction}
                         onChange={onChange}
                         placeholder={introduction}
                         autoComplete="off"
                         cols="10"
                         rows="8"
-                        style={{ fontSize: "1.1em" }}
                         maxLength="1000"
                       />
                       <div
