@@ -3,7 +3,7 @@ import "../Css/Home.css";
 import Footer from "../Components/Footer";
 import imgLogo from "../Assets/logo.png";
 import { useNavigate } from "react-router-dom";
-import { useState, useCallback, useEffect, useRef } from "react";
+import { useState, useCallback, useEffect } from "react";
 import Animation from "../Components/Animation";
 import Sidesection from "../Components/Sidesection";
 
@@ -39,7 +39,6 @@ function Home() {
   const [finish, setFinish] = useState(false);
   const handleKeyPress = (event) => {
     if (event.key === "Enter") {
-      // 엔터키로 이동
       navigate(`/searchItems`, { state: { keyword: searchItem } });
     }
   };
@@ -49,7 +48,13 @@ function Home() {
 
   const gotoDetailInfo = (e) => {
     navigate("/imgDetail", {
-      state: { itemId: currentItem.itemId, imgsrc: currentItem.itemImg },
+      state: { 
+        itemId: currentItem.itemId, 
+        imgsrc: currentItem.itemImg, 
+        content: currentItem.content,
+        imgContent: currentItem.imgContent,
+        itemName: currentItem.itemName 
+      },
     });
   };
 
@@ -68,11 +73,10 @@ function Home() {
         const {data: userData} = await axios.post('/user/userSearch',{
           email: sessionStorage.getItem("email")
         })
-        console.log(userData)
+
         const {data: plannerData} = await axios.post('/planner/plannerSearch',{
           email: sessionStorage.getItem("email")
         })
-        console.log(plannerData)
         
         if(userData || plannerData){
           setIsLoggedIn(true);
@@ -130,55 +134,56 @@ function Home() {
   }, []);
 
   const manageLikeList = useCallback(async (e) => {
-    console.log("🔷 manageLikeList called", selectLikeState, currentItem?.itemId);
-    console.log("현재 selectLikeState:", selectLikeState);
+    const email = sessionStorage.getItem("email");
+    const itemId = currentItem.itemId;
+
+    setWholeItems(prev => prev.map(items =>
+      items.map(item =>
+        item.itemId === itemId
+          ? {
+              ...item,
+              likeCount: item.likeCount + (selectLikeState ? -1 : 1),
+              isLiked: !selectLikeState
+            }
+          : item
+      )
+    ));
+
     try {
       if (selectLikeState) {
-        console.log("🧊 Deleting like");
         await axios.post(`/like/delete`, {
-          itemId: currentItem.itemId,
-          email: sessionStorage.getItem("email"),
+          itemId,
+          email,
         });
-  
-        setWholeItems(prev => prev.map(items => 
-          items.map(item => 
-            item.itemId === currentItem.itemId 
-              ? {...item, likeCount: item.likeCount - 1, isLiked: false}
-              : item
-          )
-        ));
       } else {
-        console.log("🔥 Creating like");
         await axios.post(`/like/create`, {
-          itemId: currentItem.itemId,
-          email: sessionStorage.getItem("email"),
+          itemId,
+          email,
         });
-  
-        setWholeItems(prev => prev.map(items => 
-          items.map(item => 
-            item.itemId === currentItem.itemId  
-              ? {...item, likeCount: item.likeCount + 1, isLiked: true}
-              : item
-          )
-        ));
       }
-      console.log("✅ Like operation finished");
+
       return true;
     } catch (error) {
-      console.error("❌ Error in manageLikeList", error);
       console.error(error);
+      setWholeItems(prev => prev.map(items =>
+        items.map(item =>
+          item.itemId === itemId
+            ? {
+                ...item,
+                likeCount: item.likeCount + (selectLikeState ? 1 : -1),
+                isLiked: selectLikeState
+              }
+            : item
+        )
+      ));
       return false;
     }
   },[selectLikeState, currentItem?.itemId]);
 
   const handleLikeClick = async () => {
-    console.log("🟢 handleLikeClick called");
     const success = await manageLikeList();
     if (success) {
       setSelectLikeState(prev => !prev);
-      console.log("🟢 handleLikeClick success");
-    }else {
-      console.log("🔴 handleLikeClick failed");
     }
   };
 
@@ -578,7 +583,6 @@ function Home() {
                           class="modal-title justify-content-center "
                           id="imgDetailModal"
                           style={{ fontSize: "1.9em" }}
-                          // ref={modalImgTitle}
                         >
                           - {currentItem?.itemName} -
                         </h1>
@@ -618,7 +622,6 @@ function Home() {
                               marginLeft: "20px",
                             }}
                             alt=""
-                            // ref={modalImg}
                           />
                           <div
                             style={{

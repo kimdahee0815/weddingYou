@@ -23,19 +23,16 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class ItemDTO {
-	
 
 	@NotNull
 	private Long itemId;
 	
 	@NotNull
     private String itemImg;
-   
 	
 	@NotNull
     private String itemName;
-    
-	
+
     private LocalDateTime itemWriteDate;
 	
 	@NotNull
@@ -47,7 +44,6 @@ public class ItemDTO {
 	@NotNull
     private Category1 category1;
 	
-
 	@NotNull
     private Category2 category2;
 

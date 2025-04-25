@@ -54,7 +54,7 @@ const WritePost = () => {
         formData.append("category1", selectedCategory1);
         formData.append("category2", category2);
         formData.append("file", image);
-        formData.append("imgDetailContent", imgDetailContent);
+        formData.append("imgContent", imgDetailContent);
 
         axios.post("/item/insertItem", formData, {
           headers: { "Content-Type": "multipart/form-data" }

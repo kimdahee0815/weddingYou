@@ -1,32 +1,12 @@
 import "../Css/main.css";
 import Footer from "../Components/Footer";
 import NavigationBar from "../Components/NavigationBar";
-import { Link, useNavigate, useLocation } from "react-router-dom";
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { useLocation } from "react-router-dom";
 import Sidesection from "../Components/Sidesection";
 
 function ImgDetail() {
-  const navigate = useNavigate();
-  const { imgsrc } = useLocation().state;
-  const { itemId } = useLocation().state;
-  const [imgContent, setImgContent] = useState("");
-  const [itemName, setItemName] = useState("");
-  const [imgDetailContent, setImgDetailContent] = useState("");
-  useEffect(() => {
-    axios
-      .get(`/item/getItemList/${itemId}`)
-      .then((res) => {
-        console.log(res);
-        const data = res.data;
-        setImgContent(data.imgContent);
-        setItemName(data.itemName);
-        setImgDetailContent(data.imgDetailContent);
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-  }, []);
+  const { imgsrc, itemId, content, imgContent, itemName } = useLocation().state;
+
   return (
     <div className="containerbox">
       <div className="mainlayout box1">
@@ -57,8 +37,8 @@ function ImgDetail() {
             >
               <textarea
                 className="content-textarea"
-                placeholder={imgContent}
-                value={imgContent}
+                placeholder={content}
+                value={content}
                 style={{ padding: "20px", fontSize: "1.4em", height: "100%" }}
                 disabled
               />
@@ -74,8 +54,8 @@ function ImgDetail() {
           >
             <textarea
               className="content-textarea"
-              placeholder={imgDetailContent}
-              value={imgDetailContent}
+              placeholder={imgContent}
+              value={imgContent}
               style={{ padding: "20px", fontSize: "1.4em" }}
               disabled
             />

@@ -1,10 +1,10 @@
 package com.mysite.weddingyou_backend.item;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,10 +27,10 @@ public class ItemService {
         this.itemRepository = itemRepository;
         this.likeRepository=likeRepository;
     }
-   
+
 
     public List<Item> getItemsSortedBy(Category1 category1, Category2 category2, String sort) {
-        List<Item> itemList = itemRepository.findByCategory1AndCategory2(category1, category2);
+        List<Item> itemList = itemRepository.findByCategory1AndCategory2FetchJoin(category1, category2);
     
         if (sort == null || sort.equals("latest")) {
             Collections.sort(itemList, (a, b) -> b.getItemWriteDate().compareTo(a.getItemWriteDate()));
@@ -45,22 +45,20 @@ public class ItemService {
     }
     
     public List<ItemDTO> getItemsByCategory1AndCategory2(Category1 category1, Category2 category2) {
-        List<Item> items = itemRepository.findByCategory1AndCategory2(category1, category2);
-        List<ItemDTO> itemDTOs = new ArrayList<>();
-        for (Item item : items) {
-            itemDTOs.add(ItemDTO.fromEntity(item));
-        }
+        List<Item> items = itemRepository.findByCategory1AndCategory2FetchJoin(category1, category2);
+        List<ItemDTO> itemDTOs = items.stream()
+            .map(ItemDTO::fromEntity)
+            .sorted((a, b) -> b.getItemWriteDate().compareTo(a.getItemWriteDate()))
+            .collect(Collectors.toList());
         return itemDTOs;
     }
     
     public List<ItemDTO> getItemsByCategory1(Category1 category1) {
-        List<Item> items = itemRepository.findByCategory1(category1);
-        List<ItemDTO> itemDTOs = new ArrayList<>();
-        for (Item item : items) {
-            Item itemWithLikes = getItemWithLikes(item.getItemId());
-            itemDTOs.add(ItemDTO.fromEntity(itemWithLikes));
-        }
-        Collections.sort(itemDTOs, (a, b) -> b.getItemWriteDate().compareTo(a.getItemWriteDate()));;
+        List<Item> items = itemRepository.findByCategory1FetchJoin(category1); 
+        List<ItemDTO> itemDTOs = items.stream()
+            .map(ItemDTO::fromEntity)
+            .sorted((a, b) -> b.getItemWriteDate().compareTo(a.getItemWriteDate()))
+            .collect(Collectors.toList());
         return itemDTOs;
     }
 
@@ -79,7 +77,8 @@ public class ItemService {
     
     public Item createItem(ItemDTO itemDTO) {
         Item item = new Item();
-        item.setImgContent(itemDTO.getContent());
+        item.setImgContent(itemDTO.getImgContent());
+        item.setContent(itemDTO.getContent());
         item.setItemName(itemDTO.getItemName());
         item.setCategory1(itemDTO.getCategory1());
         item.setCategory2(itemDTO.getCategory2());
@@ -96,7 +95,8 @@ public class ItemService {
         item.setItemName(itemDTO.getItemName());
         item.setCategory1(itemDTO.getCategory1());
         item.setCategory2(itemDTO.getCategory2());
-        item.setImgContent(itemDTO.getContent());
+        item.setContent(itemDTO.getContent());
+        item.setImgContent(itemDTO.getImgContent());
         if(itemDTO.getItemImg()!=null) {
             item.setItemImg(itemDTO.getItemImg());
         }
@@ -110,22 +110,21 @@ public class ItemService {
     }
 
     public int getLikeCount(Long itemId) {
-    	int like_count=0;
-    	 Item item = new Item();
-		 item.setItemId(itemId);
-		 LikeEntity like = new LikeEntity();
-		 like.setItem(item);
-		 List<LikeEntity> likeEntities = likeRepository.findAllByItem(item);
-		 like_count = likeEntities.size();
-		//like_count = likeEntities.get(0).getLikeCount();
+        int like_count=0;
+    	Item item = new Item();
+		item.setItemId(itemId);
+		LikeEntity like = new LikeEntity();
+		like.setItem(item);
+		List<LikeEntity> likeEntities = likeRepository.findAllByItem(item);
+		like_count = likeEntities.size();
 		return like_count;
 	 }
     
   //검색
   	public List<Item> searchItems(String keyword) {
   		keyword = keyword.toLowerCase(); // 검색어를 소문자로 변환
-          return itemRepository.findByItemNameContaining(keyword);
-      }
+        return itemRepository.findByItemNameContaining(keyword);
+    }
 
 }
 

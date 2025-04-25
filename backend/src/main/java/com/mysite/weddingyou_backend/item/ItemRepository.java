@@ -12,13 +12,25 @@ import com.mysite.weddingyou_backend.item.Item.Category2;
 
 public interface ItemRepository extends JpaRepository<Item, Long> {
 
-	List<Item> findByCategory1AndCategory2(Category1 category1, Category2 category2);
+	@Query("SELECT DISTINCT i FROM Item i " +
+       "LEFT JOIN FETCH i.like l " +
+       "LEFT JOIN FETCH l.user " +
+       "LEFT JOIN FETCH l.planner " +
+       "WHERE i.category1 = :category1 AND i.category2 = :category2")
+	List<Item> findByCategory1AndCategory2FetchJoin(@Param("category1") Category1 category1,
+                                                @Param("category2") Category2 category2);
 	
 	List<Item> findByCategory1(Category1 category1);
 	
 	List<Item> findByItemNameContaining(String keyword); //검색 메소드
 
-	@Query("SELECT i FROM Item i LEFT JOIN FETCH i.like WHERE i.itemId = :itemId")
-  Item findItemWithLikes(@Param("itemId") Long itemId);
+	@Query("SELECT i FROM Item i LEFT JOIN FETCH i.like l LEFT JOIN FETCH l.user LEFT JOIN FETCH l.planner WHERE i.itemId = :itemId")
+	Item findItemWithLikes(@Param("itemId") Long itemId);
 
+	@Query("SELECT DISTINCT i FROM Item i " +
+       "LEFT JOIN FETCH i.like l " +
+       "LEFT JOIN FETCH l.user " +
+       "LEFT JOIN FETCH l.planner " +
+       "WHERE i.category1 = :category1")
+	List<Item> findByCategory1FetchJoin(@Param("category1") Category1 category1);
 }

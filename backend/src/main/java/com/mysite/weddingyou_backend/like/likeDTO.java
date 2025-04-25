@@ -39,9 +39,6 @@ public class likeDTO {
 	private UserLogin user;
 
 	private PlannerLogin planner;
-
-	@NotNull
-	private Integer likeCount;
 	
 	private String location;
 
@@ -60,15 +57,15 @@ public class likeDTO {
 
     likeDTO dto = new likeDTO();
     dto.setItemId(likeEntity.getItem() != null ? likeEntity.getItem().getItemId() : null);
-    dto.setLikeCount(likeEntity.getLikeCount());
     dto.setLikeWriteDate(likeEntity.getLikeWriteDate());
     dto.setLocation(likeEntity.getLocation());
 
-    // 유저 또는 플래너 이메일 넣기
     if (likeEntity.getUser() != null) {
         dto.setEmail(likeEntity.getUser().getEmail());
+				dto.setUser(likeEntity.getUser());
     } else if (likeEntity.getPlanner() != null) {
         dto.setEmail(likeEntity.getPlanner().getEmail());
+				dto.setPlanner(likeEntity.getPlanner());
     }
 
     return dto;

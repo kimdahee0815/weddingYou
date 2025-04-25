@@ -19,7 +19,7 @@ public interface LikeRepository extends JpaRepository<LikeEntity, Long> {
 	List<LikeEntity> findByUser(UserLogin user);
 	
 	List<LikeEntity> findByPlanner(PlannerLogin planner);
-//	
+	
 	List<LikeEntity> findByUserAndItem_Category1AndItem_Category2(UserLogin user, Category1 category1, Category2 category2);
 	
 	List<LikeEntity> findByUserAndItem_Category1(UserLogin user, Category1 category1);
@@ -35,4 +35,6 @@ public interface LikeRepository extends JpaRepository<LikeEntity, Long> {
 	boolean existsByUserAndItem(UserLogin user, Item item);
 	
 	boolean existsByPlannerAndItem(PlannerLogin planner, Item item);
+
+	int countByItemId(Long itemId);
 }

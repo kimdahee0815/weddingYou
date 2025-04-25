@@ -24,7 +24,6 @@ public class UserRegisterController {
 		try {
 			createdUser = userService.createUser(userDTO);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);

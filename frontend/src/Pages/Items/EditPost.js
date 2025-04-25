@@ -75,7 +75,7 @@ const EditPost = () => {
     }
     formData.append("itemName", itemName);
     formData.append("content", content);
-    formData.append("imgDetailContent", imgDetailContent);
+    formData.append("imgContent", imgDetailContent);
     axios
       .post(`/item/updateItem/${itemId}`, formData, {
         headers: { "Content-Type": "multipart/form-data" },

@@ -38,20 +38,16 @@ public class LikeEntity  {
     @JoinColumn(name = "item_id")
     private Item item;
 	
-    @ManyToOne(fetch=FetchType.EAGER)
+    @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name = "useremail", referencedColumnName="email")
     private UserLogin user;
     
-    @ManyToOne(fetch=FetchType.EAGER)
+    @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name = "planneremail", referencedColumnName="email")
     private PlannerLogin planner;
-	
-    @Column(name = "like_count", nullable = false)
-    private Integer likeCount = 0;
-    
+
     @Column(name = "location")
     private String location;
-    
 
     @Column(name = "like_write_date")
     private LocalDateTime likeWriteDate;
