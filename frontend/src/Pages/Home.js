@@ -3,7 +3,7 @@ import "../Css/Home.css";
 import Footer from "../Components/Footer";
 import imgLogo from "../Assets/logo.png";
 import { useNavigate } from "react-router-dom";
-import { useState, useLayoutEffect, useEffect, useRef } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import Animation from "../Components/Animation";
 import Sidesection from "../Components/Sidesection";
 
@@ -30,21 +30,11 @@ function Home() {
   const navigate = useNavigate();
 
   const [searchItem, setSearchItem] = useState("");
-  const [checkLike, setCheckLike] = useState(false);
   const [wholeItems, setWholeItems] = useState([]);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  const [likseSelect, setLikeSelect] = useState(false);
-  const [modalBackgroundColor, setChangeModalBackgroundColor] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState("");
+  const [currentItem, setCurrentItem] = useState();
   const [selectLikeState, setSelectLikeState] = useState(undefined);
-
-  const modalImg = useRef();
-  const modalImgContent = useRef();
-  const modalImgTitle = useRef();
-  const modalItemId = useRef();
-
-  const [currentSrc, setCurrentSrc] = useState("");
-  const [currentItemId, setCurrentItemId] = useState("");
 
   const [finish, setFinish] = useState(false);
   const handleKeyPress = (event) => {
@@ -59,7 +49,7 @@ function Home() {
 
   const gotoDetailInfo = (e) => {
     navigate("/imgDetail", {
-      state: { itemId: currentItemId, imgsrc: currentSrc },
+      state: { itemId: currentItem.itemId, imgsrc: currentItem.itemImg },
     });
   };
 
@@ -71,472 +61,126 @@ function Home() {
       }
     }, 5000);
   }, [finish]);
+
+  useEffect(()=>{
+    const userCheck = async () =>{
+      if(sessionStorage.getItem("email")){
+        const {data: userData} = await axios.post('/user/userSearch',{
+          email: sessionStorage.getItem("email")
+        })
+        console.log(userData)
+        const {data: plannerData} = await axios.post('/planner/plannerSearch',{
+          email: sessionStorage.getItem("email")
+        })
+        console.log(plannerData)
+        
+        if(userData || plannerData){
+          setIsLoggedIn(true);
+        }else{
+          setIsLoggedIn(false);
+        }
+      }
+    }
+    userCheck();
+  },[])
+
   useEffect(() => {
     const getWholeItems = async () =>{
       try {
-        const promises = category.map(c => {
-          console.log(c)
-          return axios.get(`/item/itemList/${c}`)     
-        }          
-        )
+        const promises = category.map(c =>axios.get(`/item/itemList/${c}`))
         const responses = await Promise.all(promises);
         let items = responses.map(res => res.data);
-        console.log(items)
+        console.log(items.map(itemList => itemList.map(item => ({
+          ...item,
+          likeCount:item.like?.length,
+          isLiked: item.like?.some(like => 
+            like.user?.email === sessionStorage.getItem("email") ||
+            like.planner?.email === sessionStorage.getItem("email")
+          ) || false,
+        }))))
         setWholeItems(items.map(itemList => itemList.map(item => ({
           ...item,
           likeCount:item.like?.length,
           isLiked: item.like?.some(like => 
             like.user?.email === sessionStorage.getItem("email") ||
             like.planner?.email === sessionStorage.getItem("email")
-          )
+          ) || false,
         }))));
         setFinish(true);
       } catch (error) {
         console.log(error);
-        setFinish(true);
+        setFinish(false);
       }
     }
     getWholeItems();
+  }, [isLoggedIn]);
+
+  const showingDetail = useCallback((e) => {
+    let {
+      bsItem:item,
+    } = e.target.dataset
+
+    item = JSON.parse(item);
+    setCurrentItem(item);
+    if(item.isLiked){
+      setSelectLikeState(true);
+    } else {
+      setSelectLikeState(false);
+    }
   }, []);
 
-  // const showimgDetail = (e) => {
-  //   modalImg.current.src = e.target.dataset.bsSrc;
-  //   setCurrentSrc(e.target.dataset.bsSrc);
-  //   const index = e.target.dataset.bsKeyindex;
-  //   modalItemId.current.id = e.target.dataset.bsItemid;
-  //   setCurrentItemId(e.target.dataset.bsItemid);
-  //   modalItemId.current.dataset.index = index;
-  //   setSelectedCategory(e.target.dataset.bsCategory);
+  const manageLikeList = useCallback(async (e) => {
+    console.log("🔷 manageLikeList called", selectLikeState, currentItem?.itemId);
+    console.log("현재 selectLikeState:", selectLikeState);
+    try {
+      if (selectLikeState) {
+        console.log("🧊 Deleting like");
+        await axios.post(`/like/delete`, {
+          itemId: currentItem.itemId,
+          email: sessionStorage.getItem("email"),
+        });
+  
+        setWholeItems(prev => prev.map(items => 
+          items.map(item => 
+            item.itemId === currentItem.itemId 
+              ? {...item, likeCount: item.likeCount - 1, isLiked: false}
+              : item
+          )
+        ));
+      } else {
+        console.log("🔥 Creating like");
+        await axios.post(`/like/create`, {
+          itemId: currentItem.itemId,
+          email: sessionStorage.getItem("email"),
+        });
+  
+        setWholeItems(prev => prev.map(items => 
+          items.map(item => 
+            item.itemId === currentItem.itemId  
+              ? {...item, likeCount: item.likeCount + 1, isLiked: true}
+              : item
+          )
+        ));
+      }
+      console.log("✅ Like operation finished");
+      return true;
+    } catch (error) {
+      console.error("❌ Error in manageLikeList", error);
+      console.error(error);
+      return false;
+    }
+  },[selectLikeState, currentItem?.itemId]);
 
-  //   if (e.target.dataset.bsCategory === category[0]) {
-  //     modalItemId.current.dataset.category = category[0];
-  //     modalImgContent.current.innerText = item[index].imgContent;
-  //     modalImgTitle.current.innerText = `- ${item[index].itemName} -`;
-  //     setSelectLikeState(weddingHallLikeState[index]);
-  //     if (weddingHallLikeState[index] === true) {
-  //       modalItemId.current.style.backgroundColor = "#fce1e4";
-  //       setChangeModalBackgroundColor(true);
-  //     } else {
-  //       modalItemId.current.style.backgroundColor = "#ebebeb";
-  //       setChangeModalBackgroundColor(false);
-  //     }
-  //   } else if (e.target.dataset.bsCategory === category[1]) {
-  //     modalItemId.current.dataset.category = category[1];
-  //     modalImgContent.current.innerText = studioItem[index].imgContent;
-  //     modalImgTitle.current.innerText = `- ${studioItem[index].itemName} -`;
-  //     setSelectLikeState(studioLikeState[index]);
-  //     if (studioLikeState[index] === true) {
-  //       modalItemId.current.style.backgroundColor = "#fce1e4";
-  //       setChangeModalBackgroundColor(true);
-  //     } else {
-  //       modalItemId.current.style.backgroundColor = "#ebebeb";
-  //       setChangeModalBackgroundColor(false);
-  //     }
-  //   } else if (e.target.dataset.bsCategory === category[2]) {
-  //     modalItemId.current.dataset.category = category[2];
-  //     modalImgContent.current.innerText = dressItem[index].imgContent;
-  //     modalImgTitle.current.innerText = `- ${dressItem[index].itemName} -`;
-  //     setSelectLikeState(dressLikeState[index]);
-  //     if (dressLikeState[index] === true) {
-  //       modalItemId.current.style.backgroundColor = "#fce1e4";
-  //       setChangeModalBackgroundColor(true);
-  //     } else {
-  //       modalItemId.current.style.backgroundColor = "#ebebeb";
-  //       setChangeModalBackgroundColor(false);
-  //     }
-  //   } else if (e.target.dataset.bsCategory === category[3]) {
-  //     modalItemId.current.dataset.category = category[3];
-  //     modalImgContent.current.innerText = makeupItem[index].imgContent;
-  //     modalImgTitle.current.innerText = `- ${makeupItem[index].itemName} -`;
-  //     setSelectLikeState(makeupLikeState[index]);
-  //     if (makeupLikeState[index] === true) {
-  //       modalItemId.current.style.backgroundColor = "#fce1e4";
-  //       setChangeModalBackgroundColor(true);
-  //     } else {
-  //       modalItemId.current.style.backgroundColor = "#ebebeb";
-  //       setChangeModalBackgroundColor(false);
-  //     }
-  //   } else if (e.target.dataset.bsCategory === category[4]) {
-  //     modalItemId.current.dataset.category = category[4];
-  //     modalImgContent.current.innerText = honeyMoonItem[index].imgContent;
-  //     modalImgTitle.current.innerText = `- ${honeyMoonItem[index].itemName} -`;
-  //     setSelectLikeState(honeyMoonLikeState[index]);
-  //     if (honeyMoonLikeState[index] === true) {
-  //       modalItemId.current.style.backgroundColor = "#fce1e4";
-  //       setChangeModalBackgroundColor(true);
-  //     } else {
-  //       modalItemId.current.style.backgroundColor = "#ebebeb";
-  //       setChangeModalBackgroundColor(false);
-  //     }
-  //   } else if (e.target.dataset.bsCategory === category[5]) {
-  //     modalItemId.current.dataset.category = category[5];
-  //     modalImgContent.current.innerText = bouquetItem[index].imgContent;
-  //     modalImgTitle.current.innerText = `- ${bouquetItem[index].itemName} -`;
-
-  //     setSelectLikeState(bouquetLikeState[index]);
-  //     if (bouquetLikeState[index] === true) {
-  //       modalItemId.current.style.backgroundColor = "#fce1e4";
-  //       setChangeModalBackgroundColor(true);
-  //     } else {
-  //       modalItemId.current.style.backgroundColor = "#ebebeb";
-  //       setChangeModalBackgroundColor(false);
-  //     }
-  //   }
-  // };
-
-  // const manageLikeList = (e) => {
-  //   let newlikeState = undefined;
-  //   const index = modalItemId.current.dataset.index;
-
-  //   setCheckLike(!checkLike);
-  //   if (modalItemId.current.dataset.category === category[0]) {
-  //     newlikeState = [...weddingHallLikeState];
-  //     let prevState = newlikeState.slice(index, index + 1);
-  //     let changedState = undefined;
-  //     if (prevState[0] === true) {
-  //       setSelectLikeState(false);
-  //       modalItemId.current.style.backgroundColor = "#ebebeb";
-  //       changedState = false;
-  //       itemLike[index]--;
-  //     } else if (prevState[0] === false) {
-  //       setSelectLikeState(true);
-  //       modalItemId.current.style.backgroundColor = "#fce1e4";
-  //       changedState = true;
-  //       itemLike[index]++;
-  //     } else if (prevState[0] === undefined) {
-  //       setSelectLikeState(true);
-  //       modalItemId.current.style.backgroundColor = "#fce1e4";
-  //       changedState = true;
-  //       itemLike[index]++;
-  //     } else {
-  //       alert("찜하기 버튼을 이용하려면 로그인하세요!");
-  //       changedState = -1;
-  //     }
-  //     newlikeState.splice(index, 1, changedState);
-  //     setWeddingHallLikeState(newlikeState);
-  //   } else if (modalItemId.current.dataset.category === category[1]) {
-  //     newlikeState = [...studioLikeState];
-  //     let prevState = newlikeState.slice(index, index + 1);
-  //     let changedState = undefined;
-  //     if (prevState[0] === true) {
-  //       setSelectLikeState(false);
-  //       modalItemId.current.style.backgroundColor = "#ebebeb";
-  //       changedState = false;
-  //       studioItemLike[index]--;
-  //     } else if (prevState[0] === false) {
-  //       setSelectLikeState(true);
-  //       modalItemId.current.style.backgroundColor = "#fce1e4";
-  //       changedState = true;
-  //       studioItemLike[index]++;
-  //     } else if (prevState[0] === undefined) {
-  //       setSelectLikeState(true);
-  //       modalItemId.current.style.backgroundColor = "#fce1e4";
-  //       changedState = true;
-  //       studioItemLike[index]++;
-  //     } else {
-  //       alert("찜하기 버튼을 이용하려면 로그인하세요!");
-  //       changedState = -1;
-  //     }
-  //     newlikeState.splice(index, 1, changedState);
-  //     setStudioLikeState(newlikeState);
-  //   } else if (modalItemId.current.dataset.category === category[2]) {
-  //     newlikeState = [...dressLikeState];
-  //     let prevState = newlikeState.slice(index, index + 1);
-  //     let changedState = undefined;
-  //     if (prevState[0] === true) {
-  //       setSelectLikeState(false);
-  //       modalItemId.current.style.backgroundColor = "#ebebeb";
-  //       changedState = false;
-  //       dressItemLike[index]--;
-  //     } else if (prevState[0] === false) {
-  //       setSelectLikeState(true);
-  //       modalItemId.current.style.backgroundColor = "#fce1e4";
-  //       changedState = true;
-  //       dressItemLike[index]++;
-  //     } else if (prevState[0] === undefined) {
-  //       setSelectLikeState(true);
-  //       modalItemId.current.style.backgroundColor = "#fce1e4";
-  //       changedState = true;
-  //       dressItemLike[index]++;
-  //     } else {
-  //       alert("찜하기 버튼을 이용하려면 로그인하세요!");
-  //       changedState = -1;
-  //     }
-  //     newlikeState.splice(index, 1, changedState);
-  //     setDressLikeState(newlikeState);
-  //   } else if (modalItemId.current.dataset.category === category[3]) {
-  //     newlikeState = [...makeupLikeState];
-  //     let prevState = newlikeState.slice(index, index + 1);
-  //     let changedState = undefined;
-  //     if (prevState[0] === true) {
-  //       setSelectLikeState(false);
-  //       modalItemId.current.style.backgroundColor = "#ebebeb";
-  //       changedState = false;
-  //       makeupItemLike[index]--;
-  //     } else if (prevState[0] === false) {
-  //       setSelectLikeState(true);
-  //       modalItemId.current.style.backgroundColor = "#fce1e4";
-  //       changedState = true;
-  //       makeupItemLike[index]++;
-  //     } else if (prevState[0] === undefined) {
-  //       setSelectLikeState(true);
-  //       modalItemId.current.style.backgroundColor = "#fce1e4";
-  //       changedState = true;
-  //       makeupItemLike[index]++;
-  //     } else {
-  //       alert("찜하기 버튼을 이용하려면 로그인하세요!");
-  //       changedState = -1;
-  //     }
-  //     newlikeState.splice(index, 1, changedState);
-  //     setMakeupLikeState(newlikeState);
-  //   } else if (modalItemId.current.dataset.category === category[4]) {
-  //     newlikeState = [...honeyMoonLikeState];
-  //     let prevState = newlikeState.slice(index, index + 1);
-  //     let changedState = undefined;
-  //     if (prevState[0] === true) {
-  //       setSelectLikeState(false);
-  //       modalItemId.current.style.backgroundColor = "#ebebeb";
-  //       changedState = false;
-  //       honeyMoonItemLike[index]--;
-  //     } else if (prevState[0] === false) {
-  //       setSelectLikeState(true);
-  //       modalItemId.current.style.backgroundColor = "#fce1e4";
-  //       changedState = true;
-  //       honeyMoonItemLike[index]++;
-  //     } else if (prevState[0] === undefined) {
-  //       setSelectLikeState(true);
-  //       modalItemId.current.style.backgroundColor = "#fce1e4";
-  //       changedState = true;
-  //       honeyMoonItemLike[index]++;
-  //     } else {
-  //       alert("찜하기 버튼을 이용하려면 로그인하세요!");
-  //       changedState = -1;
-  //     }
-  //     newlikeState.splice(index, 1, changedState);
-  //     setHoneyMoonLikeState(newlikeState);
-  //   } else if (modalItemId.current.dataset.category === category[5]) {
-  //     newlikeState = [...bouquetLikeState];
-  //     let prevState = newlikeState.slice(index, index + 1);
-  //     let changedState = undefined;
-  //     if (prevState[0] === true) {
-  //       setSelectLikeState(false);
-  //       modalItemId.current.style.backgroundColor = "#ebebeb";
-  //       changedState = false;
-  //       bouquetItemLike[index]--;
-  //     } else if (prevState[0] === false) {
-  //       setSelectLikeState(true);
-  //       modalItemId.current.style.backgroundColor = "#fce1e4";
-  //       changedState = true;
-  //       bouquetItemLike[index]++;
-  //     } else if (prevState[0] === undefined) {
-  //       setSelectLikeState(true);
-  //       modalItemId.current.style.backgroundColor = "#fce1e4";
-  //       changedState = true;
-  //       bouquetItemLike[index]++;
-  //     } else {
-  //       alert("찜하기 버튼을 이용하려면 로그인하세요!");
-  //       changedState = -1;
-  //     }
-  //     newlikeState.splice(index, 1, changedState);
-  //     setBouquetLikeState(newlikeState);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   if (selectedCategory === category[0]) {
-  //     keyIndex.forEach((index) => {
-  //       if (weddingHallLikeState[index] === false) {
-  //         // console.log("deleteitem:" + itemId[index]);
-  //         setChangeModalBackgroundColor(false);
-  //         axios
-  //           .post(`/like/delete`, {
-  //             itemId: itemId[index],
-  //             email: sessionStorage.getItem("email"),
-  //           })
-  //           .then((res) => {
-  //             // console.log("delete");
-  //             // console.log(res);
-  //           })
-  //           .catch((e) => {
-  //             console.log(e);
-  //           });
-  //       } else if (weddingHallLikeState[index] === true) {
-  //         setChangeModalBackgroundColor(true);
-  //         axios
-  //           .post(`/like/create`, {
-  //             itemId: itemId[index],
-  //             email: sessionStorage.getItem("email"),
-  //           })
-  //           .then((res) => {
-  //             // console.log(res);
-  //           })
-  //           .catch((e) => {
-  //             console.log(e);
-  //           });
-  //       }
-  //     });
-  //   } else if (selectedCategory === category[1]) {
-  //     studioKeyIndex.forEach((index) => {
-  //       if (studioLikeState[index] === false) {
-  //         setChangeModalBackgroundColor(false);
-  //         // console.log("deleteitem:" + studioItemId[index]);
-  //         axios
-  //           .post(`/like/delete`, {
-  //             itemId: studioItemId[index],
-  //             email: sessionStorage.getItem("email"),
-  //           })
-  //           .then((res) => {
-  //             // console.log("delete");
-  //             // console.log(res);
-  //           })
-  //           .catch((e) => {
-  //             console.log(e);
-  //           });
-  //       } else if (studioLikeState[index] === true) {
-  //         setChangeModalBackgroundColor(true);
-  //         axios
-  //           .post(`/like/create`, {
-  //             itemId: studioItemId[index],
-  //             email: sessionStorage.getItem("email"),
-  //           })
-  //           .then((res) => {
-  //             // console.log(res);
-  //           })
-  //           .catch((e) => {
-  //             console.log(e);
-  //           });
-  //       }
-  //     });
-  //   } else if (selectedCategory === category[2]) {
-  //     dressKeyIndex.forEach((index) => {
-  //       if (dressLikeState[index] === false) {
-  //         setChangeModalBackgroundColor(false);
-  //         //   console.log("deleteitem:" + dressItemId[index]);
-  //         axios
-  //           .post(`/like/delete`, {
-  //             itemId: dressItemId[index],
-  //             email: sessionStorage.getItem("email"),
-  //           })
-  //           .then((res) => {
-  //             //   console.log("delete");
-  //             //   console.log(res);
-  //           })
-  //           .catch((e) => {
-  //             console.log(e);
-  //           });
-  //       } else if (dressLikeState[index] === true) {
-  //         setChangeModalBackgroundColor(true);
-  //         axios
-  //           .post(`/like/create`, {
-  //             itemId: dressItemId[index],
-  //             email: sessionStorage.getItem("email"),
-  //           })
-  //           .then((res) => {
-  //             //   console.log(res);
-  //           })
-  //           .catch((e) => {
-  //             console.log(e);
-  //           });
-  //       }
-  //     });
-  //   } else if (selectedCategory === category[3]) {
-  //     makeupKeyIndex.forEach((index) => {
-  //       if (makeupLikeState[index] === false) {
-  //         setChangeModalBackgroundColor(false);
-  //         // console.log("deleteitem:" + makeupItemId[index]);
-  //         axios
-  //           .post(`/like/delete`, {
-  //             itemId: makeupItemId[index],
-  //             email: sessionStorage.getItem("email"),
-  //           })
-  //           .then((res) => {
-  //             //  console.log("delete");
-  //             //  console.log(res);
-  //           })
-  //           .catch((e) => {
-  //             console.log(e);
-  //           });
-  //       } else if (makeupLikeState[index] === true) {
-  //         setChangeModalBackgroundColor(true);
-  //         axios
-  //           .post(`/like/create`, {
-  //             itemId: makeupItemId[index],
-  //             email: sessionStorage.getItem("email"),
-  //           })
-  //           .then((res) => {
-  //             //    console.log(res);
-  //           })
-  //           .catch((e) => {
-  //             console.log(e);
-  //           });
-  //       }
-  //     });
-  //   } else if (selectedCategory === category[4]) {
-  //     honeyMoonKeyIndex.forEach((index) => {
-  //       if (honeyMoonLikeState[index] === false) {
-  //         setChangeModalBackgroundColor(false);
-  //         //  console.log("deleteitem:" + honeyMoonItemId[index]);
-  //         axios
-  //           .post(`/like/delete`, {
-  //             itemId: honeyMoonItemId[index],
-  //             email: sessionStorage.getItem("email"),
-  //           })
-  //           .then((res) => {
-  //             //   console.log("delete");
-  //             //   console.log(res);
-  //           })
-  //           .catch((e) => {
-  //             console.log(e);
-  //           });
-  //       } else if (honeyMoonLikeState[index] === true) {
-  //         setChangeModalBackgroundColor(true);
-  //         axios
-  //           .post(`/like/create`, {
-  //             itemId: honeyMoonItemId[index],
-  //             email: sessionStorage.getItem("email"),
-  //           })
-  //           .then((res) => {
-  //             //     console.log(res);
-  //           })
-  //           .catch((e) => {
-  //             console.log(e);
-  //           });
-  //       }
-  //     });
-  //   } else if (selectedCategory === category[5]) {
-  //     bouquetKeyIndex.forEach((index) => {
-  //       if (bouquetLikeState[index] === false) {
-  //         setChangeModalBackgroundColor(false);
-  //         //  console.log("deleteitem:" + bouquetItemId[index]);
-  //         axios
-  //           .post(`/like/delete`, {
-  //             itemId: bouquetItemId[index],
-  //             email: sessionStorage.getItem("email"),
-  //           })
-  //           .then((res) => {
-  //             //  console.log("delete");
-  //             //  console.log(res);
-  //           })
-  //           .catch((e) => {
-  //             console.log(e);
-  //           });
-  //       } else if (bouquetLikeState[index] === true) {
-  //         setChangeModalBackgroundColor(true);
-  //         axios
-  //           .post(`/like/create`, {
-  //             itemId: bouquetItemId[index],
-  //             email: sessionStorage.getItem("email"),
-  //           })
-  //           .then((res) => {
-  //             //   console.log(res);
-  //           })
-  //           .catch((e) => {
-  //             console.log(e);
-  //           });
-  //       }
-  //     });
-  //   }
-  // }, [checkLike]);
+  const handleLikeClick = async () => {
+    console.log("🟢 handleLikeClick called");
+    const success = await manageLikeList();
+    if (success) {
+      setSelectLikeState(prev => !prev);
+      console.log("🟢 handleLikeClick success");
+    }else {
+      console.log("🔴 handleLikeClick failed");
+    }
+  };
 
   const onScrollTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -716,7 +360,6 @@ function Home() {
                         window.scrollTo({ top: 20 });
                       }}
                       style={{ cursor: "pointer" }}
-                      // href="#scrollspyHeading1"
                     >
                       웨딩홀
                     </div>
@@ -809,7 +452,7 @@ function Home() {
                 style={{ marginTop: "150px" }}
               >
                 {wholeItems.map((items, categoryIndex) => 
-                  <>
+                  <div key={categoryIndex}>
                   <h4 id={`scrollspyHeading${categoryIndex+1}`}>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -865,12 +508,11 @@ function Home() {
                           }}
                           data-bs-toggle="modal"
                           data-bs-target="#imgDetailModal"
-                          data-bs-src={item.itemImg}
+                          data-bs-item={JSON.stringify(item)}
                           data-bs-category={category[categoryIndex]}
-                          data-bs-keyIndex={itemIndex}
-                          data-bs-itemId={item.itemId}
-                          //onClick={showimgDetail}
+                          onClick={showingDetail}
                           src={item.itemImg}
+                          loading="lazy" 
                           alt="..."
                         />
                         <br />
@@ -916,7 +558,7 @@ function Home() {
                   </div>
 
                 <br />
-                </>
+                </div>
                 )}
                 {/* 이미지 상세정보 모달창 */}
                 <div
@@ -936,9 +578,9 @@ function Home() {
                           class="modal-title justify-content-center "
                           id="imgDetailModal"
                           style={{ fontSize: "1.9em" }}
-                          ref={modalImgTitle}
+                          // ref={modalImgTitle}
                         >
-                          - -
+                          - {currentItem?.itemName} -
                         </h1>
                         <button
                           type="button"
@@ -967,7 +609,7 @@ function Home() {
                           }}
                         >
                           <img
-                            src=""
+                            src={currentItem?.itemImg}
                             style={{
                               width: "430px",
                               height: "470px",
@@ -976,7 +618,7 @@ function Home() {
                               marginLeft: "20px",
                             }}
                             alt=""
-                            ref={modalImg}
+                            // ref={modalImg}
                           />
                           <div
                             style={{
@@ -985,18 +627,20 @@ function Home() {
                             }}
                           >
                             상세정보
-                            {selectLikeState === true ? (
+                            {isLoggedIn? selectLikeState ? (
                               <button
                                 style={{
                                   marginLeft: "240px",
                                   width: "130px",
                                   marginBottom: "10px",
                                   fontSize: "1em",
-                                  backgroundColor: "##fce1e4",
+                                  backgroundColor: "#fce1e4",
                                   border: "grey 1px solid",
                                 }}
-                                ref={modalItemId}
-                               // onClick={manageLikeList}
+                                onClick={(e) => {
+                                  console.log("🟡 Like button clicked");
+                                  handleLikeClick();
+                                }}
                               >
                                 <svg
                                   xmlns="http://www.w3.org/2000/svg"
@@ -1011,7 +655,7 @@ function Home() {
                                     fill-rule="evenodd"
                                     d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"
                                   />
-                                </svg>{" "}
+                                </svg>
                                 찜하기
                               </button>
                             ) : (
@@ -1024,8 +668,10 @@ function Home() {
                                   backgroundColor: "#ebebeb",
                                   border: "grey 1px solid",
                                 }}
-                                ref={modalItemId}
-                               // onClick={manageLikeList}
+                                onClick={(e) => {
+                                  console.log("🟡 Like button clicked");
+                                  handleLikeClick();
+                                }}
                               >
                                 <svg
                                   xmlns="http://www.w3.org/2000/svg"
@@ -1037,10 +683,10 @@ function Home() {
                                   style={{ cursor: "pointer" }}
                                 >
                                   <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z" />
-                                </svg>{" "}
+                                </svg>
                                 찜하기
                               </button>
-                            )}
+                            ):null}
                           </div>
                           <p
                             style={{
@@ -1049,8 +695,7 @@ function Home() {
                               border: "1px solid black",
                               padding: "10px",
                             }}
-                            ref={modalImgContent}
-                          ></p>
+                          >{currentItem?.imgContent}</p>
                         </div>
                       </div>
                       <div class="modal-footer">
@@ -1094,7 +739,7 @@ function Home() {
                 }}
               >
                 {window.sessionStorage.getItem("category") === "user" && (
-                  <div style={{}}>
+                  <div>
                     <div className="estimate-write-btn">
                       <i
                         class="bi bi-pencil-square"

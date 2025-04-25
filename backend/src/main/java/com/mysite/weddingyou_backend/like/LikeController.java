@@ -10,7 +10,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,6 +30,7 @@ import com.mysite.weddingyou_backend.userLogin.UserLogin;
 import com.mysite.weddingyou_backend.userLogin.UserLoginRepository;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.transaction.Transactional;
 
 @RestController
 @RequestMapping("/like")
@@ -50,112 +53,124 @@ public class LikeController {
 	
 	//찜목록 조회
 	@RequestMapping("/list")
-    public List<String> getLikeList(@RequestBody likeDTO user, HttpServletRequest request) {
+    public List<LikeEntity> getLikeList(@RequestBody likeDTO user, HttpServletRequest request) {
        // HttpSession session = request.getSession();
        // UserLogin loggedInUser = (UserLogin) session.getAttribute("loggedInUser");
 		String email = user.getEmail();
 		
-        List<LikeEntity> likeList = likeService.getLikeList(email);
+    List<LikeEntity> likeList = likeService.getLikeList(email);
      
        
-        List<String> encodingDatas = new ArrayList<>();
+    //     List<String> encodingDatas = new ArrayList<>();
         
         
-    if(likeList!=null) {
-    	for(int i =0;i<likeList.size();i++) {
-    		Item targetItem = likeList.get(i).getItem();
-    		targetItem.setLikeWriteDate(likeList.get(i).getLikeWriteDate());
-    		itemRepository.save(targetItem);
-    		Category2 category2 = targetItem.getCategory2();
+    // if(likeList!=null) {
+    // 	for(int i =0;i<likeList.size();i++) {
+    // 		Item targetItem = likeList.get(i).getItem();
+    // 		targetItem.setLikeWriteDate(likeList.get(i).getLikeWriteDate());
+    // 		itemRepository.save(targetItem);
+    // 		Category2 category2 = targetItem.getCategory2();
     		
-	    	 String path = "C:/Project/itemImg/"+targetItem.getCategory1()+"/"+category2;
-	    	 Path imagePath = Paths.get(path,targetItem.getItemImg());
-	    	 System.out.println(imagePath);
+	  //   	 String path = "C:/Project/itemImg/"+targetItem.getCategory1()+"/"+category2;
+	  //   	 Path imagePath = Paths.get(path,targetItem.getItemImg());
+	  //   	 System.out.println(imagePath);
 
-	         try {
-	             byte[] imageBytes = Files.readAllBytes(imagePath);
-	             byte[] base64encodedData = Base64.getEncoder().encode(imageBytes);
+	  //        try {
+	  //            byte[] imageBytes = Files.readAllBytes(imagePath);
+	  //            byte[] base64encodedData = Base64.getEncoder().encode(imageBytes);
 	             
-	             encodingDatas.add(new String(base64encodedData));
+	  //            encodingDatas.add(new String(base64encodedData));
 	             
-	         } catch (IOException e) {
-	             e.printStackTrace();
+	  //        } catch (IOException e) {
+	  //            e.printStackTrace();
 	            
-	         }
-	        encodingDatas.add(String.valueOf(targetItem.getItemId()));
-	        encodingDatas.add(String.valueOf(likeList.get(i).getLikeWriteDate()));
-	        System.out.println(targetItem.getItemId());
-    	}
+	  //        }
+	  //       encodingDatas.add(String.valueOf(targetItem.getItemId()));
+	  //       encodingDatas.add(String.valueOf(likeList.get(i).getLikeWriteDate()));
+    // 	}
     	
-    }
-    return encodingDatas;
+    // }
+    return likeList;
     
     }
 	
 	//좋아요 생성
+	@Transactional
 	@PostMapping("/create")
-	public ResponseEntity<Void> createLike(HttpServletRequest request, @RequestBody likeDTO user ) {
-		//, @RequestBody likeDTO user (추가해주기)
-		//@RequestParam String email, @RequestParam Long itemId ,(postman 테스트용)
-//    HttpSession session = request.getSession();
-//	    UserLogin loggedInUser = (UserLogin) session.getAttribute("loggedInUser");
-		
+	public ResponseEntity<Integer> createLike(HttpServletRequest request, @RequestBody likeDTO user ) {
 		Long itemId = user.getItemId();
-	 String email = user.getEmail();
-	    LikeEntity likeEntity = new LikeEntity();
-	//    likeEntity.setUser(userRepository.findByEmail(loggedInUser.getEmail()));
-	    likeEntity.setItem(itemService.getItemById(itemId));
-	    if(userRepository.findByEmail(email)!=null) {
-	    	 likeEntity.setUser(userRepository.findByEmail(email));
-	    	 if(likeService.checkDuplicatedUserAndItem(likeEntity)==0) {
-		    	 List<LikeEntity> list = likeService.getLikeListByItemId(itemId);
-		 	    likeEntity.setLikeCount(list.size()+1);
-		 	    
-		 	    likeService.increaseLikeNum(list);
-		 	    likeService.addLike(likeEntity, itemService.getItemById(itemId));
-		    }
-	    }else if(plannerRepository.findByEmail(email)!=null) {
-	    	likeEntity.setPlanner(plannerRepository.findByEmail(email));
-	    	if(likeService.checkDuplicatedPlannerAndItem(likeEntity)==0) {
-		    	 List<LikeEntity> list = likeService.getLikeListByItemId(itemId);
-		 	    likeEntity.setLikeCount(list.size()+1);
-		 	    
-		 	    likeService.increaseLikeNum(list);
-		 	    likeService.addLike(likeEntity, itemService.getItemById(itemId));
-		    }
-	    }
+    String email = user.getEmail();
+    LikeEntity likeEntity = new LikeEntity();
+    
+    Item item = itemService.getItemById(itemId);
+    
+    int newLikeCount = 0;
+    
+    if (userRepository.findByEmail(email) != null) {
+        UserLogin userLogin = userRepository.findByEmail(email);
+        likeEntity.setUser(userLogin);
+				likeEntity.setItem(item);
 
-	    return ResponseEntity.ok().build();
+        if (likeService.checkDuplicatedUserAndItem(likeEntity) == 0) {
+            List<LikeEntity> list = likeService.getLikeListByItemId(itemId);
+            newLikeCount = list.size() + 1;
+            likeEntity.setLikeCount(newLikeCount);
+				 		// Add like with proper bidirectional relationship
+				 		likeService.addLike(likeEntity, item);
+           
+            return ResponseEntity.ok(newLikeCount);
+
+        }
+				
+    } else if (plannerRepository.findByEmail(email) != null) {
+        PlannerLogin planner = plannerRepository.findByEmail(email);
+        likeEntity.setPlanner(planner);
+        likeEntity.setItem(item);
+
+        if (likeService.checkDuplicatedPlannerAndItem(likeEntity) == 0) {
+            List<LikeEntity> list = likeService.getLikeListByItemId(itemId);
+            newLikeCount = list.size() + 1;
+            likeEntity.setLikeCount(newLikeCount);
+            
+            // Add like with proper bidirectional relationship 
+						likeService.addLike(likeEntity, item);
+            
+            return ResponseEntity.ok(newLikeCount);
+        }
+    }
+
+    return ResponseEntity.badRequest().build();
 	}
 	
 	//좋아요 삭제
 	@PostMapping("/delete")
 	public ResponseEntity<Void> deleteLike( @RequestBody likeDTO data) {
-		//, @RequestBody likeDTO data (추가해주기)
-		//@RequestParam String email, @RequestParam Long itemId(postman 테스트용)
 		Long itemId = data.getItemId();
-		String email = data.getEmail();
-		
-		Item item = itemService.getItemById(itemId);
-		
-		if(userRepository.findByEmail(email)!=null) {
-			UserLogin user = userRepository.findByEmail(email);
-			List<LikeEntity> likeItem = likeService.getLikeListByItemIdAndUser(user, item);
-			System.out.println(likeItem.get(0).getLikeId());
-			System.out.println("newlikeItem:"+likeItem);
-			likeService.decreaseLikeNum(likeItem);
-			likeService.deleteLike(likeItem.get(0).getLikeId());
-		}else if(plannerRepository.findByEmail(email)!=null) {
-			PlannerLogin planner = plannerRepository.findByEmail(email);
-			List<LikeEntity> likeItem = likeService.getLikeListByItemIdAndPlanner(planner, item);
-			//List<LikeEntity> likeItem = likeService.getLikeList(email);
-			System.out.println(likeItem.get(0).getLikeId());
-			System.out.println("newlikeItem:"+likeItem);
-			likeService.decreaseLikeNum(likeItem);
-			likeService.deleteLike(likeItem.get(0).getLikeId());
-		}
-	
-		return ResponseEntity.ok().build();
+    String email = data.getEmail();
+    
+    Item item = itemService.getItemById(itemId);
+    
+    if (userRepository.findByEmail(email) != null) {
+        UserLogin user = userRepository.findByEmail(email);
+        List<LikeEntity> likeItems = likeService.getLikeListByItemIdAndUser(user, item);
+        
+        if (!likeItems.isEmpty() && likeItems.get(0).getLikeCount() == 1) {
+          likeService.deleteLike(likeItems.get(0).getLikeId());
+        }else if(likeItems.get(0).getLikeCount() != 1){
+					likeService.decreaseLikeNum(likeItems);
+				}
+    } else if (plannerRepository.findByEmail(email) != null) {
+        PlannerLogin planner = plannerRepository.findByEmail(email);
+        List<LikeEntity> likeItems = likeService.getLikeListByItemIdAndPlanner(planner, item);
+        
+        if (!likeItems.isEmpty() && likeItems.get(0).getLikeCount() == 1) {
+          likeService.deleteLike(likeItems.get(0).getLikeId());
+        }else if(likeItems.get(0).getLikeCount() != 1){
+					likeService.decreaseLikeNum(likeItems);
+				}
+    }
+
+    return ResponseEntity.ok().build();
 	}
 	
 	

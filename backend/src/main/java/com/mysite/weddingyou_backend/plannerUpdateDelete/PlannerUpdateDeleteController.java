@@ -46,9 +46,8 @@ public class PlannerUpdateDeleteController {
         PlannerUpdateDelete searchedPlanner = service.getPlannerByEmail(planner.getEmail());
         if(searchedPlanner != null) {
         	 return searchedPlanner;
-        }else {
-        	throw new Exception("이메일이 중복되지 않습니다!");
         }
+				return null;
        
     }
 	 

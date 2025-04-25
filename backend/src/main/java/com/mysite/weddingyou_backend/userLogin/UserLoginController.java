@@ -26,7 +26,6 @@ public class UserLoginController {
 	//로그인
 	@PostMapping("/user/login")
 	public UserLogin login(@RequestBody UserLogin user, HttpSession session) { 
-		System.out.println(user);
 		UserLogin loginResult = service.login(user); //loginResult에는 dto가 저장됨
 		if(loginResult != null) {
 			//로그인 성공

@@ -1,6 +1,7 @@
 package com.mysite.weddingyou_backend.like;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -52,24 +53,27 @@ public class LikeService {
 
 	//좋아요 추가
     public void addLike(LikeEntity likeEntity, Item item) {
-    	likeEntity.setLikeWriteDate(LocalDateTime.now());
-    	likeEntity.setLocation("location");
-    	item.setLikeWriteDate(LocalDateTime.now());
-    	itemRepository.save(item);
-    	likeRepository.save(likeEntity);
-    	
-        
+    likeEntity.setLikeWriteDate(LocalDateTime.now());
+    likeEntity.setLocation("location");
+    item.setLikeWriteDate(LocalDateTime.now());
+		item.addLike(likeEntity);
+
+    likeRepository.save(likeEntity);      
     }
     
     //유저와 item 중복 확인
     public int checkDuplicatedUserAndItem(LikeEntity likeEntity) {
-    	List<LikeEntity> likeEntities = likeRepository.findAllByUserAndItem(likeEntity.getUser(), likeEntity.getItem());
-    	System.out.println(likeEntities);
-    	if(likeEntities.size() !=0) { // 중복
-    		return 1;
-    	}else { //중복되지 않음
-    		return 0; 
+    	if (likeEntity.getItem() == null) {
+      	return 1; 
     	}
+
+  		if (likeEntity.getUser() != null) {
+        return likeRepository.existsByUserAndItem(likeEntity.getUser(), likeEntity.getItem()) ? 1 : 0;
+    	} else if (likeEntity.getPlanner() != null) {
+        return likeRepository.existsByPlannerAndItem(likeEntity.getPlanner(), likeEntity.getItem()) ? 1 : 0;
+    	}
+
+    	return 1;
     }
     
   //플래너와 item 중복 확인
@@ -85,7 +89,7 @@ public class LikeService {
 
     //좋아요 삭제
     public void deleteLike(Long likeId) {
-        likeRepository.deleteById(likeId);
+      likeRepository.deleteById(likeId);
     }
     
     //필터링
@@ -138,13 +142,14 @@ public class LikeService {
 
      	return likeRepository.findAllByItem(searchedItem);
      }
-    
+
+		@Transactional
     public void increaseLikeNum(List<LikeEntity> list) {
-    	for(int i=0;i<list.size();i++) {
-	    	LikeEntity likeentity = list.get(i);
-	    	likeentity.setLikeCount(list.size()+1);
-	    	likeRepository.save(likeentity);
-	    }
+    	int newCount = list.size() + 1;
+    	for (LikeEntity like : list) {
+        like.setLikeCount(newCount);
+        likeRepository.save(like);
+    	}
     }
     
     public void decreaseLikeNum(List<LikeEntity> list) {

@@ -3,6 +3,8 @@ package com.mysite.weddingyou_backend.like;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.mysite.weddingyou_backend.item.Item;
@@ -30,5 +32,7 @@ public interface LikeRepository extends JpaRepository<LikeEntity, Long> {
 	
 	List<LikeEntity> findAllByPlannerAndItem(PlannerLogin planner, Item item);
 	
-
+	boolean existsByUserAndItem(UserLogin user, Item item);
+	
+	boolean existsByPlannerAndItem(PlannerLogin planner, Item item);
 }

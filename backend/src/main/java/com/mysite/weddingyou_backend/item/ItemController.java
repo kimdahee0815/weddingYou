@@ -12,6 +12,7 @@ import java.util.Base64;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -86,8 +87,8 @@ public class ItemController {
 	 @RequestMapping(value="/itemList/{category1}")
 	 public List<ItemDTO> getItemsByCategory1(@PathVariable Category1 category1) {
 		List<ItemDTO> items =null;
-	  items = itemService.getItemsByCategory1(category1);
-		System.out.println(items);
+		items = itemService.getItemsByCategory1(category1);
+
 	  	// List<String> encodingDatas = new ArrayList<>();
 
 	    // if(items!=null) {

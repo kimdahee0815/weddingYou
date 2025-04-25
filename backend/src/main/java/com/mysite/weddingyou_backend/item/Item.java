@@ -1,6 +1,7 @@
 package com.mysite.weddingyou_backend.item;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -41,17 +42,25 @@ public class Item {
 	private String imgContent;
 	
 	@JsonManagedReference
-	@OneToMany(mappedBy = "item", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "item", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
 	private List<LikeEntity> like;
 
 	public void addLike(LikeEntity likeEntity) {
-		like.add(likeEntity);
-		likeEntity.setItem(this);
+		if (like == null) {
+        like = new ArrayList<>();
+    }
+		if (!like.contains(likeEntity)) { // 중복 여부 체크
+			like.add(likeEntity);
+			likeEntity.setItem(this);
+		}
+
 	}
 
 	public void removeLike(LikeEntity likeEntity) {
-		like.remove(likeEntity);
-		likeEntity.setItem(null);
+		if (like != null) {
+			like.remove(likeEntity);
+			likeEntity.setItem(null);
+		}
 	}
 
 	@Column(name = "item_name", nullable = false)

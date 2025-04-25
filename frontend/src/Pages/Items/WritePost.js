@@ -44,7 +44,7 @@ const WritePost = () => {
   const [selectedCategory1, setSelectedCategory1] = useState(
     selectedCategory[category1]
   );
-  console.log(selectedCategory1);
+
   const postItem = () => {
     if (content !== "" && itemName !== "") {
       if (imgFile.current.value !== "") {
