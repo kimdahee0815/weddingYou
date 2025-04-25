@@ -36,5 +36,6 @@ public interface LikeRepository extends JpaRepository<LikeEntity, Long> {
 	
 	boolean existsByPlannerAndItem(PlannerLogin planner, Item item);
 
-	int countByItemId(Long itemId);
+	@Query("SELECT COUNT(l) FROM LikeEntity l WHERE l.item.id = :itemId")
+	int countByItemId(@Param("itemId") Long itemId);
 }

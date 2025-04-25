@@ -54,7 +54,7 @@ public class ItemDTO {
         itemDTO.setItemId(item.getItemId());
         itemDTO.setItemName(item.getItemName());
         itemDTO.setItemImg(item.getItemImg());
-        itemDTO.setContent(item.getImgContent());
+        itemDTO.setContent(item.getContent());
         itemDTO.setImgContent(item.getImgContent());
         itemDTO.setItemWriteDate(item.getItemWriteDate());
         itemDTO.setCategory1(item.getCategory1());

@@ -46,20 +46,24 @@ public class ItemService {
     
     public List<ItemDTO> getItemsByCategory1AndCategory2(Category1 category1, Category2 category2) {
         List<Item> items = itemRepository.findByCategory1AndCategory2FetchJoin(category1, category2);
+        Collections.sort(items, (a, b) -> b.getItemWriteDate().compareTo(a.getItemWriteDate()));
         List<ItemDTO> itemDTOs = items.stream()
             .map(ItemDTO::fromEntity)
             .sorted((a, b) -> b.getItemWriteDate().compareTo(a.getItemWriteDate()))
             .collect(Collectors.toList());
+        
         return itemDTOs;
     }
     
     public List<ItemDTO> getItemsByCategory1(Category1 category1) {
         List<Item> items = itemRepository.findByCategory1FetchJoin(category1); 
+        Collections.sort(items, (a, b) -> b.getItemWriteDate().compareTo(a.getItemWriteDate()));
         List<ItemDTO> itemDTOs = items.stream()
             .map(ItemDTO::fromEntity)
             .sorted((a, b) -> b.getItemWriteDate().compareTo(a.getItemWriteDate()))
             .collect(Collectors.toList());
-        return itemDTOs;
+        
+            return itemDTOs;
     }
 
     public Item getItemWithLikes(Long itemId) {

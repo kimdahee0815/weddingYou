@@ -42,55 +42,7 @@ const Weddinghall = ({ postSubmitted }) => {
         const dataList = res.data;
         const items = [...dataList];
         setItemList(items);
-
-        // if (dataList.length !== 0) {
-        //   let index = 0;
-        //   for (var i = 0; i < dataList.length; ) {
-        //     let dataUrl = "data:image/jpeg;base64," + dataList[i];
-        //     previewImgArr.push(dataUrl);
-        //     setPreviewImg(previewImgArr);
-        //     i++;
-
-        //     let newitemId = dataList[i];
-        //     list.push(newitemId);
-        //     setItemId(list);
-        //     keyIndexArr.push(index);
-        //     index++;
-        //     setKeyIndex(keyIndexArr);
-        //     i++;
-
-        //     axios
-        //       .get(`/item/getItemList/${newitemId}`)
-        //       .then((res) => {
-        //         let newItem = res.data;
-        //         itemDataArr.push(newItem);
-        //         itemDataArr.sort(function (a, b) {
-        //           return new Date(b.itemWriteDate) - new Date(a.itemWriteDate);
-        //         });
-        //         setItem([...item, newItem]);
-        //         setItem(itemDataArr);
-        //       })
-        //       .catch((e) => {
-        //         console.log(e);
-        //       });
-
-        //     let newitemName = dataList[i];
-        //     itemNameArr.push(newitemName);
-        //     setItemName(itemNameArr);
-        //     i++;
-
-        //     let newitemContent = dataList[i];
-        //     itemContentArr.push(newitemContent);
-        //     setItemContent(itemContentArr);
-        //     i++;
-        //     let newItemDetailContent = dataList[i];
-        //     itemDetailContentArr.push(newItemDetailContent);
-        //     setImgDetailContent(itemDetailContentArr);
-        //     i++;
-        //   }
-        // } else {
-        //   setKeyIndex([]);
-        // }
+        console.log(items)
       })
       .catch((e) => {
         console.log(e);
