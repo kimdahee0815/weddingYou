@@ -111,9 +111,8 @@ function LikeList() {
         sortBy: selectedSort,
       })
       .then((res) => {
-        const dataList = res.data;
-
-        
+        setWholeItems(res.data);
+        console.log(res.data);
         setFinish(true);
       })
       .catch((e) => {

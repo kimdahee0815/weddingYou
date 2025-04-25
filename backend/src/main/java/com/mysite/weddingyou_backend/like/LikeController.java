@@ -1,8 +1,10 @@
 package com.mysite.weddingyou_backend.like;
 
+import java.text.Collator;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.Locale;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -39,9 +41,6 @@ public class LikeController {
 	
 	@Autowired
 	private PlannerLoginRepository plannerRepository;
-	
-	@Autowired
-	private ItemRepository itemRepository;
 
 	@Autowired
 	private ItemService itemService;
@@ -171,28 +170,85 @@ public class LikeController {
 	}
 	
 	@PostMapping("/list/category")
-	public List<likeDTO> getLikeListByCategory(HttpServletRequest request, @RequestBody likeDTO data) {
-		String email =data.getEmail();
-		Category1 category1 = data.getCategory1();
-		
-		return likeService.getLikeListByCategory1(email, category1);
+	public List<Map<String, Object>> getLikeListByCategory(HttpServletRequest request, @RequestBody likeDTO data) {
+    String email = data.getEmail();
+    Category1 category1 = data.getCategory1();
+    
+    // 1. Get filtered like list
+    List<likeDTO> likeList = likeService.getLikeListByCategory1(email, category1);
+
+    // 2. Group by ItemId
+    Map<Long, Map<String, Object>> groupedItems = new HashMap<>();
+    
+    for (likeDTO like : likeList) {
+        Long itemId = like.getItem().getItemId();
+        
+        if (!groupedItems.containsKey(itemId)) {
+            Map<String, Object> itemGroup = new HashMap<>();
+            itemGroup.put("item", like.getItem());
+            itemGroup.put("likeCount", likeService.getLikeCount(itemId));
+            itemGroup.put("latestLikeDate", like.getLikeWriteDate());
+            itemGroup.put("isLiked", true);
+            
+            groupedItems.put(itemId, itemGroup);
+        } else {
+            LocalDateTime existingDate = (LocalDateTime) groupedItems.get(itemId).get("latestLikeDate");
+            if (like.getLikeWriteDate().isAfter(existingDate)) {
+                groupedItems.get(itemId).put("latestLikeDate", like.getLikeWriteDate());
+            }
+        }
+    }
+
+    // 3. Convert to list and sort by date by default
+    List<Map<String, Object>> result = new ArrayList<>(groupedItems.values());
+    sortByDate(result);
+
+    return result;
 	}
 	
 	
 	//정렬(가나다순, 인기순, 지역순)
 	@PostMapping("/list/sort")
-	public List<likeDTO> getLikeListBySort(@RequestBody likeDTO data) {
+	public List<Map<String, Object>> getLikeListBySort(@RequestBody likeDTO data) {
     String sortBy = data.getSortBy();
     String email = data.getEmail();
 
+    // 1. Get like list
     List<likeDTO> likeList = likeService.getLikeList(email);
-    sortLikeList(likeList, sortBy);
 
-    return likeList;
+    // 2. Group by ItemId
+    Map<Long, Map<String, Object>> groupedItems = new HashMap<>();
+    
+    for (likeDTO like : likeList) {
+        Long itemId = like.getItem().getItemId();
+        
+        if (!groupedItems.containsKey(itemId)) {
+            Map<String, Object> itemGroup = new HashMap<>();
+            itemGroup.put("item", like.getItem());
+            itemGroup.put("likeCount", likeService.getLikeCount(itemId));
+            itemGroup.put("latestLikeDate", like.getLikeWriteDate());
+            itemGroup.put("isLiked", true);
+            
+            groupedItems.put(itemId, itemGroup);
+        } else {
+            LocalDateTime existingDate = (LocalDateTime) groupedItems.get(itemId).get("latestLikeDate");
+            if (like.getLikeWriteDate().isAfter(existingDate)) {
+                groupedItems.get(itemId).put("latestLikeDate", like.getLikeWriteDate());
+            }
+        }
+    }
+
+    // 3. Convert to list
+    List<Map<String, Object>> result = new ArrayList<>(groupedItems.values());
+
+    // 4. Sort
+    sortGroupedItems(result, sortBy);
+
+    return result;
 	}
 	
 	@PostMapping("/list/category/sort")
-	public List<likeDTO> getLikeListByCategoryAndSort(@RequestBody likeDTO data) {
+	public List<Map<String, Object>> getLikeListByCategoryAndSort(@RequestBody likeDTO data) {
     String sortBy = data.getSortBy();
     Category1 category1 = data.getCategory1();
     String email = data.getEmail();
@@ -209,37 +265,84 @@ public class LikeController {
         likeList = likeService.getLikeListByCategory1(email, category1);
     }
 
-    // 2. sort
-    sortLikeList(likeList, sortBy);
+		// 2. Group by ItemId
+		Map<Long, Map<String, Object>> groupedItems = new HashMap<>();
+    
+    for (likeDTO like : likeList) {
+        Long itemId = like.getItem().getItemId();
+        
+        if (!groupedItems.containsKey(itemId)) {
+            Map<String, Object> itemGroup = new HashMap<>();
+            itemGroup.put("item", like.getItem());
+            itemGroup.put("likeCount", likeService.getLikeCount(itemId));
+            itemGroup.put("latestLikeDate", like.getLikeWriteDate());
+            itemGroup.put("isLiked", true);
+            
+            groupedItems.put(itemId, itemGroup);
+        } else {
+            LocalDateTime existingDate = (LocalDateTime) groupedItems.get(itemId).get("latestLikeDate");
+            if (like.getLikeWriteDate().isAfter(existingDate)) {
+                groupedItems.get(itemId).put("latestLikeDate", like.getLikeWriteDate());
+            }
+        }
+    }
 
-    return likeList;
+		// 3. Convert to list
+    List<Map<String, Object>> result = new ArrayList<>(groupedItems.values());
+
+    // 2. sort
+    sortGroupedItems(result, sortBy);
+
+    return result;
 	}
 
-	private void sortLikeList(List<likeDTO> likeList, String sortBy) {
+	private void sortGroupedItems(List<Map<String, Object>> result, String sortBy) {
     if (sortBy == null) return;
-		
-		switch (sortBy) {
+
+    switch (sortBy) {
         case "가나다순":
-            likeList.sort(Comparator.comparing(like -> like.getItem().getItemName()));
+            sortByName(result);
             break;
         case "인기순":
-            likeList.sort((o1, o2) -> {
-                int o1Count = likeService.getLikeCount(o1.getItem().getItemId());
-                int o2Count = likeService.getLikeCount(o2.getItem().getItemId());
-
-                if (o1Count != o2Count) {
-                    return Integer.compare(o2Count, o1Count); // like (desc)
-                }
-
-                return o1.getItem().getItemName().compareTo(o2.getItem().getItemName()); // name (asc) 
-            });
+            sortByLikeCount(result);
             break;
         case "최신순":
-        case "정렬": // default is also recent order
+        case "정렬":
         default:
-            likeList.sort(Comparator.comparing(likeDTO::getLikeWriteDate).reversed());
+            sortByDate(result);
             break;
     }
+	}
+
+	private void sortByName(List<Map<String, Object>> items) {
+    Collator koreanCollator = Collator.getInstance(Locale.KOREAN); 
+    
+    items.sort((a, b) -> {
+        String nameA = ((Item)a.get("item")).getItemName().toLowerCase();
+        String nameB = ((Item)b.get("item")).getItemName().toLowerCase();
+        return koreanCollator.compare(nameA, nameB); 
+    });
+	}
+
+	private void sortByLikeCount(List<Map<String, Object>> items) {
+		Collator koreanCollator = Collator.getInstance(Locale.KOREAN);
+    
+    items.sort((a, b) -> {
+        Integer countA = (Integer)a.get("likeCount");
+        Integer countB = (Integer)b.get("likeCount");
+        if (!countA.equals(countB)) {
+            return countB.compareTo(countA); 
+        }
+
+        String nameA = ((Item)a.get("item")).getItemName().toLowerCase();
+        String nameB = ((Item)b.get("item")).getItemName().toLowerCase();
+        return koreanCollator.compare(nameA, nameB);
+    });
+	}
+
+	private void sortByDate(List<Map<String, Object>> items) {
+    items.sort((a, b) -> ((LocalDateTime)b.get("latestLikeDate"))
+        .compareTo((LocalDateTime)a.get("latestLikeDate")));
 	}
 	
 
