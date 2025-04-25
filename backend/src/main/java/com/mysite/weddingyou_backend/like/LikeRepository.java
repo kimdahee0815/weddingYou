@@ -2,6 +2,7 @@ package com.mysite.weddingyou_backend.like;
 
 import java.util.List;
 
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -15,9 +16,16 @@ import com.mysite.weddingyou_backend.userLogin.UserLogin;
 
 @Repository
 public interface LikeRepository extends JpaRepository<LikeEntity, Long> {	
+	@Query("SELECT l FROM LikeEntity l JOIN FETCH l.item WHERE l.user = :user")
+	List<LikeEntity> findByUserWithItem(@Param("user") UserLogin user);
 
-	List<LikeEntity> findByUser(UserLogin user);
+	@Query("SELECT l FROM LikeEntity l JOIN FETCH l.item WHERE l.planner = :planner")
+	List<LikeEntity> findByPlannerWithItem(@Param("planner") PlannerLogin planner);
 	
+	@EntityGraph(attributePaths = {"item"})
+	List<LikeEntity> findByUser(UserLogin user);
+
+	@EntityGraph(attributePaths = {"item"})
 	List<LikeEntity> findByPlanner(PlannerLogin planner);
 	
 	List<LikeEntity> findByUserAndItem_Category1AndItem_Category2(UserLogin user, Category1 category1, Category2 category2);

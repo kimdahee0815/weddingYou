@@ -3,72 +3,31 @@ import "../Css/Home.css";
 import "../Css/LikeList.css";
 import Footer from "../Components/Footer";
 import NavigationBar from "../Components/NavigationBar";
-import React, { useState, useEffect, useLayoutEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Animation from "../Components/Animation";
 import axios from "axios";
 import Sidesection from "../Components/Sidesection";
 
+const category = [
+  "웨딩홀",
+  "스튜디오",
+  "의상",
+  "메이크업",
+  "신혼여행",
+  "부케",
+];
+
 function LikeList() {
-  const category = [
-    "웨딩홀",
-    "스튜디오",
-    "의상",
-    "메이크업",
-    "신혼여행",
-    "부케",
-  ];
-  const [previewImg, setPreviewImg] = useState([]);
-  const [itemId, setItemId] = useState([]);
-  const [item, setItem] = useState([]);
-  const [itemName, setItemName] = useState([]);
-  const [itemLike, setItemLike] = useState([]);
-  const [keyIndex, setKeyIndex] = useState([]);
-  const [deleteItemId, setDeleteItemId] = useState([]);
-  let keyIndexArr = [];
-  let list = [];
-  let itemDataArr = [];
-  let previewImgArr = [];
-  let likeIndexArr = [];
-  const [selectedItem, setSelectedItem] = useState("카테고리"); // 초기 버튼명 설정
-  const [selectedSort, setSelectedSort] = useState("정렬"); // 초기 버튼명 설정
-  const [selectedItemId, setSelectedItemId] = useState("");
-  const [selectedIndex, setSelectedIndex] = useState();
-  const [prevSelectedIndex, setPrevSelectedIndex] = useState();
-  const [likeState, setLikeState] = useState([]);
-  const [checkLikeOrNot, setCheckLikeOrNot] = useState(false);
+  const [wholeItems, setWholeItems] = useState([]);
+  const [selectedItem, setSelectedItem] = useState("카테고리"); 
+  const [selectedSort, setSelectedSort] = useState("정렬"); 
+
+  const [selectLikeState, setSelectLikeState] = useState(true);
   const [update, setUpdate] = useState(false);
-
-  const [likeSelect, setLikeSelect] = useState(true);
   const [finish, setFinish] = useState(false);
-  const [realFinish, setRealFinish] = useState(false);
-
-  const handleHeartClick = (e) => {
-    setCheckLikeOrNot(!checkLikeOrNot);
-    let newlikeState = [...likeState];
-    let index = parseInt(e.target.dataset.index);
-    let prevState = newlikeState.slice(index, index + 1);
-    let changedState = undefined;
-    if (prevState[0] === true) {
-      changedState = false;
-    } else if (prevState[0] === false) {
-      changedState = true;
-    } else {
-      changedState = false;
-    }
-    newlikeState.splice(index, 1, changedState);
-    setLikeState(newlikeState);
-    setSelectedItemId(e.target.dataset.id);
-    setSelectedIndex(parseInt(e.target.dataset.index));
-    if (likeState[index] === true || likeState[index] === undefined) {
-      itemLike[index]--;
-    } else {
-      itemLike[index]++;
-    }
-  };
 
   const navigate = useNavigate();
-  const location = useLocation();
 
   const handleItemClick = (item) => {
     setSelectedItem(item); // 선택한 아이템으로 버튼명 변경
@@ -82,221 +41,133 @@ function LikeList() {
     if (sessionStorage.getItem("email") === null) {
       navigate("/login");
     }
-  }, []);
+  }, [navigate]);
 
   const goUpdate = (e) => {
     setUpdate(!update);
   };
 
-  // useEffect(() => {
-  //   setFinish(false);
-  //   setTimeout(() => {
-  //     setFinish(true);
-  //   }, 8000);
-  // }, [selectedItem, selectedSort]);
+  useEffect(() => {
+    const email = sessionStorage.getItem("email");
 
-  // useEffect(() => {
-  //   //전체 찜목록 불러오는 기능
-  //   axios
-  //     .post(`/like/list`, { email: sessionStorage.getItem("email") })
-  //     .then((res) => {
-  //       const dataList = res.data;
+    axios.post(`/like/list`, { email })
+      .then(async (res) => {
+        const likeItems = res.data;
 
-  //       if (dataList.length !== 0) {
-  //         let index = 0;
-  //         for (var i = 0; i < dataList.length; i++) {
-  //           if (i % 3 === 0) {
-  //             let dataUrl = "data:image/jpeg;base64," + dataList[i];
-  //             previewImgArr.push(dataUrl);
-  //             setPreviewImg(previewImgArr);
-  //           } else if (i % 3 === 1) {
-  //             let newitemId = dataList[i];
-  //             list.push(newitemId);
-  //             setItemId(list);
-  //             keyIndexArr.push(index);
-  //             index++;
-  //             setKeyIndex(keyIndexArr);
-  //             likeIndexArr.push(true);
-  //             setLikeState(likeIndexArr);
-  //             axios
-  //               .get(`/item/getItemList/${newitemId}`)
-  //               .then((res) => {
-  //                 let newItem = res.data;
-  //                 itemDataArr.push(newItem);
-  //                 itemDataArr.sort(function (a, b) {
-  //                   return (
-  //                     new Date(b.likeWriteDate) - new Date(a.likeWriteDate)
-  //                   );
-  //                 });
-  //                 setItem([...item, newItem]);
-  //                 setItem(itemDataArr);
+        // 1. group by itemId
+        const groupedItems = likeItems.reduce((acc, like) => {
+        const itemId = like.item.itemId;
 
-  //                 let itemNameList = [];
-  //                 let itemLikeList = [];
-  //                 for (var j = 0; j < itemDataArr.length; j++) {
-  //                   const newItemName = itemDataArr[j].itemName;
-  //                   const newItemLike = itemDataArr[j].like.length;
-  //                   itemNameList.push(newItemName);
-  //                   itemLikeList.push(newItemLike);
-  //                   setItemName(itemNameList);
-  //                   setItemLike(itemLikeList);
-  //                 }
-  //               })
-  //               .catch((e) => {
-  //                 console.log(e);
-  //               });
-  //           } else {
-  //           }
-  //         }
-  //       }
-  //     })
-  //     .catch((e) => {
-  //       console.log(e);
-  //     });
-  // }, []);
+        if (!acc[itemId]) {
+          acc[itemId] = {
+            item: like.item,
+            likeCount: 0, // will be overwritten later by server response
+            latestLikeDate: like.likeWriteDate,
+            isLiked: true,
+          };
+        }
+
+        if (new Date(like.likeWriteDate) > new Date(acc[itemId].latestLikeDate)) {
+          acc[itemId].latestLikeDate = like.likeWriteDate;
+        }
+
+        return acc;
+      }, {});
+
+      const itemIds = Object.keys(groupedItems).map(id => Number(id));
+
+      try {
+        // 2. get whole likeCounts by itemIds
+        const countRes = await axios.post(`/like/item/likeCounts`, itemIds);
+        const likeCountsMap = countRes.data;
+
+        // 3. overwrite likeCounts in each likeItem 
+        for (const itemId in groupedItems) {
+          groupedItems[itemId].likeCount = likeCountsMap[itemId] || 0;
+        }
+
+        // 4. sort
+        const result = Object.values(groupedItems).sort(
+          (a, b) => new Date(b.latestLikeDate) - new Date(a.latestLikeDate)
+        );
+        setWholeItems(result);
+        console.log(result);
+      } catch (countError) {
+        console.error("Error fetching like counts:", countError);
+      }
+    })
+    .catch((e) => {
+      console.error("Error fetching like list:", e);
+    });
+  }, []);
 
   useEffect(() => {
     //카테고리, 정렬 모두 적용
-
+    const email = sessionStorage.getItem("email");
     axios
       .post(`/like/list/category/sort`, {
-        email: sessionStorage.getItem("email"),
+        email,
         category1: selectedItem,
         sortBy: selectedSort,
       })
       .then((res) => {
         const dataList = res.data;
-        console.log(dataList);
-        if (dataList.length !== 0) {
-          let index = 0;
-          for (var i = 0; i < dataList.length; i++) {
-            if (i % 2 === 0) {
-              let dataUrl = "data:image/jpeg;base64," + dataList[i];
-              previewImgArr.push(dataUrl);
-              setPreviewImg(previewImgArr);
-            } else if (i % 2 === 1) {
-              let newitemId = dataList[i];
-              list.push(newitemId);
-              setItemId(list);
-              keyIndexArr.push(index);
-              index++;
-              setKeyIndex(keyIndexArr);
-              likeIndexArr.push(true);
-              setLikeState(likeIndexArr);
 
-              axios
-                .get(`/item/getItemList/${newitemId}`)
-                .then((res) => {
-                  console.log("=======================");
-                  console.log(res);
-
-                  let newItem = res.data;
-                  itemDataArr.push(newItem);
-                  if (selectedSort === "가나다순") {
-                    itemDataArr.sort(function (a, b) {
-                      if (a.itemName < b.itemName) return -1;
-                      if (a.itemName > b.itemName) return 1;
-                      if (a.itemName === b.itemName) return 0;
-                    });
-                  } else if (selectedSort === "인기순") {
-                    itemDataArr.sort(function (a, b) {
-                      if (a.like.length < b.like.length) return 1;
-                      if (a.like.length > b.like.length) return -1;
-                      if (a.like.length === b.like.length) {
-                        if (a.itemName < b.itemName) return -1;
-                        if (a.itemName > b.itemName) return 1;
-                        if (a.itemName === b.itemName) return 0;
-                      }
-                    });
-                  } else if (selectedSort === "최신순") {
-                    itemDataArr.sort(function (a, b) {
-                      return (
-                        new Date(b.likeWriteDate) - new Date(a.likeWriteDate)
-                      );
-                    });
-                  } else {
-                    itemDataArr.sort(function (a, b) {
-                      return (
-                        new Date(b.likeWriteDate) - new Date(a.likeWriteDate)
-                        //a.itemName - b.itemName
-                      );
-                    });
-                  }
-
-                  setItem([...item, newItem]);
-                  setItem(itemDataArr);
-
-                  let itemNameList = [];
-                  let itemLikeList = [];
-                  for (var j = 0; j < itemDataArr.length; j++) {
-                    const newItemName = itemDataArr[j].itemName;
-                    const newItemLike = itemDataArr[j].like.length;
-                    itemNameList.push(newItemName);
-                    itemLikeList.push(newItemLike);
-                    setItemName(itemNameList);
-                    setItemLike(itemLikeList);
-                  }
-                })
-                .catch((e) => {
-                  console.log(e);
-                });
-              //
-            }
-          }
-          setFinish(true);
-        } else {
-          // 결과 없을 때
-          keyIndexArr = [];
-          setKeyIndex(keyIndexArr);
-          setFinish(true);
-        }
+        
+        setFinish(true);
       })
       .catch((e) => {
         console.log(e);
       });
   }, [selectedItem, selectedSort, update]);
 
+  const handleLikeChange = (itemId, liked) => {
+    setWholeItems(prevItems =>
+      prevItems.map(item =>
+        item.item?.itemId === itemId ? { ...item, isLiked: liked, likeCount: liked ? (item.likeCount || 0) + 1 : Math.max(0, (item.likeCount || 0) - 1) } : item
+      )
+    );
+  };
+
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
   }, [selectedItem, selectedSort, update]);
 
-  // console.log(likeState);
-  useEffect(() => {
-    keyIndex.forEach((index) => {
-      if (likeState[index] === false) {
-        console.log("deleteitem:" + itemId[index]);
-        axios
-          .post(`/like/delete`, {
-            itemId: itemId[index],
-            email: sessionStorage.getItem("email"),
-          })
-          .then((res) => {
-            console.log("delete");
-            //   console.log(res);
-          })
-          .catch((e) => {
-            console.log(e);
+  const Like = ({ likeState, itemId, onLikeChange}) => {
+    const [isLiked, setIsLiked] = useState(likeState);
+
+    const handleHeartClick = async (itemId) => {
+      const email = sessionStorage.getItem("email");
+      
+      setIsLiked(!isLiked);
+      try {
+        if (isLiked) {
+          await axios.post(`/like/delete`, {
+            itemId,
+            email,
           });
-      } else if (likeState[index] === true) {
-        axios
-          .post(`/like/create`, {
-            itemId: itemId[index],
-            email: sessionStorage.getItem("email"),
-          })
-          .then((res) => {
-            //  console.log(res);
-          })
-          .catch((e) => {
-            console.log(e);
+          if (onLikeChange) {
+            onLikeChange(itemId, false); 
+          }
+        } else {
+          await axios.post(`/like/create`, {
+            itemId,
+            email,
           });
+          if (onLikeChange) {
+            onLikeChange(itemId, true); 
+          }
+        }
+  
+        return true;
+      } catch (error) {
+        console.error(error);
+        setIsLiked(!isLiked);
+        return false;
       }
-    });
-  }, [checkLikeOrNot, update]);
+    };
 
-  const Like = ({ likeState, index }) => {
-    const id = itemId[itemId.length - 1 - index];
-
-    if (likeState[index] === true || likeState[index] === undefined) {
+    if (likeState) {
       return (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -306,19 +177,15 @@ function LikeList() {
           class="bi bi-heart-fill "
           viewBox="0 0 16 16"
           style={{ cursor: "pointer" }}
-          onClick={handleHeartClick}
-          data-id={id}
-          data-index={index}
+          onClick={e => {handleHeartClick(itemId)}}
         >
           <path
-            data-id={id}
-            data-index={index}
             fill-rule="evenodd"
             d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"
           />
         </svg>
       );
-    } else if (likeState[index] === false) {
+    } else {
       return (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -327,14 +194,10 @@ function LikeList() {
           fill="currentColor"
           class="bi bi-heart"
           viewBox="0 0 16 16"
-          onClick={handleHeartClick}
+          onClick={e => {handleHeartClick(itemId)}}
           style={{ cursor: "pointer" }}
-          data-id={id}
-          data-index={index}
         >
           <path
-            data-id={id}
-            data-index={index}
             d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"
           />
         </svg>
@@ -503,7 +366,7 @@ function LikeList() {
                 <div class="container text-center">
                   <div class="row row-cols-2">
                     {/* 이미지카드 */}
-                    {keyIndex.length === 0 ? (
+                    {wholeItems.length === 0 ? (
                       <div
                         class="text-start"
                         style={{
@@ -515,22 +378,26 @@ function LikeList() {
                         결과가 없습니다.
                       </div>
                     ) : (
-                      keyIndex.map((i) => (
-                        <div class="col">
+                      wholeItems.map((likeItem) => (
+                        <div class="col" key={likeItem.item?.itemId}>
                           <div class="card margT">
                             <img
                               style={{ height: "230px" }}
-                              src={previewImg[i]}
+                              src={likeItem.item?.itemImg}
                               class="card-img-top"
                               alt="..."
                             />
                             <div class="card-body">
                               <p class="card-text">
-                                {itemName[i]} &nbsp;&nbsp;
+                                {likeItem.item?.itemName} &nbsp;&nbsp;
                                 <div className="likeListBtn1">
-                                  <Like likeState={likeState} index={i} />
+                                  <Like 
+                                    likeState={likeItem.isLiked} 
+                                    itemId={likeItem.item?.itemId}
+                                    onLikeChange={handleLikeChange}
+                                  />
                                 </div>
-                                {itemLike[i]}
+                                {likeItem.likeCount}
                               </p>
                             </div>
                           </div>

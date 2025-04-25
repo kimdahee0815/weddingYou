@@ -39,20 +39,24 @@ public class LikeService {
 	@Autowired
 	ItemRepository itemRepository;
 	
-	//찜목록 조회
-	public List<LikeEntity> getLikeList(String email) {
+	public List<likeDTO> getLikeList(String email) {
 	  UserLogin user = new UserLogin();
 	  PlannerLogin planner = new PlannerLogin();
 		List<LikeEntity> likeList = null;
 	  if(userRepository.findByEmail(email)!=null) {
 		  user.setEmail(email);
-		  likeList = likeRepository.findByUser(user);
+		  likeList = likeRepository.findByUserWithItem(user);
 	  }else {
 		  planner.setEmail(email);
-		  likeList = likeRepository.findByPlanner(planner);
+		  likeList = likeRepository.findByPlannerWithItem(planner);
 	  }     
-		Collections.sort(likeList, (a, b) -> b.getLikeWriteDate().compareTo(a.getLikeWriteDate()));
-		return likeList;
+		if (likeList != null) {
+			Collections.sort(likeList, (a, b) -> b.getLikeWriteDate().compareTo(a.getLikeWriteDate()));
+			return likeList.stream()
+			.map(likeDTO::fromEntity)
+			.collect(Collectors.toList());
+		}
+		return null;
 	}
 
 	//좋아요 추가
@@ -93,7 +97,7 @@ public class LikeService {
     return likeRepository.findByUserAndItem_Category1AndItem_Category2(user, category1, category2);
   }
     
-  public List<LikeEntity> getLikeListByCategory1(String email, Category1 category1) {
+  public List<likeDTO> getLikeListByCategory1(String email, Category1 category1) {
     List<LikeEntity> likeList = null;
     if(userRepository.findByEmail(email)!=null) {
     	UserLogin user = new UserLogin();
@@ -104,8 +108,13 @@ public class LikeService {
     	planner.setEmail(email);
     	likeList = likeRepository.findByPlannerAndItem_Category1(planner, category1);
     }
-		Collections.sort(likeList, (a, b) -> b.getLikeWriteDate().compareTo(a.getLikeWriteDate()));
-    return likeList;     
+		if (likeList != null) {
+			Collections.sort(likeList, (a, b) -> b.getLikeWriteDate().compareTo(a.getLikeWriteDate()));
+			return likeList.stream()
+			.map(likeDTO::fromEntity)
+			.collect(Collectors.toList());
+		}
+		return null;
   }
     
   public List<LikeEntity> getLikeListByItemId(Long itemId){

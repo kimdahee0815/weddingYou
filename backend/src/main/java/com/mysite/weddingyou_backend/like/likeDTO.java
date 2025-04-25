@@ -59,6 +59,7 @@ public class likeDTO {
     dto.setItemId(likeEntity.getItem() != null ? likeEntity.getItem().getItemId() : null);
     dto.setLikeWriteDate(likeEntity.getLikeWriteDate());
     dto.setLocation(likeEntity.getLocation());
+		dto.setItem(likeEntity.getItem());
 
     if (likeEntity.getUser() != null) {
         dto.setEmail(likeEntity.getUser().getEmail());

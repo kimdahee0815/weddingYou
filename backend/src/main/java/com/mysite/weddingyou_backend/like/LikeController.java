@@ -47,9 +47,9 @@ public class LikeController {
 	private ItemService itemService;
 	
 	@RequestMapping("/list")
-    public List<LikeEntity> getLikeList(@RequestBody likeDTO user, HttpServletRequest request) {
+    public List<likeDTO> getLikeList(@RequestBody likeDTO user, HttpServletRequest request) {
 		String email = user.getEmail();
-    List<LikeEntity> likeList = likeService.getLikeList(email);
+    List<likeDTO> likeList = likeService.getLikeList(email);
 
     return likeList;
   }
@@ -129,7 +129,7 @@ public class LikeController {
     Map<Long, Integer> likeCounts = likeService.getLikeCounts(itemIds);
 
     return ResponseEntity.ok(likeCounts);
-}
+	}	
 	
 	
 	@RequestMapping("/findlist")
@@ -171,7 +171,7 @@ public class LikeController {
 	}
 	
 	@PostMapping("/list/category")
-	public List<LikeEntity> getLikeListByCategory(HttpServletRequest request, @RequestBody likeDTO data) {
+	public List<likeDTO> getLikeListByCategory(HttpServletRequest request, @RequestBody likeDTO data) {
 		String email =data.getEmail();
 		Category1 category1 = data.getCategory1();
 		
@@ -181,154 +181,66 @@ public class LikeController {
 	
 	//정렬(가나다순, 인기순, 지역순)
 	@PostMapping("/list/sort")
-	public List<LikeEntity> getLikeListBySort(@RequestBody likeDTO data, HttpServletRequest request) {
-		String sortBy = data.getSortBy();
-		String email = data.getEmail();
+	public List<likeDTO> getLikeListBySort(@RequestBody likeDTO data) {
+    String sortBy = data.getSortBy();
+    String email = data.getEmail();
 
-		List<LikeEntity> likeList = likeService.getLikeList(email);
-	  if (sortBy != null) {
-	    switch (sortBy) {
-	      case "가나다순": //asc
-	        Collections.sort(likeList, (a, b) -> b.getItem().getItemName().compareTo(a.getItem().getItemName()));
-	        break;
-	      case "인기순": //desc
-					Collections.sort(likeList, new Comparator<LikeEntity>() {
-            public int compare(LikeEntity o1, LikeEntity o2) {
-							int o1LikeCount = likeService.getLikeCount(o1.getItem().getItemId());
-							int o2LikeCount = likeService.getLikeCount(o2.getItem().getItemId());
-              String o1ItemName = o1.getItem().getItemName();
-							String o2ItemName = o2.getItem().getItemName();
-							if(o1LikeCount - o2LikeCount>0) {
-                return 1;
-              }else if(o1LikeCount - o2LikeCount<0) {
-                return -1;
-							}else {
-                if(o1ItemName.compareTo(o2ItemName)>0) {
-                  return -1;
-                }else if(o1ItemName.compareTo(o2ItemName)<0) {
-                  return 1;
-                }else {
-                  return 0;
-                }
-              }
-						}
-          });
-          break;
-//      case "지역순": //오름차순
-//	      Collections.sort(likeList, (a, b) -> a.getLocation().compareTo(b.getLocation()));
-//        break;
-	      default:
-          throw new IllegalArgumentException("Invalid sort option: " + sortBy);
-	    }
-	  }
-	  return likeList;
+    List<likeDTO> likeList = likeService.getLikeList(email);
+    sortLikeList(likeList, sortBy);
+
+    return likeList;
 	}
 	
-		//정렬(가나다순, 인기순, 지역순)
-		@PostMapping("/list/category/sort")
-		public List<LikeEntity> getLikeListByCategoryAndSort(@RequestBody likeDTO data, HttpServletRequest request) {
-			String sortBy = data.getSortBy();
-			Category1 category1 = data.getCategory1();		
-			String email = data.getEmail();
+	@PostMapping("/list/category/sort")
+	public List<likeDTO> getLikeListByCategoryAndSort(@RequestBody likeDTO data) {
+    String sortBy = data.getSortBy();
+    Category1 category1 = data.getCategory1();
+    String email = data.getEmail();
 
-			List<LikeEntity> likeList = null; 
-			if(category1.toString().equals("카테고리") && sortBy.equals("정렬") || category1.toString().equals("전체") && sortBy.equals("정렬")) { //초기상태
-				likeList = likeService.getLikeList(email);
-			}
-			if(category1.toString().equals("카테고리") && !sortBy.equals("정렬") || category1.toString().equals("전체") && !sortBy.equals("정렬")) { //정렬만 선택했을 때
-				likeList = likeService.getLikeList(email);
-				if (sortBy != null) {
-				  switch (sortBy) {
-				    case "가나다순": //asc
-				      Collections.sort(likeList, (a, b) -> a.getItem().getItemName().compareTo(b.getItem().getItemName()));
-				      break;
-				    case "인기순": //desc
-			        Collections.sort(likeList, new Comparator<LikeEntity>() {
-			          public int compare(LikeEntity o1, LikeEntity o2) {
-									int o1LikeCount = likeService.getLikeCount(o1.getItem().getItemId());
-									int o2LikeCount = likeService.getLikeCount(o2.getItem().getItemId());
-              		String o1ItemName = o1.getItem().getItemName();
-									String o2ItemName = o2.getItem().getItemName();
-			            if(o1LikeCount - o2LikeCount >0) {
-			              return -1;
-			            }else if(o1LikeCount - o2LikeCount <0) {
-			              return 1;
-			            }else {
-			              if(o1ItemName.compareTo(o2ItemName)>0) {
-			                return 1;
-			              }else if(o1ItemName.compareTo(o2ItemName)<0) {
-			                return -1;
-			              }else {
-			                return 0;
-			              }
-			            }
-			          }
-			        });
-			        break;
-			      case "최신순": //asc
-			        Collections.sort(likeList, (a, b) -> b.getLikeWriteDate().compareTo(a.getLikeWriteDate()));
-			        break;	                
-			      case "정렬":
-			        Collections.sort(likeList, (a, b) -> b.getLikeWriteDate().compareTo(a.getLikeWriteDate()));
-			        break;
-				    default:
-			        throw new IllegalArgumentException("Invalid sort option: " + sortBy);
-				  }
-				}
-			}
+    boolean isDefaultCategory = category1.toString().equals("카테고리") || category1.toString().equals("전체");
+    boolean isDefaultSort = sortBy.equals("정렬");
 
-			if(category1.toString().equals("웨딩홀") && sortBy.equals("정렬") || category1.toString().equals("스튜디오") && sortBy.equals("정렬") 
-		|| category1.toString().equals("의상") && sortBy.equals("정렬") || category1.toString().equals("메이크업") && sortBy.equals("정렬") 
-		|| category1.toString().equals("신혼여행") && sortBy.equals("정렬") || category1.toString().equals("부케") && sortBy.equals("정렬") ) { // 카테고리만 선택했을 때
-				likeList = likeService.getLikeListByCategory1(email, category1);
-			}
-			
-			if(!sortBy.equals("정렬")) { //두조건 모두 선택되었을 때
-				if(!category1.toString().equals("전체") && !category1.toString().equals("카테고리")) {
-					likeList = likeService.getLikeListByCategory1(email, category1);
-					
-					if (sortBy != null) {
-				    switch (sortBy) {
-				      case "가나다순": //오름차순
-				        Collections.sort(likeList, (a, b) -> a.getItem().getItemName().compareTo(b.getItem().getItemName()));
-				        break;
-				      case "인기순": //내림차순
-			          Collections.sort(likeList, new Comparator<LikeEntity>() {
-			            public int compare(LikeEntity o1, LikeEntity o2) {
-										int o1LikeCount = likeService.getLikeCount(o1.getItem().getItemId());
-										int o2LikeCount = likeService.getLikeCount(o2.getItem().getItemId());
-              			String o1ItemName = o1.getItem().getItemName();
-										String o2ItemName = o2.getItem().getItemName();
-			              if(o1LikeCount - o2LikeCount >0) {
-			                return -1;
-			              }else if(o1LikeCount - o2LikeCount <0) {
-			                return 1;
-			              }else {
-			                if(o1ItemName.compareTo(o2ItemName)>0) {
-			                  return 1;
-			                }else if(o1ItemName.compareTo(o2ItemName)<0) {
-			                  return -1;
-			                }else {
-			                  return 0;
-			                }
-			              }
-			            }
-			        	});
-			          break;
-			        case "최신순": //asc
-			          Collections.sort(likeList, (a, b) -> b.getLikeWriteDate().compareTo(a.getLikeWriteDate()));
-			          break;
-			        case "정렬":
-			          Collections.sort(likeList, (a, b) -> b.getLikeWriteDate().compareTo(a.getLikeWriteDate()));
-			          break;
-				      default:
-			          throw new IllegalArgumentException("Invalid sort option: " + sortBy);
-				    }
-				  }
-				}
-			}
-		  return likeList;
-		}
+    List<likeDTO> likeList;
+
+    // 1. filtering
+    if (isDefaultCategory) {
+        likeList = likeService.getLikeList(email);
+    } else {
+        likeList = likeService.getLikeListByCategory1(email, category1);
+    }
+
+    // 2. sort
+    sortLikeList(likeList, sortBy);
+
+    return likeList;
+	}
+
+	private void sortLikeList(List<likeDTO> likeList, String sortBy) {
+    if (sortBy == null) return;
+		
+		switch (sortBy) {
+        case "가나다순":
+            likeList.sort(Comparator.comparing(like -> like.getItem().getItemName()));
+            break;
+        case "인기순":
+            likeList.sort((o1, o2) -> {
+                int o1Count = likeService.getLikeCount(o1.getItem().getItemId());
+                int o2Count = likeService.getLikeCount(o2.getItem().getItemId());
+
+                if (o1Count != o2Count) {
+                    return Integer.compare(o2Count, o1Count); // like (desc)
+                }
+
+                return o1.getItem().getItemName().compareTo(o2.getItem().getItemName()); // name (asc) 
+            });
+            break;
+        case "최신순":
+        case "정렬": // default is also recent order
+        default:
+            likeList.sort(Comparator.comparing(likeDTO::getLikeWriteDate).reversed());
+            break;
+    }
+	}
 	
 
 }
