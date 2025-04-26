@@ -50,11 +50,47 @@ public class EstimateService {
 		return data;
 	}
 	
-	//견적서 삭제
-	public void delete(int id ) {
-		estimateRepository.deleteById(id);
+	//견적서 상세조회
+		public Estimate getEstimateDetail(Long id) {
+			Estimate data = estimateRepository.findById(id);
+			return data;
+		}
+		
+		//견적서 상세조회
+				public List<Estimate> getEstimateDetailByEmail(String userEmail) {
+					List<Estimate> data = estimateRepository.findAllByWriter(userEmail);
+					return data;
+				}
+		
+		//견적서 매칭 플래너 업데이트
+	public Estimate save(Estimate data) {
+			System.out.println("service:"+data.getPlannermatching());
+			estimateRepository.save(data);
+			return data;
 	}
 	
+	//견적서 삭제
+	public void delete(Long id ) {
+		estimateRepository.deleteById(id);
+	}
+
+	
+	public List<Estimate> pageinglist(int page_num, int limit) {
+		int start = (page_num - 1) * limit;
+		return estimateRepository.pageinglist(start, limit);
+	}
+	
+	//검색데이터 갯수 
+	public int getsearchlistcount(String search) {
+			return estimateRepository.getsearchlistcount(search);
+	}
+	
+	//검색데이터 조회
+	public List<Estimate> getsearchlistpageing(int page_num, int limit, String search) {
+		int start = (page_num - 1)*limit; 
+		return estimateRepository.getsearchlistpageing(start,limit,search);
+	}
+
 	
 			
 }

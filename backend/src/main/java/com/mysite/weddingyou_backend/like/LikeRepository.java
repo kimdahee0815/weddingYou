@@ -51,4 +51,8 @@ public interface LikeRepository extends JpaRepository<LikeEntity, Long> {
 
 	@Query("SELECT COUNT(l) FROM LikeEntity l WHERE l.item.id = :itemId")
 	int countByItemId(@Param("itemId") Long itemId);
+
+	void deleteAllByPlanner(PlannerLogin planner);
+	
+	void deleteAllByUser(UserLogin user);
 }
