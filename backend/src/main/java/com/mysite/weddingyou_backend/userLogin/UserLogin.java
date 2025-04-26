@@ -1,9 +1,7 @@
 package com.mysite.weddingyou_backend.userLogin;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.mysite.weddingyou_backend.plannerRegister.PlannerRegister.Gender;
 
 import jakarta.persistence.Column;
@@ -13,7 +11,6 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -44,8 +41,8 @@ public class UserLogin {
 	@Column(name = "user_img", nullable = true)
 	private String userImg;
 	
-	 @Enumerated(EnumType.STRING) // Enum 값을 String 형태로 저장
-	    private Gender gender;
+	@Enumerated(EnumType.STRING) // Enum 값을 String 형태로 저장
+	private Gender gender;
 
 	@Column(name = "user_join_date", nullable = false)
 	private LocalDateTime userJoinDate;

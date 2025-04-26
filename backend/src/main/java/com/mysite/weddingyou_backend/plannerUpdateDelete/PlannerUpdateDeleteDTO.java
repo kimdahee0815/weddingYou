@@ -24,8 +24,6 @@ public class PlannerUpdateDeleteDTO {
 	@NotNull
 	private String password;
 	
-//	private byte[] plannerImg;
-	
 	@NotNull
 	private Gender gender;
 	
@@ -40,5 +38,6 @@ public class PlannerUpdateDeleteDTO {
 	@NotNull
 	private String preemail;
 	
+	private String introduction;
 	
 }

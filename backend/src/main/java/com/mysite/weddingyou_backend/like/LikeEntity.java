@@ -4,7 +4,9 @@ import java.time.LocalDateTime;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.mysite.weddingyou_backend.item.Item;
 import com.mysite.weddingyou_backend.plannerLogin.PlannerLogin;
+import com.mysite.weddingyou_backend.plannerUpdateDelete.PlannerUpdateDelete;
 import com.mysite.weddingyou_backend.userLogin.UserLogin;
+import com.mysite.weddingyou_backend.userUpdateDelete.UserUpdateDelete;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

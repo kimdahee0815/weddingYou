@@ -1,9 +1,14 @@
 package com.mysite.weddingyou_backend.userUpdateDelete;
-import java.sql.Blob;
 import java.time.LocalDateTime;
+import java.util.List;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
+import com.mysite.weddingyou_backend.like.LikeEntity;
 import com.mysite.weddingyou_backend.userRegister.UserRegister.Gender;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -11,6 +16,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -41,8 +47,8 @@ public class UserUpdateDelete {
 	@Column(name = "user_img", nullable = true)
 	private String userImg;
 	
-	 @Enumerated(EnumType.STRING) // Enum 값을 String 형태로 저장
-	    private Gender gender;
+	@Enumerated(EnumType.STRING) // Enum 값을 String 형태로 저장
+	private Gender gender;
 
 	@Column(name = "user_join_date", nullable = false)
 	private LocalDateTime userJoinDate;

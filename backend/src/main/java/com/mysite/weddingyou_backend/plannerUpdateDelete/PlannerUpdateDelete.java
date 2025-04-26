@@ -44,9 +44,12 @@ public class PlannerUpdateDelete {
 	
 	@Column(name = "planner_career_years", nullable = false)
 	private String plannerCareerYears;
+
+	@Column(name = "planner_introduction", nullable = true)
+	private String introduction;
 	
-	 @Enumerated(EnumType.STRING) // Enum 값을 String 형태로 저장
-	    private Gender gender;
+	@Enumerated(EnumType.STRING) // Enum 값을 String 형태로 저장
+	private Gender gender;
 
 	@Column(name = "planner_join_date", nullable = false)
 	private LocalDateTime plannerJoinDate;

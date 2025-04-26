@@ -65,7 +65,6 @@ function UserUpdate() {
 
   const [allcheck, setAllCheck] = useState(true);
   const [anyChange, setAnyChange] = useState(false);
-  const [emailDuplicate, setEmailDuplicate] = useState(false);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -104,7 +103,7 @@ function UserUpdate() {
   const viewDefaultInfo = () => {
     if (category === "user") {
       axios
-        .post("/user/userSearch", { email: sessionStorage.getItem("email") })
+        .post("/user/userSearch", { email: userEmail })
         .then((res) => {
           setName(res.data.name);
           setDefaultName(res.data.name);
@@ -120,33 +119,28 @@ function UserUpdate() {
           console.log(e);
         });
       axios
-        .post("/user/getprofileImg", { email: sessionStorage.getItem("email") })
+        .post("/user/getprofileImg", { email: userEmail }, {
+          responseType: 'blob'  
+        })
         .then((res) => {
-          console.log(res);
-          const byteCharacters = atob(res.data);
-          const byteNumbers = new Array(byteCharacters.length);
-          for (let i = 0; i < byteCharacters.length; i++) {
-            byteNumbers[i] = byteCharacters.charCodeAt(i);
-          }
-          const byteArray = new Uint8Array(byteNumbers);
-          const blob = new Blob([byteArray], { type: "image/jpeg" });
-          setProfileImg(blob);
+          const blob = res.data; 
           const reader = new FileReader();
           reader.onload = () => {
-            setDefaultViewUrl(reader.result);
             setPreviewUrl(reader.result);
+            setDefaultViewUrl(reader.result);
           };
           reader.readAsDataURL(blob);
         })
         .catch((e) => {
-          setDefaultViewUrl(profileimage);
+          console.log(e);
           setPreviewUrl(profileimage);
+          setDefaultViewUrl(profileimage);
         });
     }
     if (category === "planner") {
       axios
         .post("/planner/plannerSearch", {
-          email: sessionStorage.getItem("email"),
+          email: userEmail,
         })
         .then((res) => {
           setName(res.data.name);
@@ -165,32 +159,26 @@ function UserUpdate() {
         })
         .catch((e) => {
           console.log(e);
-        });
-      axios
-        .post("/planner/getprofileImg", {
-          email: sessionStorage.getItem("email"),
-        })
-        .then((res) => {
-          const byteCharacters = atob(res.data);
-          const byteNumbers = new Array(byteCharacters.length);
-          for (let i = 0; i < byteCharacters.length; i++) {
-            byteNumbers[i] = byteCharacters.charCodeAt(i);
-          }
-          const byteArray = new Uint8Array(byteNumbers);
-          const blob = new Blob([byteArray], { type: "image/jpeg" });
-          setProfileImg(blob);
-          const reader = new FileReader();
-          reader.onload = () => {
-            setDefaultViewUrl(reader.result);
-            setPreviewUrl(reader.result);
-          };
-          reader.readAsDataURL(blob);
-        })
-        .catch((e) => {
-          setDefaultViewUrl(profileimage);
           setPreviewUrl(profileimage);
+          setDefaultViewUrl(profileimage);
         });
-    }
+      }
+      axios
+      .post("/planner/getprofileImg", { email: userEmail }, {
+        responseType: 'blob'  
+      })
+      .then((res) => {
+        const blob = res.data; 
+        const reader = new FileReader();
+        reader.onload = () => {
+          setPreviewUrl(reader.result);
+          setDefaultViewUrl(reader.result);
+        };
+        reader.readAsDataURL(blob);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
   };
 
   // const emailDuplicateCheck = (e) => {
@@ -413,7 +401,7 @@ function UserUpdate() {
         if (e.target.value === "") {
           setNameMessage("이름을 작성해주세요.");
         } else {
-          setNameMessage("한굴 5자 이하");
+          setNameMessage("한글 5자 이하");
         }
         nameFeedback.current.classList.remove("invisible");
         nameFeedback.current.classList.remove("valid-feedback");
@@ -610,17 +598,16 @@ function UserUpdate() {
       }
     }
   };
-  // console.log("allcheck : ", allcheck);
-  // console.log("anychange : ", anyChange);
 
   const updateInfo = () => {
     if (category === "user") {
       axios
-        .post("/user/userSearch", { email: sessionStorage.getItem("email") })
+        .post("/user/userSearch", { email: userEmail })
         .then((res) => {
           axios
             .post("/user/userUpdate", {
-              email: sessionStorage.getItem("email"),
+              preemail: userEmail,
+              email: userEmail,
               password: password,
               name: name,
               phoneNum: phone,
@@ -652,17 +639,19 @@ function UserUpdate() {
     if (category === "planner") {
       axios
         .post("/planner/plannerSearch", {
-          email: sessionStorage.getItem("email"),
+          email: userEmail,
         })
         .then((res) => {
           axios
             .post("/planner/userUpdate", {
-              email: sessionStorage.getItem("email"),
+              preemail: userEmail,
+              email: userEmail,
               password: password,
               name: name,
               phoneNum: phone,
               gender: gender,
               career: career,
+              plannerCareerYears: career,
               introduction: introduction,
             })
             .then((res) => {

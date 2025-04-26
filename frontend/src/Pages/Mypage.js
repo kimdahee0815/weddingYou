@@ -4,8 +4,7 @@ import profileimage from "../Assets/defaultprofileimage.jpg";
 import NavigationBar from "../Components/NavigationBar";
 import Footer from "../Components/Footer";
 import React, { useState, useRef, useEffect } from "react";
-import Modal from "react-modal";
-import { Link, useNavigate, useParams, useLocation } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import axios from "axios";
 import Animation from "../Components/Animation";
 import Sidesection from "../Components/Sidesection";
@@ -33,7 +32,7 @@ function Mypage() {
   const passwordConfirm = useRef();
   const [passwordcheckmessage, setPasswordCheckMessage] = useState("");
 
-  const [previewUrl, setPreviewUrl] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(profileimage);
   const [image, setImage] = useState(null);
   
   const { category } = useParams();
@@ -95,7 +94,6 @@ function Mypage() {
           setFinish(true);
         })
         .catch((e) => {
-          setPreviewUrl(profileimage);
           console.log(e);
           // if (e.response.data.message === "프로필 사진이 없습니다!") {
           //   setFinish(true);
@@ -137,7 +135,6 @@ function Mypage() {
           setFinish(true);
         })
         .catch((e) => {
-          setPreviewUrl(profileimage);
           // if (e.response.data.message === "프로필 사진이 없습니다!") {
           //   setFinish(true);
           // } else if (e.reponse.data.message === "로그인 하세요!") {
@@ -182,11 +179,12 @@ function Mypage() {
   };
 
   const deleteMember = () => {
-    const formData = new FormData();
-    formData.append("email", sessionStorage.getItem("email"));
-    formData.append("category", sessionStorage.getItem("category"));
-    axios
-      .post("/user/userDelete", formData)
+    if(category === "user"){
+      axios
+      .post("/user/userDelete", {
+        email: userEmail,
+        category,
+      })
       .then((res) => {
         window.sessionStorage.clear();
         navigate("/login");
@@ -194,6 +192,20 @@ function Mypage() {
       .catch((e) => {
         console.log(e);
       });
+    }else if(category === "planner"){
+      axios
+      .post("/planner/plannerDelete",  {
+        email: userEmail,
+        category,
+      })
+      .then((res) => {
+        window.sessionStorage.clear();
+        navigate("/login");
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+    }
   };
 
   useEffect(() => {
@@ -554,7 +566,7 @@ function Mypage() {
                         type="textarea"
                         class="form-control "
                         id="introduction"
-                        style={{ overflowY: "scroll" }}
+                        style={{ overflowY: "scroll",  fontSize: "1.1em" }}
                         value={introduction}
                         onChange={onChange}
                         placeholder="아직 소개글이 없습니다."
@@ -562,7 +574,6 @@ function Mypage() {
                         cols="10"
                         rows="8"
                         disabled
-                        style={{ fontSize: "1.1em" }}
                         maxLength="1000"
                       />
                     </div>
@@ -887,7 +898,7 @@ function Mypage() {
                         type="textarea"
                         class="form-control "
                         id="introduction"
-                        style={{ overflowY: "scroll" }}
+                        style={{ overflowY: "scroll" ,fontSize: "1.1em"}}
                         value={introduction}
                         onChange={onChange}
                         placeholder="아직 소개글이 없습니다."
@@ -895,7 +906,6 @@ function Mypage() {
                         cols="10"
                         rows="8"
                         disabled
-                        style={{ fontSize: "1.1em" }}
                         maxLength="1000"
                       />
                     </div>

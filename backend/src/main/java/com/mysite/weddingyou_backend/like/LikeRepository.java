@@ -12,7 +12,9 @@ import com.mysite.weddingyou_backend.item.Item;
 import com.mysite.weddingyou_backend.item.Item.Category1;
 import com.mysite.weddingyou_backend.item.Item.Category2;
 import com.mysite.weddingyou_backend.plannerLogin.PlannerLogin;
+import com.mysite.weddingyou_backend.plannerUpdateDelete.PlannerUpdateDelete;
 import com.mysite.weddingyou_backend.userLogin.UserLogin;
+import com.mysite.weddingyou_backend.userUpdateDelete.UserUpdateDelete;
 
 @Repository
 public interface LikeRepository extends JpaRepository<LikeEntity, Long> {	
@@ -23,10 +25,10 @@ public interface LikeRepository extends JpaRepository<LikeEntity, Long> {
 	List<LikeEntity> findByPlannerWithItem(@Param("planner") PlannerLogin planner);
 
 	@EntityGraph(attributePaths = {"item"})
-	List<LikeEntity> findByUser(UserLogin user);
+	List<LikeEntity> findByUserEmail(String email);
 
 	@EntityGraph(attributePaths = {"item"})
-	List<LikeEntity> findByPlanner(PlannerLogin planner);
+	List<LikeEntity> findByPlannerEmail(String email);
 	
 	@Query("SELECT l FROM LikeEntity l JOIN FETCH l.item WHERE l.user = :user AND l.item.category1 = :category1 AND l.item.category2 = :category2")
 	List<LikeEntity> findByUserAndItem_Category1AndItem_Category2(UserLogin user, Category1 category1, Category2 category2);

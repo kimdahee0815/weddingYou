@@ -36,9 +36,6 @@ public class PlannerRegister {
     @Column(name = "phone_number", nullable = false)
     private String phoneNum;
     
-//    @Column(name = "planner_img")
-//    private byte[] plannerImg;
-    
     @Column(name = "planner_career_years", nullable = false)
     private int career;
     

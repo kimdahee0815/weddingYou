@@ -49,86 +49,56 @@ public class UserUpdateDeleteController {
 	LikeRepository likeRepository;
 	
 
-	 @PostMapping("/user/userSearch")
-	 public UserUpdateDelete searchUser(@RequestBody UserUpdateDeleteDTO user) throws Exception {
-		
-		 
-		 	UserUpdateDelete searchedUser = service.getUserByEmail(user.getEmail());
-		 	if(searchedUser != null) {
-	        	 return searchedUser;
-	        }
-					return null;
-		   
-	 }
+	@PostMapping("/user/userSearch")
+	public UserUpdateDelete searchUser(@RequestBody UserUpdateDeleteDTO user) throws Exception {
+		UserUpdateDelete searchedUser = service.getUserByEmail(user.getEmail());
+		if(searchedUser != null) {
+	    return searchedUser;
+	  }
+		return null; 
+	}
 
 
-	 @PostMapping("/user/userDelete")
-	    public ResponseEntity<UserUpdateDelete> deleteUser(@RequestBody UserUpdateDeleteDTO user) {
-		 UserUpdateDelete searchedUser = service.getUserByEmail(user.getEmail());
-		service.delete(searchedUser);
-		return ResponseEntity.status(HttpStatus.OK).build();
-	    }
-	 
-	 @PostMapping("/user/userUpdate")
-	    public UserUpdateDelete updateUser(@RequestBody UserUpdateDeleteDTO user) throws Exception {
-		 UserUpdateDelete searchedUser = service.getUserByEmail(user.getPreemail());
-		 UserUpdateDelete emailDuplicateUser = service.getUserByEmail(user.getEmail());
-		 if(user.getPreemail().equals(user.getEmail()) || emailDuplicateUser==null) {
-			 searchedUser.setEmail(user.getEmail());
-			 searchedUser.setPassword(user.getPassword());
-			 searchedUser.setPhoneNum(user.getPhoneNum());
-			 searchedUser.setGender(user.getGender());
-			service.save(searchedUser);
-		 }else {
-			 throw new Exception("이메일이 중복됩니다!");
-		 }
+	@PostMapping("/user/userDelete")
+	  public ResponseEntity<UserUpdateDelete> deleteUser(@RequestBody UserUpdateDeleteDTO user) {
+			UserUpdateDelete searchedUser = service.getUserByEmail(user.getEmail());
+			service.delete(searchedUser);
+			return ResponseEntity.status(HttpStatus.OK).build();
+	  }
+
+	@PostMapping("/user/userUpdate")
+	  public UserUpdateDelete updateUser(@RequestBody UserUpdateDeleteDTO user) throws Exception {
+		 	UserUpdateDelete searchedUser = service.getUserByEmail(user.getPreemail());
+		 	UserUpdateDelete emailDuplicateUser = service.getUserByEmail(user.getEmail());
+		 	if(user.getPreemail().equals(user.getEmail()) || emailDuplicateUser==null) {
+			 	searchedUser.setEmail(user.getEmail());
+			 	searchedUser.setPassword(user.getPassword());
+			 	searchedUser.setPhoneNum(user.getPhoneNum());
+			 	searchedUser.setGender(user.getGender());
+				service.save(searchedUser);
+		 	}else {
+			 	throw new Exception("이메일이 중복됩니다!");
+		 	}
 		
-		 return searchedUser;
-		
-	    }
-	 
-	 @PostMapping("/user/updateprofileImg")
-	 public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file, @RequestParam("useremail") String email) {
-		    try {	
-		    	UserUpdateDelete searchedUser = service.getUserByEmail(email);
-		    	String path1 = "C:\\Project";
-		    	String path2 = "C:\\Project\\profileImg";
-		    	String path3 = "C:\\Project\\profileImg\\user";
-		    	File folder1 = new File(path1);
-		    	File folder2 = new File(path2);
-		    	File folder3 = new File(path3);
-		    	if(!folder1.exists() || !folder2.exists() || !folder3.exists()) {
-		    		try {
-		    			folder1.mkdir();
-		    			folder2.mkdir();
-		    			folder3.mkdir();
-		    		}catch(Exception e) {
-		    			e.getStackTrace();
-		    		}
-		    	}
-		    	
-		    	
-		    	if(searchedUser.getUserImg() != null) {
-		    		Path deleteFilePath = Paths.get(path3, searchedUser.getUserImg());
-		    		Files.delete(deleteFilePath);
-		    	}
-		    	
-		        Files.copy(file.getInputStream(), Paths.get("C:/Project/profileImg/user", file.getOriginalFilename()),StandardCopyOption.REPLACE_EXISTING); //request에서 들어온 파일을 uploads 라는 경로에 originalfilename을 String 으로 올림
-		        System.out.println(file.getInputStream());
-		        searchedUser.setUserImg(file.getOriginalFilename()); //searchedUser에다가 이미지 파일 이름 저장
-		        //searchedUser.setUserImgUrl((Blob) file);
-		        service.save(searchedUser); // 이미지파일이름 데이터베이스에 업데이트함
-		        System.out.println(searchedUser.getUserImg());
-		        return ResponseEntity.ok().build();
-		    } catch (IOException e) {
-		        e.printStackTrace();
-		        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-		    }
-		}
+		 	return searchedUser;
+	  }
+
+	@PostMapping("/user/updateprofileImg")
+	public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file, @RequestParam("useremail") String email) {
+		UserUpdateDelete searchedUser = service.getUserByEmail(email);
+		String imageUrl = s3Service.uploadFile(file, "users/");
+					
+		// if(searchedUser.getUserImg() != null) {
+		// 	Path deleteFilePath = Paths.get(path3, searchedUser.getUserImg());
+		// 	Files.delete(deleteFilePath);
+		// }
+		searchedUser.setUserImg(imageUrl); 
+		service.save(searchedUser); 
+		return ResponseEntity.ok().build();
+	}
 	
-	 
-	 @RequestMapping(value="/user/getprofileImg",  produces = MediaType.IMAGE_JPEG_VALUE)
-	 public ResponseEntity<byte[]> getImage(@RequestBody UserUpdateDeleteDTO user) {
+	@RequestMapping(value="/user/getprofileImg",  produces = MediaType.IMAGE_JPEG_VALUE)
+	public ResponseEntity<byte[]> getImage(@RequestBody UserUpdateDeleteDTO user) {
 		UserUpdateDelete searchedUser = service.getUserByEmail(user.getEmail());
 		if (searchedUser != null) {
 			String fullPath = searchedUser.getUserImg();
@@ -145,6 +115,6 @@ public class UserUpdateDeleteController {
 			}
 		}
 		return ResponseEntity.notFound().build();
-	 }
+	}
 
 }
