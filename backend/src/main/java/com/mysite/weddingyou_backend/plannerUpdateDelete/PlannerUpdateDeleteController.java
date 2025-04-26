@@ -64,11 +64,9 @@ public class PlannerUpdateDeleteController {
 	public PlannerUpdateDelete updateUser(@RequestBody PlannerUpdateDeleteDTO planner) throws Exception {
 		PlannerUpdateDelete searchedPlanner = service.getPlannerByEmail(planner.getPreemail());
 		PlannerUpdateDelete emailDuplicatePlanner = service.getPlannerByEmail(planner.getEmail());
-		System.out.println("planner email : "+ planner.getEmail());
-		System.out.println("planner pre email : "+ planner.getPreemail());
-		System.out.println("planner : "+ planner);
 		if(planner.getPreemail().equals(planner.getEmail())||emailDuplicatePlanner==null) {
 			searchedPlanner.setEmail(planner.getEmail());
+			searchedPlanner.setName(planner.getName());
 			searchedPlanner.setPassword(planner.getPassword());
 			searchedPlanner.setPhoneNum(planner.getPhoneNum());
 			searchedPlanner.setGender(planner.getGender());

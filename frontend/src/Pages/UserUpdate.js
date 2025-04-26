@@ -647,7 +647,6 @@ console.log(defaultImage)
               phoneNum: phone,
               gender: gender,
               career: career,
-              plannerCareerYears: career,
               introduction: introduction,
             })
             .then((res) => {

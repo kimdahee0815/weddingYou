@@ -72,6 +72,7 @@ public class UserUpdateDeleteController {
 		 	UserUpdateDelete emailDuplicateUser = service.getUserByEmail(user.getEmail());
 		 	if(user.getPreemail().equals(user.getEmail()) || emailDuplicateUser==null) {
 			 	searchedUser.setEmail(user.getEmail());
+				searchedUser.setName(user.getName());
 			 	searchedUser.setPassword(user.getPassword());
 			 	searchedUser.setPhoneNum(user.getPhoneNum());
 			 	searchedUser.setGender(user.getGender());
