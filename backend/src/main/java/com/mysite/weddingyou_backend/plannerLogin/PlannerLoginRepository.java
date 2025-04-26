@@ -27,7 +27,7 @@ public interface PlannerLoginRepository extends JpaRepository<PlannerLogin, Long
 	//mypageAdmin 부분에서 이름, 비밀번호, 휴대폰번호 수정시 사용
 	@Modifying
 	@Transactional
-	@Query(value="update planner set name = :planner_name, password = :planner_password, phone_number = :planner_phoneNum where email = :planner_email", nativeQuery=true)
+	@Query(value="update Planner set name = :planner_name, password = :planner_password, phone_number = :planner_phoneNum where email = :planner_email", nativeQuery=true)
 	public int updatePlannerByEmail(@Param("planner_email") String email, @Param("planner_name") String plannerName, @Param("planner_password") String plannerPassword, @Param("planner_phoneNum") String plannerPhoneNum);
 	
 	//사용자 정보 저장
@@ -36,6 +36,6 @@ public interface PlannerLoginRepository extends JpaRepository<PlannerLogin, Long
     //사용자 정보 삭제
     @Modifying
     @Transactional
-    @Query(value="DELETE FROM planner WHERE email = :planner_email", nativeQuery=true)
+    @Query(value="DELETE FROM Planner WHERE email = :planner_email", nativeQuery=true)
     public int deleteByEmail(@Param("planner_email") String email);
 }

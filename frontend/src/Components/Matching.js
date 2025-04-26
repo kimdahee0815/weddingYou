@@ -415,7 +415,7 @@ function Matching() {
     setSelectEstimateNum(bsEstimateNum);
     setSelectDeletePlanner(matchedPlanner[bsEstimateNum]);
     axios
-      .post(`/planner/getprofileImg`, { email: selectedPlanner })
+      .post(`/planner/`, { email: selectedPlanner })
       .then((res) => {
         console.log(res);
 

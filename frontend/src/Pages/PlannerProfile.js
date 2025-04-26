@@ -3,18 +3,15 @@ import "../Css/Home.css";
 import "../Css/LikeList.css";
 import Footer from "../Components/Footer";
 import NavigationBar from "../Components/NavigationBar";
-import React, { useState, useEffect, useLayoutEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import defaultprofileimage from "../Assets/defaultprofileimage.jpg";
 import Sidesection from "../Components/Sidesection";
 
 function PlannerProfile() {
   const [wholeItems, setWholeItems] = useState([]);
-  const [plannerEmailSort, setPlannerEmailSort] = useState([]);
-
   const [sortClick, setSortClick] = useState(false);
-
   const [selectedSort, setSelectedSort] = useState(
     window.sessionStorage.getItem("profileSort")
   ); // 초기 버튼명 설정
@@ -52,18 +49,6 @@ function PlannerProfile() {
       });
   }, [selectedSort]);
 
-  useEffect(() => {
-    // const formData = new FormData();
-    // formData.append("plannerEmailArr", JSON.stringify(plannerEmailSort));
-    // axios
-    //   .post(`/plannerProfile/getProfiles`, formData)
-    //   .then((res) => {
-        
-    //   })
-    //   .catch((e) => {
-    //     console.log(e);
-    //   });
-  }, [plannerEmailSort]);
   useEffect(() => {
     if (sessionStorage.getItem("profileSort") === null) {
       window.sessionStorage.setItem("profileSort", "플래너 등록순");

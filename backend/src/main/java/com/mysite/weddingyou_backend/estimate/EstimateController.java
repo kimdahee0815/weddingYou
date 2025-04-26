@@ -3,6 +3,8 @@ package com.mysite.weddingyou_backend.estimate;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -18,6 +20,9 @@ import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,6 +34,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.mysite.weddingyou_backend.S3Service;
 import com.mysite.weddingyou_backend.comment.Comment;
 import com.mysite.weddingyou_backend.comment.CommentRepository;
 import com.mysite.weddingyou_backend.payment.Payment;
@@ -48,6 +54,9 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/estimate")
 public class EstimateController {
+
+	@Autowired
+	private final S3Service s3Service;
 
 	public final EstimateService estimateService;
 	
@@ -91,10 +100,9 @@ public class EstimateController {
 		if(!(uploadfiles == null)) {
         for (MultipartFile file : uploadfiles) {
             if (!file.isEmpty()) {
-                File storedFilename = new File(UUID.randomUUID().toString() + "_" + file.getOriginalFilename());
-                list.add("\"" + storedFilename.toString() + "\"");
-                file.transferTo(storedFilename); //업로드
-            }
+								String imgUrl = s3Service.uploadFile(file, "estimates/");
+								list.add("\"" + imgUrl + "\"");
+						}
         }
 		}
 		Estimate data = new Estimate();
@@ -144,17 +152,28 @@ public class EstimateController {
 	
 	//이미지 출력 부분입니다.
 	@RequestMapping("/imageview")
-    public ResponseEntity<UrlResource> download(@RequestParam("image") String stored) throws MalformedURLException {
-        UrlResource resource = new UrlResource("file:" + uploadDir + "/" + stored);
-        return ResponseEntity.ok().body(resource);
-    }
+    public ResponseEntity<byte[]> imgView(@RequestParam("image") String imageUrl) throws MalformedURLException {
+			String fullPath = imageUrl;
+    
+			if(fullPath != null){
+				String key = fullPath.substring(fullPath.indexOf(".com/") + 5);
+				key = URLDecoder.decode(key, StandardCharsets.UTF_8);
+				byte[] imageBytes = s3Service.downloadFile(key);
+	
+				HttpHeaders headers = new HttpHeaders();
+				headers.setContentType(MediaType.IMAGE_JPEG);
+	
+				return new ResponseEntity<>(imageBytes, headers, HttpStatus.OK); 
+			}
+		return ResponseEntity.notFound().build();
+  }
 
 	
 	//견적서 상세정보 조회 + 조회수 증가
-	@RequestMapping("/getdetail/{id}")
+	@RequestMapping("/detail/{id}")
 	public Estimate getdetail(@PathVariable ("id") int id) {
-	return estimateService.getdetail(id);
-		} 
+		return estimateService.getdetail(id);
+	} 
 		
 	
 	//견적서 삭제
@@ -202,11 +221,10 @@ public class EstimateController {
 		}
 		if(!(uploadfiles == null)) {
         for (MultipartFile file : uploadfiles) {
-            if (!file.isEmpty()) {
-                File storedFilename = new File(UUID.randomUUID().toString() + "_" + file.getOriginalFilename());
-                list.add("\"" + storedFilename.toString() + "\"");
-                file.transferTo(storedFilename); //업로드
-            }
+					if (!file.isEmpty()) {
+						String imgUrl = s3Service.uploadFile(file, "estimates/");
+						list.add("\"" + imgUrl + "\"");
+					}
         }
 		}
 		Estimate data = new Estimate();
@@ -247,7 +265,6 @@ public class EstimateController {
 		    
 			Estimate targetData = estimateService.getEstimateDetail(id);
 			
-			System.out.println("targetData.plannermatching:"+targetData.getPlannermatching());
 			JSONParser parser = new JSONParser();
 			ArrayList<String> obj = (ArrayList<String>) parser.parse(plannermatching);
 			ArrayList<String> plannerList = null;

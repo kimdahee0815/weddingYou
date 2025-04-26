@@ -3,11 +3,11 @@ import "../Css/Home.css";
 import "../Css/LikeList.css";
 import Footer from "../Components/Footer";
 import NavigationBar from "../Components/NavigationBar";
-import React, { useState, useEffect, useLayoutEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import Animation from "../Components/Animation";
 import axios from "axios";
 import Sidesection from "../Components/Sidesection";
+import defaultprofileimage from "../Assets/defaultprofileimage.jpg";
 
 function PlannerProfileDetail() {
   const [previewImg, setPreviewImg] = useState([]);
@@ -46,7 +46,7 @@ function PlannerProfileDetail() {
   const fetchData = async (selectedEstimateId) => {
     try {
       const response = await axios.get(
-        `/estimate/getdetail/${selectedEstimateId}`
+        `/estimate/detail/${selectedEstimateId}`
       );
       const { data } = response;
       console.log(data);
@@ -76,12 +76,10 @@ function PlannerProfileDetail() {
   };
 
   useEffect(() => {
-    //플래너이름, 플래너 프로필 사진, 리뷰개수, 별점, 매칭수, 소개글 불러오기
-
     let formData = new FormData();
     formData.append("plannerEmail", plannerEmail);
     axios
-      .post(`/plannerProfile/getProfileDetail`, formData)
+      .post(`/plannerProfile/detail`, formData)
       .then((res) => {
         const data = res.data;
         console.log(data);
@@ -186,7 +184,7 @@ function PlannerProfileDetail() {
               const fetchData1 = async () => {
                 try {
                   const response = await axios.get(
-                    `/estimate/getdetail/${defaultEstimateId}`
+                    `/estimate/detail/${defaultEstimateId}`
                   );
                   const { data } = response;
                   console.log(data);
@@ -301,7 +299,7 @@ function PlannerProfileDetail() {
           ></div>
           <div style={{ marginTop: "20px", display: "flex", width: "100%" }}>
             <img
-              src={plannerImg}
+              src={plannerImg || defaultprofileimage}
               alt=""
               style={{
                 width: "280px",

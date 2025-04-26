@@ -20,7 +20,7 @@ const EstimateModify = () => {
     const fetchData = async () => {
       try {
         let response = await axios.get(
-          `/estimate/getdetail/${id}`
+          `/estimate/detail/${id}`
         );
         let { data } = response;
         console.log(data);

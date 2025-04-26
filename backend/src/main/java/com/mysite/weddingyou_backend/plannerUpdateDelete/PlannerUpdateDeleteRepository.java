@@ -15,6 +15,6 @@ public interface PlannerUpdateDeleteRepository extends JpaRepository<PlannerUpda
 	//insert, update, delete 할때 필요함
 	@Modifying
 	@Transactional
-	@Query(value="update planner set password = :password where email = :email", nativeQuery=true)
+	@Query(value="update Planner set password = :password where email = :email", nativeQuery=true)
 	public int updatePassword(String email, String password);
 }

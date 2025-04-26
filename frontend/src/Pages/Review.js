@@ -31,7 +31,7 @@ function Review() {
   const fetchData = async (selectedEstimateId) => {
     try {
       const response = await axios.get(
-        `/estimate/getdetail/${selectedEstimateId}`
+        `/estimate/detail/${selectedEstimateId}`
       );
       const { data } = response;
       console.log(data);
@@ -148,7 +148,7 @@ function Review() {
         const fetchData1 = async () => {
           try {
             const response = await axios.get(
-              `/estimate/getdetail/${defaultEstimateId}`
+              `/estimate/detail/${defaultEstimateId}`
             );
             const { data } = response;
             console.log(data);

@@ -16,7 +16,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "mypageAdmin")
+@Table(name = "MypageAdmin")
 public class MypageAdmin {
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

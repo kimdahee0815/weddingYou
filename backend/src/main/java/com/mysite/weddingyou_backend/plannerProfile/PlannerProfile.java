@@ -16,7 +16,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "plannerProfile")
+@Table(name = "PlannerProfile")
 public class PlannerProfile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -55,12 +55,10 @@ public class PlannerProfile {
     @Column(name = "planner_phoneNum", nullable = false)
    	private String plannerPhoneNum;
 
-  
     @Column(name = "planner_Introduction", length=1000000000)
     private String introduction;
   
     @Column(name = "planner_JoinDate")
     private LocalDateTime plannerJoinDate;
     
-  
 }

@@ -27,7 +27,7 @@ const EstimateDetail = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `/estimate/getdetail/${id}`
+          `/estimate/detail/${id}`
         );
         const { data } = response;
         console.log(data);
@@ -38,20 +38,9 @@ const EstimateDetail = () => {
         } else {
           setPlannerMatching(JSON.parse(data.plannermatching));
         }
-        // 이미지 데이터 가져오기
+        // getting image data
         const imagearray = JSON.parse(data.img);
-        const imagePromises = imagearray.map((image) => {
-          return axios.get("/estimate/imageview", {
-            params: { image },
-            responseType: "blob",
-          });
-        });
-        const responses = await Promise.all(imagePromises);
-        const imageUrls = responses.map((res) => {
-          const resdata = URL.createObjectURL(res.data);
-          return resdata;
-        });
-        setImages(imageUrls);
+        setImages(imagearray);
         if (data.matchstatus === true) {
           setScrollControl(false);
         } else {
@@ -361,10 +350,11 @@ const EstimateDetail = () => {
                               width: "100%",
                               borderRadius: "10px",
                             }}
+                            alt=""
                           />
                         </button>
                         <ImagesView
-                          images={e}
+                          image={e}
                           index={`number${index.toString()}`}
                         />
                       </>
@@ -897,7 +887,7 @@ export default EstimateDetail;
 //   );
 // };
 
-const ImagesView = ({ images, index }) => {
+const ImagesView = ({ image, index }) => {
   return (
     <div
       class="modal fade"
@@ -908,35 +898,8 @@ const ImagesView = ({ images, index }) => {
     >
       <div class="modal-dialog" style={{ maxWidth: "800px" }}>
         <div className="image-actualsize">
-          <img src={images} />
+          <img src={image} alt="" />
         </div>
-
-        {/* <div class="modal-content">
-          <div class="modal-header">
-            <h1 class="modal-title fs-5" id="exampleModalLabel">
-              Modal title
-            </h1>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
-          </div>
-          <div class="modal-body">...</div>
-          <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              data-bs-dismiss="modal"
-            >
-              Close
-            </button>
-            <button type="button" class="btn btn-primary">
-              Save changes
-            </button>
-          </div>
-        </div> */}
       </div>
     </div>
   );

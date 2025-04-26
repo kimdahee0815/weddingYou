@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.mysite.weddingyou_backend.comment.Comment;
 
 import jakarta.persistence.CascadeType;
@@ -20,7 +21,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "review")
+@Table(name = "Review")
 public class Review {
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -56,6 +57,7 @@ public class Review {
 	private int reviewCounts;
 		
 	// 댓글
+	@JsonManagedReference
 	@OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Comment> comments = new ArrayList<>();
 

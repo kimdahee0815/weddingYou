@@ -20,7 +20,7 @@ import lombok.Setter;
 @Entity // 물리적인 테이블을 생성
 @Setter
 @Getter
-@Table(name = "planner") //PlannerEntity클래스를 사용해서 planner라는 테이블이 만들어짐
+@Table(name = "Planner") //PlannerEntity클래스를 사용해서 planner라는 테이블이 만들어짐
 public class PlannerUpdateDelete {
 	@Id // pk 지정
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

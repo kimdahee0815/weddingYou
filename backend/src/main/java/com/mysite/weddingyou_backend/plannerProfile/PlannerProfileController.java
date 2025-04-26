@@ -209,7 +209,7 @@ public class PlannerProfileController {
     }
 	}
     
-    @PostMapping("/plannerProfile/getProfileDetail")
+    @PostMapping("/plannerProfile/detail")
     public List<String> getProfileDetail(@RequestParam("plannerEmail") String plannerEmail) throws ParseException {
     	PlannerProfile targetPlannerProfile = plannerService.getPlannerByEmail(plannerEmail);
     	 List<String> result = new ArrayList<>();

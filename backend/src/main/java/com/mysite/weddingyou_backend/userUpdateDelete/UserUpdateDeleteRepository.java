@@ -7,8 +7,6 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import com.mysite.weddingyou_backend.userLogin.UserLogin;
-
 import jakarta.transaction.Transactional;
 
 
@@ -20,6 +18,6 @@ public interface UserUpdateDeleteRepository extends JpaRepository<UserUpdateDele
 	//insert, update, delete 할때 필요함
 	@Modifying
 	@Transactional
-	@Query(value="update user set password = :password where email = :email", nativeQuery=true)
+	@Query(value="update User set password = :password where email = :email", nativeQuery=true)
 	public int updatePassword(String email, String password);
 }

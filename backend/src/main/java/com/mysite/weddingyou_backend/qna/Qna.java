@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.mysite.weddingyou_backend.comment.Comment;
 
 import jakarta.persistence.CascadeType;
@@ -45,6 +46,7 @@ public class Qna {
     @Column(name = "qna_viewcount")
     private int qnaViewCount;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "qna", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
 }

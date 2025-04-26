@@ -29,11 +29,11 @@ public interface MypageAdminRepository extends JpaRepository<MypageAdmin, Long> 
   	public int updatePlanner(Long admin_id, String planner_name, String planner_password, String planner_phoneNum);
   	
   	//전체 데이터 개수 조회
-  	@Query(value = "select count(*) from mypageAdmin", nativeQuery=true)
+  	@Query(value = "select count(*) from MypageAdmin", nativeQuery=true)
   	int getCount();
   	
   	//검색
-  	@Query(value = "SELECT * FROM mypageAdmin WHERE (user_name LIKE CONCAT('%', :search, '%') \r\n"
+  	@Query(value = "SELECT * FROM MypageAdmin WHERE (user_name LIKE CONCAT('%', :search, '%') \r\n"
             + "OR user_email LIKE CONCAT('%', :search, '%') \r\n"
             + "OR user_phoneNum LIKE CONCAT('%', :search, '%') \r\n"
             + "OR DATE(user_join_date) = DATE(:search) \r\n"
@@ -57,7 +57,7 @@ public interface MypageAdminRepository extends JpaRepository<MypageAdmin, Long> 
   	Page<MypageAdmin> getSearchList(@Param("search") String search, Pageable pageable);
   	
     //검색 데이터 개수 조회
-  	@Query(value = "select count(*) from mypageAdmin where (user_name LIKE CONCAT('%', :search, '%') \r\n"
+  	@Query(value = "select count(*) from MypageAdmin where (user_name LIKE CONCAT('%', :search, '%') \r\n"
   			+ "OR user_email LIKE CONCAT('%', :search, '%') \r\n"
             + "OR user_phoneNum LIKE CONCAT('%', :search, '%') \r\n"
             + "OR DATE(user_join_date) = DATE(:search) \r\n"
