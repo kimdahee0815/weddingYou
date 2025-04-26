@@ -7,11 +7,14 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Comparator;
 import java.util.List;
 
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -61,175 +64,150 @@ public class PlannerProfileController {
        return plannerService.getPlannerProfiles();
     }
     
-    @PostMapping("/plannerProfile/getProfiles1")
-    public List<PlannerProfile> saveAndGetPlannerProfiles() throws ParseException {
-      List<PlannerUpdateDelete> plannersInfo =  plannerUpdateDeleteRepository.findAll();
-     
-      for(int i =0;i<plannersInfo.size();i++) {
-    	  PlannerProfile newProfile = new PlannerProfile();
-    	  String plannerEmail = plannersInfo.get(i).getEmail();
-    	  String plannerName  = plannersInfo.get(i).getName();
-    	  String plannerIntroduction = plannersInfo.get(i).getIntroduction();
-    	  String plannerPhoneNum = plannersInfo.get(i).getPhoneNum();
-    	  String plannerImg = plannersInfo.get(i).getPlannerImg();
-    	  LocalDateTime plannerJoinDate = plannersInfo.get(i).getPlannerJoinDate();
-    	  int plannerCareerYears = Integer.parseInt(plannersInfo.get(i).getPlannerCareerYears());
-    	  
-    	  List<Review> reviews = new ArrayList<>();
-    	  System.out.println(plannerEmail);
-    	  reviews = reviewRepository.findAllByPlannerEmail(plannerEmail);
+  @GetMapping("/plannerProfiles/{sort}")
+	public List<PlannerProfile> saveAndGetPlannerProfiles(@PathVariable String sort) throws ParseException {
+    List<PlannerUpdateDelete> plannersInfo = plannerUpdateDeleteRepository.findAll();
 
-    	  ArrayList<String> reviewUsers = new ArrayList<>();
-    	  ArrayList<Integer> reviewStars = new ArrayList<>();
-    	  int totalReviewStars = 0;
-    	  int reviewCount = 0;
-    	  if(reviews!=null) {
-    		  for(int j = 0;j<reviews.size();j++) {
-    			  System.out.println(reviews.get(j).getPlannerEmail());
-        		  reviewUsers.add(reviews.get(j).getUserEmail());
-        		  reviewStars.add(reviews.get(j).getReviewStars());
-        		  totalReviewStars += reviews.get(j).getReviewStars();
-        	  }
-    		  reviewCount = reviews.size();
-    	  }  
-    	  
-    	  double avgReviewStars = 0.0;
-    	  if(reviewCount !=0) {
-    		  avgReviewStars =  Math.round(totalReviewStars / (double)reviewCount * 100.0)/100.0;
-    	  }
-    	  
-    	  String avgReviewStarsStr = String.valueOf(avgReviewStars);
-    	  
-    	  List<Estimate> estimates = estimateRepository.findAll();
-    	  int matchingCount = 0;
-    	  for(int k = 0;k<estimates.size();k++) {
-    		  Estimate targetEstimate = estimates.get(k);
-    		  if(targetEstimate.isMatchstatus()) {
-    			  JSONParser parser = new JSONParser();
-    			  ArrayList<String> matchedPlanners = (ArrayList<String>) parser.parse(targetEstimate.getPlannermatching());
-    			  if(matchedPlanners.contains(plannerEmail)) {
-    				  matchingCount += 1;
-    			  }
-    			 
-    		  }
-    	  }
-    	  
-    	  if(plannerService.getPlannerByEmail(plannerEmail)==null) {
-    		  newProfile.setPlannerEmail(plannerEmail);
-        	  newProfile.setPlannerName(plannerName);
-        	  newProfile.setIntroduction(plannerIntroduction);
-        	  newProfile.setPlannerPhoneNum(plannerPhoneNum);
-        	  newProfile.setPlannerProfileImg(plannerImg);
-        	  newProfile.setPlannerJoinDate(plannerJoinDate);
-        	  newProfile.setPlannerCareerYears(plannerCareerYears);
-        	  newProfile.setReviewCount(reviewCount);
-        	  newProfile.setReviewStars(String.valueOf(reviewStars));
-        	  newProfile.setReviewUsers(String.valueOf(reviewUsers));
-        	  newProfile.setMatchingCount(matchingCount);
-        	  newProfile.setAvgReviewStars(avgReviewStarsStr);
-        	  
-        	  plannerService.save(newProfile);
-    	  }else {
-    		  PlannerProfile targetProfile = plannerService.getPlannerByEmail(plannerEmail);
-    		  
-    		  targetProfile.setPlannerEmail(plannerEmail);
-    		  targetProfile.setPlannerName(plannerName);
-    		  targetProfile.setIntroduction(plannerIntroduction);
-    		  targetProfile.setPlannerPhoneNum(plannerPhoneNum);
-    		  targetProfile.setPlannerProfileImg(plannerImg);
-    		  targetProfile.setPlannerJoinDate(plannerJoinDate);
-    		  targetProfile.setPlannerCareerYears(plannerCareerYears);
-    		  targetProfile.setReviewCount(reviewCount);
-        	  targetProfile.setReviewStars(String.valueOf(reviewStars));
-        	  targetProfile.setReviewUsers(String.valueOf(reviewUsers));
-        	  targetProfile.setMatchingCount(matchingCount);
-        	  targetProfile.setAvgReviewStars(avgReviewStarsStr);
-        	  
-        	  plannerService.save(targetProfile);
-    	  }
-    	  
-      }
-      
-      List<PlannerProfile> foundPlannersInfo = plannerService.getPlannerProfiles();
-      return foundPlannersInfo;
+    // planner profile save or update
+    for (PlannerUpdateDelete plannerInfo : plannersInfo) {
+        PlannerProfile newProfile = createOrUpdatePlannerProfile(plannerInfo);
+				plannerService.save(newProfile);
     }
-    
-    @PostMapping("/plannerProfile/getProfiles2")
-    public List<String> getPlannerProfiles2() throws ParseException {
-    	List<PlannerUpdateDelete> plannersInfo =  plannerUpdateDeleteRepository.findAll();
-    	 List<String> encodingDatas = new ArrayList<>();
-    	 
-    	for(int i =0;i<plannersInfo.size();i++) {
-    		PlannerUpdateDelete targetPlanner = plannerUpdateDeleteRepository.findByEmail(plannersInfo.get(i).getEmail());
-    		
-    		if(targetPlanner.getPlannerImg()!=null) {
-    			String path = "C:/Project/profileImg/planner";
-   	    	 Path imagePath = Paths.get(path,targetPlanner.getPlannerImg());
-   	    	 System.out.println(imagePath);
 
-   	         try {
-   	             byte[] imageBytes = Files.readAllBytes(imagePath);
-   	             byte[] base64encodedData = Base64.getEncoder().encode(imageBytes);
-   	             
-   	             encodingDatas.add(new String(base64encodedData));
-   	             
-   	         } catch (IOException e) {
-   	             e.printStackTrace();
-   	            
-   	         }
-    		}else {
-    			 encodingDatas.add("null");
-    		}
-    		
-	        encodingDatas.add(targetPlanner.getName());
-	        encodingDatas.add(targetPlanner.getEmail());
-    	}
-    	
-       
-    		
-	    	 
-	        return encodingDatas;
-    
-    }
-    
-    @PostMapping("/plannerProfile/getProfiles3")
-    public List<String> getPlannerProfiles3(@RequestParam("plannerEmailArr") String plannerEmailSort) throws ParseException {
-    	System.out.println(plannerEmailSort);
-    	JSONParser parser = new JSONParser();
-		ArrayList<String> obj = (ArrayList<String>) parser.parse(plannerEmailSort);
-		System.out.println(obj);
-		 List<String> encodingDatas = new ArrayList<>();
-		for(int i =0;i<obj.size();i++) {
-			PlannerUpdateDelete targetPlanner =  plannerUpdateDeleteRepository.findByEmail(obj.get(i));
-	    	 	 
-	    		if(targetPlanner.getPlannerImg()!=null) {
-	    			String path = "C:/Project/profileImg/planner";
-	   	    	 Path imagePath = Paths.get(path,targetPlanner.getPlannerImg());
-	   	    	 System.out.println(imagePath);
+    List<PlannerProfile> foundPlannersInfo = plannerService.getPlannerProfiles();
 
-	   	         try {
-	   	             byte[] imageBytes = Files.readAllBytes(imagePath);
-	   	             byte[] base64encodedData = Base64.getEncoder().encode(imageBytes);
-	   	             
-	   	             encodingDatas.add(new String(base64encodedData));
-	   	             
-	   	         } catch (IOException e) {
-	   	             e.printStackTrace();
-	   	            
-	   	         }
-	    		}else {
-	    			 encodingDatas.add("null");
-	    		}
-	    		
-		        encodingDatas.add(targetPlanner.getName());
-		        encodingDatas.add(targetPlanner.getEmail());
-	    	
-		    	 
-		      
+    // sort
+    return sortProfiles(foundPlannersInfo, sort);
+	}
+
+	// planner profile create or update
+	private PlannerProfile createOrUpdatePlannerProfile(PlannerUpdateDelete plannerInfo) throws ParseException {
+    PlannerProfile existingProfile = plannerService.getPlannerByEmail(plannerInfo.getEmail());
+		PlannerProfile profile = null;
+		if(existingProfile == null) {
+			profile = new PlannerProfile();
+		}else{
+			profile = existingProfile;
 		}
-		  return encodingDatas;
-    
+    String plannerEmail = plannerInfo.getEmail();
+    List<Review> reviews = reviewRepository.findAllByPlannerEmail(plannerEmail);
+    List<Estimate> estimates = estimateRepository.findAll();
+
+    // Review stats and counts
+    ReviewStats reviewStats = calculateReviewStats(reviews);
+    int matchingCount = calculateMatchingCount(estimates, plannerEmail);
+
+    profile.setPlannerEmail(plannerEmail);
+    profile.setPlannerName(plannerInfo.getName());
+    profile.setIntroduction(plannerInfo.getIntroduction());
+    profile.setPlannerPhoneNum(plannerInfo.getPhoneNum());
+    profile.setPlannerProfileImg(plannerInfo.getPlannerImg());
+    profile.setPlannerJoinDate(plannerInfo.getPlannerJoinDate());
+    profile.setPlannerCareerYears(Integer.parseInt(plannerInfo.getPlannerCareerYears()));
+    profile.setReviewCount(reviewStats.getReviewCount());
+    profile.setReviewStars(reviewStats.getReviewStars());
+    profile.setReviewUsers(reviewStats.getReviewUsers());
+    profile.setMatchingCount(matchingCount);
+    profile.setAvgReviewStars(reviewStats.getAvgReviewStars());
+
+    return profile;
+	}
+
+	// calcualte reviews
+	private ReviewStats calculateReviewStats(List<Review> reviews) {
+    int totalReviewStars = 0;
+    int reviewCount = 0;
+    ArrayList<String> reviewUsers = new ArrayList<>();
+    ArrayList<Integer> reviewStars = new ArrayList<>();
+
+    if (reviews != null) {
+        for (Review review : reviews) {
+            reviewUsers.add(review.getUserEmail());
+            reviewStars.add(review.getReviewStars());
+            totalReviewStars += review.getReviewStars();
+        }
+        reviewCount = reviews.size();
     }
+
+    double avgReviewStars = reviewCount > 0 ? Math.round(totalReviewStars / (double) reviewCount * 100.0) / 100.0 : 0.0;
+    String avgReviewStarsStr = String.valueOf(avgReviewStars);
+
+    return new ReviewStats(reviewCount, reviewStars.toString(), reviewUsers.toString(), avgReviewStarsStr);
+	}
+
+	// matching count
+	private int calculateMatchingCount(List<Estimate> estimates, String plannerEmail) throws ParseException {
+    int matchingCount = 0;
+    for (Estimate estimate : estimates) {
+        if (estimate.isMatchstatus()) {
+            JSONParser parser = new JSONParser();
+            ArrayList<String> matchedPlanners = (ArrayList<String>) parser.parse(estimate.getPlannermatching());
+            if (matchedPlanners.contains(plannerEmail)) {
+                matchingCount++;
+            }
+        }
+    }
+    return matchingCount;
+	}
+
+	// sort planner profile	
+	private List<PlannerProfile> sortProfiles(List<PlannerProfile> profiles, String sort) {
+    switch (sort) {
+        case "별점 높은 순":
+						profiles.sort(Comparator.comparingDouble(profile -> Double.parseDouble(((PlannerProfile) profile).getAvgReviewStars())).reversed());
+            break;
+        case "후기순":
+            profiles.sort(Comparator.comparingInt(PlannerProfile::getReviewCount).reversed());
+            break;
+        case "경력순":
+            profiles.sort(Comparator.comparingInt(PlannerProfile::getPlannerCareerYears).reversed());
+            break;
+        case "매칭순":
+            profiles.sort(Comparator.comparingInt(PlannerProfile::getMatchingCount).reversed());
+            break;
+				case "최신순":
+            profiles.sort(Comparator.comparing(PlannerProfile::getPlannerJoinDate).reversed());
+            break;
+        case "플래너 등록순":
+            profiles.sort(Comparator.comparing(PlannerProfile::getPlannerJoinDate));
+            break;
+        default:
+						profiles.sort(Comparator.comparing(PlannerProfile::getPlannerJoinDate));
+            break;
+    }
+    return profiles;
+	}
+
+	// Review Stats Class
+	public static class ReviewStats {
+    private int reviewCount;
+    private String reviewStars;
+    private String reviewUsers;
+    private String avgReviewStars;
+
+    public ReviewStats(int reviewCount, String reviewStars, String reviewUsers, String avgReviewStars) {
+        this.reviewCount = reviewCount;
+        this.reviewStars = reviewStars;
+        this.reviewUsers = reviewUsers;
+        this.avgReviewStars = avgReviewStars;
+    }
+
+    public int getReviewCount() {
+        return reviewCount;
+    }
+
+    public String getReviewStars() {
+        return reviewStars;
+    }
+
+    public String getReviewUsers() {
+        return reviewUsers;
+    }
+
+    public String getAvgReviewStars() {
+        return avgReviewStars;
+    }
+	}
     
     @PostMapping("/plannerProfile/getProfileDetail")
     public List<String> getProfileDetail(@RequestParam("plannerEmail") String plannerEmail) throws ParseException {
@@ -271,10 +249,10 @@ public class PlannerProfileController {
     }
     
     @PostMapping("/plannerProfile/getProfileDetail2")
-    public List<String> getProfileDetail2(@RequestParam("userEmail") String userEmail,@RequestParam("estimateNum") String estimateNum ) throws ParseException {
+    public PlannerUpdateDelete getProfileDetail2(@RequestParam("userEmail") String userEmail,@RequestParam("estimateNum") String estimateNum ) throws ParseException {
     	List<Estimate> estimatesData = estimateRepository.findAllByWriter(userEmail);
     	String searchedPlanner = "";
-    	List<String> encodingDatas = new ArrayList<>();
+
     	for(int i =0;i<estimatesData.size();i++) {
     		if(i==Integer.parseInt(estimateNum)) {
     			JSONParser parser = new JSONParser();
@@ -285,28 +263,7 @@ public class PlannerProfileController {
     		}
     	}
     	PlannerUpdateDelete targetPlanner = plannerUpdateDeleteRepository.findByEmail(searchedPlanner);
-    	if(targetPlanner.getPlannerImg()!=null) {
-			String path = "C:/Project/profileImg/planner";
-	    	 Path imagePath = Paths.get(path,targetPlanner.getPlannerImg());
-	    	 System.out.println(imagePath);
-
-	         try {
-	             byte[] imageBytes = Files.readAllBytes(imagePath);
-	             byte[] base64encodedData = Base64.getEncoder().encode(imageBytes);
-	             
-	             encodingDatas.add(new String(base64encodedData));
-	             
-	         } catch (IOException e) {
-	             e.printStackTrace();
-	            
-	         }
-		}else {
-			 encodingDatas.add("null");
-		}
-		
-        encodingDatas.add(targetPlanner.getName());
-        encodingDatas.add(targetPlanner.getEmail());
-        return encodingDatas;
+    	return targetPlanner;
        
     }
     

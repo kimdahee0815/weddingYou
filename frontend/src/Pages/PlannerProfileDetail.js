@@ -25,11 +25,8 @@ function PlannerProfileDetail() {
   const [plannerYears, setPlannerYears] = useState("");
   const [plannerPhone, setPlannerPhone] = useState("");
 
-  const { plannerEmail } = useLocation().state;
-  console.log(plannerEmail);
-  const { plannerName } = useLocation().state;
-  const { plannerImg } = useLocation().state;
-
+  const { plannerEmail, plannerName, plannerImg } = useLocation().state;
+  console.log(plannerEmail, plannerName, plannerImg)
   let [estimateId, setEstimateId] = useState([]);
   let [estimateData, SetEstimateData] = useState(null);
   let [images, setImages] = useState([]);
@@ -38,7 +35,6 @@ function PlannerProfileDetail() {
   const [selectEstimateId, setSelectEstimateId] = useState(0);
   const [existEstimates, setExistEstimates] = useState(true);
   const [selected, setSelected] = useState(false);
-  const [finish, setFinish] = useState(false);
   const [userMatching, setUserMatching] = useState(null);
   const [portfolioReview, setPortfolioReview] = useState("");
 
@@ -88,7 +84,6 @@ function PlannerProfileDetail() {
       .post(`/plannerProfile/getProfileDetail`, formData)
       .then((res) => {
         const data = res.data;
-        console.log("abababababababa+_+_+_+_+_+");
         console.log(data);
         const reviewStarsArr = [];
         const reviewUsersArr = [];
