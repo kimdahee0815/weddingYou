@@ -10,9 +10,9 @@ import axios from "axios";
 import Sidesection from "../Components/Sidesection";
 
 function UserUpdate() {
-  const { state: passwordCheck } = useLocation();
+  const { state: {passwordCheck, image:defaultImage} } = useLocation();
   const { category } = useParams();
-
+console.log(defaultImage)
   let userOrPlanner = "";
   if (category === "user") {
     userOrPlanner = "회원";
@@ -35,8 +35,8 @@ function UserUpdate() {
   const [introduction, setIntroduction] = useState("");
   const [defaultIntroduction, setDefaultIntroduction] = useState(0);
   const [profileImg, setProfileImg] = useState(null);
-  const [previewUrl, setPreviewUrl] = useState(null);
-  const [defaultViewUrl, setDefaultViewUrl] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(defaultImage || profileimage);
+  const [defaultViewUrl, setDefaultViewUrl] = useState(defaultImage || profileimage);
 
   const nameInput = useRef();
   const passwordInput = useRef();
@@ -133,8 +133,6 @@ function UserUpdate() {
         })
         .catch((e) => {
           console.log(e);
-          setPreviewUrl(profileimage);
-          setDefaultViewUrl(profileimage);
         });
     }
     if (category === "planner") {
@@ -159,8 +157,6 @@ function UserUpdate() {
         })
         .catch((e) => {
           console.log(e);
-          setPreviewUrl(profileimage);
-          setDefaultViewUrl(profileimage);
         });
       }
       axios

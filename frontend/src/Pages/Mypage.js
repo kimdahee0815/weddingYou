@@ -74,6 +74,7 @@ function Mypage() {
           setPassword(res.data.password);
           setPhone(res.data.phoneNum);
           setGender(res.data.gender);
+          setImage(res.data.userImg);
         })
         .catch((e) => {
           console.log(e);
@@ -84,8 +85,6 @@ function Mypage() {
             responseType: 'blob'  
           })
         .then((res) => {
-          const imageUrl = URL.createObjectURL(res.data);
-          setImage(imageUrl);
           const reader = new FileReader();
           reader.onload = () => {
             setPreviewUrl(reader.result);       
@@ -116,6 +115,7 @@ function Mypage() {
           setGender(res.data.gender);
           setCareer(res.data.plannerCareerYears);
           setIntroduction(res.data.introduction);
+          setImage(res.data.plannerImg);
         })
         .catch((e) => {
           console.log(e);
@@ -125,8 +125,6 @@ function Mypage() {
           responseType: 'blob'  
         })
         .then((res) => {
-          const imageUrl = URL.createObjectURL(res.data);
-          setImage(imageUrl);
           const reader = new FileReader();
           reader.onload = () => {
             setPreviewUrl(reader.result);       
@@ -261,7 +259,10 @@ function Mypage() {
   const gotoUpdatePage = () => {
     if (passwordcheckmessage === "비밀번호 확인 완료!") {
       navigate(`/mypage/${category}/userupdate`, {
-        state: true,
+        state: {
+          passwordCheck: true,
+          image,
+        },
       });
     }
   };

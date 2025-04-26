@@ -1,19 +1,6 @@
 package com.mysite.weddingyou_backend.userUpdateDelete;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.Properties;
-import java.util.Random;
-import java.time.LocalDateTime;
-
-import javax.mail.Authenticator;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,7 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.mysite.weddingyou_backend.like.LikeEntity;
 import com.mysite.weddingyou_backend.like.LikeRepository;
-import com.mysite.weddingyou_backend.plannerUpdateDelete.PlannerUpdateDelete;
 
 import jakarta.persistence.EntityNotFoundException;
 
@@ -29,7 +15,7 @@ import jakarta.persistence.EntityNotFoundException;
 @Service
 @Transactional
 public class UserUpdateDeleteService {
-	 
+
 	@Autowired
 	private UserUpdateDeleteRepository userRepository;
 
