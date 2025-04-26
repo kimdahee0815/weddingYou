@@ -9,6 +9,7 @@ import "../../Css/items.css";
 
 const Weddinghall = ({ postSubmitted }) => {
   const { category1 } = useParams();
+  const [currentItem, setCurrentItem] = useState();
   const title = "웨딩홀";
   const engTitle = "weddinghall";
   const category2 = ["일반", "호텔", "채플", "스몰", "야외", "전통혼례"];
@@ -17,17 +18,8 @@ const Weddinghall = ({ postSubmitted }) => {
   const [editMode, setEditMode] = useState(false);
 
   const [itemList, setItemList] = useState([]);
-  const [itemId, setItemId] = useState([]);
-
-  const modalImg = useRef();
-  const modalImgContent = useRef();
-  const modalImgTitle = useRef();
-
-  const [modalImgoriginalTitle, setModalImgoriginalTitle] = useState("");
   const navigate = useNavigate();
-  const [selectedItemId, setSelectedItemId] = useState();
-  const [selectedImgDetail, setSelectedImgDetail] = useState("");
-  const [selectedImgSrc, setSelectedImgSrc] = useState("");
+
   const [update, setUpdate] = useState(false);
 
   useEffect(() => {
@@ -55,41 +47,34 @@ const Weddinghall = ({ postSubmitted }) => {
 
 
   const showingDetail = (e) => {
-    console.log(e.target.dataset);
-    modalImg.current.src = e.target.dataset.bsSrc;
-    setSelectedImgSrc(e.target.dataset.bsSrc);
-    modalImg.current.dataset.category = e.target.dataset.bsCategory;
-    modalImg.current.dataset.itemId = e.target.dataset.bsItemid;
-    modalImgContent.current.innerText = e.target.dataset.bsItemcontent;
-    modalImgTitle.current.innerText = `- ${e.target.dataset.bsItemname} -`;
-    setModalImgoriginalTitle(e.target.dataset.bsItemname);
-    setSelectedItemId(e.target.dataset.bsItemid);
-    setSelectedImgDetail(e.target.dataset.bsItemdetailcontent);
-    console.log("e.target.dataset.bsItemid:" + e.target.dataset.bsItemid);
+    let {
+      bsItem:item,
+    } = e.target.dataset
+
+    item = JSON.parse(item);
+    setCurrentItem(item);
   };
-  console.log(itemId);
+
   const handleCategoryClick = (category) => {
     setSelectedCategory(category);
   };
 
   const handleEditClick = () => {
     setEditMode(true);
-    const itemId = modalImg.current.dataset.itemId;
-    const title = modalImgoriginalTitle;
-    const content = modalImgContent.current.innerText;
+    const itemId = currentItem.itemId;
     navigate(`/editpost/${itemId}`, {
       state: {
-        originalTitle: title,
-        originalContent: content,
+        originalTitle: currentItem.itemName,
+        originalContent: currentItem.content,
         engTitle: engTitle,
-        originalimgDetailContent: selectedImgDetail,
+        originalimgDetailContent: currentItem.imgContent,
       },
     });
   };
 
   const handleDeleteClick = () => {
     axios
-      .post(`/item/deleteItem/${selectedItemId}`)
+      .post(`/item/deleteItem/${currentItem.itemId}`)
       .then((res) => {
         console.log(res);
         setUpdate(!update);
@@ -101,7 +86,13 @@ const Weddinghall = ({ postSubmitted }) => {
 
   const gotoDetailInfo = (e) => {
     navigate("/imgDetail", {
-      state: { itemId: selectedItemId, imgsrc: selectedImgSrc },
+      state: { 
+        itemId: currentItem.itemId, 
+        imgsrc: currentItem.itemImg, 
+        content: currentItem.content,
+        imgContent: currentItem.imgContent,
+        itemName: currentItem.itemName  
+      },
     });
   };
 
@@ -156,12 +147,8 @@ const Weddinghall = ({ postSubmitted }) => {
                 width: "250px",
                 height: "250px",
               }}
-              data-bs-src={item.itemImg}
+              data-bs-item={JSON.stringify(item)}
               data-bs-category="웨딩홀"
-              data-bs-itemName={item.itemName}
-              data-bs-itemContent={item.content}
-              data-bs-itemId={item.itemId}
-              data-bs-itemDetailContent={item.imgContent}
             />
           ))}
         </div>
@@ -185,9 +172,8 @@ const Weddinghall = ({ postSubmitted }) => {
                   class="modal-title justify-content-center "
                   id="imgDetailModal"
                   style={{ fontSize: "1.9em" }}
-                  ref={modalImgTitle}
                 >
-                  - -
+                  - {currentItem?.itemName} -
                 </h1>
                 <button
                   type="button"
@@ -216,7 +202,7 @@ const Weddinghall = ({ postSubmitted }) => {
                   }}
                 >
                   <img
-                    src=""
+                    src={currentItem?.itemImg}
                     style={{
                       width: "430px",
                       height: "470px",
@@ -225,7 +211,6 @@ const Weddinghall = ({ postSubmitted }) => {
                       marginLeft: "20px",
                     }}
                     alt=""
-                    ref={modalImg}
                   />
                   <div
                     style={{
@@ -242,8 +227,7 @@ const Weddinghall = ({ postSubmitted }) => {
                       border: "1px solid black",
                       padding: "10px",
                     }}
-                    ref={modalImgContent}
-                  ></p>
+                  >{currentItem?.content}</p>
                 </div>
               </div>
               <div class="modal-footer">

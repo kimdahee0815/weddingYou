@@ -9,6 +9,7 @@ import Sidesection from "../../Components/Sidesection";
 
 const Makeup = () => {
   const { category1 } = useParams();
+  const [currentItem, setCurrentItem] = useState();
   const title = "메이크업";
   const engTitle = "makeup";
   const category2 = [
@@ -25,15 +26,6 @@ const Makeup = () => {
   const [editMode, setEditMode] = useState(false);
   const [itemList, setItemList] = useState([]);
 
-  const modalImg = useRef();
-  const modalImgContent = useRef();
-  const modalImgTitle = useRef();
-  const modalItemId = useRef();
-
-  const [modalImgoriginalTitle, setModalImgoriginalTitle] = useState("");
-  const [selectedItemId, setSelectedItemId] = useState();
-  const [selectedImgDetail, setSelectedImgDetail] = useState("");
-  const [selectedImgSrc, setSelectedImgSrc] = useState("");
   const navigate = useNavigate();
 
   const [update, setUpdate] = useState(false);
@@ -57,16 +49,12 @@ const Makeup = () => {
   }, [selectedCategory, update]);
 
   const showingDetail = (e) => {
-    modalImg.current.src = e.target.dataset.bsSrc;
-    setSelectedImgSrc(e.target.dataset.bsSrc);
-    modalImg.current.dataset.category = e.target.dataset.bsCategory;
-    modalImg.current.dataset.itemId = e.target.dataset.bsItemid;
-    modalImgContent.current.innerText = e.target.dataset.bsItemcontent;
-    modalImgTitle.current.innerText = `- ${e.target.dataset.bsItemname} -`;
-    setModalImgoriginalTitle(e.target.dataset.bsItemname);
-    setSelectedItemId(e.target.dataset.bsItemid);
-    setSelectedImgDetail(e.target.dataset.bsItemdetailcontent);
-    console.log("e.target.dataset.bsItemid:" + e.target.dataset.bsItemid);
+    let {
+      bsItem:item,
+    } = e.target.dataset
+
+    item = JSON.parse(item);
+    setCurrentItem(item);
   };
 
   const handleCategoryClick = (category) => {
@@ -75,22 +63,20 @@ const Makeup = () => {
 
   const handleEditClick = () => {
     setEditMode(true);
-    const itemId = modalImg.current.dataset.itemId;
-    const title = modalImgoriginalTitle;
-    const content = modalImgContent.current.innerText;
+    const itemId = currentItem.itemId;
     navigate(`/editpost/${itemId}`, {
       state: {
-        originalTitle: title,
-        originalContent: content,
+        originalTitle: currentItem.itemName,
+        originalContent: currentItem.content,
         engTitle: engTitle,
-        originalimgDetailContent: selectedImgDetail,
+        originalimgDetailContent: currentItem.imgContent,
       },
     });
   };
 
   const handleDeleteClick = () => {
     axios
-      .post(`/item/deleteItem/${selectedItemId}`)
+      .post(`/item/deleteItem/${currentItem.itemId}`)
       .then((res) => {
         console.log(res);
         setUpdate(!update);
@@ -106,7 +92,13 @@ const Makeup = () => {
 
   const gotoDetailInfo = (e) => {
     navigate("/imgDetail", {
-      state: { itemId: selectedItemId, imgsrc: selectedImgSrc },
+      state: { 
+        itemId: currentItem.itemId, 
+        imgsrc: currentItem.itemImg, 
+        content: currentItem.content,
+        imgContent: currentItem.imgContent,
+        itemName: currentItem.itemName  
+      },
     });
   };
   return (
@@ -160,12 +152,8 @@ const Makeup = () => {
                 width: "250px",
                 height: "250px",
               }}
-              data-bs-src={item.itemImg}
+              data-bs-item={JSON.stringify(item)}
               data-bs-category="메이크업"
-              data-bs-itemName={item.itemName}
-              data-bs-itemContent={item.content}
-              data-bs-itemId={item.itemId}
-              data-bs-itemDetailContent={item.imgContent}
               />
             ))}
         </div>
@@ -189,9 +177,8 @@ const Makeup = () => {
                   class="modal-title justify-content-center "
                   id="imgDetailModal"
                   style={{ fontSize: "1.9em" }}
-                  ref={modalImgTitle}
                 >
-                  - -
+                  - {currentItem?.itemName} -
                 </h1>
                 <button
                   type="button"
@@ -220,7 +207,7 @@ const Makeup = () => {
                   }}
                 >
                   <img
-                    src=""
+                    src={currentItem?.itemImg}
                     style={{
                       width: "430px",
                       height: "470px",
@@ -229,7 +216,6 @@ const Makeup = () => {
                       marginLeft: "20px",
                     }}
                     alt=""
-                    ref={modalImg}
                   />
                   <div
                     style={{
@@ -246,8 +232,7 @@ const Makeup = () => {
                       border: "1px solid black",
                       padding: "10px",
                     }}
-                    ref={modalImgContent}
-                  ></p>
+                  >{currentItem?.content}</p>
                 </div>
               </div>
               <div class="modal-footer">

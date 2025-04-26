@@ -18,15 +18,13 @@ function SearchItems() {
   const navigate = useNavigate();
 
   const { keyword } = useLocation().state;
+  const [currentItem, setCurrentItem] = useState();
 
   const [searchedKeyword, setSearchedKeyWord] = useState(keyword);
   const [itemLike, setItemLike] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
-  const [itemDate, setItemDate] = useState("");
-  // console.log(keyword);
   const [previewImg, setPreviewImg] = useState([]);
   const [itemId, setItemId] = useState([]);
-  const [item, setItem] = useState([]);
   const [itemName, setItemName] = useState([]);
   const [itemContent, setItemContent] = useState([]);
   const [itemLikeState, setItemLikeState] = useState([]);
@@ -586,7 +584,15 @@ function SearchItems() {
   };
 
   const gotoDetailInfo = (e) => {
-    navigate("/imgDetail");
+    navigate("/imgDetail", {
+      state: { 
+        itemId: currentItem.itemId, 
+        imgsrc: currentItem.itemImg, 
+        content: currentItem.content,
+        imgContent: currentItem.imgContent,
+        itemName: currentItem.itemName  
+      },
+    });
   };
 
   const manageLikeList = (e) => {

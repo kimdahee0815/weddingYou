@@ -6,7 +6,7 @@ import Sidesection from "../Components/Sidesection";
 
 function ImgDetail() {
   const { imgsrc, itemId, content, imgContent, itemName } = useLocation().state;
-
+  console.log(imgsrc, itemId, content, imgContent, itemName)
   return (
     <div className="containerbox">
       <div className="mainlayout box1">
