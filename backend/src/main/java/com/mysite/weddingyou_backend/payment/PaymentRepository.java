@@ -8,8 +8,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PaymentRepository extends JpaRepository<Payment, Long>{
 	
-//	List<Payment> findByUserEmail(String userEmail); //없어도 될듯..?
-	
 	Payment findByPaymentId(Long paymentId);
 	
 	Payment findByEstimateId(Long EstimateId);

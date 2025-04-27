@@ -22,7 +22,12 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
 	
 	List<Item> findByCategory1(Category1 category1);
 	
-	List<Item> findByItemNameContaining(String keyword); //검색 메소드
+	@Query("SELECT DISTINCT i FROM Item i " +
+       "LEFT JOIN FETCH i.like l " +
+       "LEFT JOIN FETCH l.user " +
+       "LEFT JOIN FETCH l.planner " +
+       "WHERE i.itemName LIKE %:keyword%")
+       List<Item> findByItemNameWithLikesAndUserPlanner(@Param("keyword") String keyword);
 
 	@Query("SELECT i FROM Item i LEFT JOIN FETCH i.like l LEFT JOIN FETCH l.user LEFT JOIN FETCH l.planner WHERE i.itemId = :itemId")
 	Item findItemWithLikes(@Param("itemId") Long itemId);

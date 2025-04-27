@@ -75,18 +75,17 @@ public class ItemController {
 
 	//검색
 	@RequestMapping("/search/{keyword}")
-	public HashMap<String, List<Item>> searchItems(@PathVariable ("keyword") String keyword, @RequestBody likeDTO like) {
-			String email = like.getEmail();
-			List<Item> items =new ArrayList<>();
+	public HashMap<String, List<ItemDTO>> searchItems(@PathVariable ("keyword") String keyword, @RequestBody likeDTO like) {
+			List<ItemDTO> items =new ArrayList<>();
 	    items = itemService.searchItems(keyword);
-	    HashMap<String, List<Item>> sortedItemsMap = new HashMap<String, List<Item>>();
+	    HashMap<String, List<ItemDTO>> sortedItemsMap = new HashMap<String, List<ItemDTO>>();
 	        
-	    List<Item> weddingHallItems = new ArrayList<>();
-	    List<Item> studioItems = new ArrayList<>();
-	    List<Item> dressItems = new ArrayList<>();
-	    List<Item> makeupItems = new ArrayList<>();
-	    List<Item> honeymoonItems = new ArrayList<>();
-	    List<Item> bouquetItems = new ArrayList<>();
+	    List<ItemDTO> weddingHallItems = new ArrayList<>();
+	    List<ItemDTO> studioItems = new ArrayList<>();
+	    List<ItemDTO> dressItems = new ArrayList<>();
+	    List<ItemDTO> makeupItems = new ArrayList<>();
+	    List<ItemDTO> honeymoonItems = new ArrayList<>();
+	    List<ItemDTO> bouquetItems = new ArrayList<>();
 	        
 	    if(items.size()!=0) {
 	        for(int i =0;i<items.size();i++) {
@@ -113,78 +112,19 @@ public class ItemController {
 	 	    Collections.sort(honeymoonItems, (a, b) -> b.getItemWriteDate().compareTo(a.getItemWriteDate()));
 	 	    Collections.sort(bouquetItems, (a, b) -> b.getItemWriteDate().compareTo(a.getItemWriteDate()));
 
-				sortedItemsMap.put("weddinghall", weddingHallItems);
+				sortedItemsMap.put("weddingHall", weddingHallItems);
 				sortedItemsMap.put("studio", studioItems);
-				sortedItemsMap.put("dress", dressItems);
+				sortedItemsMap.put("clothes", dressItems);
 				sortedItemsMap.put("makeup", makeupItems);
 				sortedItemsMap.put("honeymoon", honeymoonItems);
 				sortedItemsMap.put("bouquet", bouquetItems);	        
 	    }
-
-	    //     List<String> encodingDatas = new ArrayList<>();
-
-	    // if(items.size()!=0) {
-	    // 	for(int i =0;i<items.size()+6;i++) {
-
-	    // 		Item targetItem = sortedItems.get(i);
-	    // 		System.out.println(targetItem.getItemId());
-	    // 		if(targetItem.getItemId()!=null) {
-	    // 			Category2 category2 = targetItem.getCategory2();
-	    // 			Long itemId = targetItem.getItemId();
-
-			//     	 String path = "C:/Project/itemImg/"+targetItem.getCategory1()+"/"+category2;
-			//     	 Path imagePath = Paths.get(path,targetItem.getItemImg());
-			//     	 System.out.println(imagePath);
-
-			//          try {
-			//              byte[] imageBytes = Files.readAllBytes(imagePath);
-			//              byte[] base64encodedData = Base64.getEncoder().encode(imageBytes);
-
-			//              encodingDatas.add(new String(base64encodedData));
-
-			//          } catch (IOException e) {
-			//              e.printStackTrace();
-
-			//          }
-
-			//          encodingDatas.add(String.valueOf(targetItem.getItemId()));
-			//          encodingDatas.add(String.valueOf(targetItem.getItemName()));
-			//          encodingDatas.add(String.valueOf(targetItem.getImgContent()));
-			//          encodingDatas.add(String.valueOf(targetItem.getLike().size()));
-			// int res = 0;
-			// if(email==null) { //로그인하지 않았을 경우
-			//   res = -1;
-			// }else { //로그인했을 경우
-			// 	List<LikeEntity> likeItem = new ArrayList<>();
-			// 	if(userRepository.findByEmail(email)!=null) {
-			// 		UserLogin user = userRepository.findByEmail(email);
-			// 		likeItem = likeService.getLikeListByItemIdAndUser(user, targetItem);
-					
-			// 		if(likeItem.size()!=0) { //찾은 결과가 있을 때
-			// 		 	res = 1;
-			// 		}else {
-			// 		 	res = 0;
-			// 		}
-			// 	}else if(plannerRepository.findByEmail(email)!=null) {
-			// 		PlannerLogin planner = plannerRepository.findByEmail(email);
-			// 		likeItem = likeService.getLikeListByItemIdAndPlanner(planner, targetItem);
-
-			// 		if(likeItem.size()!=0) {
-			// 		 	res = 1;
-			// 		}else  {
-			// 		 	res = 0;
-			// 		}
-			// 	}
-			// }     
-	    return sortedItemsMap;
-		     
+	  return sortedItemsMap;
 	}
-	        
-	 
-	 
-	 // 이미지 목록 정렬
-	 @GetMapping("/sortItems")
-	 public ResponseEntity<List<Item>> getItemsByCategorySorted(@RequestParam("category1") Category1 category1, 
+
+	// 이미지 목록 정렬
+	@GetMapping("/sortItems")
+	 	public ResponseEntity<List<Item>> getItemsByCategorySorted(@RequestParam("category1") Category1 category1, 
 			 @RequestParam("category2") Category2 category2, @RequestParam(value = "sort", required = false) String sort) {
 	     List<Item> items = itemService.getItemsSortedBy(category1,category2, sort);
 

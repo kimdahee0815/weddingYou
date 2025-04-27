@@ -125,9 +125,13 @@ public class ItemService {
 	 }
     
   //검색
-  	public List<Item> searchItems(String keyword) {
+  	public List<ItemDTO> searchItems(String keyword) {
   		keyword = keyword.toLowerCase(); // 검색어를 소문자로 변환
-        return itemRepository.findByItemNameContaining(keyword);
+        List<Item> items = itemRepository.findByItemNameWithLikesAndUserPlanner(keyword);
+        List<ItemDTO> itemDTOs = items.stream()
+            .map(ItemDTO::fromEntity)
+            .collect(Collectors.toList());
+        return itemDTOs;
     }
 
 }

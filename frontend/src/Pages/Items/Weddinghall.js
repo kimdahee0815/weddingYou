@@ -34,7 +34,6 @@ const Weddinghall = ({ postSubmitted }) => {
         const dataList = res.data;
         const items = [...dataList];
         setItemList(items);
-        console.log(items)
       })
       .catch((e) => {
         console.log(e);

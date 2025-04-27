@@ -58,6 +58,20 @@ function Home() {
     });
   };
 
+  const scrollToHeading = (index) => {
+    const element = document.getElementById(`scrollspyHeading${index + 1}`);
+    if (element) {
+      const headerOffset = 150; // Account for fixed header + nav height
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+  
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth"
+      });
+    }
+  };
+
   useEffect(() => {
     const buttons = document.querySelectorAll(".carousel-control-next");
     setTimeout(() => {
@@ -358,103 +372,27 @@ function Home() {
                 }}
               >
                 <ul class="nav sortingList" style={{ width: "525px" }}>
-                  <li class="nav-item">
-                    <div
+                  {category.map((item, index) => (
+                    <li class="nav-item" key={index}>
+                      <div
                       class="nav-link"
-                      onClick={() => {
-                        window.scrollTo({ top: 20 });
-                      }}
+                      onClick={() => scrollToHeading(index)}
                       style={{ cursor: "pointer" }}
-                    >
-                      웨딩홀
-                    </div>
-                  </li>
-                  <li class="nav-item">
-                    <div
-                      class="nav-link"
-                      onClick={() => {
-                        window.scrollTo({
-                          top: 500,
-                          left: 0,
-                          behavior: "smooth",
-                        });
-                      }}
-                      style={{ cursor: "pointer" }}
-                      //   href="#scrollspyHeading2"
-                    >
-                      스튜디오
-                    </div>
-                  </li>
-                  <li class="nav-item">
-                    <div
-                      class="nav-link"
-                      onClick={() => {
-                        window.scrollTo({
-                          top: 1070,
-                          left: 0,
-                          behavior: "smooth",
-                        });
-                      }}
-                      style={{ cursor: "pointer" }}
-                    >
-                      의상
-                    </div>
-                  </li>
-                  <li class="nav-item">
-                    <div
-                      class="nav-link"
-                      onClick={() => {
-                        window.scrollTo({
-                          top: 1730,
-                          left: 0,
-                          behavior: "smooth",
-                        });
-                      }}
-                      style={{ cursor: "pointer" }}
-                    >
-                      메이크업
-                    </div>
-                  </li>
-                  <li class="nav-item">
-                    <div
-                      class="nav-link"
-                      onClick={() => {
-                        window.scrollTo({
-                          top: 2370,
-                          left: 0,
-                          behavior: "smooth",
-                        });
-                      }}
-                      style={{ cursor: "pointer" }}
-                    >
-                      신혼여행
-                    </div>
-                  </li>
-                  <li class="nav-item">
-                    <div
-                      class="nav-link"
-                      onClick={() => {
-                        window.scrollTo({
-                          top: 3300,
-                          left: 0,
-                          behavior: "smooth",
-                        });
-                      }}
-                      style={{ cursor: "pointer" }}
-                    >
-                      부케
-                    </div>
-                  </li>
+                      >
+                      {item}
+                      </div>
+                    </li>
+                  ))}
                 </ul>
               </nav>
               <div
                 data-bs-spy="scroll"
                 data-bs-target="#navbar-example2"
-                data-bs-root-margin="0px 0px -40%"
+                data-bs-root-margin="150px 0px -40%"
                 data-bs-smooth-scroll="true"
                 class="scrollspy-example bg-light p-3 rounded-2"
                 tabindex="0"
-                style={{ marginTop: "150px" }}
+                style={{ marginTop: "130px" }}
               >
                 {wholeItems.map((items, categoryIndex) => 
                   <div key={categoryIndex}>
@@ -640,10 +578,7 @@ function Home() {
                                   backgroundColor: "#fce1e4",
                                   border: "grey 1px solid",
                                 }}
-                                onClick={(e) => {
-                                  console.log("🟡 Like button clicked");
-                                  handleLikeClick();
-                                }}
+                                onClick={handleLikeClick}
                               >
                                 <svg
                                   xmlns="http://www.w3.org/2000/svg"
@@ -671,10 +606,7 @@ function Home() {
                                   backgroundColor: "#ebebeb",
                                   border: "grey 1px solid",
                                 }}
-                                onClick={(e) => {
-                                  console.log("🟡 Like button clicked");
-                                  handleLikeClick();
-                                }}
+                                onClick={handleLikeClick}
                               >
                                 <svg
                                   xmlns="http://www.w3.org/2000/svg"

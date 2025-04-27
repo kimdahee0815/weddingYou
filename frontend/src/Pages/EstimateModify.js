@@ -1,16 +1,13 @@
-//
 import "../Css/main.css";
 import "../Css/EstimateForm.css";
 import "../Css/EstimateModify.css";
-import personCentered from "../Assets/logo.png";
-//
+
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useRef } from "react";
 //컴포넌트
 import Footer from "../Components/Footer";
-import BackButton from "../Components/Backbutton";
 import NavigationBar from "../Components/NavigationBar";
 import Sidesection from "../Components/Sidesection";
 
