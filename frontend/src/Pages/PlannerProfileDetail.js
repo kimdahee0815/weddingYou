@@ -28,38 +28,7 @@ function PlannerProfileDetail() {
   };
 
   const getCurrentEstimate = (selectedEstimateIndex) => {
-    console.log(estimates[selectedEstimateIndex])
     setCurrentEstimate(estimates[selectedEstimateIndex]);
-    
-    // try {
-    //   const response = await axios.get(
-    //     `/estimate/detail/${selectedEstimateId}`
-    //   );
-    //   const { data } = response;
-    //   console.log(data);
-    //   SetEstimateData(data);
-    //   if (data.userMatching === null) {
-    //     setUserMatching(null);
-    //   } else {
-    //     setUserMatching(JSON.parse(data.userMatching));
-    //   }
-    //   // 이미지 데이터 가져오기
-    //   const imagearray = JSON.parse(data.img);
-    //   const imagePromises = imagearray.map((image) => {
-    //     return axios.get("/estimate/imageview", {
-    //       params: { image },
-    //       responseType: "blob",
-    //     });
-    //   });
-    //   const responses = await Promise.all(imagePromises);
-    //   const imageUrls = responses.map((res) => {
-    //     const resdata = URL.createObjectURL(res.data);
-    //     return resdata;
-    //   });
-    //   setImages(imageUrls);
-    // } catch (error) {
-    //   console.log(error);
-    // }
   };
 
   useEffect(() => {
