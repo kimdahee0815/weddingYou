@@ -1,14 +1,24 @@
 package com.mysite.weddingyou_backend.plannerProfile;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.hibernate.annotations.ColumnDefault;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.mysite.weddingyou_backend.item.ItemDTO;
+import com.mysite.weddingyou_backend.like.LikeEntity;
+import com.mysite.weddingyou_backend.review.Review;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -60,5 +70,9 @@ public class PlannerProfile {
   
     @Column(name = "planner_JoinDate")
     private LocalDateTime plannerJoinDate;
+    
+    @JsonManagedReference
+	@OneToMany(mappedBy = "plannerProfile", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+	private List<Review> reviews;
     
 }

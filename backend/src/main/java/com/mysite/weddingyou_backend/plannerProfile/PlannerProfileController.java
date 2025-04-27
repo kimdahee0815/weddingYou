@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -70,7 +71,7 @@ public class PlannerProfileController {
 
     // planner profile save or update
     for (PlannerUpdateDelete plannerInfo : plannersInfo) {
-        PlannerProfile newProfile = createOrUpdatePlannerProfile(plannerInfo);
+        PlannerProfileDTO newProfile = createOrUpdatePlannerProfile(plannerInfo);
 				plannerService.save(newProfile);
     }
 
@@ -81,11 +82,11 @@ public class PlannerProfileController {
 	}
 
 	// planner profile create or update
-	private PlannerProfile createOrUpdatePlannerProfile(PlannerUpdateDelete plannerInfo) throws ParseException {
-    PlannerProfile existingProfile = plannerService.getPlannerByEmail(plannerInfo.getEmail());
-		PlannerProfile profile = null;
+	private PlannerProfileDTO createOrUpdatePlannerProfile(PlannerUpdateDelete plannerInfo) throws ParseException {
+    PlannerProfileDTO existingProfile = plannerService.getPlannerByEmail(plannerInfo.getEmail());
+		PlannerProfileDTO profile = null;
 		if(existingProfile == null) {
-			profile = new PlannerProfile();
+			profile = new PlannerProfileDTO();
 		}else{
 			profile = existingProfile;
 		}
@@ -100,10 +101,10 @@ public class PlannerProfileController {
     profile.setPlannerEmail(plannerEmail);
     profile.setPlannerName(plannerInfo.getName());
     profile.setIntroduction(plannerInfo.getIntroduction());
-    profile.setPlannerPhoneNum(plannerInfo.getPhoneNum());
+    profile.setPhoneNum(plannerInfo.getPhoneNum());
     profile.setPlannerProfileImg(plannerInfo.getPlannerImg());
     profile.setPlannerJoinDate(plannerInfo.getPlannerJoinDate());
-    profile.setPlannerCareerYears(Integer.parseInt(plannerInfo.getPlannerCareerYears()));
+    profile.setCareer(Integer.parseInt(plannerInfo.getPlannerCareerYears()));
     profile.setReviewCount(reviewStats.getReviewCount());
     profile.setReviewStars(reviewStats.getReviewStars());
     profile.setReviewUsers(reviewStats.getReviewUsers());
@@ -210,41 +211,39 @@ public class PlannerProfileController {
 	}
     
     @PostMapping("/plannerProfile/detail")
-    public List<String> getProfileDetail(@RequestParam("plannerEmail") String plannerEmail) throws ParseException {
-    	PlannerProfile targetPlannerProfile = plannerService.getPlannerByEmail(plannerEmail);
-    	 List<String> result = new ArrayList<>();
-    	 List<Review> reviewData = reviewRepository.findAllByPlannerEmail(plannerEmail);
-    	result.add(String.valueOf(targetPlannerProfile.getReviewCount()));
-    	result.add(String.valueOf(targetPlannerProfile.getAvgReviewStars()));	
-    	result.add(String.valueOf(targetPlannerProfile.getIntroduction()));
-    	result.add(String.valueOf(targetPlannerProfile.getMatchingCount()));
-    	result.add(String.valueOf(targetPlannerProfile.getPlannerPhoneNum()));
+    public PlannerProfileDTO getProfileDetail(@RequestParam("plannerEmail") String plannerEmail) throws ParseException {
+    	PlannerProfileDTO targetPlannerProfile = plannerService.getPlannerByEmail(plannerEmail);
+//     	 List<String> result = new ArrayList<>();
+//     	 List<Review> reviewData = reviewRepository.findAllByPlannerEmail(plannerEmail);
+//     	result.add(String.valueOf(targetPlannerProfile.getReviewCount()));
+//     	result.add(String.valueOf(targetPlannerProfile.getAvgReviewStars()));	
+//     	result.add(String.valueOf(targetPlannerProfile.getIntroduction()));
+//     	result.add(String.valueOf(targetPlannerProfile.getMatchingCount()));
+//     	result.add(String.valueOf(targetPlannerProfile.getPlannerPhoneNum()));
    
-    	if(!targetPlannerProfile.getReviewUsers().equals("[]")) {
-    		String data = targetPlannerProfile.getReviewUsers().substring(1, targetPlannerProfile.getReviewUsers().length()-1);
-        	String[] reviewUsers = data.split(",");
+//     	if(!targetPlannerProfile.getReviewUsers().equals("[]")) {
+//     		String data = targetPlannerProfile.getReviewUsers().substring(1, targetPlannerProfile.getReviewUsers().length()-1);
+//         	String[] reviewUsers = data.split(",");
         
-    		ArrayList<String> userName = new ArrayList<>();
-    		ArrayList<String> userReview = new ArrayList<>();
-        	for(int i=0;i<reviewUsers.length;i++) {
-        		System.out.println(reviewUsers[i].trim());
-        		UserUpdateDelete userInfo = userUpdateDeleteRepository.findByEmail(reviewUsers[i].trim());
-        		System.out.println(userInfo.getName());
-        		userName.add(userInfo.getName());
-        		userReview.add(reviewData.get(i).getReviewText());
-        	}
-        	result.add(String.valueOf(userName));
-        	result.add(String.valueOf(userReview));
-        }else {
-    		result.add("[]");
-    		result.add("[]");
-    	}
+//     		ArrayList<String> userName = new ArrayList<>();
+//     		ArrayList<String> userReview = new ArrayList<>();
+//         	for(int i=0;i<reviewUsers.length;i++) {
+//         		UserUpdateDelete userInfo = userUpdateDeleteRepository.findByEmail(reviewUsers[i].trim());
+//         		userName.add(userInfo.getName());
+//         		userReview.add(reviewData.get(i).getReviewText());
+//         	}
+//         	result.add(String.valueOf(userName));
+//         	result.add(String.valueOf(userReview));
+//         }else {
+//     		result.add("[]");
+//     		result.add("[]");
+//     	}
     	
-//    	result.add(String.valueOf(targetPlannerProfile.getReviewUsers()));
-    	result.add(String.valueOf(targetPlannerProfile.getReviewStars()));
-    	result.add(String.valueOf(targetPlannerProfile.getPlannerCareerYears()));
+// //    	result.add(String.valueOf(targetPlannerProfile.getReviewUsers()));
+//     	result.add(String.valueOf(targetPlannerProfile.getReviewStars()));
+//     	result.add(String.valueOf(targetPlannerProfile.getPlannerCareerYears()));
     	
-	    return result;
+	    return targetPlannerProfile;
     
     }
     
@@ -267,19 +266,14 @@ public class PlannerProfileController {
        
     }
     
-    @PostMapping("/plannerProfile/getUnmatchedEstimates")
-    public List<String> getUnmatchedEstimates(@RequestParam("userEmail") String userEmail ) throws ParseException {
-    	List<Estimate> estimatesData = estimateRepository.findAllByWriter(userEmail);
-    	
-    	List<String> result = new ArrayList<>();
-    	for(int i =0;i<estimatesData.size();i++) {
-    		if(!estimatesData.get(i).isMatchstatus()) {
-    			result.add(String.valueOf(estimatesData.get(i).getId()));
-    		}
-    	}
+    @PostMapping("/plannerProfile/unmatched-estimates")
+    public List<Estimate> getUnmatchedEstimates(@RequestParam("userEmail") String userEmail ) throws ParseException {
+    	List<Estimate> estimatesData = estimateService.getUnmatchedEstimates(userEmail);
+			List<Estimate> unmatchedEstimates = estimatesData.stream()
+                                   .filter(e -> !e.isMatchstatus())
+                                   .collect(Collectors.toList());
     
-        return result;
-       
+      return unmatchedEstimates;
     }
     
   //견적서 매칭원하는 고객 삽입하기

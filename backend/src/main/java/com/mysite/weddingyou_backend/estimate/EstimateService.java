@@ -91,6 +91,11 @@ public class EstimateService {
 		return estimateRepository.getsearchlistpageing(start,limit,search);
 	}
 
+
+	public List<Estimate> getUnmatchedEstimates(String userEmail) {
+		return estimateRepository.findAllByWriter(userEmail);
+	}
+
 	
 			
 }

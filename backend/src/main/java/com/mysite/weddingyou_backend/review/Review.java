@@ -4,15 +4,23 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.mysite.weddingyou_backend.comment.Comment;
+import com.mysite.weddingyou_backend.like.LikeEntity;
+import com.mysite.weddingyou_backend.plannerLogin.PlannerLogin;
+import com.mysite.weddingyou_backend.plannerProfile.PlannerProfile;
+import com.mysite.weddingyou_backend.userLogin.UserLogin;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -58,15 +66,37 @@ public class Review {
 		
 	// 댓글
 	@JsonManagedReference
-	@OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<Comment> comments = new ArrayList<>();
+	@OneToMany(mappedBy = "review", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+	private List<Comment> comments;
 
-//	@ManyToOne(fetch = FetchType.LAZY)
-//	@JoinColumn(name = "user_email", referencedColumnName = "email", insertable = false, updatable = false, nullable = false)
-//	private UserLogin userLogin;
-//
-//	@ManyToOne(fetch = FetchType.LAZY)
-//	@JoinColumn(name = "planner_email", referencedColumnName = "email", insertable = false, updatable = false, nullable = false)
-//	private PlannerLogin plannerLogin;
+	public void addComments(Comment comment) {
+		if (comments == null) {
+      comments = new ArrayList<>();
+    }
+		if (!comments.contains(comment)) { 
+			comments.add(comment);
+			comment.setReview(this);
+		}
+	}
+
+	public void removeLike(Comment comment) {
+		if (comments != null) {
+			comments.remove(comment);
+			comment.setReview(null);
+		}
+	}
+
+	@JsonBackReference
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "planner_email", referencedColumnName = "planner_email", insertable = false, updatable = false, nullable = false)
+	private PlannerProfile plannerProfile;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "user_email", referencedColumnName = "email", insertable = false, updatable = false, nullable = false)
+	private UserLogin user;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "planner_email", referencedColumnName = "email", insertable = false, updatable = false, nullable = false)
+	private PlannerLogin planner;
 
 }

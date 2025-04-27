@@ -70,7 +70,6 @@ public class Item {
 		@Column(name = "item_write_date")
     private LocalDateTime itemWriteDate;
 	
-	
 		@Column(name ="like_write_date")
     private LocalDateTime likeWriteDate;
 	

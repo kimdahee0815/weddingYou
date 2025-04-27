@@ -10,69 +10,56 @@ import Sidesection from "../Components/Sidesection";
 import defaultprofileimage from "../Assets/defaultprofileimage.jpg";
 
 function PlannerProfileDetail() {
-  const [previewImg, setPreviewImg] = useState([]);
-
-  //const [plannerYears, setPlannerYears] = useState(0);
-  const [reviewCount, setReviewCount] = useState(0);
-  const [matchingCount, setMatchingCount] = useState(0);
-  const [introduction, setIntroduction] = useState("");
-  const [avgReviewStars, setAvgReviewStars] = useState(0);
-  const [reviewStars, setReviewStars] = useState([]);
-  const [reviewUsers, setReviewUsers] = useState([]);
-  const [reviewContents, setReviewContents] = useState([]);
-  const [portfolio, setPortfolio] = useState("아직 포트폴리오가 없습니다!");
-  const [portfolioIndex, setPortfolioIndex] = useState([]);
-  const [plannerYears, setPlannerYears] = useState("");
-  const [plannerPhone, setPlannerPhone] = useState("");
+  const [profileDetail, setProfileDetail] = useState({});
 
   const { plannerEmail, plannerName, plannerImg } = useLocation().state;
-  console.log(plannerEmail, plannerName, plannerImg)
-  let [estimateId, setEstimateId] = useState([]);
-  let [estimateData, SetEstimateData] = useState(null);
-  let [images, setImages] = useState([]);
-  const [estimateIndex, setEstimateIndex] = useState([]);
+
+  const [estimates, setEstimates] = useState(null);
+  const [currentEstimate, setCurrentEstimate] = useState(null);
   const [selectIndex, setSelectIndex] = useState(0);
   const [selectEstimateId, setSelectEstimateId] = useState(0);
   const [existEstimates, setExistEstimates] = useState(true);
   const [selected, setSelected] = useState(false);
   const [userMatching, setUserMatching] = useState(null);
-  const [portfolioReview, setPortfolioReview] = useState("");
 
   const navigate = useNavigate();
   const goMatch = () => {
     navigate(`/estimateform`);
   };
 
-  const fetchData = async (selectedEstimateId) => {
-    try {
-      const response = await axios.get(
-        `/estimate/detail/${selectedEstimateId}`
-      );
-      const { data } = response;
-      console.log(data);
-      SetEstimateData(data);
-      if (data.userMatching === null) {
-        setUserMatching(null);
-      } else {
-        setUserMatching(JSON.parse(data.userMatching));
-      }
-      // 이미지 데이터 가져오기
-      const imagearray = JSON.parse(data.img);
-      const imagePromises = imagearray.map((image) => {
-        return axios.get("/estimate/imageview", {
-          params: { image },
-          responseType: "blob",
-        });
-      });
-      const responses = await Promise.all(imagePromises);
-      const imageUrls = responses.map((res) => {
-        const resdata = URL.createObjectURL(res.data);
-        return resdata;
-      });
-      setImages(imageUrls);
-    } catch (error) {
-      console.log(error);
-    }
+  const getCurrentEstimate = (selectedEstimateIndex) => {
+    console.log(estimates[selectedEstimateIndex])
+    setCurrentEstimate(estimates[selectedEstimateIndex]);
+    
+    // try {
+    //   const response = await axios.get(
+    //     `/estimate/detail/${selectedEstimateId}`
+    //   );
+    //   const { data } = response;
+    //   console.log(data);
+    //   SetEstimateData(data);
+    //   if (data.userMatching === null) {
+    //     setUserMatching(null);
+    //   } else {
+    //     setUserMatching(JSON.parse(data.userMatching));
+    //   }
+    //   // 이미지 데이터 가져오기
+    //   const imagearray = JSON.parse(data.img);
+    //   const imagePromises = imagearray.map((image) => {
+    //     return axios.get("/estimate/imageview", {
+    //       params: { image },
+    //       responseType: "blob",
+    //     });
+    //   });
+    //   const responses = await Promise.all(imagePromises);
+    //   const imageUrls = responses.map((res) => {
+    //     const resdata = URL.createObjectURL(res.data);
+    //     return resdata;
+    //   });
+    //   setImages(imageUrls);
+    // } catch (error) {
+    //   console.log(error);
+    // }
   };
 
   useEffect(() => {
@@ -80,153 +67,24 @@ function PlannerProfileDetail() {
     formData.append("plannerEmail", plannerEmail);
     axios
       .post(`/plannerProfile/detail`, formData)
-      .then((res) => {
+      .then(async (res) => {
         const data = res.data;
-        console.log(data);
-        const reviewStarsArr = [];
-        const reviewUsersArr = [];
-        const reviewUserIndex = [];
-        const reviewStarsIndex = [];
-        const reviewContentsIndex = [];
-        const reviewContentsArr = [];
-        const portfolioDataArr = [];
-        const portfolioIndexArr = [];
-        const portfolioReviewArr = [];
+        setProfileDetail(data);
 
-        for (let i = 0; i < data.length; i++) {
-          setReviewCount(data[i]);
-          i++;
-          setAvgReviewStars(data[i]);
-          i++;
-          setIntroduction(data[i]);
-          i++;
-          setMatchingCount(data[i]);
-          i++;
-          setPlannerPhone(data[i]);
-          i++;
-          const reviewUsersData = data[i].slice(1, data[i].length - 1);
-          const arr = reviewUsersData.split(",");
-
-          const Userlength = arr.length;
-          for (let j = 0; j < Userlength; j++) {
-            reviewUserIndex.push(j);
-            reviewUsersArr.push(arr[j]);
-          }
-          setReviewUsers(arr);
-          console.log(arr);
-          i++;
-
-          const reviewContentsData = data[i].slice(1, data[i].length - 1);
-          const arr3 = reviewContentsData.split(",");
-
-          const reviewContentsLength = arr3.length;
-          for (let m = 0; m < reviewContentsLength; m++) {
-            reviewContentsIndex.push(m);
-            reviewContentsArr.push(arr3[m]);
-          }
-          setReviewContents(arr3);
-          console.log(arr3);
-          i++;
-
-          const reviewStarsData = data[i].slice(1, data[i].length - 1);
-          const arr2 = reviewStarsData.split(",");
-
-          const starsLength = arr2.length;
-          for (let k = 0; k < starsLength; k++) {
-            reviewStarsIndex.push(k);
-            reviewStarsArr.push(arr2[k]);
-          }
-          setReviewStars(arr2);
-          console.log(arr2);
-          i++;
-          setPlannerYears(data[i]);
-        }
-
-        if (reviewStarsArr[0] !== "") {
-          for (let m = 0; m < reviewStarsArr.length; m++) {
-            const portfolioData = `${reviewUsersArr[m]} - ${reviewStarsArr[m]}점\n`;
-            const portfolioReview = `${reviewContentsArr[m]}\n`;
-            portfolioDataArr.push(portfolioData);
-            portfolioReviewArr.push(portfolioReview);
-            portfolioIndexArr.push(m);
-            console.log(portfolioData);
-          }
-          setPortfolio(portfolioDataArr);
-          setPortfolioReview(portfolioReviewArr);
-
-          setPortfolioIndex(portfolioIndexArr);
-          console.log(portfolioDataArr);
-        } else {
-          console.log("aaa");
-          setPortfolioIndex([]);
-        }
-
-        let estimateIdArr = [];
         formData = new FormData();
         formData.append("userEmail", sessionStorage.getItem("email"));
-        axios
-          .post(`/plannerProfile/getUnmatchedEstimates`, formData)
-          .then((res) => {
-            console.log("data:++++++++++++++" + res.data);
-            console.log(res);
-            let indexArr = [];
-            if (res.data.length !== 0) {
-              const data = res.data;
-              for (let i = 0; i < data.length; i++) {
-                estimateIdArr.push(data[i]);
-                indexArr.push(i);
-              }
-              setEstimateId(estimateIdArr);
-              setEstimateIndex(indexArr);
-              setSelectEstimateId(estimateIdArr[0]);
-              console.log(estimateIdArr[0]);
-              const defaultEstimateId = estimateIdArr[0];
-              const fetchData1 = async () => {
-                try {
-                  const response = await axios.get(
-                    `/estimate/detail/${defaultEstimateId}`
-                  );
-                  const { data } = response;
-                  console.log(data);
-                  SetEstimateData(data);
-                  if (data.userMatching === null) {
-                    setUserMatching(null);
-                  } else {
-                    setUserMatching(JSON.parse(data.userMatching));
-                  }
-                  // 이미지 데이터 가져오기
-                  const imagearray = JSON.parse(data.img);
-                  const imagePromises = imagearray.map((image) => {
-                    return axios.get(
-                      "/estimate/imageview",
-                      {
-                        params: { image },
-                        responseType: "blob",
-                      }
-                    );
-                  });
-                  const responses = await Promise.all(imagePromises);
-                  const imageUrls = responses.map((res) => {
-                    const resdata = URL.createObjectURL(res.data);
-                    return resdata;
-                  });
-                  setImages(imageUrls);
-                } catch (error) {
-                  console.log(error);
-                }
-              };
-              fetchData1();
-            } else {
-              setExistEstimates(false);
-            }
-          });
+
+        const { data:estimates} = await axios
+          .post(`/plannerProfile/unmatched-estimates`, formData)
+        setEstimates(estimates);
+        if(estimates.length !== 0){
+          setCurrentEstimate(estimates[0]);
+        }
       })
       .catch((e) => {
         console.log(e);
       });
-  }, []);
-
-  useEffect(() => {}, []);
+  }, [plannerEmail]);
 
   const goChooseEstimate = (e) => {
     const estimateId = selectEstimateId;
@@ -282,7 +140,7 @@ function PlannerProfileDetail() {
   return (
     <div className="containerbox">
       <div className="mainlayout box1">
-        <NavigationBar title={`${plannerName}의 프로필`} />
+        <NavigationBar title={`${profileDetail.plannerName}의 프로필`} />
         <br />
         <div
           class="container text-center"
@@ -299,7 +157,7 @@ function PlannerProfileDetail() {
           ></div>
           <div style={{ marginTop: "20px", display: "flex", width: "100%" }}>
             <img
-              src={plannerImg || defaultprofileimage}
+              src={profileDetail.plannerProfileImg || defaultprofileimage}
               alt=""
               style={{
                 width: "280px",
@@ -324,7 +182,7 @@ function PlannerProfileDetail() {
                   marginTop: "20px",
                 }}
               >
-                {plannerName}
+                {profileDetail.plannerName}
               </div>
               <div
                 style={{
@@ -335,10 +193,10 @@ function PlannerProfileDetail() {
                   height: "60px",
                 }}
               >
-                리뷰 개수 : {reviewCount} <br />
-                평균 별점 : {avgReviewStars} <br />
-                경력 : {plannerYears} <br />
-                휴대폰번호 <br /> {plannerPhone}
+                리뷰 개수 : {profileDetail.reviews?.length} <br />
+                평균 별점 : {'abc'} <br />
+                경력 : {profileDetail.career} <br />
+                휴대폰번호 <br /> {profileDetail.phoneNum}
               </div>
             </div>
           </div>
@@ -371,7 +229,7 @@ function PlannerProfileDetail() {
               cols="41"
               rows="8"
               placeholder="아직 자기소개가 없습니다!"
-              value={introduction}
+              value={profileDetail.introduction || "아직 자기소개가 없습니다!"}
               disabled
             ></textarea>
           </div>
@@ -398,10 +256,10 @@ function PlannerProfileDetail() {
                 marginRight: "30px",
               }}
             >
-              총 매칭수 : {matchingCount}
+              총 매칭수 : {profileDetail.matchingCount}
             </div>
 
-            {portfolioIndex.length === 0 ? (
+            {profileDetail.reviews?.length === 0 ? (
               <div
                 style={{
                   marginTop: "20px",
@@ -432,7 +290,7 @@ function PlannerProfileDetail() {
                 </div>
               </div>
             ) : (
-              portfolioIndex.map((index) => {
+              profileDetail.reviews?.map((review, index) => {
                 return (
                   <div
                     style={{
@@ -467,7 +325,7 @@ function PlannerProfileDetail() {
                             paddingTop: "10px",
                           }}
                         >
-                          {index + 1}.{portfolio[index]}
+                          {index + 1}.{`${review.user.name} - ${review.reviewStars}점\n`}
                           <br />
                         </div>
                         <div
@@ -478,7 +336,7 @@ function PlannerProfileDetail() {
                             fontSize: "0.9em",
                           }}
                         >
-                          : {portfolioReview[index]}
+                          : {review.reviewText}
                           <br />
                         </div>
                       </div>
@@ -564,15 +422,10 @@ function PlannerProfileDetail() {
                     aria-label=".form-select-lg example"
                     style={{ width: "460px" }}
                     onChange={(e) => {
-                      console.log(e);
-                      console.log(e.target.value);
-                      setSelectIndex(e.target.value);
-                      const index = e.target.value;
-                      setSelectEstimateId(estimateId[index]);
-                      fetchData(estimateId[index]);
+                      getCurrentEstimate(e.target.value);
                     }}
                   >
-                    {estimateIndex.map((index) => {
+                    {estimates?.map((estimate, index) => {
                       return <option value={index}>견적서{index + 1}</option>;
                     })}
                   </select>
@@ -589,156 +442,151 @@ function PlannerProfileDetail() {
                     style={{
                       fontSize: "1.3em",
                       width: "550px",
-
                       marginLeft: "-35px",
                       marginTop: "-100px",
                     }}
                   >
-                    {console.log(estimateData)}
-                    {console.log(estimateData === null)}
-                    {estimateData !== null ? (
-                      <div className="contentcontainer-detail">
-                        <div className="contentbox-detail">
-                          <h5 onClick={() => {}}>희망 결혼 예정일</h5>
-                          {JSON.parse(estimateData?.weddingdate).map(
-                            (e, index) => {
+                    {estimates !== null ? (
+                        <div className="contentcontainer-detail">
+                          <div className="contentbox-detail">
+                            <h5>희망 결혼 예정일</h5>
+                            {JSON.parse(currentEstimate?.weddingdate).map(
+                              (date, index) => {
                               return (
                                 <div className="choosebox-detail">
-                                  {e === "" ? (
+                                  {date === "" ? (
                                     <></>
                                   ) : (
                                     <>
                                       <div>{index + 1}순위</div>
-                                      <div className="result-detail">{e}</div>
+                                      <div className="result-detail">{date}</div>
                                     </>
                                   )}
                                 </div>
                               );
                             }
                           )}
-                        </div>
-                        <div className="contentbox-detail">
-                          <h5>희망 결혼 지역</h5>
-                          {JSON.parse(estimateData?.region).map((e, index) => {
-                            return (
-                              <div className="choosebox-detail">
-                                {e === "" ? (
-                                  <></>
-                                ) : (
-                                  <>
-                                    <div>{index + 1}순위</div>
-                                    <div className="result-detail">{e}</div>
-                                  </>
-                                )}
-                              </div>
-                            );
-                          })}
-                        </div>
-                        <div className="contentbox-detail">
-                          <h5>예산 한도</h5>
-                          <div
-                            className="choosebox-detail"
-                            style={{ width: "150px" }}
-                          >
-                            <div className="result-detail">
-                              {estimateData?.budget.toLocaleString()}원
-                            </div>
                           </div>
-                        </div>
-                        <div className="contentbox-detail">
-                          <h5>희망 스튜디오 스타일</h5>
-                          <div className="choosebox-detail">
-                            <div className="result-detail">
-                              {estimateData?.studio}
-                            </div>
+                          <div className="contentbox-detail">
+                            <h5>희망 결혼 지역</h5>
+                              {JSON.parse(currentEstimate?.region).map((region, index) => {
+                                return (
+                              <div className="choosebox-detail">
+                                {region === "" ? (
+                                  <></>
+                                ) : (
+                                  <>
+                                    <div>{index + 1}순위</div>
+                                    <div className="result-detail">{region}</div>
+                                  </>
+                                )}
+                              </div>
+                            );
+                          })}
                           </div>
-                        </div>
-
-                        <div className="contentbox-detail">
-                          <h5>신부 드레스 스타일</h5>
-                          {estimateData?.dress === "[]" && (
-                            <div className="choosebox-detail">
-                              <div className="result-noneChoose">
-                                *선택사항 없음*
-                              </div>
-                            </div>
-                          )}
-                          {JSON.parse(estimateData?.dress).map((e, index) => {
-                            return (
-                              <div className="choosebox-detail">
-                                {e === "" ? (
-                                  <></>
-                                ) : (
-                                  <>
-                                    <div>{index + 1}순위</div>
-                                    <div className="result-detail">{e}</div>
-                                  </>
-                                )}
-                              </div>
-                            );
-                          })}
-                          <div></div>
-                        </div>
-                        <div className="contentbox-detail">
-                          <h5>신부 메이크업 스타일</h5>
-                          {estimateData?.dress === "[]" && (
-                            <div className="choosebox-detail">
-                              <div className="result-noneChoose">
-                                *선택사항 없음*
-                              </div>
-                            </div>
-                          )}
-                          {JSON.parse(estimateData?.makeup).map((e, index) => {
-                            return (
-                              <div className="choosebox-detail">
-                                {e === "" ? (
-                                  <></>
-                                ) : (
-                                  <>
-                                    <div>{index + 1}순위</div>
-                                    <div className="result-detail">{e}</div>
-                                  </>
-                                )}
-                              </div>
-                            );
-                          })}
-                        </div>
-                        <div className="contentbox-detail">
-                          <h5>희망 신혼여행지</h5>
-                          <div className="choosebox-detail">
-                            {estimateData?.honeymoon === "" && (
-                              <div className="result-noneChoose">
-                                *선택사항 없음*
-                              </div>
-                            )}
-                            {estimateData?.honeymoon !== "" && (
+                          <div className="contentbox-detail">
+                            <h5>예산 한도</h5>
+                            <div
+                              className="choosebox-detail"
+                              style={{ width: "150px" }}
+                            >
                               <div className="result-detail">
-                                {estimateData?.honeymoon.slice(3)}
+                                {currentEstimate?.budget.toLocaleString()}원
+                              </div>
+                            </div>
+                          </div>
+                          <div className="contentbox-detail">
+                            <h5>희망 스튜디오 스타일</h5>
+                            <div className="choosebox-detail">
+                              <div className="result-detail">
+                                {currentEstimate?.studio}
+                              </div>
+                            </div>
+                          </div>
+                          <div className="contentbox-detail">
+                            <h5>신부 드레스 스타일</h5>
+                            {JSON.parse(currentEstimate?.dress).length === 0 && (
+                              <div className="choosebox-detail">
+                                <div className="result-noneChoose">
+                                  *선택사항 없음*
+                                </div>
                               </div>
                             )}
-                          </div>
-                        </div>
-
-                        <div className="contentbox-detail">
-                          {images.length === 0 ? (
-                            <h5>고객 첨부이미지 </h5>
-                          ) : (
-                            <h5 style={{ marginTop: "-20px" }}>
-                              고객 첨부이미지{" "}
-                            </h5>
-                          )}
-
-                          {images.length === 0 && (
-                            <span>첨부 이미지가 없습니다.</span>
-                          )}
-                          <br></br>
-                          <div>
-                            {images.map((e, index) => {
+                            {JSON.parse(currentEstimate?.dress).map((dress, index) => {
                               return (
+                                <div className="choosebox-detail">
+                                  {dress === "" ? (
+                                    <></>
+                                  ) : (
+                                    <>
+                                      <div>{index + 1}순위</div>
+                                      <div className="result-detail">{dress}</div>
+                                    </>
+                                  )}
+                                </div>
+                              );
+                            })}
+                          </div>
+                          <div className="contentbox-detail">
+                            <h5>신부 메이크업 스타일</h5>
+                            {JSON.parse(currentEstimate?.makeup).length === 0 && (
+                              <div className="choosebox-detail">
+                                <div className="result-noneChoose">
+                                  *선택사항 없음*
+                                </div>
+                              </div>
+                            )}
+                            {JSON.parse(currentEstimate?.makeup).map((makeup, index) => {
+                              return (
+                              <div className="choosebox-detail">
+                                {makeup === "" ? (
+                                  <></>
+                                ) : (
+                                  <>
+                                    <div>{index + 1}순위</div>
+                                    <div className="result-detail">{makeup}</div>
+                                  </>
+                                )}
+                              </div>
+                            );
+                            })}
+                          </div>
+                          <div className="contentbox-detail">
+                            <h5>희망 신혼여행지</h5>
+                            <div className="choosebox-detail">
+                              {currentEstimate?.honeymoon === "" && (
+                                <div className="result-noneChoose">
+                                  *선택사항 없음*
+                                </div>
+                              )}
+                              {currentEstimate?.honeymoon !== "" && (
+                                <div className="result-detail">
+                                  {currentEstimate?.honeymoon.slice(3)}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+
+                          <div className="contentbox-detail">
+                            {JSON.parse(currentEstimate?.img).length === 0 ? (
+                              <h5>고객 첨부이미지 </h5>
+                            ) : (
+                              <h5 style={{ marginTop: "-20px" }}>
+                                고객 첨부이미지{" "}
+                              </h5>
+                            )}
+
+                            {JSON.parse(currentEstimate?.img).length === 0 && (
+                              <span>첨부 이미지가 없습니다.</span>
+                            )}
+                            <br></br>
+                            <div>
+                              {JSON.parse(currentEstimate?.img).map((img, index) => {
+                                return (
                                 <div key={index}>
                                   <>
                                     <img
-                                      src={e}
+                                      src={img}
                                       width="100%"
                                       height="40%"
                                       style={{
@@ -754,25 +602,25 @@ function PlannerProfileDetail() {
                                 </div>
                               );
                             })}
+                            </div>
                           </div>
-                        </div>
 
-                        <div
-                          className="contentbox-detail"
-                          style={{ borderBottom: "none", marginTop: "10px" }}
-                        >
-                          <h5>고객 요청사항</h5>
                           <div
-                            className="choosebox-detail w-100"
-                            style={{ color: "black" }}
+                            className="contentbox-detail"
+                            style={{ borderBottom: "none", marginTop: "10px" }}
                           >
-                            {estimateData?.requirement === "" && (
-                              <span>고객요청사항이 없습니다.</span>
-                            )}
-                            {estimateData?.requirement}
+                            <h5>고객 요청사항</h5>
+                            <div
+                              className="choosebox-detail w-100"
+                              style={{ color: "black" }}
+                            >
+                              {currentEstimate?.requirement === "" && (
+                                <span>고객요청사항이 없습니다.</span>
+                              )}
+                              {currentEstimate?.requirement}
+                            </div>
                           </div>
                         </div>
-                      </div>
                     ) : null}
                   </p>
                 </div>
