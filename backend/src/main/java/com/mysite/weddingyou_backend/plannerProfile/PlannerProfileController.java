@@ -277,43 +277,31 @@ public class PlannerProfileController {
     }
     
   //견적서 매칭원하는 고객 삽입하기
-  		@PostMapping(value = "/plannerProfile/insert/matchingUser")
+  		@PostMapping(value = "/plannerProfile/matching/users")
   		public void updateData(
   		                       @RequestParam("estimateId") Long estimateId,
   								@RequestParam("usermatching") String usermatching)
   		                    		   throws Exception {
   		    
   			Estimate targetData = estimateService.getEstimateDetail(estimateId);
-  			
-  			
-  			System.out.println("targetData.plannermatching:"+targetData.getUserMatching());
   			JSONParser parser = new JSONParser();
   			ArrayList<String> obj = (ArrayList<String>) parser.parse(usermatching);
   			ArrayList<String> userList = null;
   			if(targetData.getUserMatching()!=null) {
   				userList = (ArrayList<String>) parser.parse(targetData.getUserMatching());
-  				System.out.println(userList);
   			}else {
   				userList = new ArrayList<>();
   			}
   			 
-  			
-  			if(userList.size() == 0) {
-  				Estimate data = new Estimate();
-  				data.setUserMatching(usermatching);
-  				targetData.setUserMatching(data.getUserMatching());
-  				
-  				estimateService.save(targetData);
-  			}
-  			else if(userList.size()!=0 && !userList.containsAll(obj)) {
-  				Estimate data = new Estimate();
-  				data.setUserMatching(usermatching);
-  				targetData.setUserMatching(data.getUserMatching());
-  				
-  				estimateService.save(targetData);
-  			}else if(userList.size()!=0  && userList.containsAll(obj)){
+  			if(userList.size()!=0  && userList.containsAll(obj)){
   				throw new Exception("중복됩니다!");
-  			}
+  			}else{
+					Estimate data = new Estimate();
+  				data.setUserMatching(usermatching);
+  				targetData.setUserMatching(data.getUserMatching());
+  				
+  				estimateService.save(targetData);
+				}
   			
   		}
   		

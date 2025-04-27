@@ -16,11 +16,7 @@ function PlannerProfileDetail() {
 
   const [estimates, setEstimates] = useState(null);
   const [currentEstimate, setCurrentEstimate] = useState(null);
-  const [selectIndex, setSelectIndex] = useState(0);
-  const [selectEstimateId, setSelectEstimateId] = useState(0);
-  const [existEstimates, setExistEstimates] = useState(true);
-  const [selected, setSelected] = useState(false);
-  const [userMatching, setUserMatching] = useState(null);
+  const [sendRequestPlanner, setSendRequestPlanner] = useState(false);
 
   const navigate = useNavigate();
   const goMatch = () => {
@@ -53,21 +49,20 @@ function PlannerProfileDetail() {
       .catch((e) => {
         console.log(e);
       });
-  }, [plannerEmail]);
+  }, [plannerEmail, sendRequestPlanner]);
 
   const goChooseEstimate = (e) => {
-    const estimateId = selectEstimateId;
+    const estimateId = currentEstimate.id;
+    const userMatching = JSON.parse(currentEstimate.userMatching);
 
     if (userMatching === null) {
       let userEmail = [plannerEmail];
-      console.log(userEmail);
       let formData = new FormData();
       formData.append("estimateId", estimateId);
       formData.append("usermatching", JSON.stringify(userEmail));
       axios
-        .post(`/plannerProfile/insert/matchingUser`, formData)
+        .post(`/plannerProfile/matching/users`, formData)
         .then((res) => {
-          console.log(res);
           alert("매칭 신청되었습니다!");
         })
         .catch((e) => {
@@ -86,14 +81,12 @@ function PlannerProfileDetail() {
           JSON.stringify([...userMatching, addPlannerEmail])
         );
         axios
-          .post(`/plannerProfile/insert/matchingUser`, formData)
+          .post(`/plannerProfile/matching/users`, formData)
           .then((res) => {
-            console.log(res);
             alert("매칭 신청되었습니다!");
           })
           .catch((e) => {
             console.log(e);
-
             if (e.response.data.message === "중복됩니다!") {
               alert("이미 매칭 신청한 플래너입니다!");
             }
@@ -102,6 +95,7 @@ function PlannerProfileDetail() {
         alert("이미 매칭 신청한 플래너입니다!");
       }
     }
+    setSendRequestPlanner(prev => !prev)
   };
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
@@ -316,14 +310,11 @@ function PlannerProfileDetail() {
             )}
           </div>
           {sessionStorage.getItem("category") === "user" ? (
-            existEstimates ? (
+            estimates?.length !== 0 ? (
               <button
                 class="btn-colour-1 "
                 data-bs-toggle="modal"
                 data-bs-target="#chooseEstimate"
-                onClick={() => {
-                  setSelected(true);
-                }}
                 style={{ marginTop: "50px" }}
               >
                 견적요청
