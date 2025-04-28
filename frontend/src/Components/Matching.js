@@ -12,44 +12,29 @@ import Sidesection from "./Sidesection";
 function Matching() {
   const navigate = useNavigate();
 
+  const [userEstimates, setUserEstimates] = useState([]);
+  const [plannerEstimates, setPlannerEstimates] = useState([]);
+  const [currentUserEstimate, setCurrentUserEstimate] = useState(null);
+  const [matchedUsers, setMatchedUsers] = useState([]);
+  const [matchedPlanners, setMatchedPlanners] = useState([]);
+  const [currentPlannerProfile, setCurrentPlannerProfile] = useState(null);
+
   const [plannerMatching, setPlannerMatching] = useState([]);
-  const [estimateCount, setEstimateCount] = useState([]);
   const [plannerName, setPlannerName] = useState("");
-  const [plannerData, setPlannerData] = useState([]);
-  const [count, setCount] = useState([]);
   const [deletedPlanner, setDeletedPlanner] = useState(false);
-  const [deletePermission, setDeletePermission] = useState(false);
-  const [bsIndex, setBsIndex] = useState(0);
-  const [bsIndex2, setBsIndex2] = useState(0);
   const [deleteTargetEstimateId, setDeleteTargetEstimateId] = useState(0);
-  const [deletePlanner, setDeletePlanner] = useState("");
   const [matchedPlanner, setMatchedPlanner] = useState([]);
-  const [deletePlannerName, setDeletePlannerName] = useState(null);
   const [estimateNum, setEstimateNum] = useState([]);
   const [matchedKeyIndex, setMatchedKeyIndex] = useState([]);
   const [selectEstimateNum, setSelectEstimateNum] = useState(0);
-  const [selectDeletePlanner, setSelectDeletePlanner] = useState("");
-  const [errorMessage, setErrorMessage] = useState(false);
 
-  const [selectedUserEmail, setSelectedUserEmail] = useState("");
   const [selectedEstimateId, setSelectedEstimateId] = useState(0);
   const [cancelledUser, setCancelledUser] = useState(false);
   const [matchedUser, setMatchedUser] = useState(false);
 
-  const [searchedMatchedUser, setSearchedMatchedUser] = useState([]);
-  const [searchedEstimateId, setSearchedEstimateId] = useState([]);
-  const [searchedUserKeyIndex, setSearchedUserKeyIndex] = useState([]);
-
   const [selectedEstimateId2, setSelectedEstimateId2] = useState(0);
-  const [selectedEstimateNum, setSelectedEstimateNum] = useState(0);
-  const [estimateOrder, setEstimateOrder] = useState([]);
 
   const deleteBtn = useRef();
-
-  const [userName, setUserName] = useState([]);
-  const [userEmail, setUserEmail] = useState([]);
-  const [userEstimateId, setUserEstimateId] = useState([]);
-  const [userIndex, setUserIndex] = useState([]);
 
   const [matchingCouple, setMatchingCouple] = useState([]);
   const [estimateOrder2, setEstimateOrder2] = useState([]);
@@ -60,98 +45,67 @@ function Matching() {
 
   const [allprice, setAllPrice] = useState(0);
 
+  let loggedInEmail = sessionStorage.getItem("email");
+
   useEffect(() => {
-    if (sessionStorage.getItem("category") === "user") {
-      //user일 경우
-      var plannerMatchingArr = [];
-      var estimateCountArr = [];
-      var dataArr = [];
-      var countArr = [];
-
-      const fetchData1 = async () => {
+    if (sessionStorage.getItem("category") === "planner") {
+      //planner일 경우
+      const getUserEstimatesDetails = async () => {
         try {
-          const res = await axios.get(`/estimate/getuserdetail`, {
-            params: { userEmail: sessionStorage.getItem("email") },
+          const {data:userEstimates} = await axios.get(`/estimate/users/detail`, {
+            params: { userEmail: loggedInEmail },
           });
-
-          if (res.data.length !== 0) {
-            for (let i = 0; i < res.data.length; i++) {
-              let temp = [];
-              const arr = JSON.parse(res.data[i].plannermatching);
-              plannerMatchingArr.push(arr);
-              estimateCountArr.push(i);
-              dataArr.push(res.data[i]);
-              if (arr === undefined || arr === null) {
-              }
-              for (let j = 0; j < arr.length; j++) {
-                temp.push(j);
-              }
-              countArr.push(temp);
-            }
-
-            axios
-              .get(`/estimate/getPlannerName`, {
-                params: { userEmail: sessionStorage.getItem("email") },
-              })
-              .then((res) => {
-                setPlannerName(res.data);
-              })
-              .catch((e) => {
-                console.log(e);
-              });
-
-            setPlannerData(dataArr);
-            setPlannerMatching(plannerMatchingArr);
-            setEstimateCount(estimateCountArr);
-            setCount(countArr);
-          } else {
-            setErrorMessage(true);
-            if (errorMessage === false) {
-            }
-          }
+          console.log("userEstimates")
+          console.log(userEstimates)
+          setUserEstimates(userEstimates)
         } catch (e) {
           console.log(e);
         }
       };
-      fetchData1();
-    } else {
-      //planner일 경우
+      getUserEstimatesDetails();
+    } else if (sessionStorage.getItem("category") === "user") {
+      //user 경우
+      const getPlannersAndEstimatesDetails = async () => {
+        try {
+          const {data:plannerEstimates} = await axios.get(`/estimate/planners/detail`, {
+            params: { userEmail: loggedInEmail },
+          });
+          console.log("plannerEstimates")
+          console.log(plannerEstimates)
+          setPlannerEstimates(plannerEstimates)
+        } catch (e) {
+          console.log(e);
+        }
+      };
+      getPlannersAndEstimatesDetails();
     }
-  }, [deletedPlanner, matchedPlanner]);
+  }, [loggedInEmail]);
 
-  const deleteMatchingPlanner = (e) => {
+  const matchOrDeletePlanner = (e) => {
     e.preventDefault();
 
-    const bsIndex = e.target.dataset.bsIndex;
-    const bsIndex2 = e.target.dataset.bsIndex2;
-    const estimateId = e.target.dataset.bsEstimateid;
-    const deleteTargetEstimateId = estimateId;
-    const bsEstimateNum = e.target.dataset.bsEstimatenum - 1;
-    const deletePlanner = plannerMatching[bsIndex][bsIndex2];
-    const deletePlannerName = plannerName[bsIndex][bsIndex2];
-    setBsIndex(bsIndex);
-    setBsIndex2(bsIndex2);
-    setDeleteTargetEstimateId(deleteTargetEstimateId);
-    setDeletePlanner(deletePlanner);
-    setDeletePlannerName(deletePlannerName);
-    setSelectEstimateNum(bsEstimateNum);
-    setSelectDeletePlanner(matchedPlanner[bsEstimateNum]);
-    console.log(deleteTargetEstimateId);
+    const {bsEstimate, bsProfile} = e.target.dataset;
+    const estimate = JSON.parse(bsEstimate);
+    const plannerProfile = JSON.parse(bsProfile);
+    setCurrentUserEstimate(estimate);
+    setCurrentPlannerProfile(plannerProfile);
   };
 
-  const deleteMatchingPlanner2 = () => {
-    const formData = new FormData();
-    formData.append("deleteTargetEstimateId", deleteTargetEstimateId);
+  const matchOrDeleteUser = (e) => {
+    const {bsEstimate: estimate} = e.target.dataset;
+    setCurrentUserEstimate(JSON.parse(estimate));
+  };
 
-    formData.append("deletePlanner", deletePlanner);
+
+  const confirmDeleteMatchingPlanner = () => {
     axios
-      .post(`/estimate/deleteMatchingPlanner`, formData)
+      .delete({
+        url: `/estimate/matching/planner`,
+        method: "delete",
+        params: { deleteTargetEstimateId: currentUserEstimate.id, deletePlanner: currentPlannerProfile.plannerEmail },
+      })
       .then((res) => {
-        setDeletedPlanner(!deletedPlanner);
-
-        if (res.data === 2) {
-          setDeletedPlanner(!deletedPlanner);
-        }
+        setDeletedPlanner(deletedPlanner => !deletedPlanner);
       })
       .catch((e) => {
         console.log(e);
@@ -160,45 +114,33 @@ function Matching() {
 
   const goMatching = () => {
     const formData = new FormData();
-    formData.append("targetEstimateId", deleteTargetEstimateId);
-    formData.append("matchingPlanner", deletePlanner);
-    formData.append("userEmail", sessionStorage.getItem("email"));
+    formData.append("targetEstimateId", currentUserEstimate.id);
+    formData.append("matchingPlanner", currentPlannerProfile.plannerEmail);
 
     axios
       .post(`/estimate/matching`, formData)
       .then((res) => {
-        const userName = res.data.slice(0, res.data.indexOf("/"));
-        const userPhone = res.data.slice(
-          res.data.indexOf("/") + 1,
-          res.data.indexOf("]")
-        );
-        const plannerEmail = res.data.slice(
-          res.data.indexOf("]") + 1,
-          res.data.indexOf("[")
-        );
-        const plannerName = res.data.slice(
-          res.data.indexOf("[") + 1,
-          res.data.indexOf(",")
-        );
-        const depositprice = res.data.slice(
-          res.data.indexOf(",") + 1,
-          res.data.indexOf("*")
-        );
-        const plannerImg = res.data.slice(
-          res.data.indexOf("*") + 1,
-          res.data.length
-        );
-        let plannerImgUrl = "data:image/jpeg;base64," + plannerImg;
+        console.log("matching")
+        console.log(res.data);
+        let depositPrice = 0;
+        let careerYears = currentPlannerProfile.career;
+        if(careerYears < 5 && careerYears >= 0){
+          depositPrice = 50000;
+        } else if(careerYears < 10){
+          depositPrice = 100000;
+        } else{
+          depositPrice = 150000;
+        }
 
         navigate("/checkoutdeposit", {
           state: {
-            estimateId: deleteTargetEstimateId,
-            userName: userName,
-            userPhone: userPhone,
-            planneremail: plannerEmail,
-            plannerName: plannerName,
-            depositprice: depositprice,
-            plannerImg: plannerImgUrl,
+            estimateId: currentUserEstimate.id,
+            userName: currentUserEstimate.user.name,
+            userPhone: currentUserEstimate.user.phoneNum,
+            planneremail: currentPlannerProfile.plannerEmail,
+            plannerName: currentPlannerProfile.plannerName,
+            depositprice: depositPrice,
+            plannerImg: currentPlannerProfile.plannerProfileImg,
           },
         });
       })
@@ -206,44 +148,6 @@ function Matching() {
         console.log(e);
       });
   };
-
-  useEffect(() => {
-    const formData = new FormData();
-    formData.append("userEmail", sessionStorage.getItem("email"));
-    axios
-      .post(`/estimate/getMatchedPlanner`, formData)
-      .then((res) => {
-        if (res.data !== "") {
-          var splitData = res.data.slice(0, res.data.length - 1);
-          var matchedPlanners = splitData.split("|");
-          var matchedPlannerNameArr = [];
-          var matchedPlannerEstimateNumArr = [];
-          var keyIndexArr = [];
-          let keyIndex = 0;
-
-          for (var i = 0; i < matchedPlanners.length; i++) {
-            const matchedPlanner = matchedPlanners[i];
-            const index = matchedPlanner.indexOf("/");
-            matchedPlannerNameArr.push(matchedPlanner.slice(0, index));
-            matchedPlannerEstimateNumArr.push(
-              matchedPlanner.slice(index + 1, res.data.length)
-            );
-
-            keyIndexArr.push(keyIndex);
-            keyIndex++;
-          }
-          setMatchedPlanner(matchedPlannerNameArr);
-          setEstimateNum(matchedPlannerEstimateNumArr);
-          setMatchedKeyIndex(keyIndexArr);
-        } else {
-          setMatchedKeyIndex([]);
-          setMatchedPlanner([]);
-        }
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-  }, [deletedPlanner]);
 
   const CancelMatching = () => {
     const formData = new FormData();
@@ -396,131 +300,24 @@ function Matching() {
       .catch((e) => {
         console.log(e);
       });
-    //navigate(`/checkoutall`);
   };
 
   const goPlannerProfile = (e) => {
-    const bsIndex = e.target.dataset.bsIndex;
-    const bsIndex2 = e.target.dataset.bsIndex2;
-    const estimateId = e.target.dataset.bsEstimateid;
-    const deleteTargetEstimateId = estimateId;
-    const bsEstimateNum = e.target.dataset.bsEstimatenum - 1;
-    const selectedPlanner = plannerMatching[bsIndex][bsIndex2];
-    const selectedPlannerName = plannerName[bsIndex][bsIndex2];
-    setBsIndex(bsIndex);
-    setBsIndex2(bsIndex2);
-    setDeleteTargetEstimateId(deleteTargetEstimateId);
-    setDeletePlanner(selectedPlanner);
-    setDeletePlannerName(selectedPlannerName);
-    setSelectEstimateNum(bsEstimateNum);
-    setSelectDeletePlanner(matchedPlanner[bsEstimateNum]);
-    axios
-      .post(`/planner/`, { email: selectedPlanner })
-      .then((res) => {
-        console.log(res);
-
-        let selectedPlannerImg = "data:image/jpeg;base64," + res.data;
-        navigate(`/plannerprofiledetail`, {
-          state: {
-            plannerEmail: selectedPlanner,
-            plannerName: selectedPlannerName,
-            plannerImg: selectedPlannerImg,
-          },
-        });
-      })
-      .catch((e) => {
-        console.log(e);
-
-        navigate(`/plannerprofiledetail`, {
-          state: {
-            plannerEmail: selectedPlanner,
-            plannerName: selectedPlannerName,
-            plannerImg: defaultprofileimage,
-          },
-        });
-      });
-  };
-
-  const goPlannerProfile2 = (e) => {
-    const estimateNum = e.target.dataset.bsEstimatenum - 1;
-    setSelectEstimateNum(estimateNum);
-
-    const formData = new FormData();
-    formData.append("userEmail", sessionStorage.getItem("email"));
-    formData.append("estimateNum", estimateNum);
-    axios.post(`/plannerProfile/getProfileDetail2`, formData).then((res) => {
-      console.log(res);
-      const data = res.data;
-
-      if (data.length !== 0) {
-        let selectedPlannerImg = data.plannerImg;
-        let selectedPlannerEmail = data.plannerEmail;
-        let selectedPlannerName = data.plannerName;
-
-        navigate(`/plannerprofiledetail`, {
-          state: {
-            plannerEmail: selectedPlannerEmail,
-            plannerName: selectedPlannerName,
-            plannerImg: selectedPlannerImg,
-          },
-        });
-      }
+    const {bsPlanner} = e.target.dataset
+    const planner = JSON.parse(bsPlanner);
+    setCurrentPlannerProfile(planner);
+    navigate(`/plannerprofiledetail`, {
+      state: {
+        plannerEmail: planner.plannerEmail,
+        plannerName: planner.plannerName,
+        plannerImg: planner.plannerProfileImg,
+      },
     });
   };
 
-  useEffect(() => {
-    if (sessionStorage.getItem("category") === "planner") {
-      const formData = new FormData();
-      formData.append("plannerEmail", sessionStorage.getItem("email"));
-      axios
-        .post(`/plannerProfile/getmatchingUser`, formData)
-        .then((res) => {
-          console.log(res);
-          const userNameArr = [];
-          const userEmailArr = [];
-          const userEstimateIdArr = [];
-          const userIndexArr = [];
-          if (res.data.length === 0) {
-            setUserIndex([]);
-          } else {
-            const data = res.data;
-            for (let i = 0; i < data.length; i++) {
-              if (i % 3 === 0) {
-                userNameArr.push(data[i]);
-                const num = i / 3;
-                userIndexArr.push(num);
-              } else if (i % 3 === 1) {
-                userEmailArr.push(data[i]);
-              } else if (i % 3 === 2) {
-                userEstimateIdArr.push(data[i]);
-              }
-            }
-            setUserName(userNameArr);
-            setUserEmail(userEmailArr);
-            setUserEstimateId(userEstimateIdArr);
-            console.log(userIndexArr);
-            setUserIndex(userIndexArr);
-          }
-        })
-        .catch((e) => {
-          console.log(e);
-        });
-    }
-  }, [cancelledUser]);
-
   const goToEstimate = (e) => {
-    const estimateId = e.target.dataset.bsIndex;
+    const estimateId = e.target.dataset.bsId;
     navigate(`/estimatedetail/${estimateId}`);
-  };
-
-  const cancelMatchedUser = (e) => {
-    console.log(e.target.dataset);
-    const userEmail = e.target.dataset.bsUseremail;
-    const estimateId = e.target.dataset.bsIndex;
-    const estimateNum = e.target.dataset.bsEstimatenum;
-    setSelectedUserEmail(userEmail);
-    setSelectedEstimateId(estimateId);
-    setSelectedEstimateNum(estimateNum);
   };
 
   const cancelMatchedUser2 = (e) => {
@@ -545,16 +342,16 @@ function Matching() {
 
   const goMatchingUser = (e) => {
     const formData = new FormData();
-    formData.append("plannerEmail", sessionStorage.getItem("email"));
-    formData.append("estimateId", selectedEstimateId);
+    formData.append("plannerEmail", loggedInEmail);
+    formData.append("estimateId", currentUserEstimate.id);
     axios
-      .post(`/plannerProfile/matchingUser`, formData)
+      .post(`/plannerProfile/matching/user`, formData)
       .then((res) => {
-        console.log(res);
         if (res.data === 1) {
           alert("해당 고객과 매칭되었습니다!");
-          setMatchedUser(!matchedUser);
+          setMatchedUser(matchedUser => !matchedUser);
         } else {
+          alert("매칭 오류입니다. 다시 시도해주세요.");
         }
       })
       .catch((e) => {
@@ -565,41 +362,33 @@ function Matching() {
   useEffect(() => {
     if (sessionStorage.getItem("category") === "planner") {
       const formData = new FormData();
-      formData.append("plannerEmail", sessionStorage.getItem("email"));
+      formData.append("plannerEmail", loggedInEmail);
       axios
-        .post(`/plannerProfile/getMatchedUser`, formData)
+        .post(`/plannerProfile/match/users`, formData)
         .then((res) => {
-          console.log(res);
-          const data = res.data;
-          const searchedUserArr = [];
-          const searchedEstimateIdArr = [];
-          const searchedUserKeyIndexArr = [];
-          const estimateOrderArr = [];
-          if (data.length !== 0) {
-            for (let i = 0; i < data.length; i++) {
-              if (i % 3 === 0) {
-                searchedEstimateIdArr.push(data[i]);
-                const num = i / 3;
-                searchedUserKeyIndexArr.push(num);
-              } else if (i % 3 === 1) {
-                searchedUserArr.push(data[i]);
-              } else if (i % 3 === 2) {
-                estimateOrderArr.push(data[i]);
-              }
-            }
-            setSearchedMatchedUser(searchedUserArr);
-            setSearchedEstimateId(searchedEstimateIdArr);
-            setSearchedUserKeyIndex(searchedUserKeyIndexArr);
-            setEstimateOrder(estimateOrderArr);
-          } else {
-            setSearchedUserKeyIndex([]);
-          }
+          console.log(res.data)
+          const matchedUsersData = res.data;
+          setMatchedUsers(matchedUsersData)
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    }else if (sessionStorage.getItem("category") === "user"){
+      const formData = new FormData();
+      formData.append("userEmail", loggedInEmail);
+      axios
+        .post(`/plannerProfile/match/planners`, formData)
+        .then((res) => {
+          console.log("matchedPlanners")
+          console.log(res.data)
+          const matchedPlannersData = res.data;
+          setMatchedPlanners(matchedPlannersData)
         })
         .catch((e) => {
           console.log(e);
         });
     }
-  }, [matchedUser, cancelledUser]);
+  }, [matchedUser, cancelledUser, loggedInEmail]);
 
   const cancelMatchingUser2 = (e) => {
     console.log(e.target.dataset);
@@ -851,10 +640,8 @@ function Matching() {
               내 플래너
             </p>
 
-            {matchedPlanner.length !== 0 ? (
-              matchedKeyIndex.map((keyIndex) => {
-                const num = estimateNum[keyIndex] - 1;
-
+            {matchedPlanners.length !== 0 ? (
+              matchedPlanners?.map((profile, index) => {
                 return (
                   <div>
                     <div
@@ -877,15 +664,14 @@ function Matching() {
                             flexGrow: 1,
                             paddingLeft: "40px",
                             paddingTop: "20px",
-
                             paddingBottom: "20px",
                             display: "flex",
                           }}
                         >
-                          -견적서{estimateNum[keyIndex]}-
+                          -견적서{index+1}-
                         </div>
 
-                        {paymentStatus[keyIndex] === "all" ? (
+                        {paymentStatus[0] === "all" ? (
                           <div
                             style={{
                               display: "inline-block",
@@ -904,7 +690,7 @@ function Matching() {
                           >
                             결제완료!
                           </div>
-                        ) : paymentStatus[keyIndex] === "other" ? (
+                        ) : paymentStatus[0] === "other" ? (
                           <div
                             style={{
                               display: "inline-block",
@@ -923,7 +709,7 @@ function Matching() {
                           >
                             미결제
                           </div>
-                        ) : paymentStatus[keyIndex] === "deposit" ? (
+                        ) : paymentStatus[0] === "deposit" ? (
                           <div
                             style={{
                               display: "inline-block",
@@ -952,8 +738,8 @@ function Matching() {
                           marginRight: "-140px",
                         }}
                       >
-                        {matchedPlanner[keyIndex]}
-                        {estimateOrder2[num] == num ? (
+                        {profile?.plannerProfiles?.[0].plannerName}
+                        {/* {estimateOrder2[num] == num ? (
                           <img
                             src={heartIcon}
                             alt=""
@@ -963,12 +749,12 @@ function Matching() {
                               marginLeft: "14px",
                             }}
                           />
-                        ) : null}
+                        ) : null} */}
                       </p>
                       <button
                         className="plannerProBtn"
-                        data-bs-estimateNum={estimateNum[keyIndex]}
-                        onClick={goPlannerProfile2}
+                        data-bs-planner={JSON.stringify(profile?.plannerProfiles?.[0])}
+                        onClick={goPlannerProfile}
                       >
                         프로필 보기
                       </button>
@@ -976,19 +762,16 @@ function Matching() {
                       <div className="matchingBtnList">
                         <button
                           className="plannerMatchingBtn"
-                          data-bs-estimateNum={estimateNum[keyIndex]}
+                         // data-bs-estimateNum={estimateNum[keyIndex]}
                           onClick={goPay}
                           // data-bs-toggle="modal"
                           // data-bs-target="#plannerMatchingPriceModal"
                         >
                           결제하기
                         </button>
-                        {console.log("+++++++++++++++++++++++++++")}
-                        {console.log(estimateNum[keyIndex])}
-                        {paymentStatus[keyIndex] === "all" ? (
+                        {paymentStatus[0] === "all" ? (
                           <button
                             className="plannerMatchingBtn"
-                            data-bs-estimateNum={estimateNum[keyIndex]}
                             onClick={writeReview2}
                           >
                             리뷰쓰기
@@ -998,7 +781,6 @@ function Matching() {
                             className="plannerMatchingBtn"
                             data-bs-toggle="modal"
                             data-bs-target="#CancelMatching"
-                            data-bs-estimateNum={estimateNum[keyIndex]}
                             onClick={CancelMatching2}
                           >
                             매칭취소
@@ -1037,16 +819,8 @@ function Matching() {
               매칭 요청 온 플래너 목록
             </p>
             <div>
-              {estimateCount.length !== 0 ? (
-                estimateCount.map((index, keyindex) => {
-                  var plannerList = plannerName[index];
-                  var estimateId = plannerData[index].id;
-                  var plannermatchinglist = JSON.parse(
-                    plannerData[index].plannermatching
-                  );
-                  var order = estimateOrder2[index];
-                  var matchingcp = matchingCouple[index];
-                  var index = index;
+              {plannerEstimates.length !== 0 ? (
+                plannerEstimates.map((estimate, index) => {
                   return (
                     <table
                       style={{
@@ -1149,7 +923,7 @@ function Matching() {
                                 style={{ width: "140px" }}
                                 onClick={(e) => {
                                   e.preventDefault();
-                                  navigate(`/estimatedetail/${estimateId}`);
+                                  navigate(`/estimatedetail/${estimate.id}`);
                                 }}
                               >
                                 견적서보기
@@ -1158,9 +932,7 @@ function Matching() {
                           </div>
                         </div>
 
-                        {count[index].map((i) => {
-                          try {
-                            let plannername = plannerList[i];
+                        {estimate?.plannerProfiles?.map((profile, index) => {
                             return (
                               <div style={{ display: "flex" }}>
                                 <div
@@ -1173,9 +945,9 @@ function Matching() {
                                     marginRight: 0,
                                   }}
                                 >
-                                  {plannername}
+                                  {profile.plannerName}
 
-                                  {matchingcp.length !== 0 && order !== 0 ? (
+                                  {/* {matchingcp.length !== 0 && order !== 0 ? (
                                     order == index &&
                                     plannermatchinglist[i] == matchingcp[i] ? (
                                       <div
@@ -1197,7 +969,7 @@ function Matching() {
                                         짝이에요!
                                       </div>
                                     ) : null
-                                  ) : null}
+                                  ) : null} */}
                                 </div>
                                 <div style={{ marginLeft: "-10px" }}>
                                   <button
@@ -1206,10 +978,7 @@ function Matching() {
                                       marginRight: "-8px",
                                     }}
                                     className="plannerMatchingBtn"
-                                    data-bs-index={index}
-                                    data-bs-index2={i}
-                                    data-bs-estimateId={estimateId}
-                                    data-bs-estimateNum={index + 1}
+                                    data-bs-planner={JSON.stringify(profile)}
                                     onClick={goPlannerProfile}
                                   >
                                     프로필 보기
@@ -1221,8 +990,6 @@ function Matching() {
                                       style={{ width: "140px" }}
                                       className="plannerMatchingBtn"
                                       data-bs-index={index}
-                                      data-bs-index2={i}
-                                      data-bs-estimateId={estimateId}
                                       data-bs-estimateNum={index + 1}
                                       onClick={writeReview}
                                     >
@@ -1233,12 +1000,10 @@ function Matching() {
                                       style={{ width: "140px" }}
                                       className="plannerMatchingBtn"
                                       data-bs-toggle="modal"
-                                      data-bs-target="#MatchOrCanel"
-                                      data-bs-index={index}
-                                      data-bs-index2={i}
-                                      data-bs-estimateId={estimateId}
-                                      data-bs-estimateNum={index + 1}
-                                      onClick={deleteMatchingPlanner}
+                                      data-bs-target="#MatchOrCancel"
+                                      data-bs-estimate={JSON.stringify(estimate)}
+                                      data-bs-profile={JSON.stringify(profile)}
+                                      onClick={matchOrDeletePlanner}
                                     >
                                       매칭/거절
                                     </button>
@@ -1246,9 +1011,6 @@ function Matching() {
                                 </div>
                               </div>
                             );
-                          } catch (e) {
-                            console.log(e);
-                          }
                         })}
                       </div>
                     </table>
@@ -1316,9 +1078,9 @@ function Matching() {
             </div>
             <div
               className="modal fade"
-              id="MatchOrCanel"
+              id="MatchOrCancel"
               tabindex="-1"
-              aria-labelledby="MatchOrCanel"
+              aria-labelledby="MatchOrCancel"
               aria-hidden="true"
             >
               <div className="modal-dialog modal-dialog-centered">
@@ -1352,7 +1114,7 @@ function Matching() {
                       className="btn btn-secondary"
                       data-bs-dismiss="modal"
                       ref={deleteBtn}
-                      onClick={deleteMatchingPlanner2}
+                      onClick={confirmDeleteMatchingPlanner}
                     >
                       거절하기
                     </button>
@@ -1379,9 +1141,8 @@ function Matching() {
               매칭된 고객
             </p>
 
-            {searchedUserKeyIndex.length !== 0 ? (
-              searchedUserKeyIndex.map((index) => {
-                const num = estimateOrder[index] - 1;
+            {matchedUsers.length !== 0 ? (
+              matchedUsers.map((matchedUser, index) => {
                 return (
                   <div>
                     <div
@@ -1409,13 +1170,8 @@ function Matching() {
                             display: "flex",
                           }}
                         >
-                          -견적서{estimateOrder[index]}-
+                          -견적서{index + 1}-
                         </div>
-                        {console.log(
-                          "ccccccccccccccccccccccccccccccccccccccccc"
-                        )}
-                        {console.log(paymentStatus2)}
-                        {console.log(paymentStatus2[index])}
                         {paymentStatus2[index] === "all" ? (
                           <div
                             style={{
@@ -1484,8 +1240,8 @@ function Matching() {
                           marginRight: "-170px",
                         }}
                       >
-                        {searchedMatchedUser[index]}
-                        {estimateOrder2[estimateOrder[index] - 1] == num ? (
+                        {matchedUser.user.name}
+                        {/* {estimateOrder2[estimateOrder[index] - 1] == num ? (
                           <img
                             src={heartIcon}
                             alt=""
@@ -1495,14 +1251,14 @@ function Matching() {
                               marginLeft: "14px",
                             }}
                           />
-                        ) : null}
+                        ) : null} */}
                       </p>
                       <button
                         className="plannerProBtn"
-                        data-bs-estimateNum={searchedEstimateId[index]}
+                        data-bs-estimateNum={matchedUser.id}
                         onClick={() => {
                           navigate(
-                            `/estimatedetail/${searchedEstimateId[index]}`
+                            `/estimatedetail/${matchedUser.id}`
                           );
                         }}
                       >
@@ -1516,7 +1272,7 @@ function Matching() {
                         {paymentStatus2[index] === "all" ? (
                           <button
                             className="plannerMatchingBtn"
-                            data-bs-estimateNum={searchedEstimateId[index]}
+                            data-bs-estimateNum={matchedUser.id}
                             onClick={() => {
                               alert(
                                 `결제 완료한 고객과는 매칭 취소가 불가합니다!`
@@ -1530,7 +1286,7 @@ function Matching() {
                             className="plannerMatchingBtn"
                             data-bs-toggle="modal"
                             data-bs-target="#CancelMatchingCustomer"
-                            data-bs-estimateNum={searchedEstimateId[index]}
+                            data-bs-estimateNum={matchedUser.id}
                             onClick={cancelMatchingUser2}
                           >
                             매칭취소
@@ -1568,8 +1324,8 @@ function Matching() {
             >
               매칭 요청 온 고객 목록
             </p>
-            {userIndex.length !== 0 ? (
-              userIndex.map((index) => {
+            {userEstimates.length !== 0 ? (
+              userEstimates.map((estimate, index) => {
                 return (
                   <div
                     className="matchingList"
@@ -1611,8 +1367,6 @@ function Matching() {
                               paddingLeft: "-70px",
                             }}
                           >
-                            {console.log("+_+_+_+_+_+_+_+_+_+_+")}
-                            {console.log(paymentStatus3)}
                             {paymentStatus3[index] === "all" ? (
                               <div
                                 style={{
@@ -1681,7 +1435,7 @@ function Matching() {
                           <div style={{ marginRight: "8px" }}>
                             <button
                               className="plannerMatchingBtn"
-                              data-bs-index={userEstimateId[index]}
+                              data-bs-id={estimate.id}
                               onClick={goToEstimate}
                             >
                               견적서 보기
@@ -1700,9 +1454,7 @@ function Matching() {
                               flexGrow: 1,
                             }}
                           >
-                            {userName[index]}
-                            {console.log("order:" + estimateOrder2[index])}
-                            {console.log("index:" + index)}
+                            {estimate.user.name}
                             {estimateOrder2[index] == index ? (
                               <div
                                 style={{
@@ -1737,11 +1489,9 @@ function Matching() {
                             <button
                               className="plannerMatchingBtn"
                               data-bs-toggle="modal"
-                              data-bs-target="#MatchOrCanelCustomer"
-                              data-bs-index={userEstimateId[index]}
-                              data-bs-useremail={userEmail[index]}
-                              data-bs-estimateNum={index + 1}
-                              onClick={cancelMatchedUser}
+                              data-bs-target="#MatchOrCancelCustomer"
+                              data-bs-estimate={JSON.stringify(estimate)}
+                              onClick={matchOrDeleteUser}
                               style={{ width: "150px", marginLeft: "120px" }}
                             >
                               매칭/거절
@@ -1769,56 +1519,6 @@ function Matching() {
 
             <div style={{ height: "150px" }}></div>
             <Footer />
-            {/* 
-          <div
-            className="modal fade"
-            id="CancelMatching"
-            tabindex="-1"
-            aria-labelledby="CancelMatching"
-            aria-hidden="true"
-          >
-            <div className="modal-dialog modal-dialog-centered">
-              <div className="modal-content">
-                <div className="modal-header">
-                  <h1
-                    className="modal-title fs-2"
-                    id="CancelMatching"
-                    style={{ fontSize: "1.6em" }}
-                  >
-                    매칭을 취소하시겠습니까?
-                  </h1>
-                  <button
-                    type="button"
-                    className="btn-close"
-                    data-bs-dismiss="modal"
-                    aria-label="Close"
-                  ></button>
-                </div>
-                <div className="modal-body" style={{ fontSize: "1.5em" }}>
-                  매칭을 취소하실경우 해당 플래너에게 지불한 계약금은 환불되지
-                  않습니다
-                </div>
-                <div className="modal-footer">
-                  <button
-                    type="button"
-                    className="btn btn-primary"
-                    onClick={() => {
-                      setDeletePermission(true);
-                    }}
-                  >
-                    매칭 취소하기
-                  </button>
-                  <button
-                    type="button"
-                    className="btn btn-secondary"
-                    data-bs-dismiss="modal"
-                  >
-                    매칭 유지하기
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div> */}
             {/* 고객 모달창(매칭취소) */}
             <div
               className="modal fade"
@@ -1870,9 +1570,9 @@ function Matching() {
             {/* 고객 모달창(매칭취소) */}
             <div
               className="modal fade"
-              id="MatchOrCanel"
+              id="MatchOrCancel"
               tabindex="-1"
-              aria-labelledby="MatchOrCanel"
+              aria-labelledby="MatchOrCancel"
               aria-hidden="true"
             >
               <div className="modal-dialog modal-dialog-centered">
@@ -1909,7 +1609,7 @@ function Matching() {
                       type="button"
                       className="btn btn-secondary"
                       data-bs-dismiss="modal"
-                      onClick={deleteMatchingPlanner2}
+                      onClick={confirmDeleteMatchingPlanner}
                     >
                       거절하기
                     </button>
@@ -1920,9 +1620,9 @@ function Matching() {
             {/* 고객과의 매칭/거절 모달창 */}
             <div
               className="modal fade"
-              id="MatchOrCanelCustomer"
+              id="MatchOrCancelCustomer"
               tabindex="-1"
-              aria-labelledby="MatchOrCanelCustomer"
+              aria-labelledby="MatchOrCancelCustomer"
               aria-hidden="true"
             >
               <div className="modal-dialog modal-dialog-centered">
@@ -1930,7 +1630,7 @@ function Matching() {
                   <div className="modal-header">
                     <h1
                       className="modal-title fs-2"
-                      id="MatchOrCanelCustomer"
+                      id="MatchOrCancelCustomer"
                       style={{ fontSize: "1.6em" }}
                     >
                       해당 고객과 매칭하시겠습니까?

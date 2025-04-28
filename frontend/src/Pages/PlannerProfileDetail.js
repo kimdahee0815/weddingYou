@@ -42,6 +42,7 @@ function PlannerProfileDetail() {
         const { data:estimates} = await axios
           .post(`/plannerProfile/unmatched-estimates`, formData)
         setEstimates(estimates);
+
         if(estimates.length !== 0){
           setCurrentEstimate(estimates[0]);
         }
@@ -406,7 +407,7 @@ function PlannerProfileDetail() {
                       marginTop: "-100px",
                     }}
                   >
-                    {estimates !== null ? (
+                    {currentEstimate ? (
                         <div className="contentcontainer-detail">
                           <div className="contentbox-detail">
                             <h5>희망 결혼 예정일</h5>

@@ -64,6 +64,7 @@ public interface EstimateRepository extends JpaRepository<Estimate, Integer> {
 	
 	
 	//모든 데이터 조회
+	@Query("SELECT e FROM Estimate e JOIN FETCH UserLogin u ON e.writer = u.email ORDER BY e.id DESC")
 	List<Estimate> findAllByOrderByIdDesc();
 	
 	

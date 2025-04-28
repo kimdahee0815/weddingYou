@@ -10,7 +10,6 @@ import { useRef } from "react";
 import { format } from "date-fns";
 //컴포넌트
 import Footer from "../Components/Footer";
-import BackButton from "../Components/Backbutton";
 import NavigationBar from "../Components/NavigationBar";
 import Sidesection from "../Components/Sidesection";
 
@@ -1044,7 +1043,7 @@ const StudioModal = () => {
                 topic="인물중심 스튜디오"
                 image1="https://www.iwedding.co.kr/_next/image?url=https%3A%2F%2Fwww.iwedding.co.kr%2Fcenter%2Fwebsite%2Fbrandplus%2F1667180129.jpg&w=1920&q=75"
                 image2="https://www.iwedding.co.kr/center/iweddingb/product/800_11679_1665982500_05988600_3232256100.jpg"
-                image3="https://www.iwedding.co.kr/center/iweddingb/product/800_1708_1665976697_88410900_3232256100.jpg"
+                image3="https://www.iwedding.co.kr/center/iweddingb/product/800_21706_1744682085_20124700_3232256100.jpg"
                 comment1="깔끔한 배경에서 인물중심의 촬영을 진행해요!"
                 comment2="심플하고 깨끗한 이미지의 결과물!"
                 comment3="오래두고 보아도 질리지 않는 장점이 있어요!"
@@ -1067,7 +1066,7 @@ const StudioModal = () => {
                 collapse="three"
                 topic="균형적인 스튜디오"
                 image1="https://www.iwedding.co.kr/center/iweddingb/product/800_12512_1666920642_83238100_3232256098.jpg"
-                image2="https://www.iwedding.co.kr/center/iweddingb/product/800_12544_1666688374_16242500_3232256098.jpg"
+                image2="https://www.iwedding.co.kr/center/iweddingb/product/800_21644_1743578819_86544800_3232256099.jpg"
                 image3="https://www.iwedding.co.kr/center/iweddingb/product/800_13300_1668503581_00621700_3232256098.jpg"
                 comment1="요즘 가장 인기있는 스타일이에요!"
                 comment2="배경과 인물 모두 예쁘게 담을 수 있답니다~"
@@ -1119,7 +1118,7 @@ const DressModal = () => {
                 heading={4}
                 collapse="four"
                 topic="머메이드"
-                image1="https://www.iwedding.co.kr/center/iweddingb/product/800_co_sl_d120_2001_1632361176_65452700_3232256100.jpg"
+                image1="https://www.iwedding.co.kr/center/iweddingb/product/500_14205_1740477105_22685400_3232256100.jpg"
                 image2="https://www.iwedding.co.kr/center/iweddingb/product/800_4250_1668583465_80283900_3232256100.jpg"
                 image3="https://www.iwedding.co.kr/center/iweddingb/product/800___1665453271_05641100_3232256098.jpg"
                 comment1="키가 크시고 마르신 분들에게 추천해요!"
@@ -1131,9 +1130,9 @@ const DressModal = () => {
                 heading={5}
                 collapse="five"
                 topic="A라인"
-                image1="https://www.iwedding.co.kr/center/iweddingb/product/800_5350_1679279312_93081100_3232256098.jpg"
+                image1="https://www.iwedding.co.kr/center/iweddingb/product/500_6164_1707382072_27779700_3232256100.jpg"
                 image2="https://www.iwedding.co.kr/center/iweddingb/product/800_4365_1674628854_18110500_3232256100.jpg"
-                image3="https://www.iwedding.co.kr/center/iweddingb/product/800_12996_1677040520_50476000_3232256099.jpg"
+                image3="https://www.iwedding.co.kr/center/iweddingb/product/500_18789_1724896464_10868200_3232256100.jpg"
                 comment1="어떤 체형이든 잘 어울립니다!"
                 comment2="키가 커보이는 스타일이에요!"
                 comment3="하체가 통통하신 분들에게도 추천!"
@@ -1157,7 +1156,7 @@ const DressModal = () => {
                 topic="벨라인"
                 image1="https://www.iwedding.co.kr/center/iweddingb/product/800_5218_1675921472_92970900_3232256099.jpg"
                 image2="https://www.iwedding.co.kr/center/iweddingb/product/800_4796_1679476532_21876000_3232256099.jpg"
-                image3="https://www.iwedding.co.kr/center/iweddingb/product/800_14256_1681265613_43329300_3232256100.jpg"
+                image3="https://www.iwedding.co.kr/center/iweddingb/product/500_co_sl_d203_12009_1641797900_48156600_3232256098.jpg"
                 comment1="허리부터 풍성하게 퍼지는 라인이 특징입니다"
                 comment2="통통한 하체를 커버하기에 좋습니다"
                 comment3="키가 작고 마른 신부님들에게도 추천해요!"
@@ -1168,7 +1167,7 @@ const DressModal = () => {
                 collapse="eight"
                 topic="엠파이어"
                 image1="https://www.iwedding.co.kr/center/iweddingb/product/800_14083_1675239691_84022800_3232256098.jpg"
-                image2="https://www.iwedding.co.kr/center/iweddingb/product/800_co_sl_d247_14923_1649140504_74715200_3232256100.jpg"
+                image2="https://m.ygdress.com/web/product/big/WDI123_1.jpg"
                 image3="https://www.iwedding.co.kr/center/iweddingb/product/800_co_sl_d276_6631_1582187346_70709200_3232256098.jpg"
                 comment1="날씬해보이는 드레스 스타일입니다!"
                 comment2="직사각형 체형분들에게 추천해요"
@@ -1179,9 +1178,9 @@ const DressModal = () => {
                 heading={9}
                 collapse="nine"
                 topic="프린세스"
-                image1="https://www.iwedding.co.kr/center/iweddingb/product/800_17534_1673254073_72786200_3232256099.jpg"
-                image2="https://www.iwedding.co.kr/center/iweddingb/product/800_15343_1674625658_77782300_3232256100.jpg"
-                image3="https://www.iwedding.co.kr/center/iweddingb/product/800_13164_1676956927_35327800_3232256098.jpg"
+                image1="https://s.alicdn.com/@sc04/kf/He4aa94853fc040afadede77579e839afM.jpg_720x720q50.jpg"
+                image2="https://tshop.r10s.jp/soerutistore/cabinet/a00009/hsppq260_3.jpg"
+                image3="https://ko.come4buy.com/cdn/shop/products/color-sexy-off-shoulder-champagne-221010004002p.jpg?v=1665407903"
                 comment1="화려한 장식을 더한 드레스입니다!"
                 comment2="여성적인 매력을 어필하기에 좋아요!"
                 comment3="허리선이 굵은 분들에게 추천해요!"
@@ -1232,7 +1231,7 @@ const MakeupModal = () => {
                 heading={10}
                 collapse="ten"
                 topic="로맨틱한"
-                image1="https://www.iwedding.co.kr/center/iweddingb/product/800_2294_1680250969_59017300_3232256099.jpg"
+                image1="https://www.iwedding.co.kr/center/iweddingb/product/500_18854_1713148057_93536100_3232256098.jpg"
                 image2="https://www.iwedding.co.kr/center/iweddingb/product/800_co_sl_m056_14449_1640850193_39487800_3232256099.jpg"
                 image3="https://www.iwedding.co.kr/center/iweddingb/product/800_co_sl_m205_13076_1624261891_10019500_3232256100.jpg"
                 comment1="촉촉하고 투명한 느낌을 줍니다!"
@@ -1257,8 +1256,8 @@ const MakeupModal = () => {
                 collapse="twelve"
                 topic="내추럴"
                 image1="https://www.iwedding.co.kr/center/iweddingb/product/800_co_sl_m114_1711_1647822940_71648700_3232256099.jpg"
-                image2="https://www.iwedding.co.kr/center/iweddingb/product/800_co_sl_m209_15869_1653530666_48849500_3232256098.jpg"
-                image3="https://www.iwedding.co.kr/center/iweddingb/product/800_co_sl_m134_4309_1661326982_18419000_3232256098.jpg"
+                image2="https://www.iwedding.co.kr/center/iweddingb/product/500_19784_1726797137_19254800_3232256099.jpg"
+                image3="https://www.iwedding.co.kr/center/iweddingb/product/500_21296_1737529431_13114900_3232256099.jpg"
                 comment1="가장 기본적인 스타일입니다!"
                 comment2="평소 메이크업을 잘 하지 않는 분들에게 추천드려요"
                 comment3="자연스럽고 깨끗해 보이는 점이 장점입니다."
@@ -1270,7 +1269,7 @@ const MakeupModal = () => {
                 topic="스모키"
                 image1="https://www.iwedding.co.kr/center/iweddingb/product/800_co_sl_m122_1845_1628473766_68122500_3232256099.jpg"
                 image2="https://www.iwedding.co.kr/center/iweddingb/product/800_1844_1678866654_71494500_3232256100.jpg"
-                image3="https://www.iwedding.co.kr/center/iweddingb/product/800_co_sl_m199_6483_1585638230_88987100_3232256098.jpg"
+                image3="https://mblogthumb-phinf.pstatic.net/20121226_198/subrpiad8_1356501790498I2fV2_JPEG/naver_com_20121226_150126.jpg?type=w420"
                 comment1="눈매를 강조하는 화장입니다!"
                 comment2="이목구비가 뚜렷하게 보이는 장점이 있어요!"
                 comment3="하지만 평소에 인상이 쎄시다면 추천드리지 않습니다"
@@ -1281,8 +1280,8 @@ const MakeupModal = () => {
                 collapse="fourteen"
                 topic="큐티"
                 image1="https://www.iwedding.co.kr/center/iweddingb/product/800_co_sl_m205_13078_1624261921_87529100_3232256100.jpg"
-                image2="https://www.iwedding.co.kr/center/iweddingb/product/800_co_sl_m197_6298_1628237690_62191600_3232256098.jpg"
-                image3="https://www.iwedding.co.kr/center/iweddingb/product/800_co_sl_m152_12803_1652060864_24013300_3232256099.jpg"
+                image2="https://www.iwedding.co.kr/center/iweddingb/product/500_15867_1721615248_13048300_3232256099.jpg"
+                image3="https://www.iwedding.co.kr/center/iweddingb/product/500_19545_1706497746_44991600_3232256098.jpg"
                 comment1="상큼하고 귀여운 모습의 연출이 가능해요"
                 comment2="동그랗게 올린 머리가 특징입니다!"
                 comment3="얼굴이 크시거나, 이마가 넓으시다면 피하시는 게 좋습니다"
@@ -1292,7 +1291,7 @@ const MakeupModal = () => {
                 heading={15}
                 collapse="fifteen"
                 topic="러블리"
-                image1="https://www.iwedding.co.kr/center/iweddingb/product/800_17670_1676267275_58014900_3232256099.jpg"
+                image1="https://www.iwedding.co.kr/center/iweddingb/product/500_20668_1727155037_05244900_3232256099.jpg"
                 image2="https://www.iwedding.co.kr/_next/image?url=https%3A%2F%2Fwww.iwedding.co.kr%2Fcenter%2Fwebsite%2Fbrandplus%2F1663894788.jpg&w=1920&q=75"
                 image3="https://www.iwedding.co.kr/center/iweddingb/product/800_co_sl_m175_6093_1604471404_02327900_3232256100.jpg"
                 comment1="얼굴에 화사함을 주는 스타일입니다"

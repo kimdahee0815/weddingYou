@@ -1,13 +1,23 @@
 package com.mysite.weddingyou_backend.estimate;
 
 import java.time.LocalDate;
+import java.util.List;
+
+
+
+import com.mysite.weddingyou_backend.plannerProfile.PlannerProfileDTO;
+import com.mysite.weddingyou_backend.userLogin.UserLogin;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -70,13 +80,17 @@ public class Estimate {
     private int viewcount;
     
     @Column (name = "e_plannerMatching") //plannermatching
-    
     private String plannermatching;
     
     @Column (name = "e_userMatching") //usermatching
     private String userMatching;
 
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name = "e_writer", referencedColumnName = "email", insertable = false, updatable = false)
+    private UserLogin user;
 
+    @Transient
+    private List<PlannerProfileDTO> plannerProfiles;
 }
 	
 	

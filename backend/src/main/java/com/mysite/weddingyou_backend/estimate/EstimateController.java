@@ -11,9 +11,12 @@ import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
@@ -24,6 +27,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,6 +43,10 @@ import com.mysite.weddingyou_backend.comment.Comment;
 import com.mysite.weddingyou_backend.comment.CommentRepository;
 import com.mysite.weddingyou_backend.payment.Payment;
 import com.mysite.weddingyou_backend.payment.PaymentRepository;
+import com.mysite.weddingyou_backend.plannerLogin.PlannerLogin;
+import com.mysite.weddingyou_backend.plannerProfile.PlannerProfile;
+import com.mysite.weddingyou_backend.plannerProfile.PlannerProfileDTO;
+import com.mysite.weddingyou_backend.plannerProfile.PlannerProfileService;
 import com.mysite.weddingyou_backend.plannerUpdateDelete.PlannerUpdateDelete;
 import com.mysite.weddingyou_backend.plannerUpdateDelete.PlannerUpdateDeleteRepository;
 import com.mysite.weddingyou_backend.plannerUpdateDelete.PlannerUpdateDeleteService;
@@ -65,6 +73,9 @@ public class EstimateController {
 	
 	@Autowired
 	private UserUpdateDeleteService userService ;
+
+	@Autowired
+	private PlannerProfileService plannerProfileService;
 	
 	@Autowired
 	private EstimateRepository estimateRepository;
@@ -293,84 +304,98 @@ public class EstimateController {
 			
 		}
 
-		//견적서 매칭원하는 플래너 삽입하기
-				@GetMapping(value = "/getuserdetail")
+				@GetMapping(value = "/users/detail")
 				public List<Estimate> getUserDetail(@RequestParam("userEmail") String userEmail) throws Exception {
-				    
-					List<Estimate> targetData = estimateService.getEstimateDetailByEmail(userEmail);
-					if(targetData!=null) {
-						return targetData;
-					}
-					else {
+
+					List<Estimate> allEstimates = estimateService.getlist();
+					JSONParser parser = new JSONParser();
+					if (allEstimates != null) {
+						List<Estimate> targetEstimates = allEstimates.stream()
+								.filter(e -> {
+									try {
+										if (e.getUserMatching() == null) {
+												return false;
+										}
+										JSONArray userMatching = (JSONArray) parser.parse(e.getUserMatching());
+										ArrayList<String> plannerList = (ArrayList<String>) userMatching.stream()
+    									.map(Object::toString)
+    									.collect(Collectors.toList());
+										return plannerList.contains(userEmail);
+									} catch (Exception ex) {
+										ex.printStackTrace();
+										return false;
+									}
+								})
+								.collect(Collectors.toList());
+						return targetEstimates;
+				} else {
 						throw new Exception("정보가 존재하지 않습니다!");
-					}
-				
+				}
 				}
 			
 			
-				//견적서 매칭원하는 플래너 이름 가져오기
-				@GetMapping(value = "/getPlannerName")
-				public ArrayList<ArrayList<String>> getPlannerName(@RequestParam("userEmail") String userEmail) throws Exception {
-				    
-					List<Estimate> targetData = estimateService.getEstimateDetailByEmail(userEmail);
-					if(targetData!=null) {
-						ArrayList<ArrayList<String>> result = new ArrayList<>();
-						for(int i =0;i<targetData.size();i++) {
-							String plannerArr = targetData.get(i).getPlannermatching();
-						    JSONParser parser = new JSONParser();
-						    ArrayList<String> obj = (ArrayList<String>) parser.parse(plannerArr); 
-						    ArrayList<String> temp = new ArrayList<>();
-							for(int j = 0;j<obj.size();j++) {
-								
-								PlannerUpdateDelete data = plannerService.getPlannerByEmail(obj.get(j));
-								
-								temp.add(data.getName());
-//								temp.concat(eachPlannerName);
-//								if(j!=obj.size()-1) {
-//									temp.concat(",");
-//								}
-								System.out.println(temp);
-							}
-							result.add(temp);
-						}
-						
-						return result;
-					}
-					else {
-						throw new Exception("정보가 존재하지 않습니다!");
-					}
-				
-				}
+		//견적서 매칭원하는 플래너 정보 가져오기
+		@GetMapping(value = "/planners/detail")
+		public List<Estimate> getPlannersDetail(@RequestParam("userEmail") String userEmail) throws Exception {
+    List<Estimate> allEstimates = estimateService.getEstimateDetailByEmail(userEmail);
+    JSONParser parser = new JSONParser();
+
+    if (allEstimates != null) {
+        List<Estimate> targetEstimates = allEstimates.stream()
+            .map(estimate -> {
+                try {
+                    if (estimate.getPlannermatching() != null) {
+                        JSONArray plannerMatching = (JSONArray) parser.parse(estimate.getPlannermatching());
+                        List<String> plannerList = (List<String>) plannerMatching.stream()
+                                .map(Object::toString)
+                                .collect(Collectors.toList());
+
+                        List<PlannerProfileDTO> plannerDetailList = plannerList.stream()
+                                .map(plannerEmail -> plannerProfileService.getPlannerByEmail(plannerEmail))
+                                .collect(Collectors.toList());
+
+                        estimate.setPlannerProfiles(plannerDetailList);  
+                    }
+                    return estimate;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return estimate;
+                }
+            })
+            .collect(Collectors.toList());
+
+        return targetEstimates;
+
+    } else {
+        throw new Exception("정보가 존재하지 않습니다!");
+    }
+	}
 				
 				//견적서 매칭원하는 플래너 이름 삭제하기
-				@PostMapping(value = "/deleteMatchingPlanner")
+				@DeleteMapping(value = "/matching/planner")
 				public int deleteMatchingPlanner(@RequestParam("deletePlanner") String deletePlanner, 
 						@RequestParam("deleteTargetEstimateId") Long estimateId) throws Exception {
-				    int res = 0;
-				    
+				  int res = 1;
+
 					Estimate targetEstimate = estimateService.getEstimateDetail(estimateId);
 					
-					Estimate newEstimate = new Estimate();
-					System.out.println(targetEstimate.getPlannermatching());
-						JSONParser parser = new JSONParser();
-				    ArrayList<String> obj = (ArrayList<String>) parser.parse(targetEstimate.getPlannermatching());
-				    obj.remove(deletePlanner);
-				   
-				    if(targetEstimate.isMatchstatus()) {
-				    	ArrayList<String> obj2 = (ArrayList<String>) parser.parse(targetEstimate.getUserMatching());
+					JSONParser parser = new JSONParser();
+				  ArrayList<String> obj = (ArrayList<String>) parser.parse(targetEstimate.getPlannermatching());
+				  obj.remove(deletePlanner);
+
+				  if(targetEstimate.isMatchstatus()) {
+				    ArrayList<String> obj2 = (ArrayList<String>) parser.parse(targetEstimate.getUserMatching());
 						obj2.remove(deletePlanner);
-						 targetEstimate.setUserMatching(String.valueOf(obj2));
-				    	targetEstimate.setMatchstatus(false);
-				    	res=2;
-				    }
-				    Payment targetPayment = paymentRepository.findByEstimateId(estimateId);
-				    if(targetPayment!=null) {
-				    	paymentRepository.delete(targetPayment);
-				    }
-				    newEstimate.setPlannermatching(String.valueOf(obj));
-				    targetEstimate.setPlannermatching(String.valueOf(obj));
-				   
-				    estimateService.save(targetEstimate);
+						targetEstimate.setUserMatching(String.valueOf(obj2));
+				    targetEstimate.setMatchstatus(false);
+				    res=2;
+				  }
+				  Payment targetPayment = paymentRepository.findByEstimateId(estimateId);
+				  if(targetPayment!=null) {
+				    paymentRepository.delete(targetPayment);
+				  }
+				  targetEstimate.setPlannermatching(String.valueOf(obj));
+				  estimateService.save(targetEstimate);
 					
 					return res;
 				
@@ -378,108 +403,24 @@ public class EstimateController {
 				
 				//매칭하기
 				@PostMapping(value = "/matching")
-				public String matchingPlanner(@RequestParam("matchingPlanner") String matchingPlanner, 
-						@RequestParam("targetEstimateId") Long estimateId, @RequestParam("userEmail") String userEmail
+				public Estimate matchingPlanner(@RequestParam("matchingPlanner") String matchingPlanner, 
+						@RequestParam("targetEstimateId") Long estimateId
 						) throws Exception {
-				    String result="";
-				    List<Estimate> targetData = estimateService.getEstimateDetailByEmail(userEmail);
 					Estimate targetEstimate = estimateService.getEstimateDetail(estimateId);
-//					for(int i=0;i<targetData.size();i++) {
-//						targetData.get(i).setAssigned(false);
-//					}
-//					for(int i=0;i<targetData.size();i++) {
-						ArrayList<String> cleanList= new ArrayList<>();
-						Estimate cleanEstimate = targetEstimate;
-						cleanEstimate.setPlannermatching(String.valueOf(cleanList));
-						cleanEstimate.setUserMatching(String.valueOf(cleanList));
-//						cleanEstimate.setAssigned(true);
-						estimateService.save(cleanEstimate);
-//					}
-				
-					System.out.println(targetEstimate.getPlannermatching());
-					
-					
-					JSONParser parser = new JSONParser();
-					ArrayList<String> obj = (ArrayList<String>) parser.parse(targetEstimate.getPlannermatching());
-				    obj.add(matchingPlanner);
+
+					ArrayList<String> obj = new ArrayList<>();
+				  obj.add(matchingPlanner);
 					targetEstimate.setPlannermatching(String.valueOf(obj));
 					targetEstimate.setUserMatching(String.valueOf(obj));
 					targetEstimate.setMatchstatus(true);
-				    estimateService.save(targetEstimate);
-				    
-					UserUpdateDelete data = userService.getUserByEmail(userEmail);
-					PlannerUpdateDelete plannerData = plannerService.getPlannerByEmail(matchingPlanner);
-					
-					String userName = data.getName()+"/";
-					result= userName;
 
-					String userPhone = data.getPhoneNum()+"]";
-					result+= userPhone;
+					List<PlannerProfileDTO> profiles = new ArrayList<PlannerProfileDTO>();
+					PlannerProfileDTO targetPlannerData = plannerProfileService.getPlannerByEmail(matchingPlanner);
+					profiles.add(targetPlannerData);
+					targetEstimate.setPlannerProfiles(profiles);
+				  estimateService.save(targetEstimate);
 
-					String plannerEmail = plannerData.getEmail()+"[";
-					result +=plannerEmail;
-					String plannerName = plannerData.getName()+",";
-					result+=plannerName;
-					
-					int careerYears = Integer.parseInt(plannerData.getPlannerCareerYears());
-					int depositAmount = 0;
-					if(careerYears>=0 && careerYears <5) {
-						depositAmount=50000;
-					}else if(careerYears<15) {
-						depositAmount=100000;
-					}else {
-						depositAmount=150000;
-					}
-					String price = depositAmount+"*";
-					result+=price;
-				         
-				    try {
-				    	if(plannerData.getPlannerImg()!=null) {
-				    		Path imagePath = Paths.get("C:/Project/profileImg/planner",plannerData.getPlannerImg());
-					        byte[] imageBytes = Files.readAllBytes(imagePath);
-					        byte[] base64encodedData = Base64.getEncoder().encode(imageBytes);
-					        result += String.valueOf(new String(base64encodedData));
-				    	}
-				    	
-				       
-				    } catch (IOException e) {
-				           e.printStackTrace();
-				        
-				    }
-				    
-
-					System.out.println("result"+result);
-					return result;
-				
-				}
-				
-				//매칭된 플래너 정보 가져오기
-				@PostMapping(value = "/getMatchedPlanner")
-				public String matchingPlanner(@RequestParam("userEmail") String userEmail
-						) throws Exception {
-				    
-				    List<Estimate> targetData = estimateService.getEstimateDetailByEmail(userEmail);
-				    String matchedPlanner ="";
-				    int estimateNum = 0;
-				    String result = "";
-					for(int i=0;i<targetData.size();i++) {
-						Boolean matchStatus = targetData.get(i).isMatchstatus();
-//						Boolean assigned = targetData.get(i).getAssigned();
-						if(matchStatus) {
-							JSONParser parser = new JSONParser();
-							ArrayList<String> obj = (ArrayList<String>) parser.parse(targetData.get(i).getPlannermatching());
-							matchedPlanner = obj.get(0);
-							estimateNum = i+1;
-							System.out.println(estimateNum);
-							PlannerUpdateDelete data = plannerService.getPlannerByEmail(matchedPlanner);
-							String plannerName = data.getName();
-							result += plannerName + "/" + String.valueOf(estimateNum)+"|";
-						}
-					}
-					System.out.println(result);
-					
-					
-					return result;
+					return targetEstimate;
 				
 				}
 				

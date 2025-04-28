@@ -73,13 +73,13 @@ public class Payment {
 //	@Column(name = "item_id", nullable = false)
 //	private Long itemId;
 	
-//	@ManyToOne(fetch=FetchType.LAZY)
-//	@JoinColumn(name = "user_email", referencedColumnName = "email", insertable = false, updatable = false, nullable = false)
-//	private UserLogin user;
-//
-//	@ManyToOne(fetch=FetchType.LAZY)
-//	@JoinColumn(name = "planner_email", referencedColumnName = "email", insertable = false, updatable = false, nullable = false)
-//	private PlannerLogin planner;
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name = "user_email", referencedColumnName = "email", insertable = false, updatable = false, nullable = false)
+	private UserLogin user;
+
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name = "planner_email", referencedColumnName = "email", insertable = false, updatable = false, nullable = false)
+	private PlannerLogin planner;
 
 //	@ManyToOne(fetch=FetchType.LAZY)
 //	@JoinColumn(name = "item_id", referencedColumnName = "item_id", insertable = false, updatable = false, nullable = false)

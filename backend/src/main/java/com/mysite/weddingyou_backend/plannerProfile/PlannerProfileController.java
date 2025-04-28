@@ -11,6 +11,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,7 @@ import com.mysite.weddingyou_backend.userUpdateDelete.UserUpdateDeleteRepository
 
 @RestController
 public class PlannerProfileController {
+		@Autowired
     private final PlannerProfileService plannerService;
     
     @Autowired
@@ -384,33 +386,29 @@ public class PlannerProfileController {
   			
   		}
   	//매칭 요청 온 고객 매칭하기
-  		@PostMapping(value = "/plannerProfile/matchingUser")
+  		@PostMapping(value = "/plannerProfile/matching/user")
   		public int matchingUser(
-  		                       @RequestParam("estimateId") Long estimateId, @RequestParam("plannerEmail") String plannerEmail)
-  								
-  		                    		   throws Exception {
+  		  @RequestParam("estimateId") Long estimateId, @RequestParam("plannerEmail") String plannerEmail)
+  								throws Exception {
   		    
   			Estimate targetEstimate = estimateRepository.findById(estimateId);
   			int res = 0;
-  			if(targetEstimate!=null) {
-  				
-  	  				JSONParser parser = new JSONParser();
-  	  	  			ArrayList<String> obj = null; 
-  	  	  			if(targetEstimate.getUserMatching()==null) {
-  	  	  				obj= new ArrayList<>();
-  	  	  			}else {
-  	  	  				obj = (ArrayList<String>) parser.parse(targetEstimate.getUserMatching());
-  	  	  				System.out.println(obj);
-  	  	  			
-  	  	  				obj.clear();
-  	  	  				obj.add(plannerEmail);
-  	  	  				targetEstimate.setUserMatching(String.valueOf(obj));
-  	  	  				targetEstimate.setPlannermatching(String.valueOf(obj));
-  	  	  				targetEstimate.setMatchstatus(true);
-  	  	  				estimateRepository.save(targetEstimate);
-  	  	  				res =1;
-  	  	  			}		
-  	  			}
+  			if(targetEstimate!=null) { 				
+  	  		JSONParser parser = new JSONParser();
+  	  	  ArrayList<String> obj = null; 
+  	  	  if(targetEstimate.getUserMatching()==null) {
+  	  	  	obj = new ArrayList<>();
+  	  	  }else {
+  	  	  	obj = (ArrayList<String>) parser.parse(targetEstimate.getUserMatching());
+  	  	  	obj.clear();
+  	  	  	obj.add(plannerEmail);
+  	  	  	targetEstimate.setUserMatching(String.valueOf(obj));
+  	  	  	targetEstimate.setPlannermatching(String.valueOf(obj));
+  	  	  	targetEstimate.setMatchstatus(true);
+  	  	  	estimateRepository.save(targetEstimate);
+  	  	  	res =1;
+  	  	  }		
+  	  	}
   			
   			return res;
   			
@@ -418,45 +416,84 @@ public class PlannerProfileController {
   		}
  
   		//매칭된 고객 정보 가져오기
-  		@PostMapping(value = "/plannerProfile/getMatchedUser")
-  		public List<String> getMatchedUser(
+  		@PostMapping(value = "/plannerProfile/match/users")
+  		public List<Estimate> getMatchedUser(
   		                       @RequestParam("plannerEmail") String plannerEmail)
   								
   		                    		   throws Exception {
-  		    List<String> result = new ArrayList<>();
-  			List<Estimate> estimatesData = estimateRepository.findAll();
-  			int k = 0;
-  			if(estimatesData !=null) {
-  				for(int i =0;i<estimatesData.size();i++) {
-  					Estimate targetEstimate = estimatesData.get(i);
-  					JSONParser parser = new JSONParser();
-  					ArrayList<String> obj = null;
-  					if(targetEstimate.getUserMatching()!=null) {
-  						obj = (ArrayList<String>) parser.parse(targetEstimate.getUserMatching()); 
-  					}else {
-  						obj = new ArrayList<>();
-  					}
-  					if(obj.contains(plannerEmail)) {
-  						k++;
-  					}
-  					if(targetEstimate.isMatchstatus() && obj.contains(plannerEmail)) {
-  						
-  						result.add(String.valueOf(targetEstimate.getId()));
-  						String userEmail = targetEstimate.getWriter();
-  						UserUpdateDelete userInfo = userUpdateDeleteRepository.findByEmail(userEmail);
-  						String userName = userInfo.getName();
-  						result.add(userName);
-  						result.add(String.valueOf(k));  
-  						
-  					}
-  				}
+  		  List<Estimate> result = new ArrayList<>();
+				JSONParser parser = new JSONParser();
+  			List<Estimate> allEstimates = estimateService.getlist();
+  			if(allEstimates !=null) {
+					List<Estimate> targetEstimates = allEstimates.stream()
+								.filter(e -> {
+									try {
+										if (e.getUserMatching() == null) {
+												return false;
+										}
+										JSONArray userMatching = (JSONArray) parser.parse(e.getUserMatching());
+										JSONArray plannerMatching = (JSONArray) parser.parse(e.getPlannermatching());
+										ArrayList<String> userList = (ArrayList<String>) plannerMatching.stream()
+    									.map(Object::toString)
+    									.collect(Collectors.toList());
+										ArrayList<String> plannerList = (ArrayList<String>) userMatching.stream()
+    									.map(Object::toString)
+    									.collect(Collectors.toList());
+										return plannerList.contains(plannerEmail) && userList.contains(plannerEmail);
+									} catch (Exception ex) {
+										ex.printStackTrace();
+										return false;
+									}
+								})
+								.collect(Collectors.toList());
+					return targetEstimates;
   			}
-  		
-  			
   			return result;
-  			
-  			
   		}
 
-  		
+			//매칭된 고객 정보 가져오기
+  		@PostMapping(value = "/plannerProfile/match/planners")
+  		public List<Estimate> getMatchedPlanners(
+  		                       @RequestParam("userEmail") String userEmail)
+  		                    		   throws Exception {
+				List<Estimate> allEstiamtes = new ArrayList<Estimate>();						
+				JSONParser parser = new JSONParser();
+  			List<Estimate> allEstimates = estimateService.getEstimateDetailByEmail(userEmail);
+  			if(allEstimates !=null) {
+					List<Estimate> targetEstimates = allEstimates.stream()
+								.filter(e -> {
+									try {
+										if (e.getUserMatching() == null || e.getPlannermatching() == null || !e.isMatchstatus()) {
+												return false;
+										}
+										JSONArray userMatching = (JSONArray) parser.parse(e.getUserMatching());
+										JSONArray plannerMatching = (JSONArray) parser.parse(e.getPlannermatching());
+										ArrayList<String> userList = (ArrayList<String>) plannerMatching.stream()
+    									.map(Object::toString)
+    									.collect(Collectors.toList());
+										
+										ArrayList<String> plannerList = (ArrayList<String>) userMatching.stream()
+    									.map(Object::toString)
+    									.collect(Collectors.toList());
+		
+										Boolean result = (userList.size() == plannerList.size()) && (userList.size() == 1) && 
+										(userList.get(0).equals(plannerList.get(0)));
+										String plannerEmail = plannerList.get(0);
+										ArrayList<PlannerProfileDTO> plannerProfiles = new ArrayList<PlannerProfileDTO> ();									
+										if(result){
+											PlannerProfileDTO plannerData = plannerService.getPlannerByEmail(plannerEmail);
+											plannerProfiles.add(plannerData);
+											e.setPlannerProfiles(plannerProfiles);
+										}
+										return result;
+									} catch (Exception ex) {
+										ex.printStackTrace();
+										return false;
+									}
+								})
+								.collect(Collectors.toList());
+					return targetEstimates;
+  			}
+  			return allEstiamtes;
+  		}
 }
