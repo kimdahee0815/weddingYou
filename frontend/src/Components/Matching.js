@@ -18,10 +18,13 @@ function Matching() {
   const [matchedUsers, setMatchedUsers] = useState([]);
   const [matchedPlanners, setMatchedPlanners] = useState([]);
   const [currentPlannerProfile, setCurrentPlannerProfile] = useState(null);
+  const [cancelMatching, setCancelMatching] = useState(false);
+  const [deletedPlanner, setDeletedPlanner] = useState(false);
+  const [deletedUser, setDeletedUser] = useState(false);
 
   const [plannerMatching, setPlannerMatching] = useState([]);
   const [plannerName, setPlannerName] = useState("");
-  const [deletedPlanner, setDeletedPlanner] = useState(false);
+
   const [deleteTargetEstimateId, setDeleteTargetEstimateId] = useState(0);
   const [matchedPlanner, setMatchedPlanner] = useState([]);
   const [estimateNum, setEstimateNum] = useState([]);
@@ -79,33 +82,81 @@ function Matching() {
       };
       getPlannersAndEstimatesDetails();
     }
-  }, [loggedInEmail]);
+  }, [loggedInEmail, deletedPlanner, deletedUser]);
+
+  
+  useEffect(() => {
+    if (sessionStorage.getItem("category") === "planner") {
+      const formData = new FormData();
+      formData.append("plannerEmail", loggedInEmail);
+      axios
+        .post(`/plannerProfile/match/users`, formData)
+        .then((res) => {
+          console.log(res.data)
+          const matchedUsersData = res.data;
+          setMatchedUsers(matchedUsersData)
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    }else if (sessionStorage.getItem("category") === "user"){
+      const formData = new FormData();
+      formData.append("userEmail", loggedInEmail);
+      axios
+        .post(`/plannerProfile/match/planners`, formData)
+        .then((res) => {
+          console.log("matchedPlanners")
+          console.log(res.data)
+          const matchedPlannersData = res.data;
+          setMatchedPlanners(matchedPlannersData)
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    }
+  }, [matchedUser, cancelMatching, loggedInEmail]);
 
   const matchOrDeletePlanner = (e) => {
     e.preventDefault();
 
-    const {bsEstimate, bsProfile} = e.target.dataset;
-    const estimate = JSON.parse(bsEstimate);
-    const plannerProfile = JSON.parse(bsProfile);
-    setCurrentUserEstimate(estimate);
-    setCurrentPlannerProfile(plannerProfile);
+    const {bsEstimate: estimate, bsProfile:profile} = e.target.dataset;
+    setCurrentUserEstimate(JSON.parse(estimate));
+    setCurrentPlannerProfile(JSON.parse(profile));
   };
 
   const matchOrDeleteUser = (e) => {
-    const {bsEstimate: estimate} = e.target.dataset;
+    e.preventDefault();
+    const {bsEstimate:estimate} = e.target.dataset;
     setCurrentUserEstimate(JSON.parse(estimate));
   };
 
 
   const confirmDeleteMatchingPlanner = () => {
     axios
-      .delete({
-        url: `/estimate/matching/planner`,
-        method: "delete",
-        params: { deleteTargetEstimateId: currentUserEstimate.id, deletePlanner: currentPlannerProfile.plannerEmail },
+    .delete('/estimate/matching/planner', {
+      params: { 
+        deleteTargetEstimateId: currentUserEstimate.id, 
+        deletePlanner: currentPlannerProfile.plannerEmail  
+        }
       })
       .then((res) => {
         setDeletedPlanner(deletedPlanner => !deletedPlanner);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
+
+  const confirmDeleteMatchingUser = () => {
+    axios
+    .delete('/estimate/matching/user', {
+      params: { 
+        deleteTargetEstimateId: currentUserEstimate.id, 
+        deletePlanner: loggedInEmail 
+        }
+      })
+      .then((res) => {
+        setDeletedUser(deletedUser => !deletedUser);
       })
       .catch((e) => {
         console.log(e);
@@ -123,67 +174,56 @@ function Matching() {
         console.log("matching")
         console.log(res.data);
         let depositPrice = 0;
-        let careerYears = currentPlannerProfile.career;
-        if(careerYears < 5 && careerYears >= 0){
-          depositPrice = 50000;
-        } else if(careerYears < 10){
-          depositPrice = 100000;
-        } else{
-          depositPrice = 150000;
-        }
-
-        navigate("/checkoutdeposit", {
-          state: {
-            estimateId: currentUserEstimate.id,
-            userName: currentUserEstimate.user.name,
-            userPhone: currentUserEstimate.user.phoneNum,
-            planneremail: currentPlannerProfile.plannerEmail,
-            plannerName: currentPlannerProfile.plannerName,
-            depositprice: depositPrice,
-            plannerImg: currentPlannerProfile.plannerProfileImg,
-          },
-        });
+    let careerYears = currentPlannerProfile.career;
+    if(careerYears < 5 && careerYears >= 0){
+      depositPrice = 50000;
+    } else if(careerYears < 10){
+      depositPrice = 100000;
+    } else{
+      depositPrice = 150000;
+    }
+    navigate("/checkoutdeposit", {
+      state: {
+        estimateId: currentUserEstimate.id,
+        userName: currentUserEstimate.user.name,
+        userPhone: currentUserEstimate.user.phoneNum,
+        planneremail: currentPlannerProfile.plannerEmail,
+        plannerName: currentPlannerProfile.plannerName,
+        depositprice: depositPrice,
+        plannerImg: currentPlannerProfile.plannerProfileImg,
+      },
+    });
+        
+        
       })
       .catch((e) => {
         console.log(e);
       });
   };
 
-  const CancelMatching = () => {
+  const CancelMatchingModal = (e) => {
+    const {bsEstimate:estimate} = e.target.dataset;
+    setCurrentUserEstimate(estimate);
+   
+  };
+
+  const CancelMatching = (e) => {
     const formData = new FormData();
-    formData.append("userEmail", sessionStorage.getItem("email"));
-    formData.append("deleteTargetEstimateId", deleteTargetEstimateId);
+    formData.append("userEmail", loggedInEmail);
+    formData.append("estimateId", currentUserEstimate.id);
     axios
-      .post(`/estimate/cancelMatchedPlanner`, formData)
+      .post(`/estimate/matching/cancel`, formData)
       .then((res) => {
-        setDeletedPlanner(!deletedPlanner);
-        //setMatchedPlanner(null);
+        alert("해당 고객과의 매칭이 취소되었습니다!");
+        setCancelMatching(cancelMatching => !cancelMatching);
       })
       .catch((e) => {
         console.log(e);
       });
-  };
-
-  const CancelMatching2 = (e) => {
-    const estimateNum = e.target.dataset.bsEstimatenum - 1;
-    setSelectEstimateNum(estimateNum);
-  };
-
-  const CancelMatching3 = (e) => {
-    const formData = new FormData();
-    formData.append("userEmail", sessionStorage.getItem("email"));
-    formData.append("estimateNum", selectEstimateNum);
-    axios
-      .post(`/estimate/cancelMatchedPlanner2`, formData)
-      .then((res) => {
-        setDeletedPlanner(!deletedPlanner);
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-  };
+  }
 
   const goPay = (e) => {
+    
     const estimateNum = e.target.dataset.bsEstimatenum - 1;
     setSelectEstimateNum(estimateNum);
     console.log("estimateNum:" + estimateNum);
@@ -359,61 +399,7 @@ function Matching() {
       });
   };
 
-  useEffect(() => {
-    if (sessionStorage.getItem("category") === "planner") {
-      const formData = new FormData();
-      formData.append("plannerEmail", loggedInEmail);
-      axios
-        .post(`/plannerProfile/match/users`, formData)
-        .then((res) => {
-          console.log(res.data)
-          const matchedUsersData = res.data;
-          setMatchedUsers(matchedUsersData)
-        })
-        .catch((e) => {
-          console.log(e);
-        });
-    }else if (sessionStorage.getItem("category") === "user"){
-      const formData = new FormData();
-      formData.append("userEmail", loggedInEmail);
-      axios
-        .post(`/plannerProfile/match/planners`, formData)
-        .then((res) => {
-          console.log("matchedPlanners")
-          console.log(res.data)
-          const matchedPlannersData = res.data;
-          setMatchedPlanners(matchedPlannersData)
-        })
-        .catch((e) => {
-          console.log(e);
-        });
-    }
-  }, [matchedUser, cancelledUser, loggedInEmail]);
 
-  const cancelMatchingUser2 = (e) => {
-    console.log(e.target.dataset);
-    const estimateId = e.target.dataset.bsEstimatenum;
-    setSelectedEstimateId2(estimateId);
-  };
-
-  const cancelMatchingUser3 = () => {
-    const formData = new FormData();
-    formData.append("estimateId", selectedEstimateId2);
-    formData.append("plannerEmail", sessionStorage.getItem("email"));
-    axios
-      .post(`/plannerProfile/cancelMatchingUser`, formData)
-      .then((res) => {
-        console.log(res);
-        if (res.data === 1) {
-          alert("해당 고객과의 매칭이 취소되었습니다!");
-          setCancelledUser(!cancelledUser);
-        } else {
-        }
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-  };
   useEffect(() => {
     const formData = new FormData();
     formData.append("email", sessionStorage.getItem("email"));
@@ -641,7 +627,7 @@ function Matching() {
             </p>
 
             {matchedPlanners.length !== 0 ? (
-              matchedPlanners?.map((profile, index) => {
+              matchedPlanners?.map((estimate, index) => {
                 return (
                   <div>
                     <div
@@ -738,7 +724,7 @@ function Matching() {
                           marginRight: "-140px",
                         }}
                       >
-                        {profile?.plannerProfiles?.[0].plannerName}
+                        {estimate?.plannerProfiles?.[0].plannerName}
                         {/* {estimateOrder2[num] == num ? (
                           <img
                             src={heartIcon}
@@ -753,7 +739,7 @@ function Matching() {
                       </p>
                       <button
                         className="plannerProBtn"
-                        data-bs-planner={JSON.stringify(profile?.plannerProfiles?.[0])}
+                        data-bs-planner={JSON.stringify(estimate?.plannerProfiles?.[0])}
                         onClick={goPlannerProfile}
                       >
                         프로필 보기
@@ -762,7 +748,6 @@ function Matching() {
                       <div className="matchingBtnList">
                         <button
                           className="plannerMatchingBtn"
-                         // data-bs-estimateNum={estimateNum[keyIndex]}
                           onClick={goPay}
                           // data-bs-toggle="modal"
                           // data-bs-target="#plannerMatchingPriceModal"
@@ -781,7 +766,8 @@ function Matching() {
                             className="plannerMatchingBtn"
                             data-bs-toggle="modal"
                             data-bs-target="#CancelMatching"
-                            onClick={CancelMatching2}
+                            data-bs-estimate={JSON.stringify(estimate)}
+                            onClick={CancelMatchingModal}
                           >
                             매칭취소
                           </button>
@@ -847,7 +833,6 @@ function Matching() {
                                 paddingLeft: "30px",
                                 paddingRight: "-70px",
                                 paddingTop: "20px",
-
                                 display: "inline-block",
                               }}
                             >
@@ -1061,7 +1046,7 @@ function Matching() {
                       type="button"
                       className="btn btn-primary"
                       data-bs-dismiss="modal"
-                      onClick={CancelMatching3}
+                      onClick={CancelMatching}
                     >
                       매칭 취소하기
                     </button>
@@ -1286,8 +1271,8 @@ function Matching() {
                             className="plannerMatchingBtn"
                             data-bs-toggle="modal"
                             data-bs-target="#CancelMatchingCustomer"
-                            data-bs-estimateNum={matchedUser.id}
-                            onClick={cancelMatchingUser2}
+                            data-bs-estimate={JSON.stringify(matchedUser)}
+                            onClick={CancelMatchingModal}
                           >
                             매칭취소
                           </button>
@@ -1394,7 +1379,6 @@ function Matching() {
                                   width: "150px",
                                   marginTop: "15px",
                                   paddingTop: "4px",
-
                                   height: "47px",
                                   flexGrow: 1,
                                   borderRadius: "10px",
@@ -1552,7 +1536,7 @@ function Matching() {
                       type="button"
                       className="btn btn-primary"
                       data-bs-dismiss="modal"
-                      onClick={cancelMatchingUser3}
+                      onClick={CancelMatching}
                     >
                       매칭 취소하기
                     </button>
@@ -1567,57 +1551,6 @@ function Matching() {
                 </div>
               </div>
             </div>
-            {/* 고객 모달창(매칭취소) */}
-            <div
-              className="modal fade"
-              id="MatchOrCancel"
-              tabindex="-1"
-              aria-labelledby="MatchOrCancel"
-              aria-hidden="true"
-            >
-              <div className="modal-dialog modal-dialog-centered">
-                <div className="modal-content">
-                  <div className="modal-header">
-                    <h1
-                      className="modal-title fs-2"
-                      id="CancelMatching"
-                      style={{ fontSize: "1.6em" }}
-                    >
-                      해당 플래너와 매칭하시겠습니까?
-                    </h1>
-                    <button
-                      type="button"
-                      className="btn-close"
-                      data-bs-dismiss="modal"
-                      aria-label="Close"
-                    ></button>
-                  </div>
-                  <div className="modal-body" style={{ fontSize: "1.5em" }}>
-                    매칭시 다른플래너들의 요청은 모두 거절되고 계약금 결제
-                    페이지로 이동합니다.
-                  </div>
-                  <div className="modal-footer">
-                    <button
-                      type="button"
-                      className="btn btn-primary"
-                      onClick={goMatching}
-                      data-bs-dismiss="modal"
-                    >
-                      매칭하기
-                    </button>
-                    <button
-                      type="button"
-                      className="btn btn-secondary"
-                      data-bs-dismiss="modal"
-                      onClick={confirmDeleteMatchingPlanner}
-                    >
-                      거절하기
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-            {/* 고객과의 매칭/거절 모달창 */}
             <div
               className="modal fade"
               id="MatchOrCancelCustomer"
@@ -1658,9 +1591,7 @@ function Matching() {
                       type="button"
                       className="btn btn-secondary"
                       data-bs-dismiss="modal"
-                      onClick={() => {
-                        cancelMatchedUser2();
-                      }}
+                      onClick={confirmDeleteMatchingUser}
                     >
                       거절하기
                     </button>

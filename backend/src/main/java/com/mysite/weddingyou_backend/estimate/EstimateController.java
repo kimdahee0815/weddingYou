@@ -400,6 +400,35 @@ public class EstimateController {
 					return res;
 				
 				}
+
+				@DeleteMapping(value = "/matching/user")
+				public int deleteMatchingUser(@RequestParam("deletePlanner") String deletePlanner, 
+						@RequestParam("deleteTargetEstimateId") Long estimateId) throws Exception {
+				  int res = 1;
+
+					Estimate targetEstimate = estimateService.getEstimateDetail(estimateId);
+					
+					JSONParser parser = new JSONParser();
+				  ArrayList<String> obj = (ArrayList<String>) parser.parse(targetEstimate.getUserMatching());
+				  obj.remove(deletePlanner);
+
+				  if(targetEstimate.isMatchstatus()) {
+				    ArrayList<String> obj2 = (ArrayList<String>) parser.parse(targetEstimate.getUserMatching());
+						obj2.remove(deletePlanner);
+						targetEstimate.setUserMatching(String.valueOf(obj2));
+				    targetEstimate.setMatchstatus(false);
+				    res=2;
+				  }
+				  Payment targetPayment = paymentRepository.findByEstimateId(estimateId);
+				  if(targetPayment!=null) {
+				    paymentRepository.delete(targetPayment);
+				  }
+				  targetEstimate.setPlannermatching(String.valueOf(obj));
+				  estimateService.save(targetEstimate);
+					
+					return res;
+				
+				}
 				
 				//매칭하기
 				@PostMapping(value = "/matching")
@@ -408,7 +437,9 @@ public class EstimateController {
 						) throws Exception {
 					Estimate targetEstimate = estimateService.getEstimateDetail(estimateId);
 
-					ArrayList<String> obj = new ArrayList<>();
+					JSONParser parser = new JSONParser();
+				  ArrayList<String> obj = (ArrayList<String>) parser.parse(targetEstimate.getUserMatching());
+					obj.clear();
 				  obj.add(matchingPlanner);
 					targetEstimate.setPlannermatching(String.valueOf(obj));
 					targetEstimate.setUserMatching(String.valueOf(obj));
@@ -425,72 +456,25 @@ public class EstimateController {
 				}
 				
 				//매칭취소하기
-				@PostMapping(value = "/cancelMatchedPlanner")
-				public int cancelMatchedPlanner(@RequestParam("userEmail") String userEmail
-						,@RequestParam("deleteTargetEstimateId") Long EstimateId
+				@PostMapping(value = "/matching/cancel")
+				public int cancelMatching(@RequestParam("userEmail") String userEmail
+						,@RequestParam("estimateId") Long EstimateId
 						) throws Exception {
-				    
-					 List<Estimate> targetData = estimateService.getEstimateDetailByEmail(userEmail);
-					 
-					    int res = 0;
+
+					  int res = 0;
 
 						Estimate targetEstimate = estimateService.getEstimateDetail(EstimateId);
 						ArrayList<String> cleanList= new ArrayList<>();
-						targetEstimate.getPlannermatching();
 						targetEstimate.setPlannermatching(String.valueOf(cleanList));
 						targetEstimate.setUserMatching(String.valueOf(cleanList));
 						targetEstimate.setMatchstatus(false);
 						estimateService.save(targetEstimate);
-						 Payment targetPayment = paymentRepository.findByEstimateId(EstimateId);
-						    if(targetPayment!=null) {
-						    	paymentRepository.delete(targetPayment);
-						    }
-//						for(int i=0;i<targetData.size();i++) {
-//						
-//							Boolean matchStatus = targetData.get(i).isMatchstatus();
-//							if(matchStatus) {
-//								ArrayList<String> cleanList= new ArrayList<>();
-//								Estimate cleanEstimate = targetData.get(i);
-//								cleanEstimate.setPlannermatching(String.valueOf(cleanList));
-//								cleanEstimate.setMatchstatus(false);
-//								estimateService.save(cleanEstimate);
-//								res = 1;
-//								break;
-//							}
-//						}
-						res = 1;
-						
-						return res;
-				
-				}
-				
-				//매칭취소하기
-				@PostMapping(value = "/cancelMatchedPlanner2")
-				public int cancelMatchedPlanner2(@RequestParam("userEmail") String userEmail
-						,@RequestParam("estimateNum") int estimateNum
-						) throws Exception {
-				    
-					 List<Estimate> targetData = estimateService.getEstimateDetailByEmail(userEmail);
-					 
-					    int res = 0;
-
-					    Boolean matchStatus = targetData.get(estimateNum).isMatchstatus();
-						if(matchStatus) {
-							ArrayList<String> cleanList= new ArrayList<>();
-							Estimate cleanEstimate = targetData.get(estimateNum);
-							cleanEstimate.setPlannermatching(String.valueOf(cleanList));
-							cleanEstimate.setUserMatching(String.valueOf(cleanList));
-							cleanEstimate.setMatchstatus(false);
-							estimateService.save(cleanEstimate);
-							Long estimateId = cleanEstimate.getId();
-							 Payment targetPayment = paymentRepository.findByEstimateId(estimateId);
-							    if(targetPayment!=null) {
-							    	paymentRepository.delete(targetPayment);
-							    }
-							res = 1;
+						Payment targetPayment = paymentRepository.findByEstimateId(EstimateId);
+						if(targetPayment!=null) {
+						  paymentRepository.delete(targetPayment);
 						}
-						
-						
+
+						res = 1;
 						return res;
 				
 				}
