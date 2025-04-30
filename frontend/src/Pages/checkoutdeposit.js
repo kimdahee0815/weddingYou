@@ -11,52 +11,78 @@ import axios from "axios";
 import Sidesection from "../Components/Sidesection";
 
 function Checkoutdeposit() {
-  var IMP = window.IMP;
-  //IMP.init("imp57211510");
-  IMP.init("imp01206222");
   const navigate = useNavigate();
 
-  const { estimateId } = useLocation().state;
-  const { userName } = useLocation().state;
-  const { userPhone } = useLocation().state;
-  const { planneremail } = useLocation().state;
-  const { plannerName } = useLocation().state;
-  const { depositprice } = useLocation().state;
-  const { plannerImg } = useLocation().state;
-  console.log("estimateId:" + estimateId);
-  console.log("userName:" + userName);
-  console.log("userPhone:" + userPhone);
-  console.log("planneremail:" + planneremail);
-  console.log("plannerName:" + plannerName);
-  console.log("plannerImg" + plannerImg);
-  console.log("depositprice: " + depositprice);
+  const { 
+    estimateId, 
+    userName, 
+    userPhone, 
+    planneremail, 
+    plannerName, 
+    depositprice,
+    plannerImg,
+    plannerCareer
+  } = useLocation().state;
 
-  //const [price, setPrice] = useState(10000);
-  console.log("depositprice:" + depositprice);
   const [quantity, setQuantity] = useState(1);
   const [paymentAmount, setPaymentAmount] = useState(depositprice * quantity);
   const [paymentMethod, setPaymetMethod] = useState("card");
   const [paymentStatus, setPaymentStatus] = useState("other");
   const [depositAmount, setDepositAmount] = useState(depositprice);
-  console.log("depositAmount:" + depositAmount);
-  const [depositStatus, setDepositStatus] = useState("paid");
+  const [depositStatus, setDepositStatus] = useState("cancelled");
   const [paymentType, setPaymentType] = useState("deposit");
   const [userEmail, setUserEmail] = useState(sessionStorage.getItem("email"));
   const [plannerEmail, setPlannerEmail] = useState(planneremail);
-  const [plannerCareerYears, setPlannerCareerYears] = useState(0);
-  let depositAmount1 = depositAmount;
+  const [plannerCareerYears, setPlannerCareerYears] = useState(plannerCareer);
+
+  useEffect(() => {
+    axios
+      .post("/deposit/callback", {
+        price: depositprice,
+        quantity,
+        paymentMethod,
+        paymentAmount,
+        tempPaymentStatus: paymentStatus,
+        depositAmount,
+        tempDepositStatus: depositStatus,
+        paymentType,
+        userEmail,
+        plannerEmail,
+        estimateId,
+      })
+      .then((res) => {
+        console.log(res);
+        const plannerCareerYearsData = res.data;
+        setPlannerCareerYears(plannerCareerYearsData);
+        if (plannerCareerYearsData >= 0 && plannerCareerYearsData < 5) {
+          setDepositAmount(50000);
+        } else if (plannerCareerYearsData < 15) {
+          setDepositAmount(100000);
+        } else {
+          setDepositAmount(150000);
+        }
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+      if (window.IMP) {
+        window.IMP.init("imp83460455"); 
+      }
+  }, [depositprice, quantity, paymentMethod, paymentAmount, paymentStatus, depositAmount, depositStatus, paymentType, userEmail, plannerEmail, estimateId ]);
 
   function requestPay() {
+    const { IMP } = window;
     IMP.request_pay(
       {
-        pg: "kcp",
+        pg: "paypal.UFYSG9T7RFW2A",
         pay_method: { paymentMethod },
         merchant_uid: `57126841-${estimateId}` + IMP,
         name: "플래너 매칭 계약금",
-        amount: depositAmount1,
+        amount: 1,
         buyer_email: sessionStorage.getItem("email"),
         buyer_name: userName,
         buyer_tel: userPhone,
+        m_redirect_url: `${process.env.REACT_APP_API_URL}/matching`,
         // buyer_addr: "서울특별시 강남구 삼성동",
         // buyer_postcode: "123-456",
       },
@@ -68,16 +94,16 @@ function Checkoutdeposit() {
           axios
             .post("/deposit/callback", {
               price: depositprice,
-              quantity: quantity,
-              paymentMethod: paymentMethod,
-              paymentAmount: paymentAmount,
-              tempPaymentStatus: "other",
-              depositAmount: depositAmount,
+              quantity,
+              paymentMethod,
+              paymentAmount,
+              tempPaymentStatus: paymentStatus,
+              depositAmount,
               tempDepositStatus: "paid",
-              paymentType: "deposit",
-              userEmail: userEmail,
-              plannerEmail: plannerEmail,
-              estimateId: estimateId,
+              paymentType,
+              userEmail,
+              plannerEmail,
+              estimateId,
             })
             .then((res) => {
               console.log(res);
@@ -106,9 +132,9 @@ function Checkoutdeposit() {
               quantity: quantity,
               paymentMethod: paymentMethod,
               paymentAmount: paymentAmount,
-              tempPaymentStatus: "other",
+              tempPaymentStatus: paymentStatus,
               depositAmount: depositAmount,
-              tempDepositStatus: "cancelled",
+              tempDepositStatus: depositStatus,
               paymentType: "deposit",
               userEmail: userEmail,
               plannerEmail: plannerEmail,
@@ -120,42 +146,11 @@ function Checkoutdeposit() {
             .catch((e) => {
               console.log(e);
             });
+            navigate("/matching");
         }
       }
     );
   }
-
-  useEffect(() => {
-    axios
-      .post("/deposit/callback", {
-        price: depositprice,
-        quantity: quantity,
-        paymentMethod: paymentMethod,
-        paymentAmount: paymentAmount,
-        tempPaymentStatus: "other",
-        depositAmount: depositAmount,
-        tempDepositStatus: "cancelled",
-        paymentType: "deposit",
-        userEmail: userEmail,
-        plannerEmail: plannerEmail,
-        estimateId: estimateId,
-      })
-      .then((res) => {
-        console.log(res);
-        const plannerCareerYearsData = res.data;
-        setPlannerCareerYears(plannerCareerYearsData);
-        if (plannerCareerYears >= 0 && plannerCareerYearsData < 5) {
-          setDepositAmount(50000);
-        } else if (plannerCareerYearsData < 15) {
-          setDepositAmount(100000);
-        } else {
-          setDepositAmount(150000);
-        }
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-  }, []);
 
   return (
     <div className="containerbox">
@@ -223,7 +218,6 @@ function Checkoutdeposit() {
                 marginRight: "15px",
               }}
             >
-              {" "}
               (경력 5년 미만 : 50,000 / 경력 15년 미만 : 100,000 / 경력 15년
               이상 : 150,000)
             </div>

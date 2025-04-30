@@ -1,6 +1,7 @@
 package com.mysite.weddingyou_backend.plannerProfile;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -8,7 +9,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Comparator;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.json.simple.JSONArray;
@@ -26,10 +29,15 @@ import com.mysite.weddingyou_backend.estimate.EstimateRepository;
 import com.mysite.weddingyou_backend.estimate.EstimateService;
 import com.mysite.weddingyou_backend.payment.Payment;
 import com.mysite.weddingyou_backend.payment.PaymentRepository;
+import com.mysite.weddingyou_backend.payment.PaymentService;
+import com.mysite.weddingyou_backend.plannerLogin.PlannerLogin;
+import com.mysite.weddingyou_backend.plannerLogin.PlannerLoginRepository;
 import com.mysite.weddingyou_backend.plannerUpdateDelete.PlannerUpdateDelete;
 import com.mysite.weddingyou_backend.plannerUpdateDelete.PlannerUpdateDeleteRepository;
 import com.mysite.weddingyou_backend.review.Review;
 import com.mysite.weddingyou_backend.review.ReviewRepository;
+import com.mysite.weddingyou_backend.userLogin.UserLogin;
+import com.mysite.weddingyou_backend.userLogin.UserLoginRepository;
 import com.mysite.weddingyou_backend.userUpdateDelete.UserUpdateDelete;
 import com.mysite.weddingyou_backend.userUpdateDelete.UserUpdateDeleteRepository;
 
@@ -38,12 +46,21 @@ public class PlannerProfileController {
 		@Autowired
     private final PlannerProfileService plannerService;
     
+		@Autowired
+    private final PaymentService paymentService;
+
     @Autowired
     private PlannerUpdateDeleteRepository plannerUpdateDeleteRepository;
     
+		@Autowired
+    private PlannerLoginRepository plannerLoginRepository;
+
     @Autowired
     private UserUpdateDeleteRepository userUpdateDeleteRepository;
     
+		@Autowired
+    private UserLoginRepository userLoginRepository;
+
     @Autowired
     private ReviewRepository reviewRepository;
     
@@ -58,8 +75,9 @@ public class PlannerProfileController {
     private PaymentRepository paymentRepository;
 
     @Autowired
-    public PlannerProfileController(PlannerProfileService plannerService) {
+    public PlannerProfileController(PlannerProfileService plannerService, PaymentService paymentService) {
         this.plannerService = plannerService;
+				this.paymentService = paymentService;
     }
 
     @PostMapping("/plannerProfile/getProfile")
@@ -288,6 +306,8 @@ public class PlannerProfileController {
   			Estimate targetData = estimateService.getEstimateDetail(estimateId);
   			JSONParser parser = new JSONParser();
   			ArrayList<String> obj = (ArrayList<String>) parser.parse(usermatching);
+  			ArrayList<String> plannerList = (ArrayList<String>) parser.parse(targetData.getPlannermatching());
+
   			ArrayList<String> userList = null;
   			if(targetData.getUserMatching()!=null) {
   				userList = (ArrayList<String>) parser.parse(targetData.getUserMatching());
@@ -301,8 +321,47 @@ public class PlannerProfileController {
 					Estimate data = new Estimate();
   				data.setUserMatching(usermatching);
   				targetData.setUserMatching(data.getUserMatching());
-  				
-  				estimateService.save(targetData);
+					
+					estimateService.save(targetData);
+					System.out.println(obj.get(obj.size() - 1));
+					System.out.println(plannerList.contains(obj.get(obj.size() - 1)));
+					if(plannerList != null && plannerList.size() != 0 && plannerList.contains(obj.get(obj.size() - 1))){
+						List<Payment> targetPayments = paymentRepository.findByEstimateId(estimateId);
+					Payment targetPayment = targetPayments.stream()
+					.filter(p -> p.getPlannerEmail().equals(obj.get(obj.size() - 1)) && p.getUserEmail().equals(targetData.getWriter())).findFirst().orElse(null);
+					if(targetPayment == null){
+						PlannerLogin planner = plannerLoginRepository.findByEmail(obj.get(obj.size() - 1));
+      			UserLogin user = userLoginRepository.findByEmail(targetData.getWriter());
+
+						BigDecimal depositAmount;
+						int plannerCareerYears = Integer.parseInt(planner.getPlannerCareerYears());
+      			if(plannerCareerYears >= 0 && plannerCareerYears <5) {
+        			depositAmount = new BigDecimal(50000);
+      			}else if(plannerCareerYears >= 5 && plannerCareerYears <15) {
+        			depositAmount = new BigDecimal(100000);
+      			}else {
+        			depositAmount = new BigDecimal(150000);
+      			}
+						
+						Payment payment = new Payment();
+        		payment.setPrice(depositAmount);
+        		payment.setQuantity(1);
+        		payment.setPaymentMethod("card");
+        		payment.setPaymentAmount(depositAmount);
+        		payment.setPaymentStatus("other");
+        		payment.setDepositAmount(depositAmount);
+        		payment.setDepositStatus("other");
+        		payment.setPaymentType("deposit");
+        		payment.setUserEmail(targetData.getWriter());
+        		payment.setPlannerEmail(obj.get(obj.size() - 1));
+        		payment.setEstimateId(estimateId);
+        		payment.setPaymentDate(null);
+        		payment.setDepositDate(null);
+        		payment.setPlanner(planner);
+        		payment.setUser(user);
+        		paymentService.savePayment(payment);
+					}
+					}
 				}
   			
   		}
@@ -371,8 +430,12 @@ public class PlannerProfileController {
   	  	  					obj.remove(plannerEmail);
   	  	  					targetEstimate.setPlannermatching(String.valueOf(obj));
   	  	  					targetEstimate.setMatchstatus(false);
-  	  	  					Payment targetPayment = paymentRepository.findByEstimateId(estimateId);
-  	  	  					if(targetPayment!=null) {
+  	  	  					List<Payment> targetPayments = paymentRepository.findByEstimateId(estimateId);
+  	  	  					Payment targetPayment = targetPayments.stream()
+        															.filter(p -> p.getPlannerEmail().equals(plannerEmail))
+        															.findFirst() 
+        															.orElse(null); 
+										if(targetPayment!=null) {
   	  	  						paymentRepository.delete(targetPayment);
   	  	  					}
   	  	  				}
@@ -419,8 +482,7 @@ public class PlannerProfileController {
   		@PostMapping(value = "/plannerProfile/match/users")
   		public List<Estimate> getMatchedUser(
   		                       @RequestParam("plannerEmail") String plannerEmail)
-  								
-  		                    		   throws Exception {
+															throws Exception {
   		  List<Estimate> result = new ArrayList<>();
 				JSONParser parser = new JSONParser();
   			List<Estimate> allEstimates = estimateService.getlist();
@@ -433,12 +495,18 @@ public class PlannerProfileController {
 										}
 										JSONArray userMatching = (JSONArray) parser.parse(e.getUserMatching());
 										JSONArray plannerMatching = (JSONArray) parser.parse(e.getPlannermatching());
-										ArrayList<String> userList = (ArrayList<String>) plannerMatching.stream()
+										ArrayList<String> plannerList = (ArrayList<String>) plannerMatching.stream()
     									.map(Object::toString)
     									.collect(Collectors.toList());
-										ArrayList<String> plannerList = (ArrayList<String>) userMatching.stream()
+										ArrayList<String> userList = (ArrayList<String>) userMatching.stream()
     									.map(Object::toString)
     									.collect(Collectors.toList());
+										ArrayList<PlannerProfileDTO> plannerProfiles = new ArrayList<PlannerProfileDTO> ();									
+										if(plannerList.size() != 0){
+												PlannerProfileDTO plannerData = plannerService.getPlannerByEmail(plannerEmail);
+												plannerProfiles.add(plannerData);
+												e.setPlannerProfiles(plannerProfiles);
+											}
 										return plannerList.contains(plannerEmail) && userList.contains(plannerEmail);
 									} catch (Exception ex) {
 										ex.printStackTrace();
@@ -453,7 +521,7 @@ public class PlannerProfileController {
 
 			//매칭된 고객 정보 가져오기
   		@PostMapping(value = "/plannerProfile/match/planners")
-  		public List<Estimate> getMatchedPlanners(
+  		public List<Estimate> getMatchedPlannersEstimates(
   		                       @RequestParam("userEmail") String userEmail)
   		                    		   throws Exception {
 				List<Estimate> allEstiamtes = new ArrayList<Estimate>();						
@@ -463,7 +531,7 @@ public class PlannerProfileController {
 					List<Estimate> targetEstimates = allEstimates.stream()
 								.filter(e -> {
 									try {
-										if (e.getUserMatching() == null || e.getPlannermatching() == null || !e.isMatchstatus()) {
+										if (e.getUserMatching() == null || e.getPlannermatching() == null) {
 												return false;
 										}
 										JSONArray userMatching = (JSONArray) parser.parse(e.getUserMatching());
@@ -476,13 +544,23 @@ public class PlannerProfileController {
     									.map(Object::toString)
     									.collect(Collectors.toList());
 		
-										Boolean result = (userList.size() == plannerList.size()) && (userList.size() == 1) && 
-										(userList.get(0).equals(plannerList.get(0)));
-										String plannerEmail = plannerList.get(0);
+										List<String> matchList = userList.stream()
+            							.filter(plannerList::contains)
+            							.collect(Collectors.toList());
+										Set<String> mergedSet = new LinkedHashSet<>(userList);
+										mergedSet.addAll(plannerList);
+
+										int totalNumOfLists = userList.size() + plannerList.size();
+										int totalNumOfMergedSet = mergedSet.size();
+
+										Boolean result = (totalNumOfLists != totalNumOfMergedSet);
+									
 										ArrayList<PlannerProfileDTO> plannerProfiles = new ArrayList<PlannerProfileDTO> ();									
 										if(result){
-											PlannerProfileDTO plannerData = plannerService.getPlannerByEmail(plannerEmail);
-											plannerProfiles.add(plannerData);
+											matchList.forEach(matchPlanner -> {
+												PlannerProfileDTO plannerData = plannerService.getPlannerByEmail(matchPlanner);
+												plannerProfiles.add(plannerData);
+											});
 											e.setPlannerProfiles(plannerProfiles);
 										}
 										return result;

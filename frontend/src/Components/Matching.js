@@ -15,41 +15,27 @@ function Matching() {
   const [userEstimates, setUserEstimates] = useState([]);
   const [plannerEstimates, setPlannerEstimates] = useState([]);
   const [currentUserEstimate, setCurrentUserEstimate] = useState(null);
+  const [currentPlannerProfile, setCurrentPlannerProfile] = useState(null);
   const [matchedUsers, setMatchedUsers] = useState([]);
   const [matchedPlanners, setMatchedPlanners] = useState([]);
-  const [currentPlannerProfile, setCurrentPlannerProfile] = useState(null);
-  const [cancelMatching, setCancelMatching] = useState(false);
-  const [deletedPlanner, setDeletedPlanner] = useState(false);
+  const [matchedUser, setMatchedUser] = useState(false);
+  const [matchedPlanner, setMatchedPlanner] = useState(false);
   const [deletedUser, setDeletedUser] = useState(false);
+  const [deletedPlanner, setDeletedPlanner] = useState(false);
+  const [cancelMatching, setCancelMatching] = useState(false);
+
+  const [paymentStatus, setPaymentStatus] = useState([]);
+  const [estimatesPaymentStatus, setEstimatesPaymentStatus] = useState([]);
 
   const [plannerMatching, setPlannerMatching] = useState([]);
   const [plannerName, setPlannerName] = useState("");
 
-  const [deleteTargetEstimateId, setDeleteTargetEstimateId] = useState(0);
-  const [matchedPlanner, setMatchedPlanner] = useState([]);
-  const [estimateNum, setEstimateNum] = useState([]);
-  const [matchedKeyIndex, setMatchedKeyIndex] = useState([]);
   const [selectEstimateNum, setSelectEstimateNum] = useState(0);
-
-  const [selectedEstimateId, setSelectedEstimateId] = useState(0);
-  const [cancelledUser, setCancelledUser] = useState(false);
-  const [matchedUser, setMatchedUser] = useState(false);
-
-  const [selectedEstimateId2, setSelectedEstimateId2] = useState(0);
-
   const deleteBtn = useRef();
-
-  const [matchingCouple, setMatchingCouple] = useState([]);
-  const [estimateOrder2, setEstimateOrder2] = useState([]);
-  const [estimateOrder3, setEstimateOrder3] = useState([]);
-  const [paymentStatus, setPaymentStatus] = useState([]);
-  const [paymentStatus2, setPaymentStatus2] = useState([]);
-  const [paymentStatus3, setPaymentStatus3] = useState([]);
-
-  const [allprice, setAllPrice] = useState(0);
 
   let loggedInEmail = sessionStorage.getItem("email");
 
+  //estimate details + (user: planner profile details, planner: user details)
   useEffect(() => {
     if (sessionStorage.getItem("category") === "planner") {
       //planner일 경우
@@ -82,9 +68,10 @@ function Matching() {
       };
       getPlannersAndEstimatesDetails();
     }
-  }, [loggedInEmail, deletedPlanner, deletedUser]);
+  }, [loggedInEmail, deletedPlanner, deletedUser ,cancelMatching, matchedUser, matchedPlanner]);
 
   
+  //matched planners, users details
   useEffect(() => {
     if (sessionStorage.getItem("category") === "planner") {
       const formData = new FormData();
@@ -92,6 +79,7 @@ function Matching() {
       axios
         .post(`/plannerProfile/match/users`, formData)
         .then((res) => {
+          console.log("matchedUsers")
           console.log(res.data)
           const matchedUsersData = res.data;
           setMatchedUsers(matchedUsersData)
@@ -114,8 +102,9 @@ function Matching() {
           console.log(e);
         });
     }
-  }, [matchedUser, cancelMatching, loggedInEmail]);
+  }, [loggedInEmail, deletedPlanner, deletedUser ,cancelMatching, matchedUser, matchedPlanner]);
 
+  //매칭/거절 모달
   const matchOrDeletePlanner = (e) => {
     e.preventDefault();
 
@@ -124,13 +113,14 @@ function Matching() {
     setCurrentPlannerProfile(JSON.parse(profile));
   };
 
+  //매칭/거절 모달
   const matchOrDeleteUser = (e) => {
     e.preventDefault();
     const {bsEstimate:estimate} = e.target.dataset;
     setCurrentUserEstimate(JSON.parse(estimate));
   };
 
-
+  //user declines planner
   const confirmDeleteMatchingPlanner = () => {
     axios
     .delete('/estimate/matching/planner', {
@@ -147,6 +137,7 @@ function Matching() {
       });
   };
 
+  //planner declines user
   const confirmDeleteMatchingUser = () => {
     axios
     .delete('/estimate/matching/user', {
@@ -163,223 +154,46 @@ function Matching() {
       });
   };
 
-  const goMatching = () => {
+  //matching from user
+  const goMatchingPlanner = () => {
     const formData = new FormData();
     formData.append("targetEstimateId", currentUserEstimate.id);
     formData.append("matchingPlanner", currentPlannerProfile.plannerEmail);
-
+    formData.append("userEmail", loggedInEmail);
     axios
       .post(`/estimate/matching`, formData)
       .then((res) => {
         console.log("matching")
         console.log(res.data);
         let depositPrice = 0;
-    let careerYears = currentPlannerProfile.career;
-    if(careerYears < 5 && careerYears >= 0){
-      depositPrice = 50000;
-    } else if(careerYears < 10){
-      depositPrice = 100000;
-    } else{
-      depositPrice = 150000;
-    }
-    navigate("/checkoutdeposit", {
-      state: {
-        estimateId: currentUserEstimate.id,
-        userName: currentUserEstimate.user.name,
-        userPhone: currentUserEstimate.user.phoneNum,
-        planneremail: currentPlannerProfile.plannerEmail,
-        plannerName: currentPlannerProfile.plannerName,
-        depositprice: depositPrice,
-        plannerImg: currentPlannerProfile.plannerProfileImg,
-      },
-    });
-        
-        
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-  };
-
-  const CancelMatchingModal = (e) => {
-    const {bsEstimate:estimate} = e.target.dataset;
-    setCurrentUserEstimate(estimate);
-   
-  };
-
-  const CancelMatching = (e) => {
-    const formData = new FormData();
-    formData.append("userEmail", loggedInEmail);
-    formData.append("estimateId", currentUserEstimate.id);
-    axios
-      .post(`/estimate/matching/cancel`, formData)
-      .then((res) => {
-        alert("해당 고객과의 매칭이 취소되었습니다!");
-        setCancelMatching(cancelMatching => !cancelMatching);
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-  }
-
-  const goPay = (e) => {
-    
-    const estimateNum = e.target.dataset.bsEstimatenum - 1;
-    setSelectEstimateNum(estimateNum);
-    console.log("estimateNum:" + estimateNum);
-    const formData = new FormData();
-    formData.append("userEmail", sessionStorage.getItem("email"));
-    formData.append("estimateNum", estimateNum);
-
-    axios
-      .post(`/deposit/check`, formData)
-      .then((res) => {
-        console.log(res);
-        const data = res.data;
-        if (data != 1 && data != -1) {
-          const lastIndex = data.lastIndexOf("[");
-          const status = res.data.slice(lastIndex + 1, res.data.length);
-          console.log(status);
-          if (status === "paid") {
-            //paid
-            const estimateId = res.data.slice(0, res.data.indexOf("*"));
-            console.log(estimateId);
-            const userName = res.data.slice(
-              res.data.indexOf("*") + 1,
-              res.data.indexOf("/")
-            );
-            console.log(userName);
-            const userPhone = res.data.slice(
-              res.data.indexOf("/") + 1,
-              res.data.indexOf("]")
-            );
-            console.log(userPhone);
-            const plannerEmail = res.data.slice(
-              res.data.indexOf("]") + 1,
-              res.data.indexOf("[")
-            );
-            console.log(plannerEmail);
-            const plannerName = res.data.slice(
-              res.data.indexOf("[") + 1,
-              res.data.indexOf(",")
-            );
-            console.log(plannerName);
-            const depositprice = res.data.slice(
-              res.data.indexOf(",") + 1,
-              res.data.lastIndexOf("*")
-            );
-            const plannerImg = res.data.slice(
-              res.data.lastIndexOf("*") + 1,
-              res.data.lastIndexOf("[")
-            );
-
-            console.log(plannerImg);
-            let plannerImgUrl = "data:image/jpeg;base64," + plannerImg;
-
-            navigate("/checkoutall", {
-              state: {
-                estimateId: estimateId,
-                userName: userName,
-                userPhone: userPhone,
-                planneremail: plannerEmail,
-                plannerName: plannerName,
-                plannerImg: plannerImgUrl,
-                depositprice: depositprice,
-                allprice: allprice,
-              },
-            });
-          } else if (res.data === -1) {
-            //오류
-            alert("오류 발생!");
-          } else if (status === "deposit") {
-            //cancelled, other
-            const estimateId = res.data.slice(0, res.data.indexOf("*"));
-            const userName = res.data.slice(
-              res.data.indexOf("*") + 1,
-              res.data.indexOf("/")
-            );
-            const userPhone = res.data.slice(
-              res.data.indexOf("/") + 1,
-              res.data.indexOf("]")
-            );
-            const plannerEmail = res.data.slice(
-              res.data.indexOf("]") + 1,
-              res.data.indexOf("[")
-            );
-            const plannerName = res.data.slice(
-              res.data.indexOf("[") + 1,
-              res.data.indexOf(",")
-            );
-            const depositprice = res.data.slice(
-              res.data.indexOf(",") + 1,
-              res.data.lastIndexOf("*")
-            );
-            const plannerImg = res.data.slice(
-              res.data.lastIndexOf("*") + 1,
-              res.data.lastIndexOf("[")
-            );
-
-            let plannerImgUrl = "data:image/jpeg;base64," + plannerImg;
-
-            navigate("/checkoutdeposit", {
-              state: {
-                estimateId: estimateId,
-                userName: userName,
-                userPhone: userPhone,
-                planneremail: plannerEmail,
-                plannerName: plannerName,
-                plannerImg: plannerImgUrl,
-                depositprice: depositprice,
-              },
-            });
-          }
-        } else if (data == 1) {
-          alert("결제가 모두 완료된 상태입니다!");
+        let careerYears = currentPlannerProfile.career;
+        if(careerYears < 5 && careerYears >= 0){
+          depositPrice = 50000;
+        } else if(careerYears < 10){
+          depositPrice = 100000;
+        } else{
+          depositPrice = 150000;
         }
+        setMatchedPlanner(matchedPlanner => !matchedPlanner);
+        navigate("/checkoutdeposit", {
+          state: {
+            estimateId: currentUserEstimate.id,
+            userName: currentUserEstimate.user.name,
+            userPhone: currentUserEstimate.user.phoneNum,
+            planneremail: currentPlannerProfile.plannerEmail,
+            plannerName: currentPlannerProfile.plannerName,
+            depositprice: depositPrice,
+            plannerImg: currentPlannerProfile.plannerProfileImg,
+            plannerCareer: currentPlannerProfile.plannerCareerYears,
+          },
+        });  
       })
       .catch((e) => {
         console.log(e);
       });
   };
 
-  const goPlannerProfile = (e) => {
-    const {bsPlanner} = e.target.dataset
-    const planner = JSON.parse(bsPlanner);
-    setCurrentPlannerProfile(planner);
-    navigate(`/plannerprofiledetail`, {
-      state: {
-        plannerEmail: planner.plannerEmail,
-        plannerName: planner.plannerName,
-        plannerImg: planner.plannerProfileImg,
-      },
-    });
-  };
-
-  const goToEstimate = (e) => {
-    const estimateId = e.target.dataset.bsId;
-    navigate(`/estimatedetail/${estimateId}`);
-  };
-
-  const cancelMatchedUser2 = (e) => {
-    const formData = new FormData();
-
-    formData.append("plannerEmail", sessionStorage.getItem("email"));
-    formData.append("estimateId", selectedEstimateId);
-    axios
-      .post(`/plannerProfile/cancelMatchingUser`, formData)
-      .then((res) => {
-        console.log(res);
-        if (res.data === 1) {
-          alert("해당 고객과의 매칭이 취소되었습니다!");
-          setCancelledUser(!cancelledUser);
-        } else {
-        }
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-  };
-
+  //matching from planner
   const goMatchingUser = (e) => {
     const formData = new FormData();
     formData.append("plannerEmail", loggedInEmail);
@@ -399,113 +213,178 @@ function Matching() {
       });
   };
 
-
   useEffect(() => {
     const formData = new FormData();
     formData.append("email", sessionStorage.getItem("email"));
     formData.append("category", sessionStorage.getItem("category"));
+
     axios
-      .post(`/estimate/findMatching`, formData)
+      .post(`/payment-status`, formData)
       .then((res) => {
-        console.log(res);
-        const data = res.data;
-        if (data.length !== 0) {
-          const matchArr = [];
-          const estimateOrderArr2 = [];
-          const estimateOrderArr3 = [];
-          if (sessionStorage.getItem("category") === "user") {
-            for (let i = 0; i < data.length; i++) {
-              if (i % 2 === 0) {
-                matchArr.push(JSON.parse(data[i]));
-              } else if (i % 2 === 1) {
-                estimateOrderArr2.push(data[i]);
-              }
+        console.log("payment-status")
+        console.log(res.data);
+        const paymentStatus = res.data;
+        
+        if (sessionStorage.getItem("category") === "user"){
+          const newPaymentStatus = [];
+          plannerEstimates.forEach(e => {
+            const foundPayment = paymentStatus.find(p => e.id === p.estimateId);
+            if(!foundPayment){
+              newPaymentStatus.push(null);
+            }else{
+              newPaymentStatus.push(foundPayment)
             }
-            if (sessionStorage.getItem("category") === "user") {
-              const formData2 = new FormData();
-              formData2.append("email", sessionStorage.getItem("email"));
-              formData2.append("category", sessionStorage.getItem("category"));
-              formData2.append("estimateNum", estimateOrderArr2);
-              const paymentStatusArr = [];
-              axios
-                .post(`/paymentStatus`, formData2)
-                .then((res) => {
-                  console.log(res);
-                  const data = res.data;
-                  for (let i = 0; i < data.length; i++) {
-                    paymentStatusArr.push(data[i]);
-                  }
-                  setPaymentStatus(paymentStatusArr);
-                  setPaymentStatus2([]);
-                })
-                .catch((e) => {
-                  console.log(e);
-                });
+          })
+          setEstimatesPaymentStatus(newPaymentStatus);
+          setPaymentStatus(newPaymentStatus.filter(s => s !== null))
+          console.log("newPaymetnStatus")
+          console.log(newPaymentStatus);
+        }else if(sessionStorage.getItem("category") === "planner"){
+          const newPaymentStatus = [];
+          userEstimates.forEach(e => {
+            const foundPayment = paymentStatus.find(p => e.id === p.estimateId);
+            if(!foundPayment){
+              newPaymentStatus.push(null);
+            }else{
+              newPaymentStatus.push(foundPayment)
             }
+          })
+          setEstimatesPaymentStatus(newPaymentStatus);
+          setPaymentStatus(newPaymentStatus.filter(s => s !== null))
+          console.log("newPaymetnStatus")
+          console.log(newPaymentStatus);
+        }
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  }, [loggedInEmail, plannerEstimates, deletedPlanner, deletedUser, cancelMatching, matchedUser, matchedPlanner, userEstimates]);
 
-            setMatchingCouple(matchArr);
-            setEstimateOrder2(estimateOrderArr2);
-          } else if (sessionStorage.getItem("category") === "planner") {
-            for (let i = 0; i < data.length; i++) {
-              estimateOrderArr2.push(data[i]);
-              if (data[i] != -1) {
-                estimateOrderArr3.push(data[i]);
-              }
-            }
-            if (sessionStorage.getItem("category") === "planner") {
-              const formData2 = new FormData();
-              formData2.append("email", sessionStorage.getItem("email"));
-              formData2.append("category", sessionStorage.getItem("category"));
-              formData2.append("estimateNum", estimateOrderArr2);
-              const paymentStatusArr2 = [];
-              axios
-                .post(`/paymentStatus`, formData2)
-                .then((res) => {
-                  console.log(res);
-                  const data = res.data;
-                  for (let i = 0; i < data.length; i++) {
-                    paymentStatusArr2.push(data[i]);
-                  }
-                  setPaymentStatus2(paymentStatusArr2);
-                  setPaymentStatus([]);
-                })
-                .catch((e) => {
-                  console.log(e);
-                });
-            }
+  //매칭취소 modal
+  const CancelMatchingModal = (e) => {
+    const {bsEstimate:estimate, bsPlanner:plannerProfile} = e.target.dataset;
+    console.log(JSON.parse(estimate));
+    console.log(matchedUsers)
+    if(plannerProfile){
+      setCurrentPlannerProfile(JSON.parse(plannerProfile));
+    }
+    setCurrentUserEstimate(JSON.parse(estimate));
+  };
 
-            setEstimateOrder2(estimateOrderArr2);
-            setEstimateOrder3(estimateOrderArr3);
+  //매칭취소
+  const CancelMatching = (e) => {
+    if(sessionStorage.getItem("category") === "planner"){
+      axios
+    .delete('/estimate/matching/user', {
+      params: { 
+        deleteTargetEstimateId: currentUserEstimate.id, 
+        deletePlanner: loggedInEmail 
+        }
+      })
+      .then((res) => {
+        alert("해당 고객과의 매칭이 취소되었습니다!");
+        setDeletedUser(deletedUser => !deletedUser);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+    }else if(sessionStorage.getItem("category") === "user"){
+      axios
+      .delete('/estimate/matching/planner', {
+        params: { 
+          deleteTargetEstimateId: currentUserEstimate.id, 
+          deletePlanner: currentPlannerProfile.plannerEmail  
           }
-        } else {
-          setMatchingCouple([]);
-        }
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-  }, [matchedUser, cancelledUser, deletedPlanner]);
+        })
+        .then((res) => {
+          alert("해당 플래너와의 매칭이 취소되었습니다!");
+          setDeletedPlanner(deletedPlanner => !deletedPlanner);
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+      }
+  }
 
-  useEffect(() => {
+  // go to deposit page or payment page
+  const goPay = (e) => {
+    const {bsEstimate: estimate} = e.target.dataset;
     const formData = new FormData();
-    formData.append("email", sessionStorage.getItem("email"));
-    formData.append("category", sessionStorage.getItem("category"));
+    const estimateData = JSON.parse(estimate);
+    formData.append("userEmail", loggedInEmail);
+    formData.append("plannerEmail", estimateData?.plannerProfiles?.[0].plannerEmail)
+    formData.append("estimateId", estimateData.id);
 
-    const paymentStatusArr2 = [];
+    let depositPrice = 0;
+    let careerYears = estimate.plannerProfiles?.[0].career;
+    if(careerYears < 5 && careerYears >= 0){
+      depositPrice = 50000;
+    } else if(careerYears < 10){
+      depositPrice = 100000;
+    } else{
+      depositPrice = 150000;
+    }
     axios
-      .post(`/paymentStatus2`, formData)
+      .post(`/deposit/check`, formData)
       .then((res) => {
         console.log(res);
-        const data = res.data;
-        for (let i = 0; i < data.length; i++) {
-          paymentStatusArr2.push(data[i]);
-        }
-        setPaymentStatus3(paymentStatusArr2);
-      })
+        const status = res.data;
+        if (status === "payment") {
+            navigate("/checkoutall", {
+              state: {
+                estimateId: estimateData.id,
+                userName: estimateData.user.name,
+                userPhone: estimateData.user.phoneNum,
+                planneremail: estimateData.plannerProfiles?.[0].plannerEmail,
+                plannerName: estimateData.plannerProfiles?.[0].plannerName,
+                plannerImg: estimateData.plannerProfiles?.[0].plannerProfileImg,
+                depositprice: depositPrice,
+                // allprice: allprice,
+              },
+            });
+          } else if (status === "-1") {
+            alert("오류 발생!");
+          } else if (status === "deposit") {
+            navigate("/checkoutdeposit", {
+              state: {
+                estimateId: estimateData.id,
+                userName: estimateData.user.name,
+                userPhone: estimateData.user.phoneNum,
+                planneremail: estimateData.plannerProfiles?.[0].plannerEmail,
+                plannerName: estimateData.plannerProfiles?.[0].plannerName,
+                plannerImg: estimateData.plannerProfiles?.[0].plannerProfileImg,
+                depositprice: depositPrice,
+                plannerCareer: estimateData.plannerProfiles?.[0].career,
+              },
+            });
+          } else{
+            alert("결제가 모두 완료된 상태입니다!");
+          }
+        })
       .catch((e) => {
         console.log(e);
       });
-  }, [matchedUser, cancelledUser, deletedPlanner]);
+  };
+
+  //go see details of planner profile
+  const goPlannerProfile = (e) => {
+    const {bsPlanner} = e.target.dataset
+    const planner = JSON.parse(bsPlanner);
+    setCurrentPlannerProfile(planner);
+    navigate(`/plannerprofiledetail`, {
+      state: {
+        plannerEmail: planner.plannerEmail,
+        plannerName: planner.plannerName,
+        plannerImg: planner.plannerProfileImg,
+      },
+    });
+  };
+
+  //go see details of estimate
+  const goToEstimate = (e) => {
+    const estimateId = e.target.dataset.bsId;
+    navigate(`/estimatedetail/${estimateId}`);
+  };
 
   const writeReview = (e) => {
     const bsIndex = e.target.dataset.bsIndex;
@@ -623,11 +502,11 @@ function Matching() {
                 marginBottom: "30px",
               }}
             >
-              내 플래너
+              매칭된 플래너
             </p>
 
             {matchedPlanners.length !== 0 ? (
-              matchedPlanners?.map((estimate, index) => {
+              matchedPlanners?.map((estimate, estimateIndex) => {
                 return (
                   <div>
                     <div
@@ -654,10 +533,10 @@ function Matching() {
                             display: "flex",
                           }}
                         >
-                          -견적서{index+1}-
+                          -견적서{estimateIndex+1}-
                         </div>
 
-                        {paymentStatus[0] === "all" ? (
+                        {paymentStatus?.[estimateIndex] && paymentStatus?.[estimateIndex]?.paymentStatus === "paid" ? (
                           <div
                             style={{
                               display: "inline-block",
@@ -676,103 +555,119 @@ function Matching() {
                           >
                             결제완료!
                           </div>
-                        ) : paymentStatus[0] === "other" ? (
+                        ) : paymentStatus?.[estimateIndex] && paymentStatus?.[estimateIndex]?.depositStatus === "paid" ? (
                           <div
-                            style={{
-                              display: "inline-block",
-                              width: "150px",
-                              height: "44px",
-                              borderRadius: "10px",
-                              border: "1px solid red",
-                              fontSize: "1.6em",
-                              textAlign: "center",
-                              backgroundColor: "red",
-                              color: "white",
-                              marginTop: "15px",
-                              marginRight: "20px",
-                              paddingTop: "2px",
-                            }}
-                          >
-                            미결제
-                          </div>
-                        ) : paymentStatus[0] === "deposit" ? (
+                          style={{
+                            display: "inline-block",
+                            width: "180px",
+                            height: "44px",
+                            borderRadius: "10px",
+                            border: "1px solid yellow",
+                            fontSize: "1.6em",
+                            textAlign: "center",
+                            backgroundColor: "yellow",
+                            color: "black",
+                            marginTop: "15px",
+                            marginRight: "20px",
+                            paddingTop: "2px",
+                          }}
+                        >
+                          계약금 결제 완료!
+                        </div>
+                          
+                        ) : paymentStatus?.[estimateIndex] && paymentStatus?.[estimateIndex]?.depositStatus !== "paid" ? (
                           <div
-                            style={{
-                              display: "inline-block",
-                              width: "180px",
-                              height: "44px",
-                              borderRadius: "10px",
-                              border: "1px solid yellow",
-                              fontSize: "1.6em",
-                              textAlign: "center",
-                              backgroundColor: "yellow",
-                              color: "black",
-                              marginTop: "15px",
-                              marginRight: "20px",
-                              paddingTop: "2px",
-                            }}
-                          >
-                            계약금 결제 완료!
-                          </div>
+                          style={{
+                            display: "inline-block",
+                            width: "150px",
+                            height: "44px",
+                            borderRadius: "10px",
+                            border: "1px solid red",
+                            fontSize: "1.6em",
+                            textAlign: "center",
+                            backgroundColor: "red",
+                            color: "white",
+                            marginTop: "15px",
+                            marginRight: "20px",
+                            paddingTop: "2px",
+                          }}
+                        >
+                          미결제
+                        </div>
                         ) : null}
                       </div>
-                      <p
+                      
+                        {estimate?.plannerProfiles &&
+                        estimate?.plannerProfiles.map(profile => 
+                          <>
+                          <p
                         className="myPlannerName"
                         style={{
                           fontSize: "1.6em",
                           marginLeft: "120px",
                           marginRight: "-140px",
                         }}
-                      >
-                        {estimate?.plannerProfiles?.[0].plannerName}
-                        {/* {estimateOrder2[num] == num ? (
-                          <img
-                            src={heartIcon}
-                            alt=""
-                            style={{
-                              width: "55px",
-                              height: "55px",
-                              marginLeft: "14px",
-                            }}
-                          />
-                        ) : null} */}
-                      </p>
-                      <button
-                        className="plannerProBtn"
-                        data-bs-planner={JSON.stringify(estimate?.plannerProfiles?.[0])}
-                        onClick={goPlannerProfile}
-                      >
-                        프로필 보기
-                      </button>
-                      <br />
-                      <div className="matchingBtnList">
-                        <button
-                          className="plannerMatchingBtn"
-                          onClick={goPay}
-                          // data-bs-toggle="modal"
-                          // data-bs-target="#plannerMatchingPriceModal"
-                        >
-                          결제하기
-                        </button>
-                        {paymentStatus[0] === "all" ? (
-                          <button
-                            className="plannerMatchingBtn"
-                            onClick={writeReview2}
-                          >
-                            리뷰쓰기
-                          </button>
-                        ) : (
-                          <button
-                            className="plannerMatchingBtn"
-                            data-bs-toggle="modal"
-                            data-bs-target="#CancelMatching"
-                            data-bs-estimate={JSON.stringify(estimate)}
-                            onClick={CancelMatchingModal}
-                          >
-                            매칭취소
-                          </button>
+                            >
+                          {profile.plannerName}
+                          {paymentStatus?.[estimateIndex] ?
+                            paymentStatus?.[estimateIndex]?.depositStatus === "paid"? 
+                           <img
+                               src={heartIcon}
+                               alt=""
+                               style={{
+                                 width: "55px",
+                                 height: "55px",
+                                 marginLeft: "14px",
+                               }}
+                             />: 
+                             <img
+                             src={starIcon}
+                             alt=""
+                             style={{
+                               width: "55px",
+                               height: "55px",
+                               marginLeft: "14px",
+                             }}
+                           /> : null}
+                         </p>
+                         <button
+                           className="plannerProBtn"
+                           data-bs-planner={JSON.stringify(profile)}
+                           onClick={goPlannerProfile}
+                         >
+                           프로필 보기
+                         </button>
+                         <br />
+                         <div className="matchingBtnList">
+                           <button
+                             className="plannerMatchingBtn"
+                             data-bs-estimate={JSON.stringify(estimate)}
+                             onClick={goPay}
+                           >
+                             결제하기
+                           </button>
+                           {paymentStatus?.[estimateIndex] && paymentStatus?.[estimateIndex]?.paymentStatus === "paid" ? (
+                             <button
+                               className="plannerMatchingBtn"
+                               onClick={writeReview2}
+                             >
+                               리뷰쓰기
+                             </button>
+                           ) : (
+                             <button
+                               className="plannerMatchingBtn"
+                               data-bs-toggle="modal"
+                               data-bs-target="#CancelMatching"
+                               data-bs-estimate={JSON.stringify(estimate)}
+                               data-bs-planner={JSON.stringify(profile)}
+                               onClick={CancelMatchingModal}
+                             >
+                               매칭취소
+                             </button>
+                           )}
+                         </div>
+                         </> 
                         )}
-                      </div>
                     </div>
                   </div>
                 );
@@ -806,7 +701,7 @@ function Matching() {
             </p>
             <div>
               {plannerEstimates.length !== 0 ? (
-                plannerEstimates.map((estimate, index) => {
+                plannerEstimates.map((estimate, estimateIndex) => {
                   return (
                     <table
                       style={{
@@ -836,14 +731,14 @@ function Matching() {
                                 display: "inline-block",
                               }}
                             >
-                              -견적서{index + 1}-
+                              -견적서{estimateIndex + 1}-
                             </div>
                             <div
                               style={{
                                 paddingLeft: "-70px",
                               }}
                             >
-                              {paymentStatus3[index] === "all" ? (
+                              {estimatesPaymentStatus?.[estimateIndex] && estimatesPaymentStatus?.[estimateIndex]?.paymentStatus === "paid" ? (
                                 <div
                                   style={{
                                     width: "140px",
@@ -862,7 +757,26 @@ function Matching() {
                                 >
                                   결제완료!
                                 </div>
-                              ) : paymentStatus3[index] === "other" ? (
+                              ) : estimatesPaymentStatus?.[estimateIndex] && estimatesPaymentStatus?.[estimateIndex]?.depositStatus === "paid" ? (
+                                <div
+                                style={{
+                                  width: "180px",
+                                  marginTop: "15px",
+                                  paddingTop: "4px",
+                                  paddingBottom: "4px",
+                                  flexGrow: 1,
+                                  borderRadius: "10px",
+                                  border: "1px solid yellow",
+                                  fontSize: "1.6em",
+                                  textAlign: "center",
+                                  backgroundColor: "yellow",
+                                  color: "black",
+                                  marginRight: "-8px",
+                                }}
+                              >
+                                계약금 결제 완료!
+                              </div>
+                              ) : estimatesPaymentStatus?.[estimateIndex] && estimatesPaymentStatus?.[estimateIndex]?.depositStatus !== "paid" ? (
                                 <div
                                   style={{
                                     width: "140px",
@@ -881,25 +795,6 @@ function Matching() {
                                 >
                                   미결제
                                 </div>
-                              ) : paymentStatus3[index] === "deposit" ? (
-                                <div
-                                  style={{
-                                    width: "180px",
-                                    marginTop: "15px",
-                                    paddingTop: "4px",
-                                    paddingBottom: "4px",
-                                    flexGrow: 1,
-                                    borderRadius: "10px",
-                                    border: "1px solid yellow",
-                                    fontSize: "1.6em",
-                                    textAlign: "center",
-                                    backgroundColor: "yellow",
-                                    color: "black",
-                                    marginRight: "-8px",
-                                  }}
-                                >
-                                  계약금 결제 완료!
-                                </div>
                               ) : null}
                             </div>
                             <div>
@@ -917,7 +812,7 @@ function Matching() {
                           </div>
                         </div>
 
-                        {estimate?.plannerProfiles?.map((profile, index) => {
+                        {estimate?.plannerProfiles?.map((profile, profileIndex) => {
                             return (
                               <div style={{ display: "flex" }}>
                                 <div
@@ -931,30 +826,46 @@ function Matching() {
                                   }}
                                 >
                                   {profile.plannerName}
-
-                                  {/* {matchingcp.length !== 0 && order !== 0 ? (
-                                    order == index &&
-                                    plannermatchinglist[i] == matchingcp[i] ? (
-                                      <div
-                                        style={{
-                                          fontSize: "0.8em",
-                                          color: "red",
-                                          display: "inline-block",
-                                          width: "120px",
-                                        }}
-                                      >
-                                        <img
-                                          src={starIcon}
-                                          alt=""
-                                          style={{
-                                            width: "55px",
-                                            height: "55px",
-                                          }}
-                                        />
-                                        짝이에요!
-                                      </div>
-                                    ) : null
-                                  ) : null} */}
+                                  {JSON.parse(estimate?.userMatching).includes(profile.plannerEmail)? 
+                                  estimatesPaymentStatus?.[estimateIndex]? 
+                                  estimatesPaymentStatus?.[estimateIndex].depositStatus === "paid"?
+                                  <div
+                                  style={{
+                                    fontSize: "0.8em",
+                                    color: "red",
+                                    display: "inline-block",
+                                    width: "120px",
+                                  }}
+                                >
+                                  <img
+                                    src={heartIcon}
+                                    alt=""
+                                    style={{
+                                      width: "55px",
+                                      height: "55px",
+                                    }}
+                                  />
+                                  짝이에요!
+                                </div>:
+                                  <div
+                                  style={{
+                                    fontSize: "0.8em",
+                                    color: "red",
+                                    display: "inline-block",
+                                    width: "120px",
+                                  }}
+                                >
+                                  <img
+                                    src={starIcon}
+                                    alt=""
+                                    style={{
+                                      width: "55px",
+                                      height: "55px",
+                                    }}
+                                  />
+                                  짝이에요!
+                                </div>:null
+                                :null}
                                 </div>
                                 <div style={{ marginLeft: "-10px" }}>
                                   <button
@@ -970,12 +881,10 @@ function Matching() {
                                   </button>
                                 </div>
                                 <div>
-                                  {paymentStatus3[index] === "all" ? (
+                                  {estimatesPaymentStatus?.[estimateIndex]?.paymentStatus === "paid" ? (
                                     <button
                                       style={{ width: "140px" }}
                                       className="plannerMatchingBtn"
-                                      data-bs-index={index}
-                                      data-bs-estimateNum={index + 1}
                                       onClick={writeReview}
                                     >
                                       리뷰쓰기
@@ -1090,7 +999,7 @@ function Matching() {
                       type="button"
                       className="btn btn-primary"
                       data-bs-dismiss="modal"
-                      onClick={goMatching}
+                      onClick={goMatchingPlanner}
                     >
                       매칭하기
                     </button>
@@ -1127,7 +1036,7 @@ function Matching() {
             </p>
 
             {matchedUsers.length !== 0 ? (
-              matchedUsers.map((matchedUser, index) => {
+              matchedUsers.map((estimate, estimateIndex) => {
                 return (
                   <div>
                     <div
@@ -1155,14 +1064,14 @@ function Matching() {
                             display: "flex",
                           }}
                         >
-                          -견적서{index + 1}-
+                          -견적서{estimateIndex + 1}-
                         </div>
-                        {paymentStatus2[index] === "all" ? (
+                        {paymentStatus?.[estimateIndex]?.paymentStatus === "paid" ? (
                           <div
                             style={{
                               display: "inline-block",
                               width: "150px",
-                              height: "47px",
+                              height: "44px",
                               borderRadius: "10px",
                               border: "1px solid green",
                               fontSize: "1.6em",
@@ -1171,49 +1080,50 @@ function Matching() {
                               color: "white",
                               marginTop: "15px",
                               marginRight: "20px",
-                              paddingTop: "3px",
+                              paddingTop: "2px",
                             }}
                           >
                             결제완료!
                           </div>
-                        ) : paymentStatus2[index] === "other" ? (
+                        ) : paymentStatus?.[estimateIndex]?.depositStatus === "paid" ? (
                           <div
-                            style={{
-                              display: "inline-block",
-                              width: "150px",
-                              height: "47px",
-                              borderRadius: "10px",
-                              border: "1px solid red",
-                              fontSize: "1.6em",
-                              textAlign: "center",
-                              backgroundColor: "red",
-                              color: "white",
-                              marginTop: "15px",
-                              marginRight: "20px",
-                              paddingTop: "3px",
-                            }}
-                          >
-                            미결제
-                          </div>
-                        ) : paymentStatus2[index] === "deposit" ? (
+                          style={{
+                            display: "inline-block",
+                            width: "180px",
+                            height: "44px",
+                            borderRadius: "10px",
+                            border: "1px solid yellow",
+                            fontSize: "1.6em",
+                            textAlign: "center",
+                            backgroundColor: "yellow",
+                            color: "black",
+                            marginTop: "15px",
+                            marginRight: "20px",
+                            paddingTop: "2px",
+                          }}
+                        >
+                          계약금 결제 완료!
+                        </div>
+                          
+                        ) : paymentStatus?.[estimateIndex]?.depositStatus !== "paid" ? (
                           <div
-                            style={{
-                              display: "inline-block",
-                              width: "180px",
-                              height: "47px",
-                              borderRadius: "10px",
-                              border: "1px solid yellow",
-                              fontSize: "1.6em",
-                              textAlign: "center",
-                              backgroundColor: "yellow",
-                              color: "black",
-                              marginTop: "15px",
-                              marginRight: "20px",
-                              paddingTop: "3px",
-                            }}
-                          >
-                            계약금 결제 완료!
-                          </div>
+                          style={{
+                            display: "inline-block",
+                            width: "150px",
+                            height: "44px",
+                            borderRadius: "10px",
+                            border: "1px solid red",
+                            fontSize: "1.6em",
+                            textAlign: "center",
+                            backgroundColor: "red",
+                            color: "white",
+                            marginTop: "15px",
+                            marginRight: "20px",
+                            paddingTop: "2px",
+                          }}
+                        >
+                          미결제
+                        </div>
                         ) : null}
                       </div>
 
@@ -1225,9 +1135,9 @@ function Matching() {
                           marginRight: "-170px",
                         }}
                       >
-                        {matchedUser.user.name}
-                        {/* {estimateOrder2[estimateOrder[index] - 1] == num ? (
-                          <img
+                        {estimate?.user?.name}
+                        {paymentStatus?.[estimateIndex]?.depositStatus === "paid"? 
+                        <img
                             src={heartIcon}
                             alt=""
                             style={{
@@ -1235,15 +1145,23 @@ function Matching() {
                               height: "55px",
                               marginLeft: "14px",
                             }}
-                          />
-                        ) : null} */}
+                          />: 
+                          <img
+                          src={starIcon}
+                          alt=""
+                          style={{
+                            width: "55px",
+                            height: "55px",
+                            marginLeft: "14px",
+                          }}
+                        />}
                       </p>
                       <button
                         className="plannerProBtn"
-                        data-bs-estimateNum={matchedUser.id}
+                        data-bs-estimateNum={estimate.id}
                         onClick={() => {
                           navigate(
-                            `/estimatedetail/${matchedUser.id}`
+                            `/estimatedetail/${estimate.id}`
                           );
                         }}
                       >
@@ -1254,10 +1172,10 @@ function Matching() {
                         className="matchingBtnList"
                         style={{ paddingLeft: "100px", paddingBottom: "10px" }}
                       >
-                        {paymentStatus2[index] === "all" ? (
+                        {paymentStatus?.[estimateIndex] && paymentStatus?.[estimateIndex]?.paymentStatus === "paid" ? (
                           <button
                             className="plannerMatchingBtn"
-                            data-bs-estimateNum={matchedUser.id}
+                            data-bs-estimateNum={estimate.id}
                             onClick={() => {
                               alert(
                                 `결제 완료한 고객과는 매칭 취소가 불가합니다!`
@@ -1271,7 +1189,7 @@ function Matching() {
                             className="plannerMatchingBtn"
                             data-bs-toggle="modal"
                             data-bs-target="#CancelMatchingCustomer"
-                            data-bs-estimate={JSON.stringify(matchedUser)}
+                            data-bs-estimate={JSON.stringify(estimate)}
                             onClick={CancelMatchingModal}
                           >
                             매칭취소
@@ -1310,7 +1228,7 @@ function Matching() {
               매칭 요청 온 고객 목록
             </p>
             {userEstimates.length !== 0 ? (
-              userEstimates.map((estimate, index) => {
+              userEstimates.map((estimate, estimateIndex) => {
                 return (
                   <div
                     className="matchingList"
@@ -1345,14 +1263,14 @@ function Matching() {
                               height: "80px",
                             }}
                           >
-                            -견적서{index + 1}-
+                            -견적서{estimateIndex + 1}-
                           </div>
                           <div
                             style={{
                               paddingLeft: "-70px",
                             }}
                           >
-                            {paymentStatus3[index] === "all" ? (
+                            {estimatesPaymentStatus?.[estimateIndex] && estimatesPaymentStatus?.[estimateIndex].paymentStatus === "paid" ? (
                               <div
                                 style={{
                                   width: "150px",
@@ -1373,7 +1291,28 @@ function Matching() {
                               >
                                 결제완료!
                               </div>
-                            ) : paymentStatus3[index] === "other" ? (
+                            ) : estimatesPaymentStatus?.[estimateIndex] && estimatesPaymentStatus?.[estimateIndex].depositStatus === "paid" ? (
+                              <div
+                              style={{
+                                width: "180px",
+                                marginTop: "15px",
+                                paddingTop: "4px",
+
+                                height: "47px",
+                                flexGrow: 1,
+                                borderRadius: "10px",
+                                border: "1px solid yellow",
+                                fontSize: "1.6em",
+                                textAlign: "center",
+                                backgroundColor: "yellow",
+                                color: "black",
+                                marginRight: "-5px",
+                                marginLeft: "40px",
+                              }}
+                            >
+                              계약금 결제 완료!
+                            </div>
+                            ) :  estimatesPaymentStatus?.[estimateIndex] && estimatesPaymentStatus?.[estimateIndex].depositStatus !== "paid" ? (
                               <div
                                 style={{
                                   width: "150px",
@@ -1392,27 +1331,6 @@ function Matching() {
                                 }}
                               >
                                 미결제
-                              </div>
-                            ) : paymentStatus3[index] === "deposit" ? (
-                              <div
-                                style={{
-                                  width: "180px",
-                                  marginTop: "15px",
-                                  paddingTop: "4px",
-
-                                  height: "47px",
-                                  flexGrow: 1,
-                                  borderRadius: "10px",
-                                  border: "1px solid yellow",
-                                  fontSize: "1.6em",
-                                  textAlign: "center",
-                                  backgroundColor: "yellow",
-                                  color: "black",
-                                  marginRight: "-5px",
-                                  marginLeft: "40px",
-                                }}
-                              >
-                                계약금 결제 완료!
                               </div>
                             ) : null}
                           </div>
@@ -1439,25 +1357,48 @@ function Matching() {
                             }}
                           >
                             {estimate.user.name}
-                            {estimateOrder2[index] == index ? (
-                              <div
-                                style={{
-                                  fontSize: "0.8em",
-                                  color: "red",
-                                  display: "inline-block",
-                                  width: "150px",
-                                }}
-                              >
-                                <img
-                                  src={starIcon}
-                                  alt=""
-                                  style={{ width: "55px", height: "55px" }}
-                                />
-                                짝이에요!
-                              </div>
-                            ) : null}
+                            {JSON.parse(estimate?.userMatching).includes(loggedInEmail)? 
+                                  estimatesPaymentStatus?.[estimateIndex] ?
+                                  estimatesPaymentStatus?.[estimateIndex].depositStatus === "paid"? 
+                                  <div
+                                  style={{
+                                    fontSize: "0.8em",
+                                    color: "red",
+                                    display: "inline-block",
+                                    width: "120px",
+                                  }}
+                                >
+                                  <img
+                                    src={heartIcon}
+                                    alt=""
+                                    style={{
+                                      width: "55px",
+                                      height: "55px",
+                                    }}
+                                  />
+                                  짝이에요!
+                                </div>: <div
+                                  style={{
+                                    fontSize: "0.8em",
+                                    color: "red",
+                                    display: "inline-block",
+                                    width: "120px",
+                                  }}
+                                >
+                                  <img
+                                    src={starIcon}
+                                    alt=""
+                                    style={{
+                                      width: "55px",
+                                      height: "55px",
+                                    }}
+                                  />
+                                  짝이에요!
+                                </div>
+                                  :null
+                                 :null}
                           </div>
-                          {paymentStatus3[index] === "all" ? (
+                          {paymentStatus?.[estimateIndex] && paymentStatus?.[estimateIndex]?.paymentStatus === "paid" ? (
                             <button
                               style={{ width: "150px", marginLeft: "120px" }}
                               className="plannerMatchingBtn"

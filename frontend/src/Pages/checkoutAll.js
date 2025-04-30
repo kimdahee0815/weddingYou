@@ -13,9 +13,6 @@ import "bootstrap";
 import Sidesection from "../Components/Sidesection";
 
 function CheckoutAll() {
-  var IMP = window.IMP;
-  // IMP.init("imp67011510");
-  IMP.init("imp01206222");
   const { estimateId } = useLocation().state;
   console.log(estimateId);
   const { userName } = useLocation().state;
@@ -50,10 +47,12 @@ function CheckoutAll() {
     useState("");
   const [changedPrice, setChangedPrice] = useState(false);
   const path = useLocation().pathname;
+
   function requestPay() {
+    const { IMP } = window;
     IMP.request_pay(
       {
-        pg: "kcp",
+        pg: "paypal.UFYSG9T7RFW2A",
         pay_method: { paymentMethod },
         merchant_uid: `53907801-${estimateId}` + IMP,
         name: "플래너 매칭서비스",
@@ -61,6 +60,7 @@ function CheckoutAll() {
         buyer_email: sessionStorage.getItem("email"),
         buyer_name: userName,
         buyer_tel: userPhone,
+        m_redirect_url: `${process.env.REACT_APP_API_URL}/checkoutcomp`,
         // buyer_addr: "서울특별시 강남구 삼성동",
         // buyer_postcode: "123-456",
       },
@@ -74,6 +74,8 @@ function CheckoutAll() {
               tempPaymentStatus: "paid",
               paymentType: "all",
               paymentAmount: paymentAmount,
+              plannerEmail,
+              userEmail
             })
             .then((res) => {
               console.log(res);
@@ -111,6 +113,8 @@ function CheckoutAll() {
               paymentMethod: paymentMethod,
               tempPaymentStatus: "cancelled",
               paymentType: "all",
+              plannerEmail,
+              userEmail
             })
             .then((res) => {
               console.log(res);
@@ -153,6 +157,8 @@ function CheckoutAll() {
           tempPaymentStatus: "cancelled",
           paymentType: "all",
           paymentAmount: paymentAmount,
+          plannerEmail,
+          userEmail
         })
         .then((res) => {
           console.log(res);
@@ -178,6 +184,10 @@ function CheckoutAll() {
 
     if (path.indexOf("/checkoutall") !== -1) {
       window.$("#plannerMatchingPriceModal").modal("show");
+    }
+
+    if (window.IMP) {
+      window.IMP.init("imp83460455"); 
     }
   }, []);
 

@@ -2,6 +2,7 @@ package com.mysite.weddingyou_backend.estimate;
 
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
@@ -43,7 +44,9 @@ import com.mysite.weddingyou_backend.comment.Comment;
 import com.mysite.weddingyou_backend.comment.CommentRepository;
 import com.mysite.weddingyou_backend.payment.Payment;
 import com.mysite.weddingyou_backend.payment.PaymentRepository;
+import com.mysite.weddingyou_backend.payment.PaymentService;
 import com.mysite.weddingyou_backend.plannerLogin.PlannerLogin;
+import com.mysite.weddingyou_backend.plannerLogin.PlannerLoginRepository;
 import com.mysite.weddingyou_backend.plannerProfile.PlannerProfile;
 import com.mysite.weddingyou_backend.plannerProfile.PlannerProfileDTO;
 import com.mysite.weddingyou_backend.plannerProfile.PlannerProfileService;
@@ -52,6 +55,8 @@ import com.mysite.weddingyou_backend.plannerUpdateDelete.PlannerUpdateDeleteRepo
 import com.mysite.weddingyou_backend.plannerUpdateDelete.PlannerUpdateDeleteService;
 import com.mysite.weddingyou_backend.review.Review;
 import com.mysite.weddingyou_backend.review.ReviewRepository;
+import com.mysite.weddingyou_backend.userLogin.UserLogin;
+import com.mysite.weddingyou_backend.userLogin.UserLoginRepository;
 import com.mysite.weddingyou_backend.userUpdateDelete.UserUpdateDelete;
 import com.mysite.weddingyou_backend.userUpdateDelete.UserUpdateDeleteService;
 
@@ -65,6 +70,9 @@ public class EstimateController {
 
 	@Autowired
 	private final S3Service s3Service;
+
+	@Autowired
+	private final PaymentService paymentService;
 
 	public final EstimateService estimateService;
 	
@@ -86,6 +94,12 @@ public class EstimateController {
 	@Autowired
 	private PlannerUpdateDeleteRepository plannerUpdateDeleteRepository;
 	
+	@Autowired
+	private PlannerLoginRepository plannerLoginRepository;
+
+	@Autowired
+	private UserLoginRepository userLoginRepository;
+
 	@Autowired
 	private ReviewRepository reviewRepository;
 	
@@ -278,26 +292,59 @@ public class EstimateController {
 			
 			JSONParser parser = new JSONParser();
 			ArrayList<String> obj = (ArrayList<String>) parser.parse(plannermatching);
+			ArrayList<String> userList = (ArrayList<String>) parser.parse(targetData.getUserMatching());
+			
 			ArrayList<String> plannerList = null;
 			if(targetData.getPlannermatching()!=null) {
 				plannerList = (ArrayList<String>) parser.parse(targetData.getPlannermatching());
-				System.out.println(plannerList);
 			}
 			 
 			
-			if(plannerList.size() == 0) {
+			if(!plannerList.containsAll(obj)) {
 				Estimate data = new Estimate();
 				data.setPlannermatching(plannermatching);
 				targetData.setPlannermatching(data.getPlannermatching());
 				
 				estimateService.save(targetData);
-			}
-			else if(plannerList.size()!=0 && !plannerList.containsAll(obj)) {
-				Estimate data = new Estimate();
-				data.setPlannermatching(plannermatching);
-				targetData.setPlannermatching(data.getPlannermatching());
-				
-				estimateService.save(targetData);
+				System.out.println(obj);
+				System.out.println(userList.contains(obj.get(obj.size() - 1)));
+				if(userList != null && userList.size() != 0 && userList.contains(obj.get(obj.size() - 1))){
+					List<Payment> targetPayments = paymentRepository.findByEstimateId(id);
+					Payment targetPayment = targetPayments.stream()
+					.filter(p -> p.getPlannerEmail().equals(obj.get(obj.size() - 1)) && p.getUserEmail().equals(targetData.getWriter())).findFirst().orElse(null);
+					if(targetPayments== null || targetPayment == null){
+						PlannerLogin planner = plannerLoginRepository.findByEmail(obj.get(obj.size() - 1));
+      			UserLogin user = userLoginRepository.findByEmail(targetData.getWriter());
+
+						BigDecimal depositAmount;
+						int plannerCareerYears = Integer.parseInt(planner.getPlannerCareerYears());
+      			if(plannerCareerYears >= 0 && plannerCareerYears <5) {
+        			depositAmount = new BigDecimal(50000);
+      			}else if(plannerCareerYears >= 5 && plannerCareerYears <15) {
+        			depositAmount = new BigDecimal(100000);
+      			}else {
+        			depositAmount = new BigDecimal(150000);
+      			}
+						
+						Payment payment = new Payment();
+        		payment.setPrice(depositAmount);
+        		payment.setQuantity(1);
+        		payment.setPaymentMethod("card");
+        		payment.setPaymentAmount(depositAmount);
+        		payment.setPaymentStatus("other");
+        		payment.setDepositAmount(depositAmount);
+        		payment.setDepositStatus("other");
+        		payment.setPaymentType("deposit");
+        		payment.setUserEmail(targetData.getWriter());
+        		payment.setPlannerEmail(obj.get(obj.size() - 1));
+        		payment.setEstimateId(targetData.getId());
+        		payment.setPaymentDate(null);
+        		payment.setDepositDate(null);
+        		payment.setPlanner(planner);
+        		payment.setUser(user);
+        		paymentService.savePayment(payment);
+					}
+				}
 			}else if(plannerList.size()!=0  && plannerList.containsAll(obj)){
 				throw new Exception("중복됩니다!");
 			}
@@ -390,10 +437,14 @@ public class EstimateController {
 				    targetEstimate.setMatchstatus(false);
 				    res=2;
 				  }
-				  Payment targetPayment = paymentRepository.findByEstimateId(estimateId);
-				  if(targetPayment!=null) {
-				    paymentRepository.delete(targetPayment);
-				  }
+				  List<Payment> targetPayments = paymentRepository.findByEstimateId(estimateId);
+						if(targetPayments!=null) {
+							targetPayments.forEach(p -> {
+								if(p.getPlannerEmail().equals(deletePlanner)){
+									paymentRepository.delete(p);
+								}
+							});
+						}
 				  targetEstimate.setPlannermatching(String.valueOf(obj));
 				  estimateService.save(targetEstimate);
 					
@@ -413,17 +464,21 @@ public class EstimateController {
 				  obj.remove(deletePlanner);
 
 				  if(targetEstimate.isMatchstatus()) {
-				    ArrayList<String> obj2 = (ArrayList<String>) parser.parse(targetEstimate.getUserMatching());
+				    ArrayList<String> obj2 = (ArrayList<String>) parser.parse(targetEstimate.getPlannermatching());
 						obj2.remove(deletePlanner);
-						targetEstimate.setUserMatching(String.valueOf(obj2));
+						targetEstimate.setPlannermatching(String.valueOf(obj2));
 				    targetEstimate.setMatchstatus(false);
 				    res=2;
 				  }
-				  Payment targetPayment = paymentRepository.findByEstimateId(estimateId);
-				  if(targetPayment!=null) {
-				    paymentRepository.delete(targetPayment);
-				  }
-				  targetEstimate.setPlannermatching(String.valueOf(obj));
+				  List<Payment> targetPayments = paymentRepository.findByEstimateId(estimateId);
+						if(targetPayments!=null) {
+							targetPayments.forEach(p -> {
+								if(p.getPlannerEmail().equals(deletePlanner)){
+									paymentRepository.delete(p);
+								}
+							});
+						}
+				  targetEstimate.setUserMatching(String.valueOf(obj));
 				  estimateService.save(targetEstimate);
 					
 					return res;
@@ -433,7 +488,7 @@ public class EstimateController {
 				//매칭하기
 				@PostMapping(value = "/matching")
 				public Estimate matchingPlanner(@RequestParam("matchingPlanner") String matchingPlanner, 
-						@RequestParam("targetEstimateId") Long estimateId
+						@RequestParam("targetEstimateId") Long estimateId, @RequestParam("userEmail") String userEmail
 						) throws Exception {
 					Estimate targetEstimate = estimateService.getEstimateDetail(estimateId);
 
@@ -451,6 +506,41 @@ public class EstimateController {
 					targetEstimate.setPlannerProfiles(profiles);
 				  estimateService.save(targetEstimate);
 
+					List<Payment> targetPayments = paymentRepository.findByEstimateId(estimateId);
+					Payment targetPayment = targetPayments.stream()
+					.filter(p -> p.getPlannerEmail().equals(matchingPlanner) && p.getUserEmail().equals(userEmail)).findFirst().orElse(null);
+					if(targetPayment == null){
+						PlannerLogin planner = plannerLoginRepository.findByEmail(matchingPlanner);
+      			UserLogin user = userLoginRepository.findByEmail(userEmail);
+
+						BigDecimal depositAmount;
+						int plannerCareerYears = Integer.parseInt(planner.getPlannerCareerYears());
+      			if(plannerCareerYears >= 0 && plannerCareerYears <5) {
+        			depositAmount = new BigDecimal(50000);
+      			}else if(plannerCareerYears >= 5 && plannerCareerYears <15) {
+        			depositAmount = new BigDecimal(100000);
+      			}else {
+        			depositAmount = new BigDecimal(150000);
+      			}
+						
+						Payment payment = new Payment();
+        		payment.setPrice(depositAmount);
+        		payment.setQuantity(1);
+        		payment.setPaymentMethod("card");
+        		payment.setPaymentAmount(depositAmount);
+        		payment.setPaymentStatus("other");
+        		payment.setDepositAmount(depositAmount);
+        		payment.setDepositStatus("other");
+        		payment.setPaymentType("deposit");
+        		payment.setUserEmail(userEmail);
+        		payment.setPlannerEmail(matchingPlanner);
+        		payment.setEstimateId(estimateId);
+        		payment.setPaymentDate(null);
+        		payment.setDepositDate(null);
+        		payment.setPlanner(planner);
+        		payment.setUser(user);
+        		paymentService.savePayment(payment);
+					}
 					return targetEstimate;
 				
 				}
@@ -458,20 +548,24 @@ public class EstimateController {
 				//매칭취소하기
 				@PostMapping(value = "/matching/cancel")
 				public int cancelMatching(@RequestParam("userEmail") String userEmail
-						,@RequestParam("estimateId") Long EstimateId
+						,@RequestParam("plannerEmail") String plannerEmail, @RequestParam("estimateId") Long estimateId
 						) throws Exception {
 
 					  int res = 0;
 
-						Estimate targetEstimate = estimateService.getEstimateDetail(EstimateId);
+						Estimate targetEstimate = estimateService.getEstimateDetail(estimateId);
 						ArrayList<String> cleanList= new ArrayList<>();
 						targetEstimate.setPlannermatching(String.valueOf(cleanList));
 						targetEstimate.setUserMatching(String.valueOf(cleanList));
 						targetEstimate.setMatchstatus(false);
 						estimateService.save(targetEstimate);
-						Payment targetPayment = paymentRepository.findByEstimateId(EstimateId);
+						List<Payment> targetPayments = paymentRepository.findByEstimateId(estimateId);
+						Payment targetPayment = targetPayments.stream()
+    					.filter(p -> p.getPlannerEmail().equals(plannerEmail) && p.getUserEmail().equals(userEmail))
+    					.findFirst()
+    					.orElse(null);
 						if(targetPayment!=null) {
-						  paymentRepository.delete(targetPayment);
+							paymentRepository.delete(targetPayment);
 						}
 
 						res = 1;
@@ -479,112 +573,6 @@ public class EstimateController {
 				
 				}
 				
-				//플래너 요청, 고객요청 비교해서 서로 짝 찾기
-				@PostMapping(value = "/findMatching")
-				public List<String> findMatching(@RequestParam("email") String email
-						,@RequestParam("category") String category
-						) throws Exception {
-					List<String> result = new ArrayList<>();
-					if(category.equals("user")) {
-						 
-						List<Estimate> estimatesData = estimateService.getEstimateDetailByEmail(email);
-						System.out.println(estimatesData.size());
-						if(estimatesData!=null) {
-							int k=0;
-							for(int i =0;i<estimatesData.size();i++) {
-								Estimate targetEstimate = estimatesData.get(i);
-								JSONParser parser = new JSONParser();
-								
-								ArrayList<String> plannermatching = (ArrayList<String>) parser.parse(targetEstimate.getPlannermatching());
-								ArrayList<String> usermatching = (ArrayList<String>) parser.parse(targetEstimate.getUserMatching());
-								ArrayList<String> originPlannerMatching = (ArrayList<String>) parser.parse(targetEstimate.getPlannermatching());
-								JSONArray temp = new JSONArray();
-								if(plannermatching.size()!=0 && usermatching.size() !=0) {
-									System.out.println(plannermatching);
-									System.out.println(usermatching);
-									
-									System.out.println(originPlannerMatching.size());
-									plannermatching.retainAll(usermatching);
-									int m =0;
-								
-									if(plannermatching.size()!=0) {
-										
-										for(int l=0;l<originPlannerMatching.size();l++) {
-											String str = originPlannerMatching.get(l);
-											if(usermatching.contains(str)) {
-												temp.add(str);
-											
-											}else {
-												temp.add("empty");
-												
-											}
-										}
-									
-										System.out.println("temp:"+temp);
-									}
-									
-									
-									if(plannermatching.size()!=0) {
-										
-										result.add(String.valueOf(temp));
-										result.add(String.valueOf(k));
-										
-									}else {
-										result.add(String.valueOf(new ArrayList<>()));
-										result.add(String.valueOf(0));
-										k++;
-										continue;
-									}
-									
-								}else {
-									result.add(String.valueOf(new ArrayList<>()));
-									result.add(String.valueOf(0));
-								}
-								
-								k++;
-							}
-						}
-						
-					}else if(category.equals("planner")) {
-						List<Estimate> estimatesData1 = estimateRepository.findAll();
-					
-						if(estimatesData1!=null) {
-							int k= 0;
-							for(int i =0;i<estimatesData1.size();i++) {
-								Estimate targetEstimate = estimatesData1.get(i);
-							
-								JSONParser parser = new JSONParser();
-								
-								ArrayList<String> plannermatching = (ArrayList<String>) parser.parse(targetEstimate.getPlannermatching());
-								ArrayList<String> usermatching = (ArrayList<String>) parser.parse(targetEstimate.getUserMatching());
-								ArrayList<String> originUserMatching = usermatching;
-								if(usermatching.contains(email)) {
-									if(plannermatching.size()!=0 && usermatching.size() !=0) {
-										if(plannermatching.contains(email) && usermatching.contains(email)) {
-											System.out.println(plannermatching);
-											System.out.println(usermatching);
-											result.add(String.valueOf(k));
-										}else {
-											result.add(String.valueOf(-1));
-											k++;
-											continue;
-										}
-										
-									}else {
-										result.add(String.valueOf(-1));
-									}
-									k++;
-									
-								}
-							
-								
-							}
-						}
-					}
-					return result;
-				
-				}
-
 				//리뷰 페이지로 이동하기1
 				@PostMapping(value = "/review")
 				public String getPlannerInfoForReview(@RequestParam("matchingPlanner") String plannerEmail, 

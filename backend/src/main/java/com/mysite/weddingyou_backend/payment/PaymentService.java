@@ -1,6 +1,7 @@
 package com.mysite.weddingyou_backend.payment;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,8 +36,12 @@ public class PaymentService {
         return paymentRepository.save(payment);
     }
     
-    public Payment getPaymentData(Long estimateId){
+    public List<Payment> getPaymentData(Long estimateId){
     	return paymentRepository.findByEstimateId(estimateId);
+    }
+
+    public List<Payment> getPaymentsList(List<Long> estimateIds) {
+        return paymentRepository.findByEstimateIdIn(estimateIds);
     }
     
     public List<Estimate> getEstimateList(String userEmail){
