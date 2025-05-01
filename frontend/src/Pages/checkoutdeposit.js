@@ -9,6 +9,7 @@ import Footer from "../Components/Footer";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Sidesection from "../Components/Sidesection";
+import { v4 as uuidv4 } from 'uuid';
 
 function Checkoutdeposit() {
   const navigate = useNavigate();
@@ -76,13 +77,13 @@ function Checkoutdeposit() {
       {
         pg: "paypal.UFYSG9T7RFW2A",
         pay_method: { paymentMethod },
-        merchant_uid: `57126841-${estimateId}` + IMP,
+        merchant_uid: `${uuidv4()}-${estimateId}`,
         name: "플래너 매칭 계약금",
-        amount: 1,
-        buyer_email: sessionStorage.getItem("email"),
+        amount: depositprice,
+        buyer_email: userEmail,
         buyer_name: userName,
         buyer_tel: userPhone,
-        m_redirect_url: `${process.env.REACT_APP_API_URL}/matching`,
+        m_redirect_url: `${process.env.REACT_APP_API_URL || "http://localhost:3000"}/checkoutcomp`,
         // buyer_addr: "서울특별시 강남구 삼성동",
         // buyer_postcode: "123-456",
       },
@@ -125,28 +126,7 @@ function Checkoutdeposit() {
         } else {
           console.log(rsp);
           alert(rsp.error_msg);
-
-          axios
-            .post("/deposit/callback", {
-              price: depositprice,
-              quantity: quantity,
-              paymentMethod: paymentMethod,
-              paymentAmount: paymentAmount,
-              tempPaymentStatus: paymentStatus,
-              depositAmount: depositAmount,
-              tempDepositStatus: depositStatus,
-              paymentType: "deposit",
-              userEmail: userEmail,
-              plannerEmail: plannerEmail,
-              estimateId: estimateId,
-            })
-            .then((res) => {
-              console.log(res);
-            })
-            .catch((e) => {
-              console.log(e);
-            });
-            navigate("/matching");
+          navigate("/matching");
         }
       }
     );

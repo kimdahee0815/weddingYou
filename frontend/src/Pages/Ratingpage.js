@@ -12,11 +12,8 @@ import Sidesection from "../Components/Sidesection";
 const ARRAY = [0, 1, 2, 3, 4];
 
 function Ratingpage() {
-  const { estimateId } = useLocation().state;
-  const { plannerName } = useLocation().state;
-  const { plannerImg } = useLocation().state;
-  const { planneremail } = useLocation().state;
-  const { price } = useLocation().state;
+  const { price, estimateId, plannerName, plannerImg, planneremail:plannerEmail } = useLocation().state;
+
   const [clicked, setClicked] = useState([false, false, false, false, false]);
 
   const [rating, setRating] = useState(0);
@@ -173,7 +170,7 @@ function Ratingpage() {
     }
 
     formData.append("userEmail", sessionStorage.getItem("email"));
-    formData.append("plannerEmail", planneremail);
+    formData.append("plannerEmail", plannerEmail);
     formData.append("estimateId", estimateId);
     if (reviewText === undefined || reviewText === "") {
       alert("리뷰를 작성하시려면 리뷰 후기를 적어주세요!");

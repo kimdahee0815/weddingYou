@@ -315,8 +315,9 @@ function Matching() {
     formData.append("plannerEmail", estimateData?.plannerProfiles?.[0].plannerEmail)
     formData.append("estimateId", estimateData.id);
 
+    console.log(estimateData)
     let depositPrice = 0;
-    let careerYears = estimate.plannerProfiles?.[0].career;
+    let careerYears = estimateData.plannerProfiles?.[0].career;
     if(careerYears < 5 && careerYears >= 0){
       depositPrice = 50000;
     } else if(careerYears < 10){
@@ -339,7 +340,6 @@ function Matching() {
                 plannerName: estimateData.plannerProfiles?.[0].plannerName,
                 plannerImg: estimateData.plannerProfiles?.[0].plannerProfileImg,
                 depositprice: depositPrice,
-                // allprice: allprice,
               },
             });
           } else if (status === "-1") {
@@ -427,7 +427,6 @@ function Matching() {
         navigate("/rating", {
           state: {
             estimateId: estimateId,
-
             planneremail: plannerEmail,
             plannerImg: plannerImgUrl,
             plannerName: plannername,

@@ -6,17 +6,17 @@ import Sidesection from "../Components/Sidesection";
 const CheckoutComp = () => {
   const checkoutsession = window.sessionStorage.getItem("checkout");
   const navigate = useNavigate();
+  const query = new URLSearchParams(window.location.search);
+  const isSuccess = query.get("imp_success") === "true";
+  const impUid = query.get("imp_uid");
+  const merchantUid = query.get("merchant_uid");
 
-  const { plannerImg } = useLocation().state;
-  console.log(plannerImg);
-  const { estimateId } = useLocation().state;
-  console.log(estimateId);
-  const { plannerName } = useLocation().state;
-  console.log(plannerName);
-  const { planneremail } = useLocation().state;
-  const { price } = useLocation().state;
+  const { plannerImg, estimateId, plannerName, planneremail, price } = useLocation().state;
 
   const Checkout = ({ checkout }) => {
+    if(!isSuccess){
+      navigate(`/matching`);
+    }
     if (checkout === "deposit") {
       return (
         <div>
@@ -45,11 +45,11 @@ const CheckoutComp = () => {
             onClick={() =>
               navigate("/rating", {
                 state: {
-                  estimateId: estimateId,
-                  plannerImg: plannerImg,
-                  plannerName: plannerName,
-                  planneremail: planneremail,
-                  price: price,
+                  estimateId,
+                  plannerImg,
+                  plannerName,
+                  planneremail,
+                  price,
                 },
               })
             }

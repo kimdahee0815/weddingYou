@@ -7,45 +7,37 @@ import NavigationBar from "../Components/NavigationBar";
 import Footer from "../Components/Footer";
 import defaultprofileimage from "../Assets/defaultprofileimage.jpg";
 import axios from "axios";
-// import "../Css/checkoutall.css";
-import $ from "jquery";
 import "bootstrap";
 import Sidesection from "../Components/Sidesection";
+import { v4 as uuidv4 } from 'uuid';
 
 function CheckoutAll() {
-  const { estimateId } = useLocation().state;
-  console.log(estimateId);
-  const { userName } = useLocation().state;
-  const { userPhone } = useLocation().state;
-  const { planneremail } = useLocation().state;
-  const { plannerName } = useLocation().state;
-  console.log(plannerName);
-  const { plannerImg } = useLocation().state;
-  const { depositprice } = useLocation().state;
-  console.log(plannerImg);
+  const { 
+    estimateId,
+    userName,
+    userPhone,
+    planneremail: plannerEmail,
+    plannerName,
+    plannerImg,
+    depositprice
+   } = useLocation().state;
 
   const navigate = useNavigate();
 
-  //const [price, setPrice] = useState(10000);
   const [quantity, setQuantity] = useState(1);
-  const [allprice, setAllPrice] = useState("");
   const [paymentAmount, setPaymentAmount] = useState(depositprice * quantity);
   const [paymentMethod, setPaymetMethod] = useState("card");
   const [paymentStatus, setPaymentStatus] = useState("paid");
   const [depositAmount, setDepositAmount] = useState(depositprice);
 
-  const [depositStatus, setDepositStatus] = useState("paid");
   const [paymentType, setPaymentType] = useState("all");
   const [userEmail, setUserEmail] = useState(sessionStorage.getItem("email"));
-  const [plannerEmail, setPlannerEmail] = useState(planneremail);
-  let paymentAmount1 = paymentAmount - depositAmount;
-
   const plannerMatchingPriceCheckInput = useRef();
   const plannerMatchingPriceFeedback = useRef();
   const plannerMatchingPriceConfirm = useRef();
   const [plannerMatchingPriceMessage, setPlannerMatchingPriceMessage] =
     useState("");
-  const [changedPrice, setChangedPrice] = useState(false);
+
   const path = useLocation().pathname;
 
   function requestPay() {
@@ -54,13 +46,13 @@ function CheckoutAll() {
       {
         pg: "paypal.UFYSG9T7RFW2A",
         pay_method: { paymentMethod },
-        merchant_uid: `53907801-${estimateId}` + IMP,
+        merchant_uid: `${uuidv4()}-${estimateId}`,
         name: "플래너 매칭서비스",
-        amount: paymentAmount1,
+        amount: paymentAmount - depositAmount,
         buyer_email: sessionStorage.getItem("email"),
         buyer_name: userName,
         buyer_tel: userPhone,
-        m_redirect_url: `${process.env.REACT_APP_API_URL}/checkoutcomp`,
+        m_redirect_url: `${process.env.REACT_APP_API_URL || "http://localhost:3000"}/checkoutcomp`,
         // buyer_addr: "서울특별시 강남구 삼성동",
         // buyer_postcode: "123-456",
       },
@@ -69,35 +61,35 @@ function CheckoutAll() {
         if (rsp.success) {
           axios
             .post("/payment/callback", {
-              estimateId: estimateId,
-              paymentMethod: paymentMethod,
-              tempPaymentStatus: "paid",
-              paymentType: "all",
-              paymentAmount: paymentAmount,
+              estimateId,
+              paymentMethod,
+              tempPaymentStatus: paymentStatus,
+              paymentType,
+              paymentAmount,
               plannerEmail,
               userEmail
             })
             .then((res) => {
               console.log(res);
               const value = res.data;
-              if (value == -2) {
+              if (value === "depositnonvalid") {
                 alert("계약금 결제 먼저 해주세요.");
-              } else if (value == -1) {
+              } else if (value === "nonvalid") {
                 alert("유효하지 않은 결제 유형입니다.");
-              } else if (value == 0) {
+              } else if (value === "checkall") {
                 //계약금 처리만 된 상태(취소 상태로 paymentStatus 자동으로 바뀜)
-              } else if (value == 1) {
+              } else if (value === "all") {
                 sessionStorage.setItem("checkout", "all");
                 navigate("/checkoutcomp", {
                   state: {
-                    estimateId: estimateId,
-                    plannerImg: plannerImg,
-                    plannerName: plannerName,
-                    planneremail: planneremail,
+                    estimateId,
+                    plannerImg,
+                    plannerName,
+                    plannerEmail,
                     price: paymentAmount,
                   },
                 });
-              } else if (value == 2) {
+              } else if (value === "completed") {
                 alert("이미 전체 결제가 이루어진 건입니다!");
               }
             })
@@ -106,11 +98,11 @@ function CheckoutAll() {
             });
         } else {
           alert(rsp.error_msg);
-
+          
           axios
             .post("/payment/callback", {
-              estimateId: estimateId,
-              paymentMethod: paymentMethod,
+              estimateId,
+              paymentMethod,
               tempPaymentStatus: "cancelled",
               paymentType: "all",
               plannerEmail,
@@ -119,25 +111,24 @@ function CheckoutAll() {
             .then((res) => {
               console.log(res);
               const value = res.data;
-              if (value == -2) {
+              if (value === "depositnonvalid") {
                 alert("계약금 결제 먼저 해주세요.");
-              } else if (value == -1) {
+              } else if (value === "nonvalid") {
                 alert("유효하지 않은 결제 유형입니다.");
-              } else if (value == 0) {
+              } else if (value === "checkall") {
                 //계약금 처리만 된 상태(취소 상태로 paymentStatus 자동으로 바뀜)
-              } else if (value == 1) {
-                alert("전체 금액 결제가 완료되었습니다!");
+              } else if (value === "all") {
                 sessionStorage.setItem("checkout", "all");
                 navigate("/checkoutcomp", {
                   state: {
-                    estiamteId: estimateId,
-                    plannerImg: plannerImg,
-                    plannerName: plannerName,
-                    planneremail: planneremail,
+                    estimateId,
+                    plannerImg,
+                    plannerName,
+                    plannerEmail,
+                    price: paymentAmount,
                   },
                 });
-              } else if (value == 2) {
-                console.log("************************");
+              } else if (value === "completed") {
                 alert("이미 전체 결제가 이루어진 건입니다!");
               }
             })
@@ -148,34 +139,42 @@ function CheckoutAll() {
       }
     );
   }
+  
   useEffect(() => {
     if (sessionStorage.getItem("checkout") !== "all") {
       axios
         .post("/payment/callback", {
-          estimateId: estimateId,
-          paymentMethod: paymentMethod,
+          estimateId,
+          paymentMethod,
           tempPaymentStatus: "cancelled",
           paymentType: "all",
-          paymentAmount: paymentAmount,
+          paymentAmount,
           plannerEmail,
           userEmail
         })
         .then((res) => {
           console.log(res);
-          const value = res.data;
-          if (value == -2) {
-            alert("계약금 결제 먼저 해주세요.");
-          } else if (value == -1) {
-            alert("유효하지 않은 결제 유형입니다.");
-          } else if (value == 0) {
-            //계약금 처리만 된 상태(취소 상태로 paymentStatus 자동으로 바뀜)
-          } else if (value == 1) {
-            alert("전체 금액 결제가 완료되었습니다!");
-          } else if (value == 2) {
-            console.log("+++++++++++++");
-            alert("이미 전체 결제가 이루어진 건입니다!");
-            navigate("/matching");
-          }
+              const value = res.data;
+              if (value === "depositnonvalid") {
+                alert("계약금 결제 먼저 해주세요.");
+              } else if (value === "nonvalid") {
+                alert("유효하지 않은 결제 유형입니다.");
+              } else if (value === "checkall") {
+                //계약금 처리만 된 상태(취소 상태로 paymentStatus 자동으로 바뀜)
+              } else if (value === "all") {
+                sessionStorage.setItem("checkout", "all");
+                navigate("/checkoutcomp", {
+                  state: {
+                    estimateId,
+                    plannerImg,
+                    plannerName,
+                    plannerEmail,
+                    price: paymentAmount,
+                  },
+                });
+              } else if (value === "completed") {
+                alert("이미 전체 결제가 이루어진 건입니다!");
+              }
         })
         .catch((e) => {
           console.log(e);
@@ -190,10 +189,6 @@ function CheckoutAll() {
       window.IMP.init("imp83460455"); 
     }
   }, []);
-
-  // useEffect(() => {
-  //   setPaymentAmount(allprice);
-  // }, [changedPrice]);
 
   return (
     <div className="containerbox">
@@ -251,7 +246,7 @@ function CheckoutAll() {
               <br /> (
               {paymentAmount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
               원) - (
-              {depositAmount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+              {depositprice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
               원)
             </p>
           </div>
@@ -271,7 +266,7 @@ function CheckoutAll() {
               readonly
               className="form-control-plaintext"
               id="itemName"
-              value={`${paymentAmount1}원`}
+              value={`${paymentAmount - depositAmount}원`}
               style={{ fontSize: "0.9em" }}
             />
           </div>
@@ -312,9 +307,10 @@ function CheckoutAll() {
                     class="form-control "
                     id="plannerMatchingPriceCheck"
                     ref={plannerMatchingPriceCheckInput}
-                    value={allprice}
+                    value={paymentAmount}
                     onChange={(e) => {
-                      console.log(e.target.value);
+                      let value = e.target.value;
+                      setPaymentAmount(value);
                       if (e.target.value === "0") {
                         plannerMatchingPriceCheckInput.current.classList.add(
                           "is-invalid"
@@ -336,7 +332,7 @@ function CheckoutAll() {
                         );
                         plannerMatchingPriceConfirm.current.disabled = true;
                       } else {
-                        if (e.target.value == "") {
+                        if (e.target.value === "") {
                           plannerMatchingPriceCheckInput.current.classList.add(
                             "is-invalid"
                           );
@@ -412,10 +408,7 @@ function CheckoutAll() {
                           );
                           setPlannerMatchingPriceMessage("all good!");
                           plannerMatchingPriceConfirm.current.disabled = false;
-
-                          setPaymentAmount(e.target.value);
                         }
-                        setAllPrice(e.target.value);
                       }
                     }}
                     style={{ fontSize: "1.2em" }}

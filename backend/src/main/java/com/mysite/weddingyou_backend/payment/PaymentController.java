@@ -67,6 +67,9 @@ public class PaymentController {
 	
 	@Autowired
 	EstimateRepository estimateRepository;
+
+  @Autowired
+  PaymentRepository paymentRepository;
 	
 //    private IamportClient api;
 //
@@ -160,6 +163,45 @@ public class PaymentController {
     		paymentService.savePayment(targetPayment);
     	}
 
+      if(depositStatus.equals("paid")){
+        Estimate targetEstimate = estimateService.getEstimateDetail(estimateId);
+        JSONParser parser = new JSONParser();
+        try {
+          JSONArray userMatching = (JSONArray) parser.parse(targetEstimate.getUserMatching());
+          JSONArray plannerMatching = (JSONArray) parser.parse(targetEstimate.getPlannermatching());
+
+          List<String> userList = (List<String>) plannerMatching.stream()
+            .map(Object::toString)
+            .collect(Collectors.toList());
+  
+          List<String> plannerList = (List<String>) userMatching.stream()
+            .map(Object::toString)
+            .collect(Collectors.toList());
+            
+          userList.clear();
+          userList.add("\"" + plannerEmail + "\"");
+          plannerList.clear();
+          plannerList.add("\"" + plannerEmail + "\"");
+          targetEstimate.setPlannermatching(String.valueOf(plannerList));
+          targetEstimate.setUserMatching(String.valueOf(userList));
+          targetEstimate.setMatchstatus(true);
+          
+          estimateService.save(targetEstimate);
+        } catch (ParseException e) {
+          e.printStackTrace();
+        }
+
+        List<Payment> targetPayments = paymentRepository.findByEstimateId(estimateId);
+				
+        if(targetPayments!=null) {
+					targetPayments.forEach(p -> {
+						if(p.getUserEmail().equals(userEmail) && !p.getPlannerEmail().equals(plannerEmail)){
+							paymentRepository.delete(p);
+						}
+					});
+				}
+      }
+
       return plannerCareerYears;
     }
     
@@ -191,11 +233,10 @@ public class PaymentController {
     }
     
     @PostMapping(value = "/payment/callback")
-    public int handlePaymentCallback(@RequestBody PaymentCallbackRequest callbackRequest) {
+    public String handlePaymentCallback(@RequestBody PaymentCallbackRequest callbackRequest) {
         // 콜백 이벤트 처리 로직
         Long estimateId = callbackRequest.getEstimateId();
         String paymentStatus = callbackRequest.getTempPaymentStatus();
-//        String depositStatus = callbackRequest.getTempDepositStatus();
         String paymentType = callbackRequest.getPaymentType();
         BigDecimal paymentAmount = callbackRequest.getPaymentAmount();
 				String userEmail = callbackRequest.getUserEmail();
@@ -210,41 +251,34 @@ public class PaymentController {
 				.filter(p -> p.getPlannerEmail().equals(plannerEmail) && p.getUserEmail().equals(userEmail))
 				.findFirst()
 				.orElse(null);
+        System.out.println(plannerEmail);
+        System.out.println(userEmail);
+        System.out.println(payment);
         if(payment!=null && payment.getDepositStatus().equals("paid")) {
-        	if (payment.getPaymentType().equals("all") && paymentStatus.equals("cancelled")
-        			|| payment.getPaymentType().equals("deposit") && payment.getPaymentStatus().equals("other")) {
+            if (paymentStatus.equals("cancelled")) {
                 // 계약금 결제 처리
         		 payment.setPaymentStatus(paymentStatus);
         		 payment.setPaymentType(paymentType);
         		 payment.setPaymentAmount(paymentAmount);
         		 payment.setPrice(paymentAmount);
         		 paymentService.savePayment(payment);
-        		 return 0;
+        		 return "checkall";
             }  else if (paymentType.equals("all") && paymentStatus.equals("paid")) {
                 // 전체 금액 결제 처리
             	payment.setPaymentType(paymentType);
-                payment.setPaymentStatus(paymentStatus);
-                payment.setPaymentDate(currentTime);
-                payment.setPrice(paymentAmount);
-                payment.setPaymentAmount(paymentAmount);                // Payment 객체를 데이터베이스에 저장
-                paymentService.savePayment(payment);
-                return 1;
-            	
-            	
-            }  else if(payment.getPaymentType().equals("all") && payment.getPaymentStatus().equals("paid")){
-            	return 2;
-            	
-            } else if(!payment.getPaymentType().equals("deposit") && !payment.getPaymentType().equals("all")) {
-                System.out.println("유효하지 않은 결제 유형입니다.");
-                return -1;
-            } else {
-            	return -2;
-            }
-        	
-          
+              payment.setPaymentStatus(paymentStatus);
+              payment.setPaymentDate(currentTime);
+              payment.setPrice(paymentAmount);
+              payment.setPaymentAmount(paymentAmount);                // Payment 객체를 데이터베이스에 저장
+              paymentService.savePayment(payment);
+              return "all";
+            }  
+            if(payment.getPaymentType().equals("all") && payment.getPaymentStatus().equals("paid")){
+            	return "completed";
+            } 
+            return "nonvalid";
         }else {
-        	  return -2; //deposit 결제 하지 않고 전액 결제로 넘어갈수 없음.
-        	  
+            return "depositnonvalid"; //deposit 결제 하지 않고 전액 결제로 넘어갈수 없음.
         }
     }
 
