@@ -3,7 +3,6 @@ import { FaStar } from "react-icons/fa";
 import styled from "styled-components";
 import "../Css/main.css";
 import "../Css/Ratingpage.css";
-import selectImg from "../Assets/selectImg.webp";
 import axios from "axios";
 import { useNavigate, useLocation } from "react-router-dom";
 import defaultprofileimage from "../Assets/defaultprofileimage.jpg";
@@ -12,19 +11,15 @@ import Sidesection from "../Components/Sidesection";
 const ARRAY = [0, 1, 2, 3, 4];
 
 function Ratingpage() {
-  const { price, estimateId, plannerName, plannerImg, planneremail:plannerEmail } = useLocation().state;
+  const { price, estimateId, plannerName, plannerImg, plannerEmail } = useLocation().state;
 
   const [clicked, setClicked] = useState([false, false, false, false, false]);
 
   const [rating, setRating] = useState(0);
-  const [score, setScore] = useState(0);
   const [reviewText, setReviewText] = useState("");
-  const [images, setImages] = useState([]);
   const [previewUrl, setPreviewUrl] = useState([]);
-  const [imgName, setImgName] = useState([]);
-  const [fileType, setFileType] = useState([]);
-  const [originImagesFile, setOriginImagesFile] = useState([]);
   const [imgArr, setImgArr] = useState([]);
+  
   const handleStarClick = (index) => {
     let clickStates = [...clicked];
     for (let i = 0; i < 5; i++) {
@@ -32,21 +27,12 @@ function Ratingpage() {
     }
     setClicked(clickStates);
     const Rating = index + 1;
-    console.log(Rating);
     setRating(Rating);
   };
-
-  // useEffect(() => {
-  //   sendReview();
-  // }, [clicked]);
 
   const reviewtext = useRef();
 
   const navigate = useNavigate();
-
-  // const sendReview = () => {
-  //   setScore(clicked.filter(Boolean).length);
-  // };
 
   useEffect(() => {
     axios
@@ -55,95 +41,64 @@ function Ratingpage() {
         console.log(res);
         const data = res.data;
         if (data != null) {
-          const reviewStars = data.reviewStars;
-          const text = data.reviewText;
-          console.log(reviewText);
+          const {reviewStars, reviewText, reviewImg} = data;
           let clickStates = [...clicked];
           for (let i = 0; i < 5; i++) {
             clickStates[i] = i < reviewStars ? true : false;
           }
           setClicked(clickStates);
           const Rating = reviewStars;
-          console.log(Rating);
           setRating(Rating);
-          setReviewText(text);
+          setReviewText(reviewText);
           const getImages = async () => {
             try {
-              console.log(data.reviewImg);
-              const imagearray = JSON.parse(data.reviewImg);
-              console.log(imagearray);
-              const imgNameArr = [];
-              const fileTypeArr = [];
-              for (let i = 0; i < imagearray.length; i++) {
-                const img = imagearray[i];
-                const imgname = img.slice(
-                  img.indexOf("_") + 1,
-                  img.indexOf(".")
-                );
-                const fileType = img.slice(img.indexOf(".") + 1);
-                imgNameArr.push(imgname);
-                fileTypeArr.push(fileType);
-              }
-              setImgName(imgNameArr);
-              setFileType(fileTypeArr);
-              const imagePromises = imagearray.map((image) => {
-                return axios.get("/review/imageview", {
-                  params: { image },
-                  responseType: "blob",
-                });
-              });
-              const responses = await Promise.all(imagePromises);
-              const imgFileArr = [];
-              const imageUrls = responses.map((res, index) => {
-                const resdata = URL.createObjectURL(res.data);
-                console.log("aaaaaaaaa");
-                console.log(res.data);
-                const blob = res.data;
-                const file = new File([blob], imgNameArr[index], {
-                  type: `image/${fileTypeArr[index]}`,
-                });
-                imgFileArr.push(file);
-
-                const previewUrlArr = [];
-                const getImgSrc = async (event, files) => {
-                  const getPreviewUrls = imgFileArr.map((file) => {
-                    const selectedImage = file;
-                    console.log("fileReader.result");
+              if(reviewImg){
+                const imagearray = JSON.parse(reviewImg);
+                console.log(imagearray);
+  
+                try {
+                  const imagePromises = imagearray.map((image) =>
+                    axios.get("/review/imageview", {
+                      params: { image },
+                      responseType: "blob",
+                    })
+                  );
+              
+                  const responses = await Promise.all(imagePromises);
+              
+                  const previewUrlPromises = responses.map((res, index) => {
+                    const blob = res.data;
+              
+                    const fileName = imagearray[index];
+                    const fileExtension = fileName.split('.').pop();
+              
+                    const mimeType = `image/${fileExtension}`;
+              
+                    const file = new File([blob], fileName, {
+                      type: mimeType,
+                    });
+              
+                    setImgArr(prev => [...prev, file]);
                     return new Promise((resolve, reject) => {
-                      const fileReader = new FileReader();
-                      fileReader.onload = async () => {
-                        try {
-                          const response = await fileReader.result;
-
-                          resolve(response);
-                        } catch (e) {
-                          reject(e);
-                        }
-                      };
-                      fileReader.onerror = (error) => {
-                        reject(error);
-                      };
-                      fileReader.readAsDataURL(selectedImage);
+                      const reader = new FileReader();
+                      reader.onload = () => resolve(reader.result);
+                      reader.onerror = reject;
+                      reader.readAsDataURL(file);
                     });
                   });
-                  const fileInfos = await Promise.all(getPreviewUrls);
-                  setPreviewUrl(fileInfos);
-                  return fileInfos;
-                };
-                getImgSrc();
-
-                return resdata;
-              });
-              console.log(imageUrls);
-              setImages(imageUrls);
-              setOriginImagesFile(imgFileArr);
-              setImgArr(imgFileArr);
+              
+                  const previewUrls = await Promise.all(previewUrlPromises);
+                  setPreviewUrl(previewUrls); 
+                  
+                } catch (error) {
+                  console.error("Image Loading Fail:", error);
+                }
+              }
             } catch (e) {
               console.log(e);
             }
           };
           getImages();
-        } else {
         }
       })
       .catch((e) => {
@@ -160,9 +115,8 @@ function Ratingpage() {
     if (isNaN(rating)) {
       ratingstars = 0;
     }
-    console.log(ratingstars);
     formData.append("reviewStars", ratingstars);
-    console.log("+_+_+_+_+_+_+_+_+");
+    
     if (imgArr.length > 0) {
       for (let i = 0; i < imgArr.length; i++) {
         formData.append("reviewImg", imgArr[i]);
@@ -190,19 +144,11 @@ function Ratingpage() {
 
   const handleImageChange = (event) => {
     const selectedImage = event.target.files[0];
-    console.log(event.target.files);
-    const imgArr1 = [...imgArr];
-    imgArr1.push(selectedImage);
-    setImgArr(imgArr1);
-    console.log("+_+_+_+_+_+_++_+_+_+_+");
-    console.log(imgArr1);
-    // setImage(selectedImage);
+    setImgArr((prev) => [...prev, selectedImage]);
     try {
       const fileReader = new FileReader();
-      const previewUrlArr = [...previewUrl];
       fileReader.onload = () => {
-        previewUrlArr.push(fileReader.result);
-        setPreviewUrl(previewUrlArr);
+        setPreviewUrl((prev) => [...prev, fileReader.result]);
       };
 
       fileReader.readAsDataURL(selectedImage);
@@ -210,24 +156,7 @@ function Ratingpage() {
       setPreviewUrl(selectedImage);
     }
   };
-  //이미지 파일 첨부
-  // const handleImageChange = (e) => {
-  //   if (images.length >= 5 || e.target.files.length + images.length > 5) {
-  //     alert("파일 첨부는 5개까지 가능합니다.");
-  //     e.target.value = null;
-  //   } else {
-  //     let copy = [...images];
-  //     for (let i = 0; i < e.target.files.length; i++) {
-  //       copy.push(e.target.files[i]);
-  //     }
-  //     setImages(copy);
-  //   }
-  // };
 
-  //이미지 파일 초기화
-  const imageClear = () => {
-    setImages([]);
-  };
   //이미지 파일 개별 삭제
   const deleteImg = (index) => {
     let previewUrlCopy = [...previewUrl];
@@ -236,17 +165,6 @@ function Ratingpage() {
     previewUrlCopy.splice(index, 1);
     setPreviewUrl(previewUrlCopy);
     setImgArr(imgArrCopy);
-    // for (let i = 0; i < imgArrCopy.length; i++) {
-    //   console.log(i);
-    //   if(index===i){
-
-    //   }
-    //   if (copy[i].name === image) {
-    //     copy.splice(i, 1);
-    //     setImages(copy);
-    //     break;
-    //   }
-    // }
   };
 
   useEffect(() => {
@@ -257,7 +175,7 @@ function Ratingpage() {
       <div className="mainlayout box1">
         <p className="headtxt">서비스가 어떠셨나요?</p>
         <div className="plannerpro">
-          {plannerImg === "data:image/jpeg;base64," ? (
+          {!plannerImg ? (
             <img
               src={defaultprofileimage}
               style={{ width: "250px", height: "230px" }}
@@ -327,21 +245,17 @@ function Ratingpage() {
             <div>
               <h5>
                 고객 첨부이미지{" "}
-                {previewUrl.length !== 0 && <span>(클릭시 삭제됩니다)</span>}
+                {previewUrl?.length !== 0 && <span>(클릭시 삭제됩니다)</span>}
               </h5>
-              {previewUrl.length === 0 && <span>첨부 이미지가 없습니다.</span>}
+              {previewUrl?.length === 0 && <span>첨부 이미지가 없습니다.</span>}
               <br></br>
-              {console.log("previewUrl")}
-              {console.log(previewUrl)}
-              {previewUrl.length !== 0 ? (
-                previewUrl.map((url, index) => {
+              {previewUrl?.length !== 0 ? (
+                previewUrl?.map((url, index) => {
                   return (
                     <div key={index} style={{ marginBottom: "20px" }}>
                       <button
                         type="button"
                         class="btn imgOverlay"
-                        // data-bs-toggle="modal"
-                        // data-bs-target={`#number${index.toString()}`}
                         style={{
                           width: "200px",
                           pointer: "cursor",
@@ -366,45 +280,11 @@ function Ratingpage() {
                           }}
                         />
                       </button>
-                      {/* <ImagesView
-                      images={url}
-                      index={`number${index.toString()}`}
-                    /> */}
                     </div>
                   );
                 })
               ) : (
                 <div></div>
-                // <div style={{ marginTop: 5 }}>
-                //   {images.map((image, index) => {
-                //     return (
-                //       <div className="imagefilenamebox">
-                //         <div className="imagefilenamecontent">
-                //           <span>{image.name}</span>
-                //           <img
-                //             src={image}
-                //             width="40%"
-                //             height="40%"
-                //             style={{
-                //               float: "left",
-                //               width: "100%",
-                //               borderRadius: "10px",
-                //             }}
-                //             alt=""
-                //           />
-                //           <div
-                //             className="imagefilename-overlay cursor"
-                //             onClick={() => {
-                //               deleteimage(image.name);
-                //             }}
-                //           >
-                //             <i class="bi bi-x-lg"></i>
-                //           </div>
-                //         </div>
-                //       </div>
-                //     );
-                //   })}
-                // </div>
               )}
             </div>
           </div>
@@ -446,21 +326,3 @@ const Stars = styled.div`
     color: #fcc419;
   }
 `;
-
-const ImagesView = ({ images, index }) => {
-  return (
-    <div
-      class="modal fade"
-      id={index}
-      tabindex="-1"
-      aria-labelledby="exampleModalLabel"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog" style={{ maxWidth: "800px" }}>
-        <div className="image-actualsize">
-          <img src={images} alt="" />
-        </div>
-      </div>
-    </div>
-  );
-};

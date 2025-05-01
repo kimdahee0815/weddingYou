@@ -59,6 +59,7 @@ function Review() {
       console.log(error);
     }
   };
+  
   const handleSortClick = (sort) => {
     console.log(sort);
     setCheckSort(!checksort);
@@ -208,11 +209,10 @@ function Review() {
 
         navigate("/rating", {
           state: {
-            estimateId: estimateId,
-
-            planneremail: plannerEmail,
+            estimateId,
+            plannerEmail,
             plannerImg: plannerImgUrl,
-            plannerName: plannerName,
+            plannerName,
           },
         });
       })

@@ -233,35 +233,6 @@ public class PlannerProfileController {
     @PostMapping("/plannerProfile/detail")
     public PlannerProfileDTO getProfileDetail(@RequestParam("plannerEmail") String plannerEmail) throws ParseException {
     	PlannerProfileDTO targetPlannerProfile = plannerService.getPlannerByEmail(plannerEmail);
-//     	 List<String> result = new ArrayList<>();
-//     	 List<Review> reviewData = reviewRepository.findAllByPlannerEmail(plannerEmail);
-//     	result.add(String.valueOf(targetPlannerProfile.getReviewCount()));
-//     	result.add(String.valueOf(targetPlannerProfile.getAvgReviewStars()));	
-//     	result.add(String.valueOf(targetPlannerProfile.getIntroduction()));
-//     	result.add(String.valueOf(targetPlannerProfile.getMatchingCount()));
-//     	result.add(String.valueOf(targetPlannerProfile.getPlannerPhoneNum()));
-   
-//     	if(!targetPlannerProfile.getReviewUsers().equals("[]")) {
-//     		String data = targetPlannerProfile.getReviewUsers().substring(1, targetPlannerProfile.getReviewUsers().length()-1);
-//         	String[] reviewUsers = data.split(",");
-        
-//     		ArrayList<String> userName = new ArrayList<>();
-//     		ArrayList<String> userReview = new ArrayList<>();
-//         	for(int i=0;i<reviewUsers.length;i++) {
-//         		UserUpdateDelete userInfo = userUpdateDeleteRepository.findByEmail(reviewUsers[i].trim());
-//         		userName.add(userInfo.getName());
-//         		userReview.add(reviewData.get(i).getReviewText());
-//         	}
-//         	result.add(String.valueOf(userName));
-//         	result.add(String.valueOf(userReview));
-//         }else {
-//     		result.add("[]");
-//     		result.add("[]");
-//     	}
-    	
-// //    	result.add(String.valueOf(targetPlannerProfile.getReviewUsers()));
-//     	result.add(String.valueOf(targetPlannerProfile.getReviewStars()));
-//     	result.add(String.valueOf(targetPlannerProfile.getPlannerCareerYears()));
     	
 	    return targetPlannerProfile;
     

@@ -89,10 +89,6 @@ public class UserUpdateDeleteController {
 		UserUpdateDelete searchedUser = service.getUserByEmail(email);
 		String imageUrl = s3Service.uploadFile(file, "users/");
 					
-		// if(searchedUser.getUserImg() != null) {
-		// 	Path deleteFilePath = Paths.get(path3, searchedUser.getUserImg());
-		// 	Files.delete(deleteFilePath);
-		// }
 		searchedUser.setUserImg(imageUrl); 
 		service.save(searchedUser); 
 		return ResponseEntity.ok().build();

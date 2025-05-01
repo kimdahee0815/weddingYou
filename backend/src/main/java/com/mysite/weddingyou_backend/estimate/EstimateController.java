@@ -578,8 +578,8 @@ public class EstimateController {
 				public String getPlannerInfoForReview(@RequestParam("matchingPlanner") String plannerEmail, 
 						@RequestParam("targetEstimateId") Long estimateId, @RequestParam("userEmail") String userEmail
 						) throws Exception {
-				    String result="";
-				    List<Estimate> targetData = estimateService.getEstimateDetailByEmail(userEmail);
+				  String result="";
+				  List<Estimate> targetData = estimateService.getEstimateDetailByEmail(userEmail);
 					Estimate targetEstimate = estimateService.getEstimateDetail(estimateId);
 
 					UserUpdateDelete data = userService.getUserByEmail(userEmail);

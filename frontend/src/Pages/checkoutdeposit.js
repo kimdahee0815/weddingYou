@@ -18,7 +18,7 @@ function Checkoutdeposit() {
     estimateId, 
     userName, 
     userPhone, 
-    planneremail, 
+    plannerEmail, 
     plannerName, 
     depositprice,
     plannerImg,
@@ -33,7 +33,6 @@ function Checkoutdeposit() {
   const [depositStatus, setDepositStatus] = useState("cancelled");
   const [paymentType, setPaymentType] = useState("deposit");
   const [userEmail, setUserEmail] = useState(sessionStorage.getItem("email"));
-  const [plannerEmail, setPlannerEmail] = useState(planneremail);
   const [plannerCareerYears, setPlannerCareerYears] = useState(plannerCareer);
 
   useEffect(() => {
@@ -112,10 +111,10 @@ function Checkoutdeposit() {
               sessionStorage.setItem("checkout", "deposit");
               navigate("/checkoutcomp", {
                 state: {
-                  estiamteId: estimateId,
-                  plannerImg: plannerImg,
-                  plannerName: plannerName,
-                  planneremail: planneremail,
+                  estimateId,
+                  plannerImg,
+                  plannerName,
+                  plannerEmail,
                   price: depositprice,
                 },
               });

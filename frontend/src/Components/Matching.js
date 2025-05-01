@@ -180,7 +180,7 @@ function Matching() {
             estimateId: currentUserEstimate.id,
             userName: currentUserEstimate.user.name,
             userPhone: currentUserEstimate.user.phoneNum,
-            planneremail: currentPlannerProfile.plannerEmail,
+            plannerEmail: currentPlannerProfile.plannerEmail,
             plannerName: currentPlannerProfile.plannerName,
             depositprice: depositPrice,
             plannerImg: currentPlannerProfile.plannerProfileImg,
@@ -336,7 +336,7 @@ function Matching() {
                 estimateId: estimateData.id,
                 userName: estimateData.user.name,
                 userPhone: estimateData.user.phoneNum,
-                planneremail: estimateData.plannerProfiles?.[0].plannerEmail,
+                plannerEmail: estimateData.plannerProfiles?.[0].plannerEmail,
                 plannerName: estimateData.plannerProfiles?.[0].plannerName,
                 plannerImg: estimateData.plannerProfiles?.[0].plannerProfileImg,
                 depositprice: depositPrice,
@@ -350,7 +350,7 @@ function Matching() {
                 estimateId: estimateData.id,
                 userName: estimateData.user.name,
                 userPhone: estimateData.user.phoneNum,
-                planneremail: estimateData.plannerProfiles?.[0].plannerEmail,
+                plannerEmail: estimateData.plannerProfiles?.[0].plannerEmail,
                 plannerName: estimateData.plannerProfiles?.[0].plannerName,
                 plannerImg: estimateData.plannerProfiles?.[0].plannerProfileImg,
                 depositprice: depositPrice,
@@ -387,98 +387,20 @@ function Matching() {
   };
 
   const writeReview = (e) => {
-    const bsIndex = e.target.dataset.bsIndex;
-    const bsIndex2 = e.target.dataset.bsIndex2;
-    const estimateId = e.target.dataset.bsEstimateid;
-    const estimateNum = e.target.dataset.bsEstimatenum - 1;
-    const plannerEmail = plannerMatching[bsIndex][bsIndex2];
-    const plannername = plannerName[bsIndex][bsIndex2];
+    const {bsEstimate} = e.target.dataset;
+    const estimate = JSON.parse(bsEstimate);
     const formData = new FormData();
-    formData.append("targetEstimateId", estimateId);
-    formData.append("matchingPlanner", plannerEmail);
-    formData.append("userEmail", sessionStorage.getItem("email"));
+    formData.append("targetEstimateId", estimate.id);
+    formData.append("matchingPlanner", estimate.plannerProfiles[0].plannerEmail);
+    formData.append("userEmail", loggedInEmail);
 
-    axios
-      .post(`/estimate/review`, formData)
-      .then((res) => {
-        const userName = res.data.slice(0, res.data.indexOf("/"));
-        const userPhone = res.data.slice(
-          res.data.indexOf("/") + 1,
-          res.data.indexOf("]")
-        );
-        const plannerEmail = res.data.slice(
-          res.data.indexOf("]") + 1,
-          res.data.indexOf("[")
-        );
-        const plannerName = res.data.slice(
-          res.data.indexOf("[") + 1,
-          res.data.indexOf(",")
-        );
-        const budget = res.data.slice(
-          res.data.indexOf(",") + 1,
-          res.data.indexOf("*")
-        );
-        const plannerImg = res.data.slice(
-          res.data.indexOf("*") + 1,
-          res.data.length
-        );
-        let plannerImgUrl = "data:image/jpeg;base64," + plannerImg;
-
-        navigate("/rating", {
-          state: {
-            estimateId: estimateId,
-            planneremail: plannerEmail,
-            plannerImg: plannerImgUrl,
-            plannerName: plannername,
-          },
-        });
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-  };
-
-  const writeReview2 = (e) => {
-    const estimateNum = e.target.dataset.bsEstimatenum - 1;
-    setSelectEstimateNum(estimateNum);
-    console.log("estimateNum:" + estimateNum);
-    const formData = new FormData();
-    formData.append("userEmail", sessionStorage.getItem("email"));
-    formData.append("estimateNum", estimateNum);
-    axios.post(`/estimate/review2`, formData).then((res) => {
-      console.log(res);
-      const data = res.data;
-
-      if (data.length !== 0) {
-        let selectedPlannerImg = null;
-        let selectedPlanner = null;
-        let selectedPlannerName = null;
-        let estimateId = null;
-        for (let j = 0; j < data.length; j++) {
-          if (j % 4 === 0) {
-            if (data[j] === "null") {
-              selectedPlannerImg = defaultprofileimage;
-            } else {
-              let img = "data:image/jpeg;base64," + data[j];
-              selectedPlannerImg = img;
-            }
-          } else if (j % 4 === 1) {
-            selectedPlannerName = data[j];
-          } else if (j % 4 === 2) {
-            selectedPlanner = data[j];
-          } else if (j % 4 === 3) {
-            estimateId = data[j];
-          }
-        }
-        navigate(`/rating`, {
-          state: {
-            planneremail: selectedPlanner,
-            plannerName: selectedPlannerName,
-            plannerImg: selectedPlannerImg,
-            estimateId: estimateId,
-          },
-        });
-      }
+    navigate("/rating", {
+      state: {
+        estimateId: estimate.id,
+        plannerEmail: estimate.plannerProfiles[0].plannerEmail,
+        plannerImg: estimate.plannerProfiles[0].plannerProfileImg,
+        plannerName: estimate.plannerProfiles[0].plannerName,
+      },
     });
   };
 
@@ -648,7 +570,8 @@ function Matching() {
                            {paymentStatus?.[estimateIndex] && paymentStatus?.[estimateIndex]?.paymentStatus === "paid" ? (
                              <button
                                className="plannerMatchingBtn"
-                               onClick={writeReview2}
+                               data-bs-estimate={JSON.stringify(estimate)}
+                               onClick={writeReview}
                              >
                                리뷰쓰기
                              </button>
@@ -880,10 +803,11 @@ function Matching() {
                                   </button>
                                 </div>
                                 <div>
-                                  {estimatesPaymentStatus?.[estimateIndex]?.paymentStatus === "paid" ? (
+                                  {estimatesPaymentStatus?.[estimateIndex] && estimatesPaymentStatus?.[estimateIndex]?.paymentStatus === "paid" ? (
                                     <button
                                       style={{ width: "140px" }}
                                       className="plannerMatchingBtn"
+                                      data-bs-estimate={JSON.stringify(estimate)}
                                       onClick={writeReview}
                                     >
                                       리뷰쓰기

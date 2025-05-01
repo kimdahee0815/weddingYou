@@ -3,6 +3,8 @@ package com.mysite.weddingyou_backend.review;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -16,6 +18,9 @@ import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.mysite.weddingyou_backend.S3Service;
 import com.mysite.weddingyou_backend.estimate.Estimate;
 import com.mysite.weddingyou_backend.estimate.EstimateRepository;
 import com.mysite.weddingyou_backend.payment.Payment;
@@ -60,6 +66,9 @@ public class ReviewController {
 	
 	@Autowired
 	PaymentRepository paymentRepository;
+
+	@Autowired
+	S3Service s3Service;
 	
 	@Value("${spring.servlet.multipart.location}")
     String uploadDir;
@@ -74,18 +83,16 @@ public class ReviewController {
 		
 		int res = 0;
 	    
-	    // 파일 저장
 		List<String> list = new ArrayList<>();
-	 	if (!(reviewImg == null)) {
-	 	for (MultipartFile file : reviewImg) {
-	 		if (!file.isEmpty()) {
-	 			File storedFilename = new File(UUID.randomUUID().toString() + "_" + file.getOriginalFilename());
-	 			list.add("\"" + storedFilename.toString() + "\"");
-                file.transferTo(storedFilename); //업로드
-	 		}
-	 	}
-	 	}
-	 	
+		if(!(reviewImg == null)) {
+        for (MultipartFile file : reviewImg) {
+            if (!file.isEmpty()) {
+								String imgUrl = s3Service.uploadFile(file, "reviews/");
+								list.add("\"" + imgUrl + "\"");
+						}
+        }
+		}
+
 	 	Review review = new Review();
 	 	if(reviewText.equals("undefined")) {
 	 		review.setReviewText("");
@@ -102,7 +109,6 @@ public class ReviewController {
 	 	PlannerUpdateDelete plannerData = plannerUpdateDeleteRepository.findByEmail(plannerEmail);
 	 	review.setReviewTitle(plannerData.getName()+" 플래너 Review");
 	 	review.setReviewCounts(0);
-	 	System.out.println(review);
 	 	
 	 	if(reviewService.findEstimate(estimateId)!=null) {
 	 		Review targetReview = reviewService.findEstimate(estimateId);
@@ -116,15 +122,11 @@ public class ReviewController {
 	 		res =1;
 	 	}else {
 	 	// 리뷰 생성 및 데이터베이스 저장
-		    reviewService.save(review);
-		    res=1;
+		  reviewService.save(review);
+		  res=1;
 	 	}
-	 	
-	 	
-	    
-	    
+
 	    return res;
-	    
 	}
 	
 	@RequestMapping(value = "/getreviewslist")
@@ -141,7 +143,7 @@ public class ReviewController {
 		
 		Review targetReview  = reviewService.findEstimate(estimateId);
 		if(targetReview ==null) {
-			
+			return null;
 		}
 		return targetReview;
 	}
@@ -160,10 +162,21 @@ public class ReviewController {
 	
 	
 	@RequestMapping("/review/imageview")
-    public ResponseEntity<UrlResource> downloadReviewImg(@RequestParam("image") String stored) throws MalformedURLException {
-        UrlResource resource = new UrlResource("file:" + uploadDir + "/" + stored);
-        return ResponseEntity.ok().body(resource);
-    }
+	public ResponseEntity<byte[]> imgView(@RequestParam("image") String imageUrl) throws MalformedURLException {
+			String fullPath = imageUrl;
+    
+			if(fullPath != null){
+				String key = fullPath.substring(fullPath.indexOf(".com/") + 5);
+				key = URLDecoder.decode(key, StandardCharsets.UTF_8);
+				byte[] imageBytes = s3Service.downloadFile(key);
+	
+				HttpHeaders headers = new HttpHeaders();
+				headers.setContentType(MediaType.IMAGE_JPEG);
+	
+				return new ResponseEntity<>(imageBytes, headers, HttpStatus.OK); 
+			}
+		return ResponseEntity.notFound().build();
+  }
 
 	@Transactional
 	@DeleteMapping("/review/delete/{estimateId}")

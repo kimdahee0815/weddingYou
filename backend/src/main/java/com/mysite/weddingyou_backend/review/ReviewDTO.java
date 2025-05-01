@@ -20,6 +20,8 @@ public class ReviewDTO {
 
 	//작성자
 	private String userEmail;
+
+    private UserLogin user;
     
     // 별점
     private int reviewStars;
@@ -59,6 +61,7 @@ public class ReviewDTO {
         dto.setReviewDate(review.getReviewDate());
         dto.setUserEmail(review.getUserEmail());
         dto.setPlannerEmail(review.getPlannerEmail());
+        dto.setUser(review.getUser());
 
         if (review.getComments() != null) {
             dto.setComments(review.getComments().stream()
@@ -80,6 +83,7 @@ public class ReviewDTO {
         review.setPlannerEmail(this.getPlannerEmail());
         review.setReviewTitle(this.getReviewTitle());
         review.setReviewCounts(this.getReviewCounts());
+        review.setUser(this.getUser());
         
         // 관련된 엔티티 (plannerProfile, user, planner) 설정
         PlannerProfile plannerProfile = new PlannerProfile();

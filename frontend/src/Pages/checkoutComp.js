@@ -11,7 +11,7 @@ const CheckoutComp = () => {
   const impUid = query.get("imp_uid");
   const merchantUid = query.get("merchant_uid");
 
-  const { plannerImg, estimateId, plannerName, planneremail, price } = useLocation().state;
+  const { plannerImg, estimateId, plannerName, plannerEmail, price } = useLocation().state;
 
   const Checkout = ({ checkout }) => {
     if(!isSuccess){
@@ -48,7 +48,7 @@ const CheckoutComp = () => {
                   estimateId,
                   plannerImg,
                   plannerName,
-                  planneremail,
+                  plannerEmail,
                   price,
                 },
               })
