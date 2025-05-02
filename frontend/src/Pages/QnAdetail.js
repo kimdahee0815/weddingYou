@@ -37,7 +37,7 @@ function QnAdetail() {
 
   const navigate = useNavigate();
   const onChangePic = (e) => {
-    console.log(e);
+    //console.log(e);
     const selectedFile = e.target.files[0];
     setImg(selectedFile);
     try {
@@ -55,7 +55,7 @@ function QnAdetail() {
     axios
       .get(`/qna/${qnaId}`)
       .then((res) => {
-        console.log(res);
+      //  console.log(res);
         const data = res.data;
         setTitle(data.qnaTitle);
         setDate(data.qnaWriteDate.slice(0, 10));
@@ -79,7 +79,7 @@ function QnAdetail() {
         axios
           .post(`/qna/getqnaimg`, formData)
           .then((res) => {
-            console.log(res.data);
+          //  console.log(res.data);
             const byteCharacters = atob(res.data);
             const byteNumbers = new Array(byteCharacters.length);
             for (let i = 0; i < byteCharacters.length; i++) {
@@ -109,7 +109,7 @@ function QnAdetail() {
     axios
       .post(`/qna/getqnaimg`, formData)
       .then((res) => {
-        console.log(res.data);
+       // console.log(res.data);
         const byteCharacters = atob(res.data);
         const byteNumbers = new Array(byteCharacters.length);
         for (let i = 0; i < byteCharacters.length; i++) {
@@ -130,7 +130,7 @@ function QnAdetail() {
   }, []);
 
   const handleEditClick = (e) => {
-    console.log(e.target.dataset.bsIndex);
+  //  console.log(e.target.dataset.bsIndex);
     const index = e.target.dataset.bsIndex;
     setEditIndex(e.target.dataset.bsIndex);
     setEditMode(true);
@@ -145,7 +145,7 @@ function QnAdetail() {
     axios
       .post(`/qna/updatecomment`, formData)
       .then((res) => {
-        console.log(res);
+        //console.log(res);
         setUpdated(!updated);
         setInputEditedComment("");
       })
@@ -164,7 +164,7 @@ function QnAdetail() {
     axios
       .delete(`/qna/delete/${qnaId}`)
       .then((res) => {
-        console.log(res);
+        //console.log(res);
         alert(`Q&A 글이 삭제되었습니다!`);
         navigate(`/qnapage`);
       })
@@ -186,7 +186,7 @@ function QnAdetail() {
     axios
       .post(`/qna/update/${qnaId}`, formData)
       .then((res) => {
-        console.log(res);
+        //console.log(res);
         setUpdated(!updated);
       })
       .catch((e) => {
@@ -196,16 +196,13 @@ function QnAdetail() {
   };
 
   const handleDelete2 = (e) => {
-    console.log("===============================");
-
-    console.log(bsIndex);
     const index = bsIndex;
     const formData = new FormData();
     formData.append("index", index);
     formData.append("qnaId", qnaId);
 
     axios.post(`/qna/deletecomment`, formData).then((res) => {
-      console.log(res);
+     // console.log(res);
       alert(`댓글이 삭제되었습니다!`);
       setDeleted(!deleted);
     });
@@ -221,7 +218,7 @@ function QnAdetail() {
     axios
       .post(`/qna/createcomment`, formData)
       .then((res) => {
-        console.log(res);
+       // console.log(res);
         setCreated(!created);
         setCommentContent("");
       })
@@ -341,7 +338,7 @@ function QnAdetail() {
           <div className="ComentArea" style={{ marginBottom: "20px" }}>
             {commentsIndex.map((index) => {
               // setEditedComment(comments[index].commentContent);
-              console.log("index=>" + index);
+             // console.log("index=>" + index);
               return (
                 <div className="Coment">
                   <p className="nickname">{comments[index].commentWriter}</p>

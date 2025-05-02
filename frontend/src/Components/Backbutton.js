@@ -23,7 +23,6 @@ function BackButton({ engTitle }) {
       <button
         class="backbutton"
         onClick={() => {
-          console.log(path);
           if (
             path === "/mypage/user" ||
             path === "/mypage/planner" ||

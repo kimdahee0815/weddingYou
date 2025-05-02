@@ -27,7 +27,7 @@ const EstimateDetail = () => {
           `/estimate/detail/${id}`
         );
         const { data } = response;
-        console.log(data);
+      // console.log(data);
         SetEstimateData(data);
         setLoading(true);
         if (data.plannermatching === null) {
@@ -62,7 +62,7 @@ const EstimateDetail = () => {
           { params: { id: estimateData.id } }
         );
         let { data } = response;
-        console.log("삭제 성공");
+      // console.log("삭제 성공");
         navigate("../estimatelist");
       } catch (e) {
         console.log(e);
@@ -73,14 +73,14 @@ const EstimateDetail = () => {
   const goMatching = (e) => {
     if (plannerMatching === null) {
       let plannerEmail = [sessionStorage.getItem("email")];
-      console.log(plannerEmail);
+    //  console.log(plannerEmail);
       let formData = new FormData();
       formData.append("id", id);
       formData.append("plannermatching", JSON.stringify(plannerEmail));
       axios
         .post(`/estimate/insert/matchingplanner`, formData)
         .then((res) => {
-          console.log(res);
+        //  console.log(res);
           alert("매칭 신청되었습니다!");
         })
         .catch((e) => {
@@ -101,7 +101,7 @@ const EstimateDetail = () => {
         axios
           .post(`/estimate/insert/matchingplanner`, formData)
           .then((res) => {
-            console.log(res);
+           // console.log(res);
             alert("매칭 신청되었습니다!");
           })
           .catch((e) => {

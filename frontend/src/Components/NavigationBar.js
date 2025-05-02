@@ -10,7 +10,7 @@ function NavigationBar({ title, goUpdate, category1, isAdmin, engTitle }) {
   const path = url.pathname;
 
   const [navigationBorder, setNavigationBorder] = useState(false);
-  console.log(window.scrollY);
+  // console.log(window.scrollY);
   window.addEventListener("scroll", () => {
     if (0 <= window.scrollY && window.scrollY < 1) {
       setNavigationBorder(true);
@@ -36,7 +36,6 @@ function NavigationBar({ title, goUpdate, category1, isAdmin, engTitle }) {
             paddingTop: "10px",
           }}
         >
-          {console.log(engTitle)}
           <BackButton engTitle={engTitle} />
           <p style={{ fontSize: "1.8em", marginTop: "10px" }}>{title} </p>
           {path.indexOf("likeList") === 1 ? (

@@ -70,7 +70,7 @@ function CheckoutAll() {
               userEmail
             })
             .then((res) => {
-              console.log(res);
+             // console.log(res);
               const value = res.data;
               if (value === "depositnonvalid") {
                 alert("계약금 결제 먼저 해주세요.");
@@ -109,7 +109,7 @@ function CheckoutAll() {
               userEmail
             })
             .then((res) => {
-              console.log(res);
+             // console.log(res);
               const value = res.data;
               if (value === "depositnonvalid") {
                 alert("계약금 결제 먼저 해주세요.");
@@ -153,7 +153,7 @@ function CheckoutAll() {
           userEmail
         })
         .then((res) => {
-          console.log(res);
+          //console.log(res);
               const value = res.data;
               if (value === "depositnonvalid") {
                 alert("계약금 결제 먼저 해주세요.");

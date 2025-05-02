@@ -16,7 +16,6 @@ function Reviewdetail() {
   const [actionmode, setActionmode] = useState(0);
   const [clicked, setClicked] = useState([false, false, false, false, false]);
   const { estimateId } = useLocation().state;
-  console.log("estimateId=-=-=-=-=-=- : " + estimateId);
 
   const [reviewTitle, setReviewTitle] = useState([]);
   const [rating, setReviewStars] = useState([]);
@@ -77,13 +76,9 @@ function Reviewdetail() {
 
   const handleImageChange = (event) => {
     const selectedImage = event.target.files[0];
-    console.log(event.target.files);
     const imgArr1 = [...imgArr];
     imgArr1.push(selectedImage);
     setImgArr(imgArr1);
-    console.log("+_+_+_+_+_+_++_+_+_+_+");
-    console.log(imgArr1);
-    // setImage(selectedImage);
     try {
       const fileReader = new FileReader();
       const previewUrlArr = [...previewUrl];
@@ -101,7 +96,7 @@ function Reviewdetail() {
     axios
       .get(`/estimateIdReview/${estimateId}`)
       .then((res) => {
-        console.log(res);
+        //console.log(res);
         const data = res.data;
 
         setReviewText(data.reviewText);
@@ -135,12 +130,8 @@ function Reviewdetail() {
 
             const imageUrls = responses.map((res, index) => {
               const resdata = URL.createObjectURL(res.data);
-              console.log("aaaaaaaaa");
-              console.log(res.data);
-
               return resdata;
             });
-            console.log(imageUrls);
             setImages(imageUrls);
           } catch (e) {
             console.log(e);
@@ -159,7 +150,7 @@ function Reviewdetail() {
     axios
       .post(`/reviewauthority/${estimateId}`, formData)
       .then((res) => {
-        console.log(res);
+        //console.log(res);
         if (res.data == 1) {
           setShowAuthorityBtns(true);
         } else {
@@ -172,7 +163,6 @@ function Reviewdetail() {
   }, []);
 
   const handleEditClick = (e) => {
-    console.log(e.target.dataset.bsIndex);
     const index = e.target.dataset.bsIndex;
     setEditIndex(e.target.dataset.bsIndex);
     setEditMode(true);
@@ -187,7 +177,7 @@ function Reviewdetail() {
     axios
       .post(`/updatecomment`, formData)
       .then((res) => {
-        console.log(res);
+       // console.log(res);
         setUpdated(!updated);
         setInputEditedComment("");
       })
@@ -205,26 +195,26 @@ function Reviewdetail() {
     axios
       .get(`/estimateIdReview/${estimateId}`)
       .then((res) => {
-        console.log(res);
+        //console.log(res);
         const data = res.data;
         if (data != null) {
           const reviewStars = data.reviewStars;
           const text = data.reviewText;
-          console.log(reviewText);
+          //console.log(reviewText);
           let clickStates = [...clicked];
           for (let i = 0; i < 5; i++) {
             clickStates[i] = i < reviewStars ? true : false;
           }
           setClicked(clickStates);
           const Rating = reviewStars;
-          console.log(Rating);
+          //console.log(Rating);
           setReviewStars(Rating);
           setReviewText(text);
           const getImages = async () => {
             try {
-              console.log(data.reviewImg);
+             // console.log(data.reviewImg);
               const imagearray = JSON.parse(data.reviewImg);
-              console.log(imagearray);
+             // console.log(imagearray);
               const imgNameArr = [];
               const fileTypeArr = [];
               for (let i = 0; i < imagearray.length; i++) {
@@ -249,8 +239,7 @@ function Reviewdetail() {
               const imgFileArr = [];
               const imageUrls = responses.map((res, index) => {
                 const resdata = URL.createObjectURL(res.data);
-                console.log("aaaaaaaaa");
-                console.log(res.data);
+               // console.log(res.data);
                 const blob = res.data;
                 const file = new File([blob], imgNameArr[index], {
                   type: `image/${fileTypeArr[index]}`,
@@ -261,7 +250,7 @@ function Reviewdetail() {
                 const getImgSrc = async (event, files) => {
                   const getPreviewUrls = imgFileArr.map((file) => {
                     const selectedImage = file;
-                    console.log("fileReader.result");
+                    //console.log("fileReader.result");
                     return new Promise((resolve, reject) => {
                       const fileReader = new FileReader();
                       fileReader.onload = async () => {
@@ -287,7 +276,7 @@ function Reviewdetail() {
 
                 return resdata;
               });
-              console.log(imageUrls);
+            //  console.log(imageUrls);
               setImages(imageUrls);
               setOriginImagesFile(imgFileArr);
               setImgArr(imgFileArr);
@@ -315,9 +304,8 @@ function Reviewdetail() {
     if (isNaN(rating)) {
       ratingstars = 0;
     }
-    console.log(ratingstars);
+    //console.log(ratingstars);
     formData.append("reviewStars", ratingstars);
-    console.log("+_+_+_+_+_+_+_+_+");
     if (imgArr.length > 0) {
       for (let i = 0; i < imgArr.length; i++) {
         formData.append("reviewImg", imgArr[i]);
@@ -334,7 +322,7 @@ function Reviewdetail() {
       axios
         .post("/updatedreviews", formData)
         .then((res) => {
-          console.log("성공:", res);
+         // console.log("성공:", res);
           alert("리뷰 수정 완료!");
           navigate(`/review`);
         })
@@ -390,7 +378,7 @@ function Reviewdetail() {
 
   const handleDelete = () => {
     axios.delete(`/review/delete/${estimateId}`).then((res) => {
-      console.log(res);
+     // console.log(res);
       alert(`글이 삭제되었습니다!`);
       navigate(`/review`);
     });
@@ -398,16 +386,13 @@ function Reviewdetail() {
   };
 
   const handleDelete2 = (e) => {
-    console.log("===============================");
-
-    console.log(bsIndex);
     const index = bsIndex;
     const formData = new FormData();
     formData.append("index", index);
     formData.append("estimateId", estimateId);
 
     axios.post(`/deletecomment`, formData).then((res) => {
-      console.log(res);
+     // console.log(res);
       alert(`댓글이 삭제되었습니다!`);
       setDeleted(!deleted);
     });
@@ -423,7 +408,7 @@ function Reviewdetail() {
     axios
       .post(`/createcomment`, formData)
       .then((res) => {
-        console.log(res);
+       // console.log(res);
         setCreated(!created);
         setCommentContent("");
       })
@@ -582,7 +567,7 @@ function Reviewdetail() {
           <div className="ComentArea">
             {reviewCommentsIndex.map((index) => {
               // setEditedComment(reviewComments[index].commentContent);
-              console.log("index=>" + index);
+             // console.log("index=>" + index);
               return (
                 <div className="Coment">
                   <p className="nickname">

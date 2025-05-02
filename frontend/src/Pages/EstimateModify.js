@@ -20,7 +20,7 @@ const EstimateModify = () => {
           `/estimate/detail/${id}`
         );
         let { data } = response;
-        console.log(data);
+        //console.log(data);
         setbudget(data.budget.toLocaleString());
         sethoneymoon(data.honeymoon);
         setrequirement(data.requirement);
@@ -372,7 +372,7 @@ const EstimateModify = () => {
       axios
         .post("/estimate/modify", formData)
         .then((res) => {
-          console.log("성공");
+          //console.log("성공");
           navigate(`../estimatedetail/${id}`);
         })
         .catch((e) => {
@@ -388,11 +388,7 @@ const EstimateModify = () => {
         <NavigationBar title="견적서 수정" />
         <div className="contentcontainer">
           <div className="contentbox">
-            <h5
-              onClick={() => {
-                console.log(date);
-              }}
-            >
+            <h5>
               희망 결혼 예정일
             </h5>
             <div className="choosebox">

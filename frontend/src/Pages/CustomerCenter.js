@@ -23,7 +23,7 @@ function CustomerCenter() {
     axios
       .get(`/notice/list`)
       .then((res) => {
-        console.log(res);
+       // console.log(res);
         const data = res.data;
         const noticeviewcountarr = [];
         const noticeTitleArr = [];
@@ -47,7 +47,7 @@ function CustomerCenter() {
     axios
       .get(`/qna/list`)
       .then((res) => {
-        console.log(res);
+       // console.log(res);
         const data = res.data;
         const qnaviewcountarr = [];
         const qnaTitleArr = [];
@@ -109,7 +109,7 @@ function CustomerCenter() {
                           axios
                             .post(`/notice/addviewcount`, formData)
                             .then((res) => {
-                              console.log(res);
+                          //    console.log(res);
                             })
                             .catch((e) => {
                               console.log(e);
@@ -132,7 +132,7 @@ function CustomerCenter() {
                           axios
                             .post(`/notice/addviewcount`, formData)
                             .then((res) => {
-                              console.log(res);
+                           //   console.log(res);
                             })
                             .catch((e) => {
                               console.log(e);
@@ -155,7 +155,7 @@ function CustomerCenter() {
                           axios
                             .post(`/notice/addviewcount`, formData)
                             .then((res) => {
-                              console.log(res);
+                             // console.log(res);
                             })
                             .catch((e) => {
                               console.log(e);
@@ -212,7 +212,7 @@ function CustomerCenter() {
                           axios
                             .post(`/qna/addviewcount`, formData)
                             .then((res) => {
-                              console.log(res);
+                            //  console.log(res);
                             })
                             .catch((e) => {
                               console.log(e);
@@ -235,7 +235,7 @@ function CustomerCenter() {
                           axios
                             .post(`/qna/addviewcount`, formData)
                             .then((res) => {
-                              console.log(res);
+                             // console.log(res);
                             })
                             .catch((e) => {
                               console.log(e);
@@ -258,7 +258,7 @@ function CustomerCenter() {
                           axios
                             .post(`/qna/addviewcount`, formData)
                             .then((res) => {
-                              console.log(res);
+                             // console.log(res);
                             })
                             .catch((e) => {
                               console.log(e);

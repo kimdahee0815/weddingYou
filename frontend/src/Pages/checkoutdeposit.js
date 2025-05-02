@@ -51,7 +51,7 @@ function Checkoutdeposit() {
         estimateId,
       })
       .then((res) => {
-        console.log(res);
+       // console.log(res);
         const plannerCareerYearsData = res.data;
         setPlannerCareerYears(plannerCareerYearsData);
         if (plannerCareerYearsData >= 0 && plannerCareerYearsData < 5) {
@@ -89,7 +89,7 @@ function Checkoutdeposit() {
       function (rsp) {
         // callback
         if (rsp.success) {
-          console.log(rsp);
+          //console.log(rsp);
 
           axios
             .post("/deposit/callback", {
@@ -106,7 +106,7 @@ function Checkoutdeposit() {
               estimateId,
             })
             .then((res) => {
-              console.log(res);
+             // console.log(res);
 
               sessionStorage.setItem("checkout", "deposit");
               navigate("/checkoutcomp", {
@@ -123,7 +123,7 @@ function Checkoutdeposit() {
               console.log(e);
             });
         } else {
-          console.log(rsp);
+          //console.log(rsp);
           alert(rsp.error_msg);
           navigate("/matching");
         }

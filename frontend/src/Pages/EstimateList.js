@@ -73,7 +73,7 @@ const EstimateList = () => {
 
   //검색어
   const enterSearch = (e) => {
-    console.log(search);
+   // console.log(search);
     setSearch(e.target.value);
   };
 
@@ -83,7 +83,7 @@ const EstimateList = () => {
         params: { search: search },
       })
       .then((res) => {
-        console.log(res.data);
+       // console.log(res.data);
         if (startDate === null && endDate === null) {
           let { data } = res;
           setWithCompletelist(false);

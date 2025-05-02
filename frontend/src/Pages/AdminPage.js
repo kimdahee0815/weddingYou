@@ -53,12 +53,12 @@ const AdminPage = () => {
     const koreanNameRegExp = /^[가-힣\s]{1,5}$/;
     setUserName(e.target.value);
     if (koreanNameRegExp.test(e.target.value)) {
-      console.log("형식에 맞음");
+      // console.log("형식에 맞음");
       document.querySelector(".userNameModify").classList.remove("is-invalid");
       document.querySelector(".userNameModify").classList.add("is-valid");
       setNameCheck(true);
     } else {
-      console.log("형식에 맞지 않음");
+      // console.log("형식에 맞지 않음");
       document.querySelector(".userNameModify").classList.remove("is-valid");
       document.querySelector(".userNameModify").classList.add("is-invalid");
       setNameCheck(false);
@@ -102,13 +102,6 @@ const AdminPage = () => {
   };
 
   const onUserDataModify = (id, type) => {
-    console.log(id);
-    console.log(userName);
-    console.log(userPassword);
-    console.log(userPhone);
-    console.log(type);
-    console.log(userArticle.email);
-
     if (nameCheck == false) {
       alert("이름의 형식이 올바르지 않습니다.");
       return false;
@@ -131,12 +124,12 @@ const AdminPage = () => {
           type: type,
         })
         .then((res) => {
-          console.log("수정성공");
+          // console.log("수정성공");
           getUserListCount();
           getUserList();
         })
         .catch((e) => {
-          console.log("실패");
+          // console.log("실패");
         });
     } else {
       axios
@@ -149,12 +142,12 @@ const AdminPage = () => {
           type: type,
         })
         .then((res) => {
-          console.log("수정성공");
+          // console.log("수정성공");
           getUserListCount();
           getUserList();
         })
         .catch((e) => {
-          console.log("실패");
+          // console.log("실패");
         });
     }
   };
@@ -181,7 +174,7 @@ const AdminPage = () => {
     axios
       .get("/estimate/getcount", {})
       .then((res) => {
-        console.log("data=>", res.data);
+        // console.log("data=>", res.data);
         const { data } = res;
         article_countPost = data; //총 글의 갯수 저장.
         page_count = Math.ceil(article_countPost / page_size); //무조건 올림처리 함. 9.1도 10으로, 필요한 페이지 개수를 계산함.
@@ -189,7 +182,7 @@ const AdminPage = () => {
         for (let i = 1; i <= page_count; i++) {
           page_link.push(i);
         }
-        console.log("getArticleCount(page_link) =>", page_link);
+        // console.log("getArticleCount(page_link) =>", page_link);
         setPageLink(page_link);
       })
       .catch((e) => {
@@ -204,9 +197,9 @@ const AdminPage = () => {
         limit: page_size,
       })
       .then((res) => {
-        console.log("res ==>", res);
+        // console.log("res ==>", res);
         const { data } = res;
-        console.log("data==>", data);
+        // console.log("data==>", data);
         setPostList(data);
       })
       .catch((e) => {
@@ -232,7 +225,7 @@ const AdminPage = () => {
         params: { page: 0, size: page_size },
       });
       let { data } = res;
-      console.log("유저리스트", data);
+      // console.log("유저리스트", data);
       setUserList(data.content);
     } catch (e) {
       console.log(e);
@@ -244,14 +237,14 @@ const AdminPage = () => {
     try {
       let res = await axios.get("/mypageAdmin/count");
       let { data } = res;
-      console.log("총 유저 데이터 수", data);
+      // console.log("총 유저 데이터 수", data);
       article_countUser = data; //총 글의 갯수 저장.
       page_count = Math.ceil(article_countUser / page_size); //무조건 올림처리 함. 9.1도 10으로, 필요한 페이지 개수를 계산함.
       var page_link = []; //map 함수를 사용하기 위한 배열화.
       for (let i = 1; i <= page_count; i++) {
         page_link.push(i);
       }
-      console.log("getArticleCount(page_link) =>", page_link);
+     // console.log("getArticleCount(page_link) =>", page_link);
       setUserPageLink(page_link);
       let tag = document.querySelectorAll(".ugAll");
       tag.forEach((e) => {
@@ -274,9 +267,9 @@ const AdminPage = () => {
     const initialize = async () => {
       try {
         const res = await axios.post('/admin/init');
-        console.log('초기화 완료:', res.data);
+        // console.log('초기화 완료:', res.data);
       } catch (err) {
-        console.error('초기화 실패', err);
+        // console.error('초기화 실패', err);
       }
     };
     initialize();
@@ -363,7 +356,7 @@ const AdminPage = () => {
   let [userPage, setUserPage] = useState(1);
 
   useEffect(() => {
-    console.log("실행됨", postPage);
+    // console.log("실행됨", postPage);
     const onPostPageing = (e) => {
       //검색상태 아닐 때
       const fetchData = () => {
@@ -374,9 +367,9 @@ const AdminPage = () => {
             limit: page_size,
           })
           .then((res) => {
-            console.log("res ==>", res);
+            //console.log("res ==>", res);
             const { data } = res;
-            console.log("data==>", data);
+            //console.log("data==>", data);
             setPostList(data);
           })
           .catch((e) => {
@@ -393,9 +386,9 @@ const AdminPage = () => {
             search: postSearchPageing,
           })
           .then((res) => {
-            console.log("res ==>", res);
+           // console.log("res ==>", res);
             const { data } = res;
-            console.log("data==>", data);
+           // console.log("data==>", data);
             setPostList(data);
           })
           .catch((e) => {
@@ -418,7 +411,7 @@ const AdminPage = () => {
   }, [postPage]);
 
   useEffect(() => {
-    console.log("유저페이지", userPage);
+   // console.log("유저페이지", userPage);
     const onUserPageing = (e) => {
       const fetchData = async () => {
         try {
@@ -502,7 +495,7 @@ const AdminPage = () => {
         })
         .then((res) => {
           let { data } = res;
-          console.log(data);
+          //console.log(data);
           setUserList(data.content);
         })
         .catch((e) => {
@@ -516,14 +509,14 @@ const AdminPage = () => {
         })
         .then((res) => {
           let { data } = res;
-          console.log(data);
+         // console.log(data);
           article_countUser = data; //총 글의 갯수 저장.
           page_count = Math.ceil(article_countUser / page_size); //무조건 올림처리 함. 9.1도 10으로, 필요한 페이지 개수를 계산함.
           var page_link = []; //map 함수를 사용하기 위한 배열화.
           for (let i = 1; i <= page_count; i++) {
             page_link.push(i);
           }
-          console.log("getArticleCount(page_link) =>", page_link);
+          //console.log("getArticleCount(page_link) =>", page_link);
           setUserPageLink(page_link);
           let tag = document.querySelectorAll(".ugAll");
           tag.forEach((e) => {
@@ -549,7 +542,7 @@ const AdminPage = () => {
         search: postSearch,
       })
       .then((res) => {
-        console.log("data=>", res.data);
+        //console.log("data=>", res.data);
         const { data } = res;
         article_countPost = data; //총 글의 갯수 저장.
         page_count = Math.ceil(article_countPost / page_size); //무조건 올림처리 함. 9.1도 10으로, 필요한 페이지 개수를 계산함.
@@ -557,15 +550,15 @@ const AdminPage = () => {
         for (let i = 1; i <= page_count; i++) {
           page_link.push(i);
         }
-        console.log("getArticleCount(page_link) =>", page_link);
+        //console.log("getArticleCount(page_link) =>", page_link);
         setPageLink(page_link);
       })
       .catch((e) => {
         console.log(e);
       });
 
-    console.log("start=>", page_num);
-    console.log("page_num=>", page_num);
+    // console.log("start=>", page_num);
+    // console.log("page_num=>", page_num);
     axios
       .post("/estimate/getsearchlistpageing", {
         page_num: page_num,
@@ -573,9 +566,9 @@ const AdminPage = () => {
         search: postSearch,
       })
       .then((res) => {
-        console.log("res ==>", res);
+       // console.log("res ==>", res);
         const { data } = res;
-        console.log("data==>", data);
+       // console.log("data==>", data);
         setPostList(data);
       })
       .catch((e) => {
@@ -593,7 +586,7 @@ const AdminPage = () => {
     axios
       .get("/estimate/delete", { params: { id: id } })
       .then((res) => {
-        console.log(res);
+       // console.log(res);
         getPostList();
       })
       .catch((e) => {
@@ -651,9 +644,6 @@ const AdminPage = () => {
             </div>
             <div
               className="adminpage-Administration-list"
-              onClick={() => {
-                console.log(userPage);
-              }}
             >
               <div className="adminpage-Administration-list-head-box">
                 <div
@@ -789,9 +779,6 @@ const AdminPage = () => {
                 <div
                   className="adminpage-Administration-list-head"
                   style={{ width: "14%" }}
-                  onClick={() => {
-                    console.log();
-                  }}
                 >
                   글번호
                 </div>
@@ -1038,7 +1025,7 @@ const PostListData = ({ array2, postDetail }) => {
   return (
     <>
       {array2.map((e, index) => {
-        console.log("matchedplanner:" + JSON.parse(e.plannermatching)[0]);
+        // console.log("matchedplanner:" + JSON.parse(e.plannermatching)[0]);
         const matchedplanner = JSON.parse(e.plannermatching)[0];
         // setMatchedPlanner(matchedplanner);
         return (

@@ -44,8 +44,8 @@ function Matching() {
           const {data:userEstimates} = await axios.get(`/estimate/users/detail`, {
             params: { userEmail: loggedInEmail },
           });
-          console.log("userEstimates")
-          console.log(userEstimates)
+          // console.log("userEstimates")
+          // console.log(userEstimates)
           setUserEstimates(userEstimates)
         } catch (e) {
           console.log(e);
@@ -59,8 +59,8 @@ function Matching() {
           const {data:plannerEstimates} = await axios.get(`/estimate/planners/detail`, {
             params: { userEmail: loggedInEmail },
           });
-          console.log("plannerEstimates")
-          console.log(plannerEstimates)
+          // console.log("plannerEstimates")
+          // console.log(plannerEstimates)
           setPlannerEstimates(plannerEstimates)
         } catch (e) {
           console.log(e);
@@ -79,8 +79,8 @@ function Matching() {
       axios
         .post(`/plannerProfile/match/users`, formData)
         .then((res) => {
-          console.log("matchedUsers")
-          console.log(res.data)
+          // console.log("matchedUsers")
+          // console.log(res.data)
           const matchedUsersData = res.data;
           setMatchedUsers(matchedUsersData)
         })
@@ -93,8 +93,8 @@ function Matching() {
       axios
         .post(`/plannerProfile/match/planners`, formData)
         .then((res) => {
-          console.log("matchedPlanners")
-          console.log(res.data)
+          // console.log("matchedPlanners")
+          // console.log(res.data)
           const matchedPlannersData = res.data;
           setMatchedPlanners(matchedPlannersData)
         })
@@ -163,8 +163,8 @@ function Matching() {
     axios
       .post(`/estimate/matching`, formData)
       .then((res) => {
-        console.log("matching")
-        console.log(res.data);
+        // console.log("matching")
+        // console.log(res.data);
         let depositPrice = 0;
         let careerYears = currentPlannerProfile.career;
         if(careerYears < 5 && careerYears >= 0){
@@ -221,8 +221,8 @@ function Matching() {
     axios
       .post(`/payment-status`, formData)
       .then((res) => {
-        console.log("payment-status")
-        console.log(res.data);
+        // console.log("payment-status")
+        // console.log(res.data);
         const paymentStatus = res.data;
         
         if (sessionStorage.getItem("category") === "user"){
@@ -237,8 +237,8 @@ function Matching() {
           })
           setEstimatesPaymentStatus(newPaymentStatus);
           setPaymentStatus(newPaymentStatus.filter(s => s !== null))
-          console.log("newPaymetnStatus")
-          console.log(newPaymentStatus);
+          // console.log("newPaymetnStatus")
+          // console.log(newPaymentStatus);
         }else if(sessionStorage.getItem("category") === "planner"){
           const newPaymentStatus = [];
           userEstimates.forEach(e => {
@@ -251,8 +251,8 @@ function Matching() {
           })
           setEstimatesPaymentStatus(newPaymentStatus);
           setPaymentStatus(newPaymentStatus.filter(s => s !== null))
-          console.log("newPaymetnStatus")
-          console.log(newPaymentStatus);
+          // console.log("newPaymetnStatus")
+          // console.log(newPaymentStatus);
         }
       })
       .catch((e) => {
@@ -263,8 +263,8 @@ function Matching() {
   //매칭취소 modal
   const CancelMatchingModal = (e) => {
     const {bsEstimate:estimate, bsPlanner:plannerProfile} = e.target.dataset;
-    console.log(JSON.parse(estimate));
-    console.log(matchedUsers)
+    // console.log(JSON.parse(estimate));
+    // console.log(matchedUsers)
     if(plannerProfile){
       setCurrentPlannerProfile(JSON.parse(plannerProfile));
     }
@@ -315,7 +315,7 @@ function Matching() {
     formData.append("plannerEmail", estimateData?.plannerProfiles?.[0].plannerEmail)
     formData.append("estimateId", estimateData.id);
 
-    console.log(estimateData)
+    // console.log(estimateData)
     let depositPrice = 0;
     let careerYears = estimateData.plannerProfiles?.[0].career;
     if(careerYears < 5 && careerYears >= 0){
@@ -328,7 +328,7 @@ function Matching() {
     axios
       .post(`/deposit/check`, formData)
       .then((res) => {
-        console.log(res);
+        // console.log(res);
         const status = res.data;
         if (status === "payment") {
             navigate("/checkoutall", {

@@ -12,7 +12,7 @@ import Sidesection from "../Components/Sidesection";
 function UserUpdate() {
   const { state: {passwordCheck, image:defaultImage} } = useLocation();
   const { category } = useParams();
-console.log(defaultImage)
+
   let userOrPlanner = "";
   if (category === "user") {
     userOrPlanner = "회원";
@@ -372,7 +372,7 @@ console.log(defaultImage)
         setAllCheck(false);
       }
     } else if (e.target.id === "name") {
-      console.log(e.target.value);
+      //console.log(e.target.value);
       setName(e.target.value);
       const koreanNameRegExp = /^[가-힣\s]+$/;
 
@@ -650,7 +650,7 @@ console.log(defaultImage)
               introduction: introduction,
             })
             .then((res) => {
-              console.log(res);
+             // console.log(res);
               setEmail(res.data.email);
               setDefaultEmail(res.data.email);
               setName(res.data.name);

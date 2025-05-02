@@ -36,7 +36,7 @@ function Noticedetail() {
     axios
       .get(`/notice/${noticeId}`)
       .then((res) => {
-        console.log(res);
+       // console.log(res);
         const data = res.data;
         setTitle(data.noticeTitle);
         setDate(data.noticeWriteDate.slice(0, 10));
@@ -51,7 +51,7 @@ function Noticedetail() {
     axios
       .post(`/notice/getnoticeimg`, formData)
       .then((res) => {
-        console.log(res.data);
+       // console.log(res.data);
         const byteCharacters = atob(res.data);
         const byteNumbers = new Array(byteCharacters.length);
         for (let i = 0; i < byteCharacters.length; i++) {
@@ -75,7 +75,7 @@ function Noticedetail() {
     axios
       .delete(`/notice/delete/${noticeId}`)
       .then((res) => {
-        console.log(res);
+      //  console.log(res);
         navigate(`/noticepage`);
       })
       .catch((e) => {
@@ -98,7 +98,7 @@ function Noticedetail() {
     axios
       .post(`/notice/update/${noticeId}`, formData)
       .then((res) => {
-        console.log(res);
+      //  console.log(res);
       })
       .catch((e) => {
         console.log(e);

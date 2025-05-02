@@ -108,14 +108,14 @@ function Home() {
         const promises = category.map(c =>axios.get(`/item/itemList/${c}`))
         const responses = await Promise.all(promises);
         let items = responses.map(res => res.data);
-        console.log(items.map(itemList => itemList.map(item => ({
-          ...item,
-          likeCount:item.like?.length,
-          isLiked: item.like?.some(like => 
-            like.user?.email === sessionStorage.getItem("email") ||
-            like.planner?.email === sessionStorage.getItem("email")
-          ) || false,
-        }))))
+        // console.log(items.map(itemList => itemList.map(item => ({
+        //   ...item,
+        //   likeCount:item.like?.length,
+        //   isLiked: item.like?.some(like => 
+        //     like.user?.email === sessionStorage.getItem("email") ||
+        //     like.planner?.email === sessionStorage.getItem("email")
+        //   ) || false,
+        // }))))
         setWholeItems(items.map(itemList => itemList.map(item => ({
           ...item,
           likeCount:item.like?.length,

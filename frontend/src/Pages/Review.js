@@ -34,7 +34,7 @@ function Review() {
         `/estimate/detail/${selectedEstimateId}`
       );
       const { data } = response;
-      console.log(data);
+     // console.log(data);
       SetEstimateData(data);
       if (data.userMatching === null) {
         setUserMatching(null);
@@ -61,7 +61,7 @@ function Review() {
   };
   
   const handleSortClick = (sort) => {
-    console.log(sort);
+  //  console.log(sort);
     setCheckSort(checksort => !checksort);
     setSelectedSort(sort); // 선택한 정렬로 버튼명 변경
   };
@@ -70,11 +70,11 @@ function Review() {
     axios
       .get(`/getreviewslist`)
       .then((res) => {
-        console.log(res);
+       // console.log(res);
         let data = res.data;
         if (selectedSort === "별점순") {
           data.sort(function (a, b) {
-            console.log(a.reviewStars);
+           // console.log(a.reviewStars);
             if (a.reviewStars < b.reviewStars) return 1;
             if (a.reviewStars > b.reviewStars) return -1;
             if (a.reviewStars === b.reviewStars) {
@@ -132,7 +132,7 @@ function Review() {
     const formData = new FormData();
     formData.append("userEmail", sessionStorage.getItem("email"));
     axios.post(`/existreviewpaid`, formData).then((res) => {
-      console.log("data:++++++++++++++" + res.data);
+    //  console.log("data:++++++++++++++" + res.data);
       console.log(res);
       let indexArr = [];
       if (res.data.length !== 0) {
@@ -144,7 +144,7 @@ function Review() {
         setEstimateIdArr(estimateIdArr);
         setEstimateIndex(indexArr);
         setSelectEstimateId(estimateIdArr[0]);
-        console.log(estimateIdArr[0]);
+      //  console.log(estimateIdArr[0]);
         const defaultEstimateId = estimateIdArr[0];
         const fetchData1 = async () => {
           try {
@@ -152,7 +152,7 @@ function Review() {
               `/estimate/detail/${defaultEstimateId}`
             );
             const { data } = response;
-            console.log(data);
+            //console.log(data);
             SetEstimateData(data);
             if (data.userMatching === null) {
               setUserMatching(null);
@@ -196,7 +196,7 @@ function Review() {
     axios
       .post(`/plannerinforeview`, formData)
       .then((res) => {
-        console.log(res.data);
+        //console.log(res.data);
         const plannerEmail = res.data.slice(0, res.data.indexOf("["));
 
         const plannerName = res.data.slice(
@@ -305,7 +305,7 @@ function Review() {
                       axios
                         .put(`/reviewcount/${estimateIds[index]}`)
                         .then((res) => {
-                          console.log(res);
+                        //  console.log(res);
                         })
                         .catch((e) => {
                           console.log(e);
@@ -415,8 +415,8 @@ function Review() {
                     aria-label=".form-select-lg example"
                     style={{ width: "460px" }}
                     onChange={(e) => {
-                      console.log(e);
-                      console.log(e.target.value);
+                     // console.log(e);
+                     // console.log(e.target.value);
                       setSelectIndex(e.target.value);
                       const index = e.target.value;
                       setSelectEstimateId(estimateIdArr[index]);
@@ -445,8 +445,6 @@ function Review() {
                       marginTop: "-100px",
                     }}
                   >
-                    {console.log(estimateData)}
-                    {console.log(estimateData === null)}
                     {estimateData !== null ? (
                       <div className="contentcontainer-detail">
                         <div className="contentbox-detail">

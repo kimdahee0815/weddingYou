@@ -34,7 +34,7 @@ function PlannerProfileDetail() {
       .post(`/plannerProfile/detail`, formData)
       .then(async (res) => {
         const data = res.data;
-        console.log(data);
+       // console.log(data);
         setProfileDetail(data);
 
         formData = new FormData();

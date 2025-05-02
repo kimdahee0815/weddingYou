@@ -125,7 +125,7 @@ function NotFound() {
               type="button"
               className="btn-colour-1 "
               onClick={() => {
-                console.log(passwordCheck);
+               // console.log(passwordCheck);
                 if (path.indexOf("mypageabc") !== -1) {
                   navigate(`/mypage/${sessionStorage.getItem("category")}`);
                 } else if (

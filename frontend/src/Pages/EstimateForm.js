@@ -201,7 +201,7 @@ const EstimateForm = () => {
   const deleteimage = (image) => {
     let copy = [...images];
     for (let i = 0; i < copy.length; i++) {
-      console.log(i);
+    //  console.log(i);
       if (copy[i].name === image) {
         copy.splice(i, 1);
         setimages(copy);
@@ -292,7 +292,7 @@ const EstimateForm = () => {
       axios
         .post("/estimate/write", formData)
         .then((res) => {
-          console.log("성공");
+         // console.log("성공");
           navigate("/estimatelist");
         })
         .catch((e) => {
@@ -308,11 +308,7 @@ const EstimateForm = () => {
         <NavigationBar title="내가 원하는 웨딩은?" />
         <div className="contentcontainer">
           <div className="contentbox">
-            <h5
-              onClick={() => {
-                console.log(images);
-              }}
-            >
+            <h5>
               희망 결혼 예정일
             </h5>
             <div className="choosebox">

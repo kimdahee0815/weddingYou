@@ -25,7 +25,7 @@ function ContentWrite() {
       axios
         .post(`/notice/post`, formData)
         .then((res) => {
-          console.log(res);
+          //console.log(res);
           if (res.data != null) {
             alert(`공지사항 글 작성이 완료되었습니다!`);
             navigate(`/noticepage`);
@@ -43,7 +43,7 @@ function ContentWrite() {
       axios
         .post(`/qna/post`, formData)
         .then((res) => {
-          console.log(res);
+          //console.log(res);
           if (res.data != null) {
             alert(`Q&A 글 작성이 완료되었습니다!`);
             navigate(`/qnapage`);

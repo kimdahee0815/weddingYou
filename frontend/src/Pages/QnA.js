@@ -19,7 +19,7 @@ function QnA() {
     axios
       .get(`/qna/list`)
       .then((res) => {
-        console.log(res);
+       // console.log(res);
         const data = res.data;
         const qnaContentArr = [];
         const qnaIdArr = [];
@@ -135,7 +135,7 @@ function QnA() {
                           axios
                             .post(`/qna/addviewcount`, formData)
                             .then((res) => {
-                              console.log(res);
+                           //   console.log(res);
                             })
                             .catch((e) => {
                               console.log(e);
@@ -158,7 +158,7 @@ function QnA() {
                           axios
                             .post(`/qna/addviewcount`, formData)
                             .then((res) => {
-                              console.log(res);
+                            //  console.log(res);
                             })
                             .catch((e) => {
                               console.log(e);
@@ -181,7 +181,7 @@ function QnA() {
                           axios
                             .post(`/qna/addviewcount`, formData)
                             .then((res) => {
-                              console.log(res);
+                            //  console.log(res);
                             })
                             .catch((e) => {
                               console.log(e);

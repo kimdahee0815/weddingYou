@@ -70,7 +70,7 @@ const Honeymoon = () => {
     axios
       .post(`/item/deleteItem/${currentItem.itemId}`)
       .then((res) => {
-        console.log(res);
+       // console.log(res);
         setUpdate(!update);
       })
       .catch((e) => {

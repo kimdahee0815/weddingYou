@@ -28,17 +28,17 @@ function Login() {
 
   const handleInputId = (e) => {
     setInputId(e.target.value);
-    console.log(e.target.value);
+   // console.log(e.target.value);
   };
 
   const handleInputPw = (e) => {
     setInputPw(e.target.value);
-    console.log(e.target.value);
+   // console.log(e.target.value);
   };
 
   const handleRole = (e) => {
     setRole(e.target.value);
-    console.log(e.target.value);
+   // console.log(e.target.value);
   };
 
   const onClickLogin = () => {
@@ -49,13 +49,13 @@ function Login() {
           password: inputPw,
         })
         .then((res) => {
-          console.log("res.data.email :: ", res.data.email);
+         // console.log("res.data.email :: ", res.data.email);
           if (inputId === null || inputPw === null) {
             alert("회원정보를 입력해주세요");
           } else if (res.data.email === undefined || res.data.email === null) {
             alert("입력하신 id나 password가 일치하지 않습니다.");
           } else {
-            console.log("======================", "유저 로그인 성공");
+           // console.log("======================", "유저 로그인 성공");
             sessionStorage.setItem("email", res.data.email);
             sessionStorage.setItem("category", "user");
             // sessionStorage.setItem("user_name", res.data.name); // sessionStorage에 name을 user_name이라는 key 값으로 저장
@@ -72,13 +72,13 @@ function Login() {
           password: inputPw,
         })
         .then((res) => {
-          console.log("res.data.email :: ", res.data.email);
+        //  console.log("res.data.email :: ", res.data.email);
           if (inputId === null || inputPw === null) {
             alert("회원정보를 입력해주세요");
           } else if (res.data.email === undefined || res.data.email === null) {
             alert("입력하신 id나 password가 일치하지 않습니다.");
           } else {
-            console.log("======================", "플래너 로그인 성공");
+           // console.log("======================", "플래너 로그인 성공");
             sessionStorage.setItem("email", res.data.email);
             sessionStorage.setItem("category", "planner");
             // sessionStorage.setItem("planner_name", res.data.name); // sessionStorage에 name을 user_name이라는 key 값으로 저장

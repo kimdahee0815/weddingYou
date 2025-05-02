@@ -40,7 +40,7 @@ function PlannerProfile() {
     axios
       .get(`/plannerProfiles/${encodedSort}`)
       .then((res) => {
-        console.log(res.data);
+      //  console.log(res.data);
         let data = res.data;
         setWholeItems(data);
       })

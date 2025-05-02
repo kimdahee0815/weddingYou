@@ -73,7 +73,7 @@ const EditPost = () => {
         headers: { "Content-Type": "multipart/form-data" },
       })
       .then((res) => {
-        console.log(res);
+        //console.log(res);
         alert("수정이 완료 되었습니다!");
         navigate(`/menu/${engTitle}`);
       })

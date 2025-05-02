@@ -38,7 +38,7 @@ function Ratingpage() {
     axios
       .get(`/estimateIdReview/${estimateId}`)
       .then((res) => {
-        console.log(res);
+       // console.log(res);
         const data = res.data;
         if (data != null) {
           const {reviewStars, reviewText, reviewImg} = data;
@@ -54,7 +54,7 @@ function Ratingpage() {
             try {
               if(reviewImg){
                 const imagearray = JSON.parse(reviewImg);
-                console.log(imagearray);
+              //  console.log(imagearray);
   
                 try {
                   const imagePromises = imagearray.map((image) =>
@@ -116,7 +116,7 @@ function Ratingpage() {
       ratingstars = 0;
     }
     formData.append("reviewStars", ratingstars);
-    console.log(imgArr);
+   // console.log(imgArr);
     if (imgArr.length > 0) {
       for (let i = 0; i < imgArr.length; i++) {
         formData.append("reviewImg", imgArr[i]);
@@ -132,7 +132,7 @@ function Ratingpage() {
       axios
         .post("/reviews", formData)
         .then((res) => {
-          console.log("성공:", res);
+         // console.log("성공:", res);
           alert("리뷰 작성 완료!");
           navigate(`/`);
         })

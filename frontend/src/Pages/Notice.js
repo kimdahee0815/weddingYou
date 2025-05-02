@@ -17,7 +17,7 @@ function Notice() {
     axios
       .get(`/notice/list`)
       .then((res) => {
-        console.log(res);
+       // console.log(res);
         const data = res.data;
         const titleArr = [];
         const dateArr = [];
@@ -74,7 +74,7 @@ function Notice() {
                           axios
                             .post(`/notice/addviewcount`, formData)
                             .then((res) => {
-                              console.log(res);
+                            //  console.log(res);
                             })
                             .catch((e) => {
                               console.log(e);
@@ -95,7 +95,7 @@ function Notice() {
                           axios
                             .post(`/notice/addviewcount`)
                             .then((res) => {
-                              console.log(res);
+                             // console.log(res);
                             })
                             .catch((e) => {
                               console.log(e);
@@ -116,7 +116,7 @@ function Notice() {
                           axios
                             .post(`/notice/addviewcount`)
                             .then((res) => {
-                              console.log(res);
+                            //  console.log(res);
                             })
                             .catch((e) => {
                               console.log(e);

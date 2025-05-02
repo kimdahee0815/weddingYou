@@ -91,7 +91,7 @@ function LikeList() {
           (a, b) => new Date(b.latestLikeDate) - new Date(a.latestLikeDate)
         );
         setWholeItems(result);
-        console.log(result);
+        //console.log(result);
       } catch (countError) {
         console.error("Error fetching like counts:", countError);
       }
@@ -112,7 +112,7 @@ function LikeList() {
       })
       .then((res) => {
         setWholeItems(res.data);
-        console.log(res.data);
+        //console.log(res.data);
         setFinish(true);
       })
       .catch((e) => {

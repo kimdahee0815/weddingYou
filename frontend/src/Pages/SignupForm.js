@@ -256,7 +256,7 @@ function SignupForm() {
           introduction: "아직 소개글이 없습니다!",
         })
         .then((res) => {
-          console.log(res);
+        //  console.log(res);
           if (res.data === "") {
             setEmailstyle("is-invalid");
             setEmailcheck(false);

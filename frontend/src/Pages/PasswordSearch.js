@@ -31,7 +31,7 @@ function PasswordSearch() {
         .then((res) => {
           if (res.data === 1) {
             setHidden1(false);
-            console.log("======================", "유저 임시비밀번호 전송성공");
+            //console.log("======================", "유저 임시비밀번호 전송성공");
           } else {
             setHidden1(true);
             alert("입력하신 id 가 일치하지 않습니다.");

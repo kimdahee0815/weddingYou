@@ -60,7 +60,7 @@ const WritePost = () => {
           headers: { "Content-Type": "multipart/form-data" }
         })
           .then((response) => {
-            console.log("Success:", response.data);
+           // console.log("Success:", response.data);
             setItemName("");
             setContent("");
             setImgDetailContent("");
