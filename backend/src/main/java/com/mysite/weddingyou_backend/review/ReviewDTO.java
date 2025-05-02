@@ -45,8 +45,8 @@ public class ReviewDTO {
 
 	private String plannerEmail;
 
-	private List<CommentDTO> comments;
-	
+	private List<CommentDTO> comments = new ArrayList<>(); 
+    
     public void setAttachment(String reviewImg) {
         this.reviewImg = reviewImg;
     }
@@ -58,6 +58,7 @@ public class ReviewDTO {
 
         ReviewDTO dto = new ReviewDTO();
         dto.setReviewId(review.getReviewId());
+        dto.setReviewCounts(review.getReviewCounts());
         dto.setReviewTitle(review.getReviewTitle());
         dto.setReviewText(review.getReviewText());
         dto.setReviewStars(review.getReviewStars());
@@ -67,7 +68,6 @@ public class ReviewDTO {
         dto.setEstimateId(review.getEstimateId());
         dto.setReviewImg(review.getReviewImg());
         dto.setUser(review.getUser());
-        dto.setComments(new ArrayList<>()); 
 
         if (review.getComments() != null) {
             List<CommentDTO> commentDTOs = review.getComments().stream()
@@ -95,6 +95,7 @@ public class ReviewDTO {
         review.setReviewTitle(this.getReviewTitle());
         review.setReviewCounts(this.getReviewCounts());
         review.setEstimateId(this.getEstimateId()); 
+        review.setReviewCounts(this.getReviewCounts());
         review.setUser(this.getUser());
 
         PlannerProfile plannerProfile = new PlannerProfile();

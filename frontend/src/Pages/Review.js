@@ -62,7 +62,7 @@ function Review() {
   
   const handleSortClick = (sort) => {
     console.log(sort);
-    setCheckSort(!checksort);
+    setCheckSort(checksort => !checksort);
     setSelectedSort(sort); // 선택한 정렬로 버튼명 변경
   };
 
@@ -160,19 +160,22 @@ function Review() {
               setUserMatching(JSON.parse(data.userMatching));
             }
             // 이미지 데이터 가져오기
-            const imagearray = JSON.parse(data.img);
-            const imagePromises = imagearray.map((image) => {
-              return axios.get("/estimate/imageview", {
-                params: { image },
-                responseType: "blob",
+            if(data.img){
+              const imagearray = JSON.parse(data.img);
+              const imagePromises = imagearray.map((image) => {
+                return axios.get("/estimate/imageview", {
+                  params: { image },
+                  responseType: "blob",
+                });
               });
-            });
-            const responses = await Promise.all(imagePromises);
-            const imageUrls = responses.map((res) => {
-              const resdata = URL.createObjectURL(res.data);
-              return resdata;
-            });
-            setImages(imageUrls);
+              const responses = await Promise.all(imagePromises);
+              const imageUrls = responses.map((res) => {
+                const resdata = URL.createObjectURL(res.data);
+                return resdata;
+              });
+              setImages(imageUrls);
+            }
+            
           } catch (error) {
             console.log(error);
           }
@@ -205,7 +208,7 @@ function Review() {
           res.data.indexOf(",") + 1,
           res.data.length
         );
-        let plannerImgUrl = "data:image/jpeg;base64," + plannerImg;
+        let plannerImgUrl = plannerImg;
 
         navigate("/rating", {
           state: {
@@ -224,7 +227,7 @@ function Review() {
   return (
     <div className="containerbox">
       <div className="mainlayout box1">
-        <NavigationBar title={"이용후기"} />{" "}
+        <NavigationBar title={"이용후기"} />
         <div style={{ marginTop: 75 }}>
           <div class="dropdown  right-sort">
             <button

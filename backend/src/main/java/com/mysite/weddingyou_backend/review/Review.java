@@ -69,7 +69,7 @@ public class Review {
 		
 	// 댓글
 	@JsonManagedReference
-	@OneToMany(mappedBy = "review", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+	@OneToMany(mappedBy = "review", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Comment> comments = new ArrayList<>();
 
 	public void addComment(Comment comment) {

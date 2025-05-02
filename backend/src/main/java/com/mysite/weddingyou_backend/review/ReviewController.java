@@ -283,28 +283,29 @@ public class ReviewController {
 	    
 	}
 	
-	// @PostMapping(value = "/existreviewpaid")
-	// public List<Review> checkPaidReview(
-	//         @RequestParam("userEmail") String userEmail
-	//         ) throws IOException {
-	// 	int res =0;
-	// 	List<Estimate> estimatesData = estimateRepository.findAllByWriter(userEmail);
+	@PostMapping(value = "/existreviewpaid")
+	public ArrayList<String> checkPaidReview(
+	        @RequestParam("userEmail") String userEmail
+	        ) throws IOException {
+		int res =0;
+		ArrayList<String> result = new ArrayList<>();
+		List<Estimate> estimatesData = estimateRepository.findAllByWriter(userEmail);
 
-	// 	for(int i =0;i<estimatesData.size();i++) {
-	// 		Estimate targetEstimate = estimatesData.get(i);
-	// 		Long estimateId = targetEstimate.getId();
-	// 		List<Payment> paymentData = paymentRepository.findByEstimateId(estimateId);
-	// 		if(paymentData!=null) {
-	// 			paymentData.forEach(p -> {
-	// 				if(p.getPaymentStatus().equals("paid")){
-	// 					result.add(String.valueOf(estimateId));
-	// 			}});
-	// 		}
+		for(int i =0;i<estimatesData.size();i++) {
+			Estimate targetEstimate = estimatesData.get(i);
+			Long estimateId = targetEstimate.getId();
+			List<Payment> paymentData = paymentRepository.findByEstimateId(estimateId);
+			if(paymentData!=null) {
+				paymentData.forEach(p -> {
+					if(p.getPaymentStatus().equals("paid")){
+						result.add(String.valueOf(estimateId));
+				}});
+			}
 			
-	// 	}
-	// 	 return result; 
+		}
+		 return result; 
 	    
-	// }
+	}
 	
 	@PostMapping(value = "/plannerinforeview")
 	public String getPlannerInfoForReview2(

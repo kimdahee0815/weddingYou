@@ -24,6 +24,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.mysite.weddingyou_backend.comment.Comment;
+import com.mysite.weddingyou_backend.comment.CommentDTO;
 import com.mysite.weddingyou_backend.estimate.Estimate;
 import com.mysite.weddingyou_backend.estimate.EstimateRepository;
 import com.mysite.weddingyou_backend.estimate.EstimateService;
@@ -112,7 +114,7 @@ public class PlannerProfileController {
 			profile = existingProfile;
 		}
     String plannerEmail = plannerInfo.getEmail();
-    List<Review> reviews = reviewRepository.findAllByPlannerEmail(plannerEmail);
+    List<Review> reviews = reviewRepository.findAllByPlannerEmailFetchUserAndComments(plannerEmail);
     List<Estimate> estimates = estimateRepository.findAll();
 
     // Review stats and counts

@@ -47,6 +47,6 @@ public class Qna {
     private int qnaViewCount;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "qna", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "qna", cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
 }

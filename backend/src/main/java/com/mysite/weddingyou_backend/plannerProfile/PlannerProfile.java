@@ -75,7 +75,7 @@ public class PlannerProfile {
     private LocalDateTime plannerJoinDate;
     
     @JsonManagedReference
-	@OneToMany(mappedBy = "plannerProfile", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+	@OneToMany(mappedBy = "plannerProfile", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Review> reviews;
     
 }
