@@ -539,13 +539,13 @@ function Reviewdetail() {
           <hr />
           <div className="contentbox-detail" style={{ paddingLeft: "20px" }}>
             <h5 style={{ marginBottom: "-15px" }}>
-              고객 첨부이미지{" "}
-              {images.length !== 0 && <span>(클릭시 확대됩니다)</span>}
+              고객 첨부이미지
+              {images?.length !== 0 && <span>(클릭시 확대됩니다)</span>}
             </h5>
-            {images.length === 0 && <span>첨부 이미지가 없습니다.</span>}
+            {images?.length === 0 && <span>첨부 이미지가 없습니다.</span>}
             <br></br>
             <div>
-              {images.map((e, index) => {
+              {images?.map((e, index) => {
                 return (
                   <div key={index}>
                     <>
@@ -799,14 +799,12 @@ function Reviewdetail() {
             <div>
               <h5>
                 고객 첨부이미지{" "}
-                {previewUrl.length !== 0 && <span>(클릭시 삭제됩니다)</span>}
+                {previewUrl?.length !== 0 && <span>(클릭시 삭제됩니다)</span>}
               </h5>
-              {previewUrl.length === 0 && <span>첨부 이미지가 없습니다.</span>}
+              {previewUrl?.length === 0 && <span>첨부 이미지가 없습니다.</span>}
               <br></br>
-              {console.log("previewUrl")}
-              {console.log(previewUrl)}
-              {previewUrl.length !== 0 ? (
-                previewUrl.map((url, index) => {
+              {previewUrl?.length !== 0 ? (
+                previewUrl?.map((url, index) => {
                   return (
                     <div key={index} style={{ marginBottom: "20px" }}>
                       <button

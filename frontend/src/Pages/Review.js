@@ -568,7 +568,7 @@ function Review() {
                         </div>
 
                         <div className="contentbox-detail">
-                          {images.length === 0 ? (
+                          {images?.length === 0 ? (
                             <h5>고객 첨부이미지 </h5>
                           ) : (
                             <h5 style={{ marginTop: "-20px" }}>

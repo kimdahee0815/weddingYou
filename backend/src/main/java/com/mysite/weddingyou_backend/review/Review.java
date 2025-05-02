@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.annotations.Cascade;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.mysite.weddingyou_backend.comment.Comment;
@@ -22,6 +24,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -67,9 +70,9 @@ public class Review {
 	// 댓글
 	@JsonManagedReference
 	@OneToMany(mappedBy = "review", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-	private List<Comment> comments;
+	private List<Comment> comments = new ArrayList<>();
 
-	public void addComments(Comment comment) {
+	public void addComment(Comment comment) {
 		if (comments == null) {
       comments = new ArrayList<>();
     }
@@ -79,7 +82,7 @@ public class Review {
 		}
 	}
 
-	public void removeLike(Comment comment) {
+	public void removeComment(Comment comment) {
 		if (comments != null) {
 			comments.remove(comment);
 			comment.setReview(null);
@@ -88,15 +91,15 @@ public class Review {
 
 	@JsonBackReference
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "planner_email", referencedColumnName = "planner_email", insertable = false, updatable = false, nullable = false)
+	@JoinColumn(name = "planner_profile_id")
 	private PlannerProfile plannerProfile;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_email", referencedColumnName = "email", insertable = false, updatable = false, nullable = false)
 	private UserLogin user;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "planner_email", referencedColumnName = "email", insertable = false, updatable = false, nullable = false)
-	private PlannerLogin planner;
+	// @OneToOne(fetch = FetchType.LAZY)
+  // @JoinColumn(name = "planner_email", referencedColumnName = "email", insertable = false, updatable = false, nullable = false)
+  // private PlannerLogin planner;
 
 }

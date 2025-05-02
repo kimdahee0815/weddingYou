@@ -69,6 +69,11 @@ public class MypageAdminController {
 	@Autowired
 	CommentRepository commentRepository;
 	
+	@PostMapping("/init")
+    public ResponseEntity<String> initializeMypageAdminData() {
+        mypageAdminService.initializeMypageAdmins();
+        return ResponseEntity.ok("MypageAdmin 초기화 완료");
+    }
 
 	//전체 사용자 정보 리스트 조회
 	@GetMapping("/all")
@@ -76,57 +81,9 @@ public class MypageAdminController {
 			@RequestParam(defaultValue = "0") int page,
 	        @RequestParam(defaultValue = "10") int size) {
 		
-		//페이징 기능
 		Pageable pageable = PageRequest.of(page, size);
-		
-	    List<UserLogin> users = userLoginRepository.findAll();
-	    List<PlannerLogin> planners = plannerLoginRepository.findAll();
-
-	    List<MypageAdmin> mypageAdmins = new ArrayList<>();
-
-	    for (UserLogin user : users) {
-	        // 이미 저장된 사용자인지 확인
-	        if (!mypageAdminRepository.existsByUserEmail(user.getEmail())) {
-	            MypageAdmin userMypageAdmin = new MypageAdmin();
-	            userMypageAdmin.setType("user");
-	            userMypageAdmin.setUserEmail(user.getEmail());
-	            userMypageAdmin.setUserName(user.getName());
-	            userMypageAdmin.setUserPassword(user.getPassword());
-	            userMypageAdmin.setUserGender(user.getGender());
-	            userMypageAdmin.setUserPhoneNum(user.getPhoneNum());
-	            userMypageAdmin.setUserJoinDate(user.getUserJoinDate());
-
-	            mypageAdmins.add(userMypageAdmin); //userMypageAdmin객체를 mypageAdmins 리스트에 추가하는 역할
-	            mypageAdminRepository.save(userMypageAdmin); //db에 저장하는 역할
-	        }
-	    }
-
-	    for (PlannerLogin planner : planners) {
-	        // 이미 저장된 플래너인지 확인
-	        if (!mypageAdminRepository.existsByPlannerEmail(planner.getEmail())) {
-	            MypageAdmin plannerMypageAdmin = new MypageAdmin();
-	            plannerMypageAdmin.setType("planner");
-	            plannerMypageAdmin.setPlannerEmail(planner.getEmail());
-	            plannerMypageAdmin.setPlannerName(planner.getName());
-	            plannerMypageAdmin.setPlannerPassword(planner.getPassword());
-	            plannerMypageAdmin.setPlannerGender(planner.getGender());
-	            plannerMypageAdmin.setPlannerPhoneNum(planner.getPhoneNum());
-	            plannerMypageAdmin.setPlannerCareerYears(Integer.parseInt(planner.getPlannerCareerYears()));
-	            plannerMypageAdmin.setPlannerJoinDate(planner.getPlannerJoinDate());
-
-	            mypageAdmins.add(plannerMypageAdmin);
-	            mypageAdminRepository.save(plannerMypageAdmin);
-	        }
-	    }
-	    
-	    Page<MypageAdmin> mypageAdminPage = mypageAdminRepository.findAll(pageable);
-	    
-	    if (!mypageAdminPage.isEmpty()) {
-	        return ResponseEntity.ok().body(mypageAdminPage);
-	    } else {
-	        // 사용자 또는 플래너 정보가 없는 경우에 대한 처리
-	        return ResponseEntity.noContent().build();
-	    }    
+		Page<MypageAdmin> pageResult = mypageAdminRepository.findAll(pageable);
+		return pageResult.hasContent() ? ResponseEntity.ok(pageResult) : ResponseEntity.noContent().build();
 	}
 	
 	//전체 데이터 개수 조회

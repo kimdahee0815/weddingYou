@@ -96,8 +96,11 @@ public class PlannerProfileDTO {
 
         // Reviews는 ReviewDTO -> Review로 변환하여 설정
         List<Review> reviewList = this.getReviews().stream()
-            .map(ReviewDTO::toEntity)
-            .collect(Collectors.toList());
+        .map(dto -> {
+            Review review = dto.toEntity();
+            review.setPlannerProfile(plannerProfile); 
+            return review;
+        }).collect(Collectors.toList());
         plannerProfile.setReviews(reviewList);
 
         return plannerProfile;

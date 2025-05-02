@@ -1,6 +1,7 @@
 package com.mysite.weddingyou_backend.review;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,6 +16,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ReviewDTO {
+
+    private long estimateId;
 
 	private long reviewId;
 
@@ -61,12 +64,20 @@ public class ReviewDTO {
         dto.setReviewDate(review.getReviewDate());
         dto.setUserEmail(review.getUserEmail());
         dto.setPlannerEmail(review.getPlannerEmail());
+        dto.setEstimateId(review.getEstimateId());
+        dto.setReviewImg(review.getReviewImg());
         dto.setUser(review.getUser());
+        dto.setComments(new ArrayList<>()); 
 
         if (review.getComments() != null) {
-            dto.setComments(review.getComments().stream()
-                    .map(CommentDTO::fromEntity)
-                    .collect(Collectors.toList()));
+            List<CommentDTO> commentDTOs = review.getComments().stream()
+            .map(CommentDTO::fromEntity)
+            .collect(Collectors.toList());
+
+            dto.getComments().addAll(commentDTOs);
+        } else {
+            List<CommentDTO> emptyCommentDTOs = new ArrayList<>();
+            dto.setComments(emptyCommentDTOs);  
         }
 
         return dto;
@@ -83,20 +94,16 @@ public class ReviewDTO {
         review.setPlannerEmail(this.getPlannerEmail());
         review.setReviewTitle(this.getReviewTitle());
         review.setReviewCounts(this.getReviewCounts());
+        review.setEstimateId(this.getEstimateId()); 
         review.setUser(this.getUser());
-        
-        // 관련된 엔티티 (plannerProfile, user, planner) 설정
+
         PlannerProfile plannerProfile = new PlannerProfile();
         plannerProfile.setPlannerEmail(this.getPlannerEmail());
         review.setPlannerProfile(plannerProfile);
-        
-        UserLogin userLogin = new UserLogin();
-        userLogin.setEmail(this.getUserEmail());
-        review.setUser(userLogin);
-        
-        PlannerLogin plannerLogin = new PlannerLogin();
-        plannerLogin.setEmail(this.getPlannerEmail());
-        review.setPlanner(plannerLogin);
+
+        // PlannerLogin plannerLogin = new PlannerLogin();
+        // plannerLogin.setEmail(this.getPlannerEmail());
+        // review.setPlanner(plannerLogin);
         
         return review;
     }

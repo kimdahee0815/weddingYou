@@ -116,7 +116,7 @@ function Ratingpage() {
       ratingstars = 0;
     }
     formData.append("reviewStars", ratingstars);
-    
+    console.log(imgArr);
     if (imgArr.length > 0) {
       for (let i = 0; i < imgArr.length; i++) {
         formData.append("reviewImg", imgArr[i]);

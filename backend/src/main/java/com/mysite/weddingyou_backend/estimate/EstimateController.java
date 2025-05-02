@@ -125,7 +125,7 @@ public class EstimateController {
 		if(!(uploadfiles == null)) {
         for (MultipartFile file : uploadfiles) {
             if (!file.isEmpty()) {
-								String imgUrl = s3Service.uploadFile(file, "estimates/");
+								String imgUrl = s3Service.uploadFile(file, "estimates");
 								list.add("\"" + imgUrl + "\"");
 						}
         }
@@ -247,7 +247,7 @@ public class EstimateController {
 		if(!(uploadfiles == null)) {
         for (MultipartFile file : uploadfiles) {
 					if (!file.isEmpty()) {
-						String imgUrl = s3Service.uploadFile(file, "estimates/");
+						String imgUrl = s3Service.uploadFile(file, "estimates");
 						list.add("\"" + imgUrl + "\"");
 					}
         }

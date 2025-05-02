@@ -159,7 +159,7 @@ function PlannerProfileDetail() {
                 }}
               >
                 리뷰 개수 : {profileDetail.reviews?.length} <br />
-                평균 별점 : {'abc'} <br />
+                평균 별점 : {profileDetail.avgReviewStars} <br />
                 경력 : {profileDetail.career} <br />
                 휴대폰번호 <br /> {profileDetail.phoneNum}
               </div>
@@ -530,20 +530,20 @@ function PlannerProfileDetail() {
                           </div>
 
                           <div className="contentbox-detail">
-                            {JSON.parse(currentEstimate?.img).length === 0 ? (
+                            {JSON.parse(currentEstimate?.img)?.length === 0 ? (
                               <h5>고객 첨부이미지 </h5>
                             ) : (
                               <h5 style={{ marginTop: "-20px" }}>
-                                고객 첨부이미지{" "}
+                                고객 첨부이미지
                               </h5>
                             )}
 
-                            {JSON.parse(currentEstimate?.img).length === 0 && (
+                            {JSON.parse(currentEstimate?.img)?.length === 0 && (
                               <span>첨부 이미지가 없습니다.</span>
                             )}
                             <br></br>
                             <div>
-                              {JSON.parse(currentEstimate?.img).map((img, index) => {
+                              {JSON.parse(currentEstimate?.img)?.map((img, index) => {
                                 return (
                                 <div key={index}>
                                   <>

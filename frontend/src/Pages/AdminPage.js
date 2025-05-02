@@ -16,6 +16,10 @@ const AdminPage = () => {
     userListReset();
   }, []);
 
+  useEffect(()=>{
+    initUserList();
+  },[])
+
   const navigate = useNavigate();
   let [modalMode, setModalMode] = useState("user");
   let [postSearchMode, setPostSearchMode] = useState("none");
@@ -265,6 +269,18 @@ const AdminPage = () => {
     getUserListCount();
     getUserList();
   };
+
+  const initUserList = () =>{
+    const initialize = async () => {
+      try {
+        const res = await axios.post('/admin/init');
+        console.log('초기화 완료:', res.data);
+      } catch (err) {
+        console.error('초기화 실패', err);
+      }
+    };
+    initialize();
+  }
 
   //상세데이터 모달로 보내는 부분
   let [postArticle, setPostArticle] = useState({

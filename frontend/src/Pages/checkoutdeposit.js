@@ -136,7 +136,7 @@ function Checkoutdeposit() {
       <div className="mainlayout box1" style={{ height: "950px" }}>
         <NavigationBar title={"결제하기 (계약금)"} />
         <div className="plannerpro" style={{ marginTop: 110 }}>
-          {plannerImg === "data:image/jpeg;base64," ? (
+          {!plannerImg ? (
             <img
               src={defaultprofileimage}
               style={{ width: "250px", height: "230px" }}

@@ -35,6 +35,7 @@ import com.mysite.weddingyou_backend.plannerLogin.PlannerLoginRepository;
 import com.mysite.weddingyou_backend.plannerUpdateDelete.PlannerUpdateDelete;
 import com.mysite.weddingyou_backend.plannerUpdateDelete.PlannerUpdateDeleteRepository;
 import com.mysite.weddingyou_backend.review.Review;
+import com.mysite.weddingyou_backend.review.ReviewDTO;
 import com.mysite.weddingyou_backend.review.ReviewRepository;
 import com.mysite.weddingyou_backend.userLogin.UserLogin;
 import com.mysite.weddingyou_backend.userLogin.UserLoginRepository;
@@ -131,6 +132,9 @@ public class PlannerProfileController {
     profile.setMatchingCount(matchingCount);
     profile.setAvgReviewStars(reviewStats.getAvgReviewStars());
 
+		List<ReviewDTO> reviewsDTOs = reviews.stream().map(ReviewDTO::fromEntity).collect(Collectors.toList());
+		profile.setReviews(reviewsDTOs);
+		
     return profile;
 	}
 

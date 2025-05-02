@@ -299,12 +299,12 @@ const EstimateDetail = () => {
             <div className="contentbox-detail">
               <h5>
                 고객 첨부이미지{" "}
-                {images.length !== 0 && <span>(클릭시 확대됩니다)</span>}
+                {images?.length !== 0 && <span>(클릭시 확대됩니다)</span>}
               </h5>
-              {images.length === 0 && <span>첨부 이미지가 없습니다.</span>}
+              {images?.length === 0 && <span>첨부 이미지가 없습니다.</span>}
               <br></br>
               <div>
-                {images.map((e, index) => {
+                {images?.map((e, index) => {
                   return (
                     <div key={index}>
                       <>

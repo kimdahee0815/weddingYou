@@ -87,7 +87,7 @@ public class UserUpdateDeleteController {
 	@PostMapping("/user/updateprofileImg")
 	public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file, @RequestParam("useremail") String email) {
 		UserUpdateDelete searchedUser = service.getUserByEmail(email);
-		String imageUrl = s3Service.uploadFile(file, "users/");
+		String imageUrl = s3Service.uploadFile(file, "users");
 					
 		searchedUser.setUserImg(imageUrl); 
 		service.save(searchedUser); 

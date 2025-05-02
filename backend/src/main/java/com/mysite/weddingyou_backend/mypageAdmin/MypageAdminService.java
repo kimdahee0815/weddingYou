@@ -1,11 +1,18 @@
 package com.mysite.weddingyou_backend.mypageAdmin;
 
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.mysite.weddingyou_backend.plannerLogin.PlannerLogin;
+import com.mysite.weddingyou_backend.plannerLogin.PlannerLoginRepository;
+import com.mysite.weddingyou_backend.userLogin.UserLogin;
+import com.mysite.weddingyou_backend.userLogin.UserLoginRepository;
 
 
 @Service
@@ -14,10 +21,47 @@ public class MypageAdminService {
 	
 	@Autowired
 	MypageAdminRepository mypageAdminRepository;
-	
-//	public List<MypageAdmin> getAllUsersAndPlanners() {
-//        return mypageAdminRepository.findAll();
-//    }
+
+	@Autowired
+  private UserLoginRepository userLoginRepository;
+
+	@Autowired
+  private PlannerLoginRepository plannerLoginRepository;
+
+	public void initializeMypageAdmins() {
+		List<UserLogin> users = userLoginRepository.findAll();
+		List<PlannerLogin> planners = plannerLoginRepository.findAll();
+
+		for (UserLogin user : users) {
+				if (mypageAdminRepository.findByUserEmail(user.getEmail()) == null) {
+						MypageAdmin userAdmin = new MypageAdmin();
+						userAdmin.setType("user");
+						userAdmin.setUserEmail(user.getEmail());
+						userAdmin.setUserName(user.getName());
+						userAdmin.setUserPassword(user.getPassword());
+						userAdmin.setUserGender(user.getGender());
+						userAdmin.setUserPhoneNum(user.getPhoneNum());
+						userAdmin.setUserJoinDate(user.getUserJoinDate());
+						mypageAdminRepository.save(userAdmin);
+				}
+		}
+
+		for (PlannerLogin planner : planners) {
+				if (mypageAdminRepository.findByPlannerEmail(planner.getEmail()) == null) {
+						MypageAdmin plannerAdmin = new MypageAdmin();
+						plannerAdmin.setType("planner");
+						plannerAdmin.setPlannerEmail(planner.getEmail());
+						plannerAdmin.setPlannerName(planner.getName());
+						plannerAdmin.setPlannerPassword(planner.getPassword());
+						plannerAdmin.setPlannerGender(planner.getGender());
+						plannerAdmin.setPlannerPhoneNum(planner.getPhoneNum());
+						plannerAdmin.setPlannerCareerYears(Integer.parseInt(planner.getPlannerCareerYears()));
+						plannerAdmin.setPlannerJoinDate(planner.getPlannerJoinDate());
+						mypageAdminRepository.save(plannerAdmin);
+				}
+		}
+	}
+
 	
 	public int updateUser(Long admin_id, String user_name, String user_password, String user_phoneNum) {
 		return mypageAdminRepository.updateUser(admin_id, user_name, user_password, user_phoneNum);

@@ -37,6 +37,10 @@ import com.mysite.weddingyou_backend.estimate.Estimate;
 import com.mysite.weddingyou_backend.estimate.EstimateRepository;
 import com.mysite.weddingyou_backend.payment.Payment;
 import com.mysite.weddingyou_backend.payment.PaymentRepository;
+import com.mysite.weddingyou_backend.plannerLogin.PlannerLogin;
+import com.mysite.weddingyou_backend.plannerLogin.PlannerLoginRepository;
+import com.mysite.weddingyou_backend.plannerProfile.PlannerProfile;
+import com.mysite.weddingyou_backend.plannerProfile.PlannerProfileRepository;
 import com.mysite.weddingyou_backend.plannerUpdateDelete.PlannerUpdateDelete;
 import com.mysite.weddingyou_backend.plannerUpdateDelete.PlannerUpdateDeleteRepository;
 import com.mysite.weddingyou_backend.userUpdateDelete.UserUpdateDelete;
@@ -53,7 +57,7 @@ public class ReviewController {
 	ReviewService reviewService;
 	
 	@Autowired
-	PlannerUpdateDeleteRepository plannerUpdateDeleteRepository;
+	PlannerLoginRepository plannerLoginRepository;
 	
 	@Autowired
 	UserUpdateDeleteRepository userUpdateDeleteRepository;
@@ -68,11 +72,15 @@ public class ReviewController {
 	PaymentRepository paymentRepository;
 
 	@Autowired
+	PlannerProfileRepository plannerProfileRepository;
+
+	@Autowired
 	S3Service s3Service;
 	
 	@Value("${spring.servlet.multipart.location}")
     String uploadDir;
 	
+	@Transactional
 	@PostMapping(value = "/reviews")
 	public int createReview(@RequestParam("reviewText") String reviewText,
 	        @RequestParam("reviewStars") Integer reviewStars,
@@ -87,11 +95,12 @@ public class ReviewController {
 		if(!(reviewImg == null)) {
         for (MultipartFile file : reviewImg) {
             if (!file.isEmpty()) {
-								String imgUrl = s3Service.uploadFile(file, "reviews/");
+								String imgUrl = s3Service.uploadFile(file, "reviews");
 								list.add("\"" + imgUrl + "\"");
 						}
         }
 		}
+		System.out.println(list.toString());
 
 	 	Review review = new Review();
 	 	if(reviewText.equals("undefined")) {
@@ -106,9 +115,12 @@ public class ReviewController {
 	 	review.setPlannerEmail(plannerEmail);
 	 	review.setReviewDate(LocalDateTime.now());
 	 	review.setEstimateId(estimateId);
-	 	PlannerUpdateDelete plannerData = plannerUpdateDeleteRepository.findByEmail(plannerEmail);
-	 	review.setReviewTitle(plannerData.getName()+" 플래너 Review");
+	 	PlannerLogin plannerData = plannerLoginRepository.findByEmail(plannerEmail);
+	 	PlannerProfile plannerProfile = plannerProfileRepository.findByPlannerEmailFetchJoin(plannerEmail);
+		review.setPlannerProfile(plannerProfile);
+		review.setReviewTitle(plannerData.getName()+" 플래너 Review");
 	 	review.setReviewCounts(0);
+		// review.setPlanner(plannerData);
 	 	
 	 	if(reviewService.findEstimate(estimateId)!=null) {
 	 		Review targetReview = reviewService.findEstimate(estimateId);
@@ -225,7 +237,7 @@ public class ReviewController {
 	 	review.setReviewDate(LocalDateTime.now());
 	 	review.setReviewTitle(reviewTitle);
 	 	review.setEstimateId(estimateId);
-	 	PlannerUpdateDelete plannerData = plannerUpdateDeleteRepository.findByEmail(plannerEmail);
+	 	PlannerLogin plannerData = plannerLoginRepository.findByEmail(plannerEmail);
 	 	review.setReviewTitle(plannerData.getName()+"플래너 Review");
 	 	review.setReviewCounts(0);
 	 	System.out.println(review);
@@ -306,7 +318,7 @@ public class ReviewController {
 		ArrayList<String> plannermatching = (ArrayList<String>) parser.parse(targetEstimate.getPlannermatching());
 		String plannerEmail = plannermatching.get(0);
 		//	UserUpdateDelete data = userUpdateDeleteRepository(userEmail);
-		PlannerUpdateDelete plannerData = plannerUpdateDeleteRepository.findByEmail(plannerEmail);
+		PlannerLogin plannerData = plannerLoginRepository.findByEmail(plannerEmail);
 		
 //		System.out.println(data.getName());
 //		String userName = data.getName()+"/";
