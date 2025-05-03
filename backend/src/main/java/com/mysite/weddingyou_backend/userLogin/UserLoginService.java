@@ -99,20 +99,23 @@ public class UserLoginService {
 
     //이메일 전송
     private void sendEmail(String email, String temporaryPassword) {
-        String host = "smtp.gmail.com"; // 메일 서버 호스트
-        String port = "465"; // 메일 서버 포트
-				Properties config = new Properties();
-				try (InputStream input = getClass().getClassLoader().getResourceAsStream("config.properties")) {
-    			if (input == null) {
-        		throw new FileNotFoundException("config.properties not found in resources folder");
-    			}
-    			config.load(input);
-				} catch (IOException ex) {
-    			ex.printStackTrace();
-				}
-
-				String senderEmail = config.getProperty("gmail.address");
-				String senderPassword = config.getProperty("gmail.appPassword");
+        // String host = "smtp.gmail.com"; // 메일 서버 호스트
+        // String port = "465"; // 메일 서버 포트
+				// Properties config = new Properties();
+				// try (InputStream input = getClass().getClassLoader().getResourceAsStream("config.properties")) {
+    		// 	if (input == null) {
+        // 		throw new FileNotFoundException("config.properties not found in resources folder");
+    		// 	}
+    		// 	config.load(input);
+				// } catch (IOException ex) {
+    		// 	ex.printStackTrace();
+				// }
+				// String senderEmail = config.getProperty("gmail.address");
+				// String senderPassword = config.getProperty("gmail.appPassword");
+				String host = System.getenv("EMAIL_HOST");
+				String port = System.getenv("EMAIL_PORT");
+				String senderEmail = System.getenv("EMAIL_USER");
+				String senderPassword = System.getenv("EMAIL_PASSWORD");
 
         Properties properties = new Properties();
         properties.put("mail.smtp.auth", "true");
