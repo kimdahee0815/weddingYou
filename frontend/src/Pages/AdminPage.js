@@ -266,7 +266,7 @@ const AdminPage = () => {
   const initUserList = () =>{
     const initialize = async () => {
       try {
-        const res = await axios.post('/admin/init');
+        const res = await axios.post('/mypageAdmin/init');
         // console.log('초기화 완료:', res.data);
       } catch (err) {
         // console.error('초기화 실패', err);
