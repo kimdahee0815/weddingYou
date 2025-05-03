@@ -97,6 +97,7 @@ public class PlannerProfileController {
     // planner profile save or update
     for (PlannerUpdateDelete plannerInfo : plannersInfo) {
         PlannerProfileDTO newProfile = createOrUpdatePlannerProfile(plannerInfo);
+				plannerService.save(newProfile);
     }
 
     List<PlannerProfile> foundPlannersInfo = plannerService.getPlannerProfiles();
@@ -111,7 +112,10 @@ public class PlannerProfileController {
 		PlannerProfileDTO profile = null;
 		if(existingProfile == null) {
 			profile = new PlannerProfileDTO();
-			String plannerEmail = plannerInfo.getEmail();
+		}else{
+			profile = existingProfile;
+		}
+    String plannerEmail = plannerInfo.getEmail();
     	List<Review> reviews = reviewRepository.findAllByPlannerEmailFetchUserAndComments(plannerEmail);
     	List<Estimate> estimates = estimateRepository.findAll();
 
@@ -134,11 +138,6 @@ public class PlannerProfileController {
 
 			List<ReviewDTO> reviewsDTOs = reviews.stream().map(ReviewDTO::fromEntity).collect(Collectors.toList());
 			profile.setReviews(reviewsDTOs);
-			plannerService.save(profile);
-		}else{
-			profile = existingProfile;
-		}
-    
 		
     return profile;
 	}
