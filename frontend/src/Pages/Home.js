@@ -436,7 +436,7 @@ function Home() {
                           flexDirection: "column",
                           alignItems: "center",
                           width: "500px",
-                          height: "510px",
+                          height: "530px",
                         }}
                         data-bs-interval="5000"
                         key={item.itemId}
