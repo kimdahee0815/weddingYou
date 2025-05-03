@@ -97,7 +97,6 @@ public class PlannerProfileController {
     // planner profile save or update
     for (PlannerUpdateDelete plannerInfo : plannersInfo) {
         PlannerProfileDTO newProfile = createOrUpdatePlannerProfile(plannerInfo);
-				plannerService.save(newProfile);
     }
 
     List<PlannerProfile> foundPlannersInfo = plannerService.getPlannerProfiles();
@@ -107,38 +106,39 @@ public class PlannerProfileController {
 	}
 
 	// planner profile create or update
-	@Transactional
 	private PlannerProfileDTO createOrUpdatePlannerProfile(PlannerUpdateDelete plannerInfo) throws ParseException {
     PlannerProfileDTO existingProfile = plannerService.getPlannerByEmail(plannerInfo.getEmail());
 		PlannerProfileDTO profile = null;
 		if(existingProfile == null) {
 			profile = new PlannerProfileDTO();
+			String plannerEmail = plannerInfo.getEmail();
+    	List<Review> reviews = reviewRepository.findAllByPlannerEmailFetchUserAndComments(plannerEmail);
+    	List<Estimate> estimates = estimateRepository.findAll();
+
+    	// Review stats and counts
+    	ReviewStats reviewStats = calculateReviewStats(reviews);
+    	int matchingCount = calculateMatchingCount(estimates, plannerEmail);
+
+    	profile.setPlannerEmail(plannerEmail);
+    	profile.setPlannerName(plannerInfo.getName());
+    	profile.setIntroduction(plannerInfo.getIntroduction());
+    	profile.setPhoneNum(plannerInfo.getPhoneNum());
+    	profile.setPlannerProfileImg(plannerInfo.getPlannerImg());
+    	profile.setPlannerJoinDate(plannerInfo.getPlannerJoinDate());
+    	profile.setCareer(Integer.parseInt(plannerInfo.getPlannerCareerYears()));
+    	profile.setReviewCount(reviewStats.getReviewCount());
+    	profile.setReviewStars(reviewStats.getReviewStars());
+    	profile.setReviewUsers(reviewStats.getReviewUsers());
+    	profile.setMatchingCount(matchingCount);
+    	profile.setAvgReviewStars(reviewStats.getAvgReviewStars());
+
+			List<ReviewDTO> reviewsDTOs = reviews.stream().map(ReviewDTO::fromEntity).collect(Collectors.toList());
+			profile.setReviews(reviewsDTOs);
+			plannerService.save(profile);
 		}else{
 			profile = existingProfile;
 		}
-    String plannerEmail = plannerInfo.getEmail();
-    List<Review> reviews = reviewRepository.findAllByPlannerEmailFetchUserAndComments(plannerEmail);
-    List<Estimate> estimates = estimateRepository.findAll();
-
-    // Review stats and counts
-    ReviewStats reviewStats = calculateReviewStats(reviews);
-    int matchingCount = calculateMatchingCount(estimates, plannerEmail);
-
-    profile.setPlannerEmail(plannerEmail);
-    profile.setPlannerName(plannerInfo.getName());
-    profile.setIntroduction(plannerInfo.getIntroduction());
-    profile.setPhoneNum(plannerInfo.getPhoneNum());
-    profile.setPlannerProfileImg(plannerInfo.getPlannerImg());
-    profile.setPlannerJoinDate(plannerInfo.getPlannerJoinDate());
-    profile.setCareer(Integer.parseInt(plannerInfo.getPlannerCareerYears()));
-    profile.setReviewCount(reviewStats.getReviewCount());
-    profile.setReviewStars(reviewStats.getReviewStars());
-    profile.setReviewUsers(reviewStats.getReviewUsers());
-    profile.setMatchingCount(matchingCount);
-    profile.setAvgReviewStars(reviewStats.getAvgReviewStars());
-
-		List<ReviewDTO> reviewsDTOs = reviews.stream().map(ReviewDTO::fromEntity).collect(Collectors.toList());
-		profile.setReviews(reviewsDTOs);
+    
 		
     return profile;
 	}

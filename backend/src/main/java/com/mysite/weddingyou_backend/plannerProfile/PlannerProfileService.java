@@ -14,7 +14,12 @@ public class PlannerProfileService {
 
     public PlannerProfileDTO getPlannerByEmail(String email) {
         PlannerProfile foundProfile = plannerprofileRepository.findByPlannerEmailFetchJoin(email);
-        return PlannerProfileDTO.fromEntity(foundProfile); 
+        if(foundProfile != null){
+            return PlannerProfileDTO.fromEntity(foundProfile); 
+        }else{
+            return null;
+        }
+       
     }
     
     public List<PlannerProfile> getPlannerProfiles(){
