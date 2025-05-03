@@ -44,6 +44,8 @@ import com.mysite.weddingyou_backend.userLogin.UserLoginRepository;
 import com.mysite.weddingyou_backend.userUpdateDelete.UserUpdateDelete;
 import com.mysite.weddingyou_backend.userUpdateDelete.UserUpdateDeleteRepository;
 
+import jakarta.transaction.Transactional;
+
 @RestController
 public class PlannerProfileController {
 		@Autowired
@@ -105,6 +107,7 @@ public class PlannerProfileController {
 	}
 
 	// planner profile create or update
+	@Transactional
 	private PlannerProfileDTO createOrUpdatePlannerProfile(PlannerUpdateDelete plannerInfo) throws ParseException {
     PlannerProfileDTO existingProfile = plannerService.getPlannerByEmail(plannerInfo.getEmail());
 		PlannerProfileDTO profile = null;
