@@ -2,6 +2,9 @@ package com.mysite.weddingyou_backend.notice;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -25,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mysite.weddingyou_backend.S3Service;
 import com.mysite.weddingyou_backend.userUpdateDelete.UserUpdateDelete;
 import com.mysite.weddingyou_backend.userUpdateDelete.UserUpdateDeleteDTO;
 
@@ -33,9 +37,11 @@ import com.mysite.weddingyou_backend.userUpdateDelete.UserUpdateDeleteDTO;
 public class NoticeController {
 
 	private final NoticeService noticeService;
+	private final S3Service s3Service;
 
-	public NoticeController(NoticeService noticeService) {
+	public NoticeController(NoticeService noticeService, S3Service s3Service) {
 		this.noticeService = noticeService;
+		this.s3Service = s3Service;
 	}
 	
 	@GetMapping("/list")
@@ -51,22 +57,12 @@ public class NoticeController {
 			noticeDTO.setNoticeTitle(title);
 			noticeDTO.setNoticeContent(content);
 			noticeDTO.setNoticeViewCount(0);
-			String folderPath = "C:\\Project\\noticeService";
-			
 
-			File folder = new File(folderPath);
-			if (!folder.exists()) {
-				folder.mkdirs(); // 폴더가 존재하지 않으면 폴더 생성
-			}
-
-			if (file!=null) {
-			
-				Files.copy(file.getInputStream(), Paths.get(folderPath, file.getOriginalFilename()),StandardCopyOption.REPLACE_EXISTING); //request에서 들어온 파일을 uploads 라는 경로에 originalfilename을 String 으로 올림
-				//file.transferTo(newFile);
-				 noticeDTO.setAttachment(file.getOriginalFilename()); 
-			}else {
-				noticeDTO.setAttachment(null);
-			}
+			noticeDTO.setAttachment(null);
+				if (!file.isEmpty()) {
+					String imgUrl = s3Service.uploadFile(file, "notice");
+					noticeDTO.setAttachment(imgUrl); 
+        }
 
 			NoticeDTO newNotice = noticeService.createNotice(noticeDTO);
 			return ResponseEntity.ok(newNotice);
@@ -83,27 +79,13 @@ public class NoticeController {
 		noticeDTO.setNoticeTitle(title);
 		noticeDTO.setNoticeContent(content);
 
-		String folderPath = "C:\\Project\\noticeService";
-		//String filePath = folderPath + "\\" + file.getOriginalFilename();
-
-		File folder = new File(folderPath);
-		if (!folder.exists()) {
-			folder.mkdirs(); // 폴더가 존재하지 않으면 폴더 생성
-		}
-		try {
-		if (file!=null) {
-			Files.copy(file.getInputStream(), Paths.get(folderPath, file.getOriginalFilename())); //request에서 들어온 파일을 uploads 라는 경로에 originalfilename을 String 으로 올림
-			//file.transferTo(newFile);
-			 noticeDTO.setNoticeImg(file.getOriginalFilename()); 
-		}else {
-			noticeDTO.setAttachment(null);
-		}
-		}catch(Exception e) {
-			System.out.println("error");
-			noticeDTO.setNoticeImg(file.getOriginalFilename()); 
-		
-		}
+		noticeDTO.setAttachment(null);
+		if (!file.isEmpty()) {
+			String imgUrl = s3Service.uploadFile(file, "notice");
+			noticeDTO.setAttachment(imgUrl); 
+    }
 		return noticeService.updateNotice(noticeId, noticeDTO);
+
 	}
 
 	@DeleteMapping("/delete/{noticeId}")
@@ -130,32 +112,20 @@ public class NoticeController {
 		return notice;
 	}
 	
-	 @RequestMapping(value="/getnoticeimg",  produces = MediaType.IMAGE_JPEG_VALUE)
-	 public ResponseEntity<byte[]> getNoticeImg(@RequestParam Long noticeId) throws Exception {
+	 @RequestMapping(value="/noticeimg",  produces = MediaType.IMAGE_JPEG_VALUE)
+	 public ResponseEntity<byte[]> imgView(@RequestParam("image") String imageUrl) throws MalformedURLException {
+			String fullPath = imageUrl;
+    
+			if(fullPath != null){
+				String key = fullPath.substring(fullPath.indexOf(".com/") + 5);
+				key = URLDecoder.decode(key, StandardCharsets.UTF_8);
+				byte[] imageBytes = s3Service.downloadFile(key);
 	
-		 Notice targetNotice = noticeService.getNoticeById2(noticeId);
-	     if (targetNotice != null) {
-	    	 try {
-	    		 	Path imagePath = Paths.get("C:/Project/noticeService",targetNotice.getNoticeImg());
-
-	             	 byte[] imageBytes = Files.readAllBytes(imagePath);
-	            
-	            	 byte[] base64encodedData = Base64.getEncoder().encode(imageBytes);
-		             return ResponseEntity.ok()
-		                      .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + 
-		                    		  targetNotice.getNoticeImg() + "\"")
-		                      .body(base64encodedData);
-	           
-	            
-	         } catch (Exception e) {
-	             e.printStackTrace();
-	             throw new Exception("공지사항 사진이 없습니다!");
-	         }
-	 
-	     } else {
-	        throw new Exception("공지사항 글이 없습니다!");
-	     }
-		 
-	   
-	 }
+				HttpHeaders headers = new HttpHeaders();
+				headers.setContentType(MediaType.IMAGE_JPEG);
+	
+				return new ResponseEntity<>(imageBytes, headers, HttpStatus.OK); 
+			}
+		return ResponseEntity.notFound().build();
+  }
 }

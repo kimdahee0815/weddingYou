@@ -42,29 +42,19 @@ function Noticedetail() {
         setDate(data.noticeWriteDate.slice(0, 10));
         setView(data.noticeViewCount);
         setContent(data.noticeContent);
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-    const formData = new FormData();
-    formData.append("noticeId", noticeId);
-    axios
-      .post(`/notice/getnoticeimg`, formData)
-      .then((res) => {
-       // console.log(res.data);
-        const byteCharacters = atob(res.data);
-        const byteNumbers = new Array(byteCharacters.length);
-        for (let i = 0; i < byteCharacters.length; i++) {
-          byteNumbers[i] = byteCharacters.charCodeAt(i);
-        }
-        const byteArray = new Uint8Array(byteNumbers);
-        const blob = new Blob([byteArray], { type: "image/jpeg" });
-
-        const reader = new FileReader();
-        reader.onload = () => {
-          setPreviewUrl(reader.result);
-        };
-        reader.readAsDataURL(blob);
+        const imgUrl = data.noticeImg;
+        console.log(imgUrl)
+        const formData = new FormData();
+        formData.append("image", imgUrl);
+        setImg(imgUrl)
+        axios.get("/notice/noticeimg", {
+          params: { image: imgUrl },
+          responseType: "blob",
+        })
+        .then((response)=>{
+          const image = URL.createObjectURL(response.data);
+          setPreviewUrl(image);
+        });
       })
       .catch((e) => {
         console.log(e);

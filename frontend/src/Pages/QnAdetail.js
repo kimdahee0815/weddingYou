@@ -63,6 +63,7 @@ function QnAdetail() {
         setContent(data.qnaContent);
         setComments(data.comments);
         setQnaWriter(data.qnaWriter);
+        setImg(data.qnaAttachedfile);
         const commentsIndexArr = [];
         const commentContentArr = [];
         const commentEmailArr = [];
@@ -74,60 +75,24 @@ function QnAdetail() {
         setCommentsIndex(commentsIndexArr);
         setCommentEmail(commentEmailArr);
         setEditedComment(commentContentArr);
+        const imgUrl = data.qnaAttachedfile;
+        setImg(imgUrl)
         const formData = new FormData();
-        formData.append("qnaId", qnaId);
-        axios
-          .post(`/qna/getqnaimg`, formData)
-          .then((res) => {
-          //  console.log(res.data);
-            const byteCharacters = atob(res.data);
-            const byteNumbers = new Array(byteCharacters.length);
-            for (let i = 0; i < byteCharacters.length; i++) {
-              byteNumbers[i] = byteCharacters.charCodeAt(i);
-            }
-            const byteArray = new Uint8Array(byteNumbers);
-            const blob = new Blob([byteArray], { type: "image/jpeg" });
+        formData.append("image", imgUrl);
 
-            const reader = new FileReader();
-            reader.onload = () => {
-              setPreviewUrl(reader.result);
-            };
-            reader.readAsDataURL(blob);
-          })
-          .catch((e) => {
-            console.log(e);
-          });
+        axios.get("/qna/qnaimg", {
+          params: { image: imgUrl },
+          responseType: "blob",
+        })
+        .then((response)=>{
+          const image = URL.createObjectURL(response.data);
+          setPreviewUrl(image);
+        });
       })
       .catch((e) => {
         console.log(e);
       });
-  }, [updated, created, deleted]);
-
-  useEffect(() => {
-    const formData = new FormData();
-    formData.append("qnaId", qnaId);
-    axios
-      .post(`/qna/getqnaimg`, formData)
-      .then((res) => {
-       // console.log(res.data);
-        const byteCharacters = atob(res.data);
-        const byteNumbers = new Array(byteCharacters.length);
-        for (let i = 0; i < byteCharacters.length; i++) {
-          byteNumbers[i] = byteCharacters.charCodeAt(i);
-        }
-        const byteArray = new Uint8Array(byteNumbers);
-        const blob = new Blob([byteArray], { type: "image/jpeg" });
-
-        const reader = new FileReader();
-        reader.onload = () => {
-          setPreviewUrl(reader.result);
-        };
-        reader.readAsDataURL(blob);
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-  }, []);
+  }, [updated, created, deleted, qnaId]);
 
   const handleEditClick = (e) => {
   //  console.log(e.target.dataset.bsIndex);
@@ -146,7 +111,7 @@ function QnAdetail() {
       .post(`/qna/updatecomment`, formData)
       .then((res) => {
         //console.log(res);
-        setUpdated(!updated);
+        setUpdated(updated => !updated);
         setInputEditedComment("");
       })
       .catch((e) => {
@@ -187,7 +152,7 @@ function QnAdetail() {
       .post(`/qna/update/${qnaId}`, formData)
       .then((res) => {
         //console.log(res);
-        setUpdated(!updated);
+        setUpdated(updated => !updated);
       })
       .catch((e) => {
         console.log(e);

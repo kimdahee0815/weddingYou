@@ -2,11 +2,15 @@ package com.mysite.weddingyou_backend.qna;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
@@ -29,6 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mysite.weddingyou_backend.S3Service;
 import com.mysite.weddingyou_backend.comment.CommentDTO;
 import com.mysite.weddingyou_backend.notice.Notice;
 import com.mysite.weddingyou_backend.notice.NoticeDTO;
@@ -42,48 +47,39 @@ import com.mysite.weddingyou_backend.userLogin.UserLoginRepository;
 public class QnaController {
 	
     private final QnaService qnaService;
+		private final S3Service s3Service;
 	private final UserLoginRepository userLoginRepository;
 	private final PlannerLoginRepository plannerLoginRepository;
 
     @Autowired
     public QnaController(QnaService qnaService, UserLoginRepository userLoginRepository,
-			PlannerLoginRepository plannerLoginRepository) {
+			PlannerLoginRepository plannerLoginRepository, S3Service s3Service) {
         this.qnaService = qnaService;
         this.userLoginRepository = userLoginRepository;
 		this.plannerLoginRepository = plannerLoginRepository;
+		this.s3Service = s3Service;
     }
     @PostMapping("/post")
 	public ResponseEntity<QnaDTO> createQna(@RequestParam(required=false) MultipartFile file,
 			@RequestParam("title") String title,@RequestParam("content") String content, @RequestParam("email") String email) {
-		try {
-			QnaDTO qnaDTO = new QnaDTO();
-			qnaDTO.setQnaTitle(title);
-			qnaDTO.setQnaContent(content);
-			qnaDTO.setQnaViewCount(0);
-			qnaDTO.setQnaWriter(email);
-			String folderPath = "C:\\Project\\qnaService";
+			try {
+				QnaDTO qnaDTO = new QnaDTO();
+				qnaDTO.setQnaTitle(title);
+				qnaDTO.setQnaContent(content);
+				qnaDTO.setQnaViewCount(0);
+				qnaDTO.setQnaWriter(email);
 			
-
-			File folder = new File(folderPath);
-			if (!folder.exists()) {
-				folder.mkdirs(); // 폴더가 존재하지 않으면 폴더 생성
-			}
-
-			if (file!=null) {
-			
-				Files.copy(file.getInputStream(), Paths.get(folderPath, file.getOriginalFilename()),StandardCopyOption.REPLACE_EXISTING); //request에서 들어온 파일을 uploads 라는 경로에 originalfilename을 String 으로 올림
-				//file.transferTo(newFile);
-				qnaDTO.setQnaImg(file.getOriginalFilename()); 
-			}else {
 				qnaDTO.setQnaImg(null);
-			}
+				if (!file.isEmpty()) {
+					String imgUrl = s3Service.uploadFile(file, "qna");
+					qnaDTO.setQnaImg(imgUrl); 
+        }
 
 			QnaDTO qnadto = qnaService.createQna(qnaDTO);
 			return ResponseEntity.ok(qnadto);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-		}
+			} catch (Exception e) {
+				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+			}
 	}
    
 
@@ -94,26 +90,12 @@ public class QnaController {
     	qnaDTO.setQnaTitle(title);
     	qnaDTO.setQnaContent(content);
 
-		String folderPath = "C:\\Project\\qnaService";
-		//String filePath = folderPath + "\\" + file.getOriginalFilename();
-
-		File folder = new File(folderPath);
-		if (!folder.exists()) {
-			folder.mkdirs(); // 폴더가 존재하지 않으면 폴더 생성
-		}
-		try {
-		if (file!=null) {
-			System.out.println(file.getOriginalFilename());
-			Files.copy(file.getInputStream(), Paths.get(folderPath, file.getOriginalFilename())); //request에서 들어온 파일을 uploads 라는 경로에 originalfilename을 String 으로 올림
-			//file.transferTo(newFile);
-			qnaDTO.setQnaImg(file.getOriginalFilename()); 
-		}else {
 			qnaDTO.setQnaImg(null);
-		}
-		}catch(Exception e) {
-			System.out.println("error");
-			qnaDTO.setQnaImg(file.getOriginalFilename()); 
-		}
+			if (!file.isEmpty()) {
+				String imgUrl = s3Service.uploadFile(file, "qna");
+				qnaDTO.setQnaImg(imgUrl); 
+			}
+
 		return qnaService.updateQna(qnaId, qnaDTO);
     
     }
@@ -164,33 +146,22 @@ public class QnaController {
 		qnaService.save(targetQna);
 		return targetQna;
 	}
+  
+	@RequestMapping("/qnaimg")
+    public ResponseEntity<byte[]> imgView(@RequestParam("image") String imageUrl) throws MalformedURLException {
+			String fullPath = imageUrl;
     
-    @RequestMapping(value="/getqnaimg",  produces = MediaType.IMAGE_JPEG_VALUE)
-	 public ResponseEntity<byte[]> getNoticeImg(@RequestParam Long qnaId) throws Exception {
+			if(fullPath != null){
+				String key = fullPath.substring(fullPath.indexOf(".com/") + 5);
+				key = URLDecoder.decode(key, StandardCharsets.UTF_8);
+				byte[] imageBytes = s3Service.downloadFile(key);
 	
-		 Qna targetQna = qnaService.getQnaById2(qnaId).get();
-	     if (targetQna != null) {
-	    	 try {
-	    		 	Path imagePath = Paths.get("C:/Project/qnaService",targetQna.getQnaImg());
-
-	             	 byte[] imageBytes = Files.readAllBytes(imagePath);
-	            
-	            	 byte[] base64encodedData = Base64.getEncoder().encode(imageBytes);
-		             return ResponseEntity.ok()
-		                      .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + 
-		                    		  targetQna.getQnaImg() + "\"")
-		                      .body(base64encodedData);
-	           
-	            
-	         } catch (Exception e) {
-	             e.printStackTrace();
-	             throw new Exception("QNA 사진이 없습니다!");
-	         }
-	 
-	     } else {
-	        throw new Exception("QNA 글이 없습니다!");
-	     }
-		 
-	   
-	 }
+				HttpHeaders headers = new HttpHeaders();
+				headers.setContentType(MediaType.IMAGE_JPEG);
+	
+				return new ResponseEntity<>(imageBytes, headers, HttpStatus.OK); 
+			}
+		return ResponseEntity.notFound().build();
+  }
+	
 }
