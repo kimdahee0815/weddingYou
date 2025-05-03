@@ -37,7 +37,13 @@ public class PaymentService {
     }
     
     public List<Payment> getPaymentData(Long estimateId){
-    	return paymentRepository.findByEstimateId(estimateId);
+        List<Payment> payments = paymentRepository.findByEstimateId(estimateId);
+        if(payments != null){
+            return payments;
+        }else{
+            return null;
+        }
+
     }
 
     public List<Payment> getPaymentsList(List<Long> estimateIds) {
