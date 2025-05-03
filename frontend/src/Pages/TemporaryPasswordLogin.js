@@ -54,7 +54,10 @@ function TemporaryPasswordLogin() {
             sessionStorage.setItem("email", res.data.email);
             // sessionStorage.setItem("user_name", res.data.name); // sessionStorage에 name을 user_name이라는 key 값으로 저장
             navigate(`/passwordSearch/temporaryPasswordLogin/passwordChange`, {
-              state: true,
+              state: {
+                temporaryLoggedIn: true,
+                category: "user",
+              },
             });
           }
         })
@@ -77,7 +80,10 @@ function TemporaryPasswordLogin() {
             sessionStorage.setItem("email", res.data.email);
             // sessionStorage.setItem("planner_name", res.data.name); // sessionStorage에 name을 user_name이라는 key 값으로 저장
             navigate(`/passwordSearch/temporaryPasswordLogin/passwordChange`, {
-              state: true,
+              state: {
+                temporaryLoggedIn: true,
+                category: "planner",
+              },
             });
           }
         })

@@ -38,7 +38,10 @@ function PasswordSearch() {
             document.location.href = "/passwordSearch";
           }
         })
-        .catch();
+        .catch((e)=>{
+          alert("Error Occured!");
+          document.location.href = "/passwordSearch";
+        });
     } else if (Role === "플래너") {
       axios
         .post("/planner/forgotPassword", {
@@ -47,17 +50,20 @@ function PasswordSearch() {
         .then((res) => {
           if (res.data === 1) {
             setHidden1(false);
-            console.log(
-              "======================",
-              "플래너 임시비밀번호 전송성공"
-            );
+            // console.log(
+            //   "======================",
+            //   "플래너 임시비밀번호 전송성공"
+            // );
           } else {
             setHidden1(true);
             alert("입력하신 id 가 일치하지 않습니다.");
             document.location.href = "/passwordSearch";
           }
         })
-        .catch();
+        .catch((e)=>{
+          alert("Error Occured!");
+          document.location.href = "/passwordSearch";
+        });
     }
   };
 

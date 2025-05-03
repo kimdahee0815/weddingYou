@@ -1,5 +1,9 @@
 package com.mysite.weddingyou_backend.plannerLogin;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.Random;
@@ -96,10 +100,20 @@ public class PlannerLoginService {
 
     //이메일 전송
     private void sendEmail(String email, String temporaryPassword) {
-        String host = "smtp.naver.com"; // 메일 서버 호스트
+        String host = "smtp.gmail.com"; // 메일 서버 호스트
         String port = "465"; // 메일 서버 포트
-        String senderEmail = "weddingyou502@naver.com"; // 보내는 사람 이메일 주소
-        String senderPassword = "weddingyou502!"; // 보내는 사람 이메일 비밀번호
+        Properties config = new Properties();
+				try (InputStream input = getClass().getClassLoader().getResourceAsStream("config.properties")) {
+    			if (input == null) {
+        		throw new FileNotFoundException("config.properties not found in resources folder");
+    			}
+    			config.load(input);
+				} catch (IOException ex) {
+    			ex.printStackTrace();
+				}
+
+				String senderEmail = config.getProperty("gmail.address");
+				String senderPassword = config.getProperty("gmail.appPassword");
 
         Properties properties = new Properties();
         properties.put("mail.smtp.auth", "true");
@@ -107,7 +121,7 @@ public class PlannerLoginService {
         properties.put("mail.smtp.host", host);
         properties.put("mail.smtp.port", port);
         properties.put("mail.smtp.ssl.enable", "true");
-        properties.put("mail.smtp.ssl.trust", "smtp.naver.com");
+        properties.put("mail.smtp.ssl.trust", "smtp.gmail.com");
 
         Session session = Session.getInstance(properties, new Authenticator() {
             @Override
@@ -120,10 +134,18 @@ public class PlannerLoginService {
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress(senderEmail));
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email));
-            message.setSubject("웨딩유 임시 비밀번호 발급 안내");
-            message.setText("안녕하세요. 웨딩유 입니다:) 임시 비밀번호는 " + temporaryPassword + " 입니다.");
+						message.setSubject("🔐 Your Temporary Password from WeddingYou");
+						message.setText(
+    					"Dear Valued User,\n\n" +
+    					"This is WeddingYou 🕊️. Please use the following temporary password to log in to your account:\n\n" +
+    					"🔑 Temporary Password: " + temporaryPassword + "\n\n" +
+    					"For your security 🔒, we recommend that you change your password after logging in.\n\n" +
+    					"Best regards,\n" +
+    					"WeddingYou Support Team 💌"
+						);
             Transport.send(message);
         } catch (MessagingException e) {
+						e.printStackTrace();
             throw new RuntimeException("이메일 전송 중 오류가 발생했습니다.");
         }
     }

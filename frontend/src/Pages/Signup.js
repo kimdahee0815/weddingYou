@@ -16,7 +16,8 @@ function Signup() {
       <div className="mainlayout box1">
         <NavigationBar title={"회원가입"} />
 
-        <div className="Signup-logo" style={{ marginTop: "200px" }}></div>
+        <div className="Signup-logo" style={{ marginTop: "200px" }}>
+        </div>
 
         <div className="Signup-button">
           <button

@@ -22,7 +22,7 @@ function PasswordChange() {
   let [passwordstyle2, setPasswordstyle2] = useState("");
 
   const navigate = useNavigate();
-  const { state: temporaryPasswordCheck } = useLocation();
+  const { state: {temporaryLoggedIn: temporaryPasswordCheck , category }} = useLocation();
   useEffect(() => {
     //임시비밀번호 입력하지 않고 passwordchange url 접근 불가
     if (temporaryPasswordCheck !== true) {
@@ -32,16 +32,33 @@ function PasswordChange() {
   }, []);
 
   const onClickpwUpdate = () => {
-    const formData = new FormData();
-    formData.append("email", sessionStorage.getItem("email"));
-    formData.append("password", password);
-    axios
-      .post("/user/updatePassword", formData)
+    if(category === "user"){
+      axios
+      .post("/user/updatePassword", {
+        email: sessionStorage.getItem("email"),
+        password
+      })
       .then((res) => {
        // console.log("======================", "비밀번호 변경완료");
         sessionStorage.clear();
       })
-      .catch();
+      .catch((e)=>{
+        alert('Try Again! Error occurred!')
+      });
+    }else if(category === "planner"){
+      axios
+      .post("/planner/updatePassword", {
+        email: sessionStorage.getItem("email"),
+        password
+      })
+      .then((res) => {
+       // console.log("======================", "비밀번호 변경완료");
+        sessionStorage.clear();
+      })
+      .catch((e)=>{
+        alert('Try Again! Error occurred!')
+      });
+    }
   };
 
   useEffect(() => {
