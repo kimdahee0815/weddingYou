@@ -147,57 +147,56 @@ function Home() {
     }
   }, []);
 
-  const manageLikeList = useCallback(async (e) => {
+  const manageLikeList = useCallback(async (isLikedNow) => {
     const email = sessionStorage.getItem("email");
     const itemId = currentItem.itemId;
-
-    setWholeItems(prev => prev.map(items =>
-      items.map(item =>
-        item.itemId === itemId
-          ? {
-              ...item,
-              likeCount: item.likeCount + (selectLikeState ? -1 : 1),
-              isLiked: !selectLikeState
-            }
-          : item
-      )
-    ));
-
-    try {
-      if (selectLikeState) {
-        await axios.post(`/like/delete`, {
-          itemId,
-          email,
-        });
-      } else {
-        await axios.post(`/like/create`, {
-          itemId,
-          email,
-        });
-      }
-
-      return true;
-    } catch (error) {
-      console.error(error);
-      setWholeItems(prev => prev.map(items =>
+  
+    setWholeItems(prev =>
+      prev.map(items =>
         items.map(item =>
           item.itemId === itemId
             ? {
                 ...item,
-                likeCount: item.likeCount + (selectLikeState ? 1 : -1),
-                isLiked: selectLikeState
+                likeCount: item.likeCount + (isLikedNow ? -1 : 1),
+                isLiked: !isLikedNow
               }
             : item
         )
-      ));
+      )
+    );
+  
+    try {
+      if (isLikedNow) {
+        await axios.post(`/like/delete`, { itemId, email });
+      } else {
+        await axios.post(`/like/create`, { itemId, email });
+      }
+  
+      return true;
+    } catch (error) {
+      console.error(error);
+      setWholeItems(prev =>
+        prev.map(items =>
+          items.map(item =>
+            item.itemId === itemId
+              ? {
+                  ...item,
+                  likeCount: item.likeCount + (isLikedNow ? 1 : -1),
+                  isLiked: isLikedNow
+                }
+              : item
+          )
+        )
+      );
       return false;
     }
-  },[selectLikeState, currentItem?.itemId]);
-
+  }, [currentItem?.itemId]);
+  
   const handleLikeClick = async () => {
-    const success = await manageLikeList();
+    const isLikedNow = selectLikeState; 
+    const success = await manageLikeList(isLikedNow);
     if (success) {
-      setSelectLikeState(prev => !prev);
+      setSelectLikeState(prev => !prev); 
     }
   };
 
