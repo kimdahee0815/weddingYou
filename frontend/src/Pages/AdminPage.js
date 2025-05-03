@@ -677,7 +677,7 @@ const AdminPage = () => {
                   가입일자
                 </div>
               </div>
-              {userList.length === 0 && (
+              {userList?.length === 0 && (
                 <div className="nonedata">
                   <p>검색결과가 없습니다.</p>
                   <p style={{ fontSize: "20px" }}>
@@ -939,7 +939,7 @@ export default AdminPage;
 const UserListData = ({ userList, userDetail }) => {
   return (
     <>
-      {userList.map((e, index) => {
+      {userList?.map((e, index) => {
         return (
           <div
             className="adminpage-Administration-list-body-box cursor"
