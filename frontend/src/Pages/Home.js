@@ -436,7 +436,7 @@ function Home() {
                           flexDirection: "column",
                           alignItems: "center",
                           width: "500px",
-                          height: "600px",
+                          height: "510px",
                         }}
                         data-bs-interval="5000"
                         key={item.itemId}
@@ -445,7 +445,7 @@ function Home() {
                           id="targetImg"
                           style={{
                             width: "400px",
-                            height: "465px",
+                            height: "400px",
                             marginLeft: "25px",
                             cursor: "pointer",
                           }}
