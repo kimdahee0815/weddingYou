@@ -9,6 +9,7 @@ spring:
     url: ${MYSQL_URL}
     username: ${MYSQL_USER}
     password: ${MYSQL_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
     # true : 트랜잭션이 완료되도 영속성 컨텍스트는 유지된다.
