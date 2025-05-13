@@ -23,6 +23,7 @@ public interface EstimateRepository extends JpaRepository<Estimate, Integer> {
 			+ "OR e_studio LIKE CONCAT('%', :search, '%') \r\n"
 			+ "OR e_weddingdate LIKE CONCAT('%', :search, '%') \r\n"
 			+ "OR e_date LIKE CONCAT('%', :search, '%') \r\n"
+			+ "OR e_requirement LIKE CONCAT('%', :search, '%') \r\n"
 			+ "OR DATE_FORMAT(e_date, '%Y-%m') = :search \r\n"
 			+ "OR DATE_FORMAT(e_date, '%m-%d') = :search \r\n"
 			+ "OR DATE_FORMAT(e_date, '%Y') = :search \r\n"
