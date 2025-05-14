@@ -143,8 +143,9 @@ function LikeList() {
       await axios.post(`/like/delete`, { itemId, email });
     }
   } catch (error) {
-    // 롤백
     console.error("Failed to update like:", error);
+
+    // 롤백
     setWholeItems(prevItems =>
       prevItems.map(item => {
         if (item.item?.itemId !== itemId) return item;
@@ -167,12 +168,22 @@ function LikeList() {
   }, [selectedItem, selectedSort, update]);
 
 const Like = ({ isLiked, itemId, onLikeToggle }) => {
-  const handleHeartClick = () => {
-    if (onLikeToggle) {
-      onLikeToggle(itemId, !isLiked);
+  const [loading, setLoading] = useState(false);
+
+  const handleHeartClick = async () => {
+    if (loading) return; 
+
+    setLoading(true);
+    const nextLiked = !isLiked;
+
+    try {
+      await onLikeToggle(itemId, nextLiked);
+    } finally {
+      setLoading(false);
     }
   };
-   return (
+
+  return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="20"
@@ -180,8 +191,12 @@ const Like = ({ isLiked, itemId, onLikeToggle }) => {
       fill={isLiked ? "red" : "currentColor"}
       className={`bi ${isLiked ? "bi-heart-fill" : "bi-heart"}`}
       viewBox="0 0 16 16"
-      onClick={handleHeartClick}
-      style={{ cursor: "pointer" }}
+      onClick={loading ? null : handleHeartClick} 
+      style={{ 
+        cursor: loading ? "not-allowed" : "pointer", 
+        opacity: loading ? 0.6 : 1,
+        pointerEvents: loading ? "none" : "auto" 
+      }}
     >
       <path
         fillRule="evenodd"
@@ -193,7 +208,7 @@ const Like = ({ isLiked, itemId, onLikeToggle }) => {
       />
     </svg>
   );
-  };
+};
   return (
     <div className="containerbox">
       <div className="mainlayout box1">
