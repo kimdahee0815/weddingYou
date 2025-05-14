@@ -121,18 +121,22 @@ function LikeList() {
 
   const handleLikeChange = (itemId, liked) => {
     setWholeItems(prevItems =>
-    prevItems.map(item =>
-      item.item?.itemId === itemId
-        ? {
-            ...item,
-            isLiked: liked,
-            likeCount: liked
-              ? (item.likeCount || 0) + 1
-              : Math.max(0, (item.likeCount || 0) - 1),
-          }
-        : item
-      )
-    );
+    prevItems.map(item => {
+      if (item.item?.itemId !== itemId) return item;
+
+      const newIsLiked = liked;
+      const currentLikeCount = item.likeCount || 0;
+      const newLikeCount = newIsLiked
+        ? currentLikeCount + 1
+        : Math.max(0, currentLikeCount - 1);
+
+      return {
+        ...item,
+        isLiked: newIsLiked,
+        likeCount: newLikeCount,
+      };
+    })
+  );
   };
 
   useEffect(() => {
