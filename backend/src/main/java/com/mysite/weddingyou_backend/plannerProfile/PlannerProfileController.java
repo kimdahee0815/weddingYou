@@ -74,7 +74,9 @@ public class PlannerProfileController {
     
     @Autowired
     private EstimateService estimateService;
-    
+
+		@Autowired
+		private PlannerProfileUtils plannerProfileUtils; 
 
     @Autowired
     private PaymentRepository paymentRepository;
@@ -367,7 +369,7 @@ public class PlannerProfileController {
   	  	  	targetEstimate.setPlannermatching(String.valueOf(obj));
   	  	  	targetEstimate.setMatchstatus(true);
 						PlannerUpdateDelete plannerInfo = plannerUpdateDeleteRepository.findByEmail(obj.get(0));
-        		PlannerProfileDTO profile = PlannerProfileUtils.createOrUpdatePlannerProfile(plannerInfo);
+        		PlannerProfileDTO profile = plannerProfileUtils.createOrUpdatePlannerProfile(plannerInfo);
         		plannerProfileService.save(profile);
   	  	  	estimateRepository.save(targetEstimate);
   	  	  	res =1;

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.mysite.weddingyou_backend.estimate.EstimateRepository;
 import com.mysite.weddingyou_backend.plannerProfile.PlannerProfileDTO;
 import com.mysite.weddingyou_backend.plannerProfile.PlannerProfileService;
 import com.mysite.weddingyou_backend.plannerProfile.PlannerProfileUtils;
@@ -26,11 +27,17 @@ public class ReviewService {
 
 	@Autowired
 	PlannerProfileService plannerProfileService;
+
+	@Autowired
+	EstimateRepository estimateRepository;
+
+	@Autowired
+	private PlannerProfileUtils plannerProfileUtils;
 	
 	public void save(Review review) throws ParseException {
 		reviewRepository.save(review);
 		PlannerUpdateDelete plannerInfo = plannerUpdateDeleteRepository.findByEmail(review.getPlannerEmail());
-    PlannerProfileDTO profile = PlannerProfileUtils.createOrUpdatePlannerProfile(plannerInfo);
+    PlannerProfileDTO profile = plannerProfileUtils.createOrUpdatePlannerProfile(plannerInfo);
     plannerProfileService.save(profile);
 	}
 

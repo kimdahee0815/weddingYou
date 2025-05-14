@@ -1,27 +1,15 @@
 package com.mysite.weddingyou_backend.plannerRegister;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.mysite.weddingyou_backend.estimate.Estimate;
 import com.mysite.weddingyou_backend.estimate.EstimateRepository;
-import com.mysite.weddingyou_backend.plannerProfile.PlannerProfile;
-import com.mysite.weddingyou_backend.plannerProfile.PlannerProfileController.ReviewStats;
 import com.mysite.weddingyou_backend.plannerProfile.PlannerProfileDTO;
 import com.mysite.weddingyou_backend.plannerProfile.PlannerProfileService;
 import com.mysite.weddingyou_backend.plannerProfile.PlannerProfileUtils;
 import com.mysite.weddingyou_backend.plannerUpdateDelete.PlannerUpdateDelete;
-import com.mysite.weddingyou_backend.plannerUpdateDelete.PlannerUpdateDeleteRepository;
-import com.mysite.weddingyou_backend.review.Review;
-import com.mysite.weddingyou_backend.review.ReviewDTO;
 import com.mysite.weddingyou_backend.review.ReviewRepository;
 import com.mysite.weddingyou_backend.userRegister.UserRegisterRepository;
 
@@ -33,7 +21,7 @@ public class PlannerRegisterService {
     private PlannerRegisterRepository plannerRepository;
 
     @Autowired
-    private PlannerUpdateDeleteRepository plannerUpdateDeleteRepository;
+    private PlannerProfileUtils plannerProfileUtils; 
     
     @Autowired
     private UserRegisterRepository userRepository;
@@ -60,11 +48,19 @@ public class PlannerRegisterService {
         planner.setCareer(plannerDTO.getCareer());
         planner.setPlannerJoinDate(LocalDateTime.now()); // 현재 시간으로 설정
 
+        PlannerRegister savedPlanner = plannerRepository.save(planner);
+
         PlannerUpdateDelete plannerInfo = new PlannerUpdateDelete();
         plannerInfo.setEmail(plannerDTO.getEmail());
-        PlannerProfileDTO profile = PlannerProfileUtils.createOrUpdatePlannerProfile(plannerInfo);
+        plannerInfo.setName(plannerDTO.getName());
+        plannerInfo.setPassword(plannerDTO.getPassword());
+        plannerInfo.setPhoneNum(plannerDTO.getPhoneNum());
+        plannerInfo.setGender(plannerDTO.getGender());
+        plannerInfo.setPlannerCareerYears(String.valueOf(plannerDTO.getCareer()));
+        plannerInfo.setPlannerJoinDate(planner.getPlannerJoinDate());
+        PlannerProfileDTO profile = plannerProfileUtils.createOrUpdatePlannerProfile(plannerInfo);
         plannerProfileService.save(profile);
-        return plannerRepository.save(planner);
+        return savedPlanner;
     }
 }
 

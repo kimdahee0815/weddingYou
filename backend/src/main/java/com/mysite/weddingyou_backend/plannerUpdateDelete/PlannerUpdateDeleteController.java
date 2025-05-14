@@ -16,11 +16,13 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.mysite.weddingyou_backend.S3Service;
+import com.mysite.weddingyou_backend.estimate.EstimateRepository;
 import com.mysite.weddingyou_backend.like.LikeRepository;
 import com.mysite.weddingyou_backend.plannerLogin.PlannerLoginRepository;
 import com.mysite.weddingyou_backend.plannerProfile.PlannerProfileDTO;
 import com.mysite.weddingyou_backend.plannerProfile.PlannerProfileService;
 import com.mysite.weddingyou_backend.plannerProfile.PlannerProfileUtils;
+import com.mysite.weddingyou_backend.review.ReviewRepository;
 import com.mysite.weddingyou_backend.userLogin.UserLoginRepository;
 import com.mysite.weddingyou_backend.userUpdateDelete.UserUpdateDeleteDTO;
 
@@ -52,6 +54,9 @@ public class PlannerUpdateDeleteController {
 	@Autowired
 	LikeRepository likeRepository;
 
+	@Autowired
+    private PlannerProfileUtils plannerProfileUtils;
+
 	@PostMapping("/planner/plannerSearch")
   public PlannerUpdateDelete searchUser(@RequestBody PlannerUpdateDeleteDTO planner) throws Exception {
     PlannerUpdateDelete searchedPlanner = service.getPlannerByEmail(planner.getEmail());
@@ -82,7 +87,7 @@ public class PlannerUpdateDeleteController {
 			searchedPlanner.setPlannerCareerYears(planner.getCareer());
 			searchedPlanner.setIntroduction(planner.getIntroduction());
 			PlannerUpdateDelete plannerInfo = plannerUpdateDeleteRepository.findByEmail(planner.getEmail());
-      PlannerProfileDTO profile = PlannerProfileUtils.createOrUpdatePlannerProfile(plannerInfo);
+      PlannerProfileDTO profile = plannerProfileUtils.createOrUpdatePlannerProfile(plannerInfo);
       plannerProfileService.save(profile);
 			service.save(searchedPlanner);
 		}else {

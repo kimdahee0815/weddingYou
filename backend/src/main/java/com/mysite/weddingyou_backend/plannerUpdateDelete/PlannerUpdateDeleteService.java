@@ -1,26 +1,12 @@
 package com.mysite.weddingyou_backend.plannerUpdateDelete;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.Properties;
-import java.util.Random;
-
-import javax.mail.Authenticator;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mysite.weddingyou_backend.like.LikeEntity;
 import com.mysite.weddingyou_backend.like.LikeRepository;
-import com.mysite.weddingyou_backend.plannerRegister.PlannerRegister;
-import com.mysite.weddingyou_backend.userUpdateDelete.UserUpdateDelete;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;

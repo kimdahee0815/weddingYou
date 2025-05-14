@@ -76,6 +76,8 @@ public class PaymentController {
   @Autowired
   PlannerUpdateDeleteRepository plannerUpdateDeleteRepository;
 	
+  @Autowired
+  private PlannerProfileUtils plannerProfileUtils;
 //    private IamportClient api;
 //
 //    public PaymentController() {
@@ -191,7 +193,7 @@ public class PaymentController {
           targetEstimate.setUserMatching(String.valueOf(userList));
           targetEstimate.setMatchstatus(true);
           PlannerUpdateDelete plannerInfo = plannerUpdateDeleteRepository.findByEmail(plannerList.get(0));
-        	PlannerProfileDTO profile = PlannerProfileUtils.createOrUpdatePlannerProfile(plannerInfo);
+        	PlannerProfileDTO profile = plannerProfileUtils.createOrUpdatePlannerProfile(plannerInfo);
         	plannerProfileService.save(profile);
 
           estimateService.save(targetEstimate);

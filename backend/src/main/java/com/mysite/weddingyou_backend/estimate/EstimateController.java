@@ -106,6 +106,9 @@ public class EstimateController {
 	
 	@Autowired
 	private CommentRepository commentRepository;
+
+	@Autowired
+  private PlannerProfileUtils plannerProfileUtils;
 	
 	@Value("${spring.servlet.multipart.location}")
     String uploadDir;
@@ -501,7 +504,7 @@ public class EstimateController {
 					targetEstimate.setUserMatching(String.valueOf(obj));
 					targetEstimate.setMatchstatus(true);
 					PlannerUpdateDelete plannerInfo = plannerUpdateDeleteRepository.findByEmail(obj.get(0));
-        	PlannerProfileDTO profile = PlannerProfileUtils.createOrUpdatePlannerProfile(plannerInfo);
+        	PlannerProfileDTO profile = plannerProfileUtils.createOrUpdatePlannerProfile(plannerInfo);
         	plannerProfileService.save(profile);
 
 					List<PlannerProfileDTO> profiles = new ArrayList<PlannerProfileDTO>();
