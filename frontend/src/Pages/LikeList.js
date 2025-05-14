@@ -22,7 +22,6 @@ function LikeList() {
   const [wholeItems, setWholeItems] = useState([]);
   const [selectedItem, setSelectedItem] = useState("카테고리"); 
   const [selectedSort, setSelectedSort] = useState("정렬"); 
-  const [likeState, setLikeState] = useState(false);
   const [update, setUpdate] = useState(false);
   const [finish, setFinish] = useState(false);
 
@@ -98,7 +97,7 @@ function LikeList() {
     .catch((e) => {
       console.error("Error fetching like list:", e);
     });
-  }, [likeState]);
+  }, []);
 
   useEffect(() => {
     //카테고리, 정렬 모두 적용
@@ -119,74 +118,75 @@ function LikeList() {
       });
   }, [selectedItem, selectedSort, update]);
 
-  const handleLikeChange = (itemId, liked) => {
-    setWholeItems(prevItems =>
+ const handleLikeToggle = async (itemId, nextLiked) => {
+  const email = sessionStorage.getItem("email");
+
+  setWholeItems(prevItems =>
     prevItems.map(item => {
       if (item.item?.itemId !== itemId) return item;
-
-      const newIsLiked = liked;
       const currentLikeCount = item.likeCount || 0;
-      const newLikeCount = newIsLiked
-        ? currentLikeCount + 1
-        : Math.max(0, currentLikeCount - 1);
 
       return {
         ...item,
-        isLiked: newIsLiked,
-        likeCount: newLikeCount,
+        isLiked: nextLiked,
+        likeCount: nextLiked
+          ? currentLikeCount + 1
+          : Math.max(0, currentLikeCount - 1),
       };
     })
   );
-  setLikeState(like => !like);
-  };
+
+  try {
+    if (nextLiked) {
+      await axios.post(`/like/create`, { itemId, email });
+    } else {
+      await axios.post(`/like/delete`, { itemId, email });
+    }
+  } catch (error) {
+    // 롤백
+    console.error("Failed to update like:", error);
+    setWholeItems(prevItems =>
+      prevItems.map(item => {
+        if (item.item?.itemId !== itemId) return item;
+        const currentLikeCount = item.likeCount || 0;
+
+        return {
+          ...item,
+          isLiked: !nextLiked,
+          likeCount: !nextLiked
+            ? currentLikeCount + 1
+            : Math.max(0, currentLikeCount - 1),
+        };
+      })
+    );
+  }
+};
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
   }, [selectedItem, selectedSort, update]);
 
-const Like = ({ likeState, itemId, onLikeChange }) => {
-  const [isProcessing, setIsProcessing] = useState(false);
-
-  const handleHeartClick = async () => {
-    if (isProcessing) return;
-
-    setIsProcessing(true);
-
-    const email = sessionStorage.getItem("email");
-    const optimisticState = !likeState;
-
-    onLikeChange?.(itemId, optimisticState);
-
-    try {
-      if (optimisticState) {
-        await axios.post(`/like/create`, { itemId, email });
-      } else {
-        await axios.post(`/like/delete`, { itemId, email });
-      }
-    } catch (error) {
-      console.error("Failed to update like:", error);
-      // 실패 시 롤백
-      onLikeChange?.(itemId, likeState);
-    } finally {
-      setIsProcessing(false);
+const Like = ({ isLiked, itemId, onLikeToggle }) => {
+  const handleHeartClick = () => {
+    if (onLikeToggle) {
+      onLikeToggle(itemId, !isLiked);
     }
   };
-
-  return (
+   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="20"
       height="20"
-      fill={likeState ? "red" : "currentColor"}
-      className={`bi ${likeState ? "bi-heart-fill" : "bi-heart"}`}
+      fill={isLiked ? "red" : "currentColor"}
+      className={`bi ${isLiked ? "bi-heart-fill" : "bi-heart"}`}
       viewBox="0 0 16 16"
       onClick={handleHeartClick}
-      style={{ cursor: isProcessing ? "not-allowed" : "pointer", opacity: isProcessing ? 0.5 : 1 }}
+      style={{ cursor: "pointer" }}
     >
       <path
         fillRule="evenodd"
         d={
-          likeState
+          isLiked
             ? "M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"
             : "m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"
         }
@@ -382,9 +382,9 @@ const Like = ({ likeState, itemId, onLikeChange }) => {
                                 {likeItem.item?.itemName} &nbsp;&nbsp;
                                 <div className="likeListBtn1">
                                   <Like 
-                                    likeState={likeItem.isLiked} 
+                                    isLiked={likeItem.isLiked}
                                     itemId={likeItem.item?.itemId}
-                                    onLikeChange={handleLikeChange}
+                                    onLikeToggle={handleLikeToggle}
                                   />
                                 </div>
                                 {likeItem.likeCount}
