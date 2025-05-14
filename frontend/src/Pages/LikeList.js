@@ -23,7 +23,6 @@ function LikeList() {
   const [selectedItem, setSelectedItem] = useState("카테고리"); 
   const [selectedSort, setSelectedSort] = useState("정렬"); 
 
-  const [selectLikeState, setSelectLikeState] = useState(true);
   const [update, setUpdate] = useState(false);
   const [finish, setFinish] = useState(false);
 
@@ -122,8 +121,16 @@ function LikeList() {
 
   const handleLikeChange = (itemId, liked) => {
     setWholeItems(prevItems =>
-      prevItems.map(item =>
-        item.item?.itemId === itemId ? { ...item, isLiked: liked, likeCount: liked ? (item.likeCount || 0) + 1 : Math.max(0, (item.likeCount || 0) - 1) } : item
+    prevItems.map(item =>
+      item.item?.itemId === itemId
+        ? {
+            ...item,
+            isLiked: liked,
+            likeCount: liked
+              ? (item.likeCount || 0) + 1
+              : Math.max(0, (item.likeCount || 0) - 1),
+          }
+        : item
       )
     );
   };
