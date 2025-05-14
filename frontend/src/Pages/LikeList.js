@@ -135,10 +135,6 @@ function LikeList() {
   const Like = ({ likeState, itemId, onLikeChange }) => {
     const [isLiked, setIsLiked] = useState(likeState);
   
-    useEffect(() => {
-      setIsLiked(likeState);
-    }, [likeState]);
-  
     const handleHeartClick = async () => {
       const email = sessionStorage.getItem("email");
       const previousState = isLiked;
