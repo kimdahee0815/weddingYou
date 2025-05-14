@@ -148,20 +148,22 @@ function LikeList() {
       const optimisticState = !previousState;
   
       setIsLiked(optimisticState); 
+      if (onLikeChange) {
+        onLikeChange(itemId, optimisticState);
+      }
   
       try {
         if (optimisticState) {
           await axios.post(`/like/create`, { itemId, email });
         } else {
           await axios.post(`/like/delete`, { itemId, email });
-        }
-  
-        if (onLikeChange) {
-          onLikeChange(itemId, optimisticState);
-        }
+        } 
       } catch (error) {
         console.error("Failed to update like:", error);
         setIsLiked(previousState); 
+        if (onLikeChange) {
+          onLikeChange(itemId, previousState); 
+        }
       }
     };
   
