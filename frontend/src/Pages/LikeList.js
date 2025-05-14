@@ -22,7 +22,7 @@ function LikeList() {
   const [wholeItems, setWholeItems] = useState([]);
   const [selectedItem, setSelectedItem] = useState("카테고리"); 
   const [selectedSort, setSelectedSort] = useState("정렬"); 
-
+  const [likeState, setLikeState] = useState(false);
   const [update, setUpdate] = useState(false);
   const [finish, setFinish] = useState(false);
 
@@ -43,7 +43,7 @@ function LikeList() {
   }, [navigate]);
 
   const goUpdate = (e) => {
-    setUpdate(!update);
+    setUpdate(update => !update);
   };
 
   useEffect(() => {
@@ -98,7 +98,7 @@ function LikeList() {
     .catch((e) => {
       console.error("Error fetching like list:", e);
     });
-  }, []);
+  }, [likeState]);
 
   useEffect(() => {
     //카테고리, 정렬 모두 적용
@@ -137,14 +137,15 @@ function LikeList() {
       };
     })
   );
+  setLikeState(like => !like);
   };
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
   }, [selectedItem, selectedSort, update]);
 
-  const Like = ({ likeState, itemId, onLikeChange }) => {
-   const [isProcessing, setIsProcessing] = useState(false);
+const Like = ({ likeState, itemId, onLikeChange }) => {
+  const [isProcessing, setIsProcessing] = useState(false);
 
   const handleHeartClick = async () => {
     if (isProcessing) return;
