@@ -60,7 +60,8 @@ public class PlannerRegisterService {
         planner.setCareer(plannerDTO.getCareer());
         planner.setPlannerJoinDate(LocalDateTime.now()); // 현재 시간으로 설정
 
-        PlannerUpdateDelete plannerInfo = plannerUpdateDeleteRepository.findByEmail(plannerDTO.getEmail());
+        PlannerUpdateDelete plannerInfo = new PlannerUpdateDelete();
+        plannerInfo.setEmail(plannerDTO.getEmail());
         PlannerProfileDTO profile = PlannerProfileUtils.createOrUpdatePlannerProfile(plannerInfo);
         plannerProfileService.save(profile);
         return plannerRepository.save(planner);
