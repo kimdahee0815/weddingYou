@@ -503,9 +503,6 @@ public class EstimateController {
 					targetEstimate.setPlannermatching(String.valueOf(obj));
 					targetEstimate.setUserMatching(String.valueOf(obj));
 					targetEstimate.setMatchstatus(true);
-					PlannerUpdateDelete plannerInfo = plannerUpdateDeleteRepository.findByEmail(obj.get(0));
-        	PlannerProfileDTO profile = plannerProfileUtils.createOrUpdatePlannerProfile(plannerInfo);
-        	plannerProfileService.save(profile);
 
 					List<PlannerProfileDTO> profiles = new ArrayList<PlannerProfileDTO>();
 					PlannerProfileDTO targetPlannerData = plannerProfileService.getPlannerByEmail(matchingPlanner);
@@ -513,6 +510,10 @@ public class EstimateController {
 					targetEstimate.setPlannerProfiles(profiles);
 				  estimateService.save(targetEstimate);
 
+					PlannerUpdateDelete plannerInfo = plannerUpdateDeleteRepository.findByEmail(obj.get(0));
+        	PlannerProfileDTO profile = plannerProfileUtils.createOrUpdatePlannerProfile(plannerInfo);
+        	plannerProfileService.save(profile);
+					
 					List<Payment> targetPayments = paymentRepository.findByEstimateId(estimateId);
 					Payment targetPayment = targetPayments.stream()
 					.filter(p -> p.getPlannerEmail().equals(matchingPlanner) && p.getUserEmail().equals(userEmail)).findFirst().orElse(null);

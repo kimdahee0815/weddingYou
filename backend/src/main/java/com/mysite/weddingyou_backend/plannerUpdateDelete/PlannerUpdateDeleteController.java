@@ -86,10 +86,12 @@ public class PlannerUpdateDeleteController {
 			searchedPlanner.setGender(planner.getGender());
 			searchedPlanner.setPlannerCareerYears(planner.getCareer());
 			searchedPlanner.setIntroduction(planner.getIntroduction());
+			service.save(searchedPlanner);
+			
 			PlannerUpdateDelete plannerInfo = plannerUpdateDeleteRepository.findByEmail(planner.getEmail());
       PlannerProfileDTO profile = plannerProfileUtils.createOrUpdatePlannerProfile(plannerInfo);
       plannerProfileService.save(profile);
-			service.save(searchedPlanner);
+
 		}else {
 			throw new Exception("이메일이 중복됩니다!");
 		}

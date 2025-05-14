@@ -368,10 +368,12 @@ public class PlannerProfileController {
   	  	  	targetEstimate.setUserMatching(String.valueOf(obj));
   	  	  	targetEstimate.setPlannermatching(String.valueOf(obj));
   	  	  	targetEstimate.setMatchstatus(true);
+						estimateRepository.save(targetEstimate);
+						
 						PlannerUpdateDelete plannerInfo = plannerUpdateDeleteRepository.findByEmail(obj.get(0));
         		PlannerProfileDTO profile = plannerProfileUtils.createOrUpdatePlannerProfile(plannerInfo);
         		plannerProfileService.save(profile);
-  	  	  	estimateRepository.save(targetEstimate);
+
   	  	  	res =1;
   	  	  }		
   	  	}

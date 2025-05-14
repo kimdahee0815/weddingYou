@@ -36,6 +36,7 @@ public class ReviewService {
 	
 	public void save(Review review) throws ParseException {
 		reviewRepository.save(review);
+		
 		PlannerUpdateDelete plannerInfo = plannerUpdateDeleteRepository.findByEmail(review.getPlannerEmail());
     PlannerProfileDTO profile = plannerProfileUtils.createOrUpdatePlannerProfile(plannerInfo);
     plannerProfileService.save(profile);
