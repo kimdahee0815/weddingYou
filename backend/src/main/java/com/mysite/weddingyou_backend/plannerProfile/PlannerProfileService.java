@@ -31,6 +31,10 @@ public class PlannerProfileService {
         plannerprofileRepository.save(newProfile);   	
     }
 
+    public void delete(String plannerEmail){
+        plannerprofileRepository.deleteByPlannerEmail(plannerEmail);   	
+    }
+
 }
 
 

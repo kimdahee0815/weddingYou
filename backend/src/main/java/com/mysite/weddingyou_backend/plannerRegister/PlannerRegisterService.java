@@ -1,11 +1,28 @@
 package com.mysite.weddingyou_backend.plannerRegister;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.mysite.weddingyou_backend.estimate.Estimate;
+import com.mysite.weddingyou_backend.estimate.EstimateRepository;
+import com.mysite.weddingyou_backend.plannerProfile.PlannerProfile;
+import com.mysite.weddingyou_backend.plannerProfile.PlannerProfileController.ReviewStats;
+import com.mysite.weddingyou_backend.plannerProfile.PlannerProfileDTO;
+import com.mysite.weddingyou_backend.plannerProfile.PlannerProfileService;
+import com.mysite.weddingyou_backend.plannerProfile.PlannerProfileUtils;
+import com.mysite.weddingyou_backend.plannerUpdateDelete.PlannerUpdateDelete;
+import com.mysite.weddingyou_backend.plannerUpdateDelete.PlannerUpdateDeleteRepository;
+import com.mysite.weddingyou_backend.review.Review;
+import com.mysite.weddingyou_backend.review.ReviewDTO;
+import com.mysite.weddingyou_backend.review.ReviewRepository;
 import com.mysite.weddingyou_backend.userRegister.UserRegisterRepository;
 
 @Service
@@ -14,9 +31,16 @@ public class PlannerRegisterService {
 
     @Autowired
     private PlannerRegisterRepository plannerRepository;
+
+    @Autowired
+    private PlannerUpdateDeleteRepository plannerUpdateDeleteRepository;
     
     @Autowired
     private UserRegisterRepository userRepository;
+
+    @Autowired
+    private PlannerProfileService plannerProfileService;
+
 
     public PlannerRegister getPlannerByEmail(String email) {
         return plannerRepository.findByEmail(email);
@@ -35,6 +59,10 @@ public class PlannerRegisterService {
         planner.setGender(plannerDTO.getGender());
         planner.setCareer(plannerDTO.getCareer());
         planner.setPlannerJoinDate(LocalDateTime.now()); // 현재 시간으로 설정
+
+        PlannerUpdateDelete plannerInfo = plannerUpdateDeleteRepository.findByEmail(plannerDTO.getEmail());
+        PlannerProfileDTO profile = PlannerProfileUtils.createOrUpdatePlannerProfile(plannerInfo);
+        plannerProfileService.save(profile);
         return plannerRepository.save(planner);
     }
 }

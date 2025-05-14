@@ -67,7 +67,7 @@ public class PlannerProfileController {
     private UserLoginRepository userLoginRepository;
 
     @Autowired
-    private ReviewRepository reviewRepository;
+    private PlannerProfileService plannerProfileService;
     
     @Autowired
     private EstimateRepository estimateRepository;
@@ -92,91 +92,10 @@ public class PlannerProfileController {
     
   @GetMapping("/plannerProfiles/{sort}")
 	public List<PlannerProfile> saveAndGetPlannerProfiles(@PathVariable String sort) throws ParseException {
-    List<PlannerUpdateDelete> plannersInfo = plannerUpdateDeleteRepository.findAll();
-
-    // planner profile save or update
-    for (PlannerUpdateDelete plannerInfo : plannersInfo) {
-        PlannerProfileDTO newProfile = createOrUpdatePlannerProfile(plannerInfo);
-				plannerService.save(newProfile);
-    }
-
     List<PlannerProfile> foundPlannersInfo = plannerService.getPlannerProfiles();
 
     // sort
     return sortProfiles(foundPlannersInfo, sort);
-	}
-
-	// planner profile create or update
-	private PlannerProfileDTO createOrUpdatePlannerProfile(PlannerUpdateDelete plannerInfo) throws ParseException {
-    PlannerProfileDTO existingProfile = plannerService.getPlannerByEmail(plannerInfo.getEmail());
-		PlannerProfileDTO profile = null;
-		if(existingProfile == null) {
-			profile = new PlannerProfileDTO();
-		}else{
-			profile = existingProfile;
-		}
-    String plannerEmail = plannerInfo.getEmail();
-    	List<Review> reviews = reviewRepository.findAllByPlannerEmailFetchUserAndComments(plannerEmail);
-    	List<Estimate> estimates = estimateRepository.findAll();
-
-    	// Review stats and counts
-    	ReviewStats reviewStats = calculateReviewStats(reviews);
-    	int matchingCount = calculateMatchingCount(estimates, plannerEmail);
-
-    	profile.setPlannerEmail(plannerEmail);
-    	profile.setPlannerName(plannerInfo.getName());
-    	profile.setIntroduction(plannerInfo.getIntroduction());
-    	profile.setPhoneNum(plannerInfo.getPhoneNum());
-    	profile.setPlannerProfileImg(plannerInfo.getPlannerImg());
-    	profile.setPlannerJoinDate(plannerInfo.getPlannerJoinDate());
-    	profile.setCareer(Integer.parseInt(plannerInfo.getPlannerCareerYears()));
-    	profile.setReviewCount(reviewStats.getReviewCount());
-    	profile.setReviewStars(reviewStats.getReviewStars());
-    	profile.setReviewUsers(reviewStats.getReviewUsers());
-    	profile.setMatchingCount(matchingCount);
-    	profile.setAvgReviewStars(reviewStats.getAvgReviewStars());
-
-			List<ReviewDTO> reviewsDTOs = reviews.stream().map(ReviewDTO::fromEntity).collect(Collectors.toList());
-			profile.setReviews(reviewsDTOs);
-		
-    return profile;
-	}
-
-	// calcualte reviews
-	private ReviewStats calculateReviewStats(List<Review> reviews) {
-    int totalReviewStars = 0;
-    int reviewCount = 0;
-    ArrayList<String> reviewUsers = new ArrayList<>();
-    ArrayList<Integer> reviewStars = new ArrayList<>();
-
-    if (reviews != null) {
-        for (Review review : reviews) {
-            reviewUsers.add(review.getUserEmail());
-            reviewStars.add(review.getReviewStars());
-            totalReviewStars += review.getReviewStars();
-        }
-        reviewCount = reviews.size();
-    }
-
-    double avgReviewStars = reviewCount > 0 ? Math.round(totalReviewStars / (double) reviewCount * 100.0) / 100.0 : 0.0;
-    String avgReviewStarsStr = String.valueOf(avgReviewStars);
-
-    return new ReviewStats(reviewCount, reviewStars.toString(), reviewUsers.toString(), avgReviewStarsStr);
-	}
-
-	// matching count
-	private int calculateMatchingCount(List<Estimate> estimates, String plannerEmail) throws ParseException {
-    int matchingCount = 0;
-    for (Estimate estimate : estimates) {
-        if (estimate.isMatchstatus()) {
-            JSONParser parser = new JSONParser();
-            ArrayList<String> matchedPlanners = (ArrayList<String>) parser.parse(estimate.getPlannermatching());
-            if (matchedPlanners.contains(plannerEmail)) {
-                matchingCount++;
-            }
-        }
-    }
-    return matchingCount;
 	}
 
 	// sort planner profile	
@@ -447,6 +366,9 @@ public class PlannerProfileController {
   	  	  	targetEstimate.setUserMatching(String.valueOf(obj));
   	  	  	targetEstimate.setPlannermatching(String.valueOf(obj));
   	  	  	targetEstimate.setMatchstatus(true);
+						PlannerUpdateDelete plannerInfo = plannerUpdateDeleteRepository.findByEmail(obj.get(0));
+        		PlannerProfileDTO profile = PlannerProfileUtils.createOrUpdatePlannerProfile(plannerInfo);
+        		plannerProfileService.save(profile);
   	  	  	estimateRepository.save(targetEstimate);
   	  	  	res =1;
   	  	  }		

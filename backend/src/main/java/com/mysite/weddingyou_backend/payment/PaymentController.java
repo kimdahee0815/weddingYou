@@ -30,7 +30,9 @@ import com.mysite.weddingyou_backend.plannerLogin.PlannerLogin;
 import com.mysite.weddingyou_backend.plannerLogin.PlannerLoginRepository;
 import com.mysite.weddingyou_backend.plannerProfile.PlannerProfileDTO;
 import com.mysite.weddingyou_backend.plannerProfile.PlannerProfileService;
+import com.mysite.weddingyou_backend.plannerProfile.PlannerProfileUtils;
 import com.mysite.weddingyou_backend.plannerUpdateDelete.PlannerUpdateDelete;
+import com.mysite.weddingyou_backend.plannerUpdateDelete.PlannerUpdateDeleteRepository;
 import com.mysite.weddingyou_backend.plannerUpdateDelete.PlannerUpdateDeleteService;
 import com.mysite.weddingyou_backend.userLogin.UserLogin;
 import com.mysite.weddingyou_backend.userLogin.UserLoginRepository;
@@ -70,6 +72,9 @@ public class PaymentController {
 
   @Autowired
   PaymentRepository paymentRepository;
+
+  @Autowired
+  PlannerUpdateDeleteRepository plannerUpdateDeleteRepository;
 	
 //    private IamportClient api;
 //
@@ -185,7 +190,10 @@ public class PaymentController {
           targetEstimate.setPlannermatching(String.valueOf(plannerList));
           targetEstimate.setUserMatching(String.valueOf(userList));
           targetEstimate.setMatchstatus(true);
-          
+          PlannerUpdateDelete plannerInfo = plannerUpdateDeleteRepository.findByEmail(plannerList.get(0));
+        	PlannerProfileDTO profile = PlannerProfileUtils.createOrUpdatePlannerProfile(plannerInfo);
+        	plannerProfileService.save(profile);
+
           estimateService.save(targetEstimate);
         } catch (ParseException e) {
           e.printStackTrace();

@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.UrlResource;
@@ -87,7 +88,7 @@ public class ReviewController {
 	        @RequestParam(value = "reviewImg", required = false) MultipartFile[] reviewImg,
 	        @RequestParam("userEmail") String userEmail,
 	        @RequestParam("plannerEmail") String plannerEmail,
-	        @RequestParam("estimateId") Long estimateId) throws IOException {
+	        @RequestParam("estimateId") Long estimateId) throws IOException, ParseException {
 		
 		int res = 0;
 	    
@@ -207,7 +208,7 @@ public class ReviewController {
 	        @RequestParam(value = "reviewImg", required = false) MultipartFile[] reviewImg,
 	        @RequestParam("userEmail") String userEmail,
 	        @RequestParam("plannerEmail") String plannerEmail,
-	        @RequestParam("estimateId") Long estimateId) throws IOException {
+	        @RequestParam("estimateId") Long estimateId) throws IOException, ParseException {
 		
 		int res = 0;
 	    

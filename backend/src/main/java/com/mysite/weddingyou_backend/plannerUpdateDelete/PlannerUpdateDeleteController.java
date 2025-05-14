@@ -18,6 +18,9 @@ import org.springframework.web.multipart.MultipartFile;
 import com.mysite.weddingyou_backend.S3Service;
 import com.mysite.weddingyou_backend.like.LikeRepository;
 import com.mysite.weddingyou_backend.plannerLogin.PlannerLoginRepository;
+import com.mysite.weddingyou_backend.plannerProfile.PlannerProfileDTO;
+import com.mysite.weddingyou_backend.plannerProfile.PlannerProfileService;
+import com.mysite.weddingyou_backend.plannerProfile.PlannerProfileUtils;
 import com.mysite.weddingyou_backend.userLogin.UserLoginRepository;
 import com.mysite.weddingyou_backend.userUpdateDelete.UserUpdateDeleteDTO;
 
@@ -39,6 +42,12 @@ public class PlannerUpdateDeleteController {
 	
 	@Autowired
 	UserLoginRepository userRepository;
+
+	@Autowired
+	PlannerUpdateDeleteRepository plannerUpdateDeleteRepository;
+
+	@Autowired
+	PlannerProfileService plannerProfileService;
 	
 	@Autowired
 	LikeRepository likeRepository;
@@ -55,7 +64,7 @@ public class PlannerUpdateDeleteController {
 	@PostMapping("/planner/plannerDelete")
 	public ResponseEntity<PlannerUpdateDelete> deleteUser(@RequestBody PlannerUpdateDeleteDTO planner) {
 		PlannerUpdateDelete searchedPlanner = service.getPlannerByEmail(planner.getEmail());
-		
+		plannerProfileService.delete(searchedPlanner.getEmail());
 		service.delete(searchedPlanner);
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
@@ -72,6 +81,9 @@ public class PlannerUpdateDeleteController {
 			searchedPlanner.setGender(planner.getGender());
 			searchedPlanner.setPlannerCareerYears(planner.getCareer());
 			searchedPlanner.setIntroduction(planner.getIntroduction());
+			PlannerUpdateDelete plannerInfo = plannerUpdateDeleteRepository.findByEmail(planner.getEmail());
+      PlannerProfileDTO profile = PlannerProfileUtils.createOrUpdatePlannerProfile(plannerInfo);
+      plannerProfileService.save(profile);
 			service.save(searchedPlanner);
 		}else {
 			throw new Exception("이메일이 중복됩니다!");
