@@ -20,7 +20,7 @@ const EstimateModify = () => {
           `/estimate/detail/${id}`
         );
         let { data } = response;
-        //console.log(data);
+        
         setbudget(data.budget.toLocaleString());
         sethoneymoon(data.honeymoon);
         setrequirement(data.requirement);
@@ -569,6 +569,13 @@ const EstimateModify = () => {
               />
               <label htmlFor="머메이드" className="label-design w-100 cursor">
                 머메이드
+                {dress.includes("머메이드") ? (
+                  <span className="ranking">
+                    {dress.indexOf("머메이드") + 1}순위
+                  </span>
+                ) : (
+                  ""
+                )}
               </label>
             </div>
             <div className="choosebox">
@@ -583,6 +590,13 @@ const EstimateModify = () => {
               />
               <label htmlFor="A라인" className="label-design w-100 cursor">
                 A라인
+                {dress.includes("A라인") ? (
+                  <span className="ranking">
+                    {dress.indexOf("A라인") + 1}순위
+                  </span>
+                ) : (
+                  ""
+                )}
               </label>
             </div>
             <div className="choosebox">
@@ -597,6 +611,13 @@ const EstimateModify = () => {
               />
               <label htmlFor="H라인" className="label-design w-100 cursor">
                 H라인
+                {dress.includes("H라인") ? (
+                  <span className="ranking">
+                    {dress.indexOf("H라인") + 1}순위
+                  </span>
+                ) : (
+                  ""
+                )}
               </label>
             </div>
             <div className="choosebox">
@@ -611,6 +632,13 @@ const EstimateModify = () => {
               />
               <label htmlFor="벨라인" className="label-design w-100 cursor">
                 벨라인
+                {dress.includes("벨라인") ? (
+                  <span className="ranking">
+                    {dress.indexOf("벨라인") + 1}순위
+                  </span>
+                ) : (
+                  ""
+                )}
               </label>
             </div>
             <div className="choosebox">
@@ -625,6 +653,13 @@ const EstimateModify = () => {
               />
               <label htmlFor="엠파이어" className="label-design w-100 cursor">
                 엠파이어
+                {dress.includes("엠파이어") ? (
+                  <span className="ranking">
+                    {dress.indexOf("엠파이어") + 1}순위
+                  </span>
+                ) : (
+                  ""
+                )}
               </label>
             </div>
             <div className="choosebox">
@@ -639,6 +674,13 @@ const EstimateModify = () => {
               />
               <label htmlFor="프린세스" className="label-design w-100 cursor">
                 프린세스
+                {dress.includes("프린세스") ? (
+                  <span className="ranking">
+                    {dress.indexOf("프린세스") + 1}순위
+                  </span>
+                ) : (
+                  ""
+                )}
               </label>
             </div>
             <span>
@@ -667,6 +709,13 @@ const EstimateModify = () => {
               />
               <label htmlFor="로맨틱한" className="label-design w-100 cursor">
                 로맨틱한
+                {makeup.includes("로맨틱한") ? (
+                  <span className="ranking">
+                    {makeup.indexOf("로맨틱한") + 1}순위
+                  </span>
+                ) : (
+                  ""
+                )}
               </label>
             </div>
             <div className="choosebox">
@@ -681,6 +730,13 @@ const EstimateModify = () => {
               />
               <label htmlFor="포인트" className="label-design w-100 cursor">
                 포인트
+                {makeup.includes("포인트") ? (
+                  <span className="ranking">
+                    {makeup.indexOf("포인트") + 1}순위
+                  </span>
+                ) : (
+                  ""
+                )}
               </label>
             </div>
             <div className="choosebox">
@@ -695,6 +751,13 @@ const EstimateModify = () => {
               />
               <label htmlFor="내추럴" className="label-design w-100 cursor">
                 내추럴
+                {makeup.includes("내추럴") ? (
+                  <span className="ranking">
+                    {makeup.indexOf("내추럴") + 1}순위
+                  </span>
+                ) : (
+                  ""
+                )}
               </label>
             </div>
             <div className="choosebox">
@@ -709,6 +772,13 @@ const EstimateModify = () => {
               />
               <label htmlFor="스모키" className="label-design w-100 cursor">
                 스모키
+                {makeup.includes("스모키") ? (
+                  <span className="ranking">
+                    {makeup.indexOf("스모키") + 1}순위
+                  </span>
+                ) : (
+                  ""
+                )}
               </label>
             </div>
             <div className="choosebox">
@@ -723,6 +793,13 @@ const EstimateModify = () => {
               />
               <label htmlFor="큐티" className="label-design w-100 cursor">
                 큐티
+                {makeup.includes("큐티") ? (
+                  <span className="ranking">
+                    {makeup.indexOf("큐티") + 1}순위
+                  </span>
+                ) : (
+                  ""
+                )}
               </label>
             </div>
             <div className="choosebox">
@@ -737,6 +814,13 @@ const EstimateModify = () => {
               />
               <label htmlFor="러블리" className="label-design w-100 cursor">
                 러블리
+                {makeup.includes("러블리") ? (
+                  <span className="ranking">
+                    {makeup.indexOf("러블리") + 1}순위
+                  </span>
+                ) : (
+                  ""
+                )}
               </label>
             </div>
             <span>
