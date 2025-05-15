@@ -6,12 +6,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.mysite.weddingyou_backend.comment.Comment;
+import com.mysite.weddingyou_backend.comment.CommentRepository;
 import com.mysite.weddingyou_backend.estimate.Estimate;
 import com.mysite.weddingyou_backend.estimate.EstimateRepository;
 import com.mysite.weddingyou_backend.like.LikeEntity;
 import com.mysite.weddingyou_backend.like.LikeRepository;
+import com.mysite.weddingyou_backend.mypageAdmin.MypageAdmin;
+import com.mysite.weddingyou_backend.mypageAdmin.MypageAdminRepository;
 import com.mysite.weddingyou_backend.payment.Payment;
 import com.mysite.weddingyou_backend.payment.PaymentRepository;
+import com.mysite.weddingyou_backend.qna.Qna;
+import com.mysite.weddingyou_backend.qna.QnaRepository;
 import com.mysite.weddingyou_backend.review.Review;
 import com.mysite.weddingyou_backend.review.ReviewRepository;
 
@@ -33,6 +39,15 @@ public class UserUpdateDeleteService {
 
 	@Autowired
 	private ReviewRepository reviewRepository;
+
+	@Autowired
+	private CommentRepository commentRepository;
+
+	@Autowired
+	private QnaRepository qnaRepository;
+
+	@Autowired
+	private MypageAdminRepository mypageAdminRepository;
 
 	@Autowired
 	private LikeRepository likeRepository;
@@ -58,6 +73,12 @@ public class UserUpdateDeleteService {
 				paymentRepository.deleteAll(payments);
 				List<Review> reviews = reviewRepository.findAllByUserEmail(user.getEmail());
 				reviewRepository.deleteAll(reviews);
+				List<Comment> comments = commentRepository.findAllByCommentWriterEmail(user.getEmail());
+				commentRepository.deleteAll(comments);
+				List<Qna> qnas = qnaRepository.findAllByQnaWriter(user.getEmail());
+				qnaRepository.deleteAll(qnas);
+				MypageAdmin adminInfo = mypageAdminRepository.findByUserEmail(user.getEmail());
+				mypageAdminRepository.delete(adminInfo);
         userRepository.delete(user);
     } else {
         throw new EntityNotFoundException("User with email not found.");

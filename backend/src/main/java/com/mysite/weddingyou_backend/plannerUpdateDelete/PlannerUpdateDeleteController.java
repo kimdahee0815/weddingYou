@@ -3,6 +3,7 @@ package com.mysite.weddingyou_backend.plannerUpdateDelete;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 
+import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -67,7 +68,7 @@ public class PlannerUpdateDeleteController {
   }
 
 	@PostMapping("/planner/plannerDelete")
-	public ResponseEntity<PlannerUpdateDelete> deleteUser(@RequestBody PlannerUpdateDeleteDTO planner) {
+	public ResponseEntity<PlannerUpdateDelete> deleteUser(@RequestBody PlannerUpdateDeleteDTO planner) throws ParseException {
 		PlannerUpdateDelete searchedPlanner = service.getPlannerByEmail(planner.getEmail());
 		plannerProfileService.delete(searchedPlanner.getEmail());
 		service.delete(searchedPlanner);

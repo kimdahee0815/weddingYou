@@ -310,8 +310,8 @@ public class EstimateController {
 				targetData.setPlannermatching(data.getPlannermatching());
 				
 				estimateService.save(targetData);
-				System.out.println(obj);
-				System.out.println(userList.contains(obj.get(obj.size() - 1)));
+				// System.out.println(obj);
+				// System.out.println(userList.contains(obj.get(obj.size() - 1)));
 				if(userList != null && userList.size() != 0 && userList.contains(obj.get(obj.size() - 1))){
 					List<Payment> targetPayments = paymentRepository.findByEstimateId(id);
 					Payment targetPayment = targetPayments.stream()

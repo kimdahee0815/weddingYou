@@ -11,6 +11,8 @@ public interface PaymentRepository extends JpaRepository<Payment, Long>{
 	Payment findByPaymentId(Long paymentId);
 	
 	List<Payment> findAllByUserEmail(String userEmail);
+
+	List<Payment> findAllByPlannerEmail(String plannerEmail);
 	
 	void deleteByEstimateId(Long estimateId);
 
