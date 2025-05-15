@@ -6,8 +6,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.mysite.weddingyou_backend.estimate.Estimate;
+import com.mysite.weddingyou_backend.estimate.EstimateRepository;
 import com.mysite.weddingyou_backend.like.LikeEntity;
 import com.mysite.weddingyou_backend.like.LikeRepository;
+import com.mysite.weddingyou_backend.payment.Payment;
+import com.mysite.weddingyou_backend.payment.PaymentRepository;
+import com.mysite.weddingyou_backend.review.Review;
+import com.mysite.weddingyou_backend.review.ReviewRepository;
 
 import jakarta.persistence.EntityNotFoundException;
 
@@ -18,6 +24,15 @@ public class UserUpdateDeleteService {
 
 	@Autowired
 	private UserUpdateDeleteRepository userRepository;
+
+	@Autowired
+	private EstimateRepository estimateRepository;
+
+	@Autowired
+	private PaymentRepository paymentRepository;
+
+	@Autowired
+	private ReviewRepository reviewRepository;
 
 	@Autowired
 	private LikeRepository likeRepository;
@@ -37,7 +52,12 @@ public class UserUpdateDeleteService {
 		if (user != null) {
         List<LikeEntity> likes = likeRepository.findByUserEmail(user.getEmail());
         likeRepository.deleteAll(likes);
-        
+        List<Estimate> estimates = estimateRepository.findAllByWriter(user.getEmail());
+				estimateRepository.deleteAll(estimates);
+				List<Payment> payments = paymentRepository.findAllByUserEmail(user.getEmail());
+				paymentRepository.deleteAll(payments);
+				List<Review> reviews = reviewRepository.findAllByUserEmail(user.getEmail());
+				reviewRepository.deleteAll(reviews);
         userRepository.delete(user);
     } else {
         throw new EntityNotFoundException("User with email not found.");
