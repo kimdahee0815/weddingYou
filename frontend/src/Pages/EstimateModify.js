@@ -723,8 +723,8 @@ const EstimateModify = () => {
                 id="포인트"
                 type="checkbox"
                 name="makeup"
-                value="우아한"
-                checked={makeup.includes("우아한")}
+                value="포인트"
+                checked={makeup.includes("포인트")}
                 onChange={makeupcheck}
                 className="displaynone"
               />
