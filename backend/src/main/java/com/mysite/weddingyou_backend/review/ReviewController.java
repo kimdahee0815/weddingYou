@@ -309,50 +309,18 @@ public class ReviewController {
 	}
 	
 	@PostMapping(value = "/plannerinforeview")
-	public String getPlannerInfoForReview2(
+	public PlannerLogin getPlannerInfoForReview2(
 			@RequestParam("targetEstimateId") Long estimateId
 			) throws Exception {
-	    String result="";
-	    
+
 		Estimate targetEstimate = estimateRepository.findById(estimateId);
 		JSONParser parser = new JSONParser();
 		
 		ArrayList<String> plannermatching = (ArrayList<String>) parser.parse(targetEstimate.getPlannermatching());
 		String plannerEmail = plannermatching.get(0);
-		//	UserUpdateDelete data = userUpdateDeleteRepository(userEmail);
 		PlannerLogin plannerData = plannerLoginRepository.findByEmail(plannerEmail);
-		
-//		System.out.println(data.getName());
-//		String userName = data.getName()+"/";
-//		result= userName;
-//		System.out.println(data.getPhoneNum());
-//		String userPhone = data.getPhoneNum()+"]";
-//		result+= userPhone;
 
-		String planneremail = plannerData.getEmail()+"[";
-		result +=planneremail;
-		String plannerName = plannerData.getName()+",";
-		result+=plannerName;
-//		String price = targetEstimate.getBudget()+"*";
-//		result+=price;
-	         
-	    try {
-	    	if(plannerData.getPlannerImg()!=null) {
-	    		Path imagePath = Paths.get("C:/Project/profileImg/planner",plannerData.getPlannerImg());
-		        byte[] imageBytes = Files.readAllBytes(imagePath);
-		        byte[] base64encodedData = Base64.getEncoder().encode(imageBytes);
-		        result += String.valueOf(new String(base64encodedData));
-	    	}
-	    	
-	       
-	    } catch (IOException e) {
-	           e.printStackTrace();
-	        
-	    }
-	    
-
-		System.out.println("result"+result);
-		return result;
+		return plannerData;
 	
 	}
 }

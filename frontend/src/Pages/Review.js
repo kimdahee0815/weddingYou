@@ -196,26 +196,16 @@ function Review() {
     axios
       .post(`/plannerinforeview`, formData)
       .then((res) => {
-        //console.log(res.data);
-        const plannerEmail = res.data.slice(0, res.data.indexOf("["));
-
-        const plannerName = res.data.slice(
-          res.data.indexOf("[") + 1,
-          res.data.indexOf(",")
-        );
-
-        const plannerImg = res.data.slice(
-          res.data.indexOf(",") + 1,
-          res.data.length
-        );
-        let plannerImgUrl = plannerImg;
+        console.log(res.data);
+        const plannerData = res.data;
+  
 
         navigate("/rating", {
           state: {
             estimateId,
-            plannerEmail,
-            plannerImg: plannerImgUrl,
-            plannerName,
+            plannerEmail: plannerData.email,
+            plannerImg: plannerData.plannerImg,
+            plannerName: plannerData.name,
           },
         });
       })
