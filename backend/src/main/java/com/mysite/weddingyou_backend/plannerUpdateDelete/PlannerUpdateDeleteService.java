@@ -88,7 +88,7 @@ public class PlannerUpdateDeleteService {
 		paymentRepository.deleteAll(payments);
 		List<Review> reviews = reviewRepository.findAllByPlannerEmail(planner.getEmail());
 		reviewRepository.deleteAll(reviews);
-		List<Comment> comments = commentRepository.findAllByCommentWriterEmail(planner.getEmail());
+		List<Comment> comments = commentRepository.findAllByCommentWriter(planner.getEmail());
 		commentRepository.deleteAll(comments);
 		List<Qna> qnas = qnaRepository.findAllByQnaWriter(planner.getEmail());
 		qnaRepository.deleteAll(qnas);
