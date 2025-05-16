@@ -214,15 +214,14 @@ public class ReviewController {
 	    
 	    // 파일 저장
 		List<String> list = new ArrayList<>();
-	 	if (!(reviewImg == null)) {
-	 	for (MultipartFile file : reviewImg) {
-	 		if (!file.isEmpty()) {
-	 			File storedFilename = new File(UUID.randomUUID().toString() + "_" + file.getOriginalFilename());
-	 			list.add("\"" + storedFilename.toString() + "\"");
-                file.transferTo(storedFilename); //업로드
-	 		}
-	 	}
-	 	}
+		if(!(reviewImg == null)) {
+        for (MultipartFile file : reviewImg) {
+            if (!file.isEmpty()) {
+								String imgUrl = s3Service.uploadFile(file, "reviews");
+								list.add("\"" + imgUrl + "\"");
+						}
+        }
+		}
 	 	
 	 	Review review = new Review();
 	 	if(reviewText.equals("undefined")) {

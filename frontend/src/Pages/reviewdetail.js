@@ -27,9 +27,6 @@ function Reviewdetail() {
   const [images, setImages] = useState([]);
 
   const [previewUrl, setPreviewUrl] = useState([]);
-  const [imgName, setImgName] = useState([]);
-  const [fileType, setFileType] = useState([]);
-  const [originImagesFile, setOriginImagesFile] = useState([]);
   const [imgArr, setImgArr] = useState([]);
   const [plannerEmail, setPlannerEmail] = useState("");
   const [authorityBtns, setShowAuthorityBtns] = useState(true);
@@ -61,17 +58,6 @@ function Reviewdetail() {
     previewUrlCopy.splice(index, 1);
     setPreviewUrl(previewUrlCopy);
     setImgArr(imgArrCopy);
-    // for (let i = 0; i < imgArrCopy.length; i++) {
-    //   console.log(i);
-    //   if(index===i){
-
-    //   }
-    //   if (copy[i].name === image) {
-    //     copy.splice(i, 1);
-    //     setImages(copy);
-    //     break;
-    //   }
-    // }
   };
 
   const handleImageChange = (event) => {
@@ -120,19 +106,40 @@ function Reviewdetail() {
         const imagearray = JSON.parse(data.reviewImg);
         const getImages = async () => {
           try {
-            const imagePromises = imagearray.map((image) => {
-              return axios.get("/review/imageview", {
-                params: { image },
-                responseType: "blob",
-              });
-            });
-            const responses = await Promise.all(imagePromises);
-
-            const imageUrls = responses.map((res, index) => {
-              const resdata = URL.createObjectURL(res.data);
-              return resdata;
-            });
-            setImages(imageUrls);
+            const imagePromises = imagearray.map((image) =>
+            axios.get("/review/imageview", {
+              params: { image },
+              responseType: "blob",
+            })
+          );
+                          
+          const responses = await Promise.all(imagePromises);
+                          
+          const previewUrlPromises = responses.map((res, index) => {
+          const blob = res.data;
+                          
+          const fileName = imagearray[index];
+          const fileExtension = fileName.split('.').pop();
+                          
+          const mimeType = `image/${fileExtension}`;
+                          
+          const file = new File([blob], fileName, {
+            type: mimeType,
+          });
+                          
+          setImages(imagearray);
+          return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => {
+              setPreviewUrl((prev) => [...prev, resolve(reader.result)]);
+            };
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
+          });
+      });
+                          
+      const previewUrls = await Promise.all(previewUrlPromises);
+      setPreviewUrl(previewUrls); 
           } catch (e) {
             console.log(e);
           }
@@ -219,16 +226,11 @@ function Reviewdetail() {
               const fileTypeArr = [];
               for (let i = 0; i < imagearray.length; i++) {
                 const img = imagearray[i];
-                const imgname = img.slice(
-                  img.indexOf("_") + 1,
-                  img.indexOf(".")
-                );
+
                 const fileType = img.slice(img.indexOf(".") + 1);
-                imgNameArr.push(imgname);
+                imgNameArr.push(img);
                 fileTypeArr.push(fileType);
               }
-              setImgName(imgNameArr);
-              setFileType(fileTypeArr);
               const imagePromises = imagearray.map((image) => {
                 return axios.get("/review/imageview", {
                   params: { image },
@@ -238,48 +240,25 @@ function Reviewdetail() {
               const responses = await Promise.all(imagePromises);
               const imgFileArr = [];
               const imageUrls = responses.map((res, index) => {
-                const resdata = URL.createObjectURL(res.data);
                // console.log(res.data);
                 const blob = res.data;
                 const file = new File([blob], imgNameArr[index], {
                   type: `image/${fileTypeArr[index]}`,
                 });
                 imgFileArr.push(file);
-
-                const previewUrlArr = [];
-                const getImgSrc = async (event, files) => {
-                  const getPreviewUrls = imgFileArr.map((file) => {
-                    const selectedImage = file;
-                    //console.log("fileReader.result");
-                    return new Promise((resolve, reject) => {
-                      const fileReader = new FileReader();
-                      fileReader.onload = async () => {
-                        try {
-                          const response = await fileReader.result;
-
-                          resolve(response);
-                        } catch (e) {
-                          reject(e);
-                        }
-                      };
-                      fileReader.onerror = (error) => {
-                        reject(error);
-                      };
-                      fileReader.readAsDataURL(selectedImage);
-                    });
+                setImgArr(prev => [...prev, file]);
+                  return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = () => {
+                      setPreviewUrl((prev) => [...prev, resolve(reader.result)]);
+                    };
+                    reader.onerror = reject;
+                    reader.readAsDataURL(file);
                   });
-                  const fileInfos = await Promise.all(getPreviewUrls);
-                  setPreviewUrl(fileInfos);
-                  return fileInfos;
-                };
-                getImgSrc();
-
-                return resdata;
               });
-            //  console.log(imageUrls);
-              setImages(imageUrls);
-              setOriginImagesFile(imgFileArr);
-              setImgArr(imgFileArr);
+
+              const previewUrls = await Promise.all(imageUrls);
+              setPreviewUrl(previewUrls); 
             } catch (e) {
               console.log(e);
             }
