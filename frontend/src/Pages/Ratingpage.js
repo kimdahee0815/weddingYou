@@ -77,11 +77,14 @@ function Ratingpage() {
                     const file = new File([blob], fileName, {
                       type: mimeType,
                     });
+                    console.log(file);
               
                     setImgArr(prev => [...prev, file]);
                     return new Promise((resolve, reject) => {
                       const reader = new FileReader();
-                      reader.onload = () => resolve(reader.result);
+                      reader.onload = () => {
+                        setPreviewUrl((prev) => [...prev, resolve(reader.result)]);
+                      };
                       reader.onerror = reject;
                       reader.readAsDataURL(file);
                     });
