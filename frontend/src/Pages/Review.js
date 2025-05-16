@@ -196,9 +196,7 @@ function Review() {
     axios
       .post(`/plannerinforeview`, formData)
       .then((res) => {
-        console.log(res.data);
         const plannerData = res.data;
-  
 
         navigate("/rating", {
           state: {
