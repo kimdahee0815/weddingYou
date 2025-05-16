@@ -1,6 +1,7 @@
 import "../Css/main.css";
 import "../Css/checkout.css";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Sidesection from "../Components/Sidesection";
 
 const CheckoutComp = () => {
@@ -8,10 +9,23 @@ const CheckoutComp = () => {
   const navigate = useNavigate();
   const query = new URLSearchParams(window.location.search);
   const isSuccess = query.get("imp_success") === "true";
+  const storedInfo = JSON.parse(window.sessionStorage.getItem("checkoutInfo"));
+  useEffect(() => {
+  if (!isSuccess || !storedInfo) {
+    window.sessionStorage.removeItem("checkout");
+    navigate("/matching");
+  }
+}, [isSuccess, storedInfo]);
   const impUid = query.get("imp_uid");
   const merchantUid = query.get("merchant_uid");
 
-  const { plannerImg, estimateId, plannerName, plannerEmail, price } = useLocation().state;
+  const {
+    plannerImg,
+    estimateId,
+    plannerName,
+    plannerEmail,
+    price
+  } = storedInfo || {};
 
   const Checkout = ({ checkout }) => {
     if(!isSuccess){

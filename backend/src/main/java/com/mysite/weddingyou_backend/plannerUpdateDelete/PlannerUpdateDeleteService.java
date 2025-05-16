@@ -84,8 +84,8 @@ public class PlannerUpdateDeleteService {
 			}
 			estimateRepository.save(estimate);
 		}
-		List<Payment> payments = paymentRepository.findAllByPlannerEmail(planner.getEmail());
-		paymentRepository.deleteAll(payments);
+		// List<Payment> payments = paymentRepository.findAllByPlannerEmail(planner.getEmail());
+		// paymentRepository.deleteAll(payments);
 		List<Review> reviews = reviewRepository.findAllByPlannerEmail(planner.getEmail());
 		reviewRepository.deleteAll(reviews);
 		List<Comment> comments = commentRepository.findAllByCommentEmail(planner.getEmail());

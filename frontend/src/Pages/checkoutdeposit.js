@@ -109,15 +109,14 @@ function Checkoutdeposit() {
              // console.log(res);
 
               sessionStorage.setItem("checkout", "deposit");
-              navigate("/checkoutcomp", {
-                state: {
-                  estimateId,
-                  plannerImg,
-                  plannerName,
-                  plannerEmail,
-                  price: depositprice,
-                },
-              });
+              sessionStorage.setItem("checkoutInfo", JSON.stringify({
+                estimateId,
+                plannerImg,
+                plannerName,
+                plannerEmail,
+                price: depositprice,
+              }));
+              navigate("/checkoutcomp");
             })
             .catch((e) => {
               console.log(e);

@@ -370,6 +370,10 @@ function Matching() {
   const goPlannerProfile = (e) => {
     const {bsPlanner} = e.target.dataset
     const planner = JSON.parse(bsPlanner);
+    if(!planner){
+      alert("해당 플래너는 탈퇴한 회원입니다.");
+      return;
+    }
     setCurrentPlannerProfile(planner);
     navigate(`/plannerprofiledetail`, {
       state: {
@@ -390,6 +394,10 @@ function Matching() {
     const {bsEstimate} = e.target.dataset;
     const estimate = JSON.parse(bsEstimate);
     const formData = new FormData();
+    if (estimate.plannerProfiles.length === 0 || !estimate.plannerProfiles) {
+      alert("해당 플래너는 탈퇴한 회원입니다.");
+      return;
+    }
     formData.append("targetEstimateId", estimate.id);
     formData.append("matchingPlanner", estimate.plannerProfiles[0].plannerEmail);
     formData.append("userEmail", loggedInEmail);

@@ -80,15 +80,14 @@ function CheckoutAll() {
                 //계약금 처리만 된 상태(취소 상태로 paymentStatus 자동으로 바뀜)
               } else if (value === "all") {
                 sessionStorage.setItem("checkout", "all");
-                navigate("/checkoutcomp", {
-                  state: {
-                    estimateId,
-                    plannerImg,
-                    plannerName,
-                    plannerEmail,
-                    price: paymentAmount,
-                  },
-                });
+                sessionStorage.setItem("checkoutInfo", JSON.stringify({
+                  estimateId,
+                  plannerImg,
+                  plannerName,
+                  plannerEmail,
+                  price: paymentAmount,
+                }));
+                navigate("/checkoutcomp");
               } else if (value === "completed") {
                 alert("이미 전체 결제가 이루어진 건입니다!");
               }
@@ -119,15 +118,14 @@ function CheckoutAll() {
                 //계약금 처리만 된 상태(취소 상태로 paymentStatus 자동으로 바뀜)
               } else if (value === "all") {
                 sessionStorage.setItem("checkout", "all");
-                navigate("/checkoutcomp", {
-                  state: {
-                    estimateId,
-                    plannerImg,
-                    plannerName,
-                    plannerEmail,
-                    price: paymentAmount,
-                  },
-                });
+                sessionStorage.setItem("checkoutInfo", JSON.stringify({
+                  estimateId,
+                  plannerImg,
+                  plannerName,
+                  plannerEmail,
+                  price: paymentAmount,
+                }));
+                navigate("/checkoutcomp");
               } else if (value === "completed") {
                 alert("이미 전체 결제가 이루어진 건입니다!");
               }
@@ -163,15 +161,14 @@ function CheckoutAll() {
                 //계약금 처리만 된 상태(취소 상태로 paymentStatus 자동으로 바뀜)
               } else if (value === "all") {
                 sessionStorage.setItem("checkout", "all");
-                navigate("/checkoutcomp", {
-                  state: {
-                    estimateId,
-                    plannerImg,
-                    plannerName,
-                    plannerEmail,
-                    price: paymentAmount,
-                  },
-                });
+                sessionStorage.setItem("checkoutInfo", JSON.stringify({
+                  estimateId,
+                  plannerImg,
+                  plannerName,
+                  plannerEmail,
+                  price: paymentAmount,
+                }));
+                navigate("/checkoutcomp");
               } else if (value === "completed") {
                 alert("이미 전체 결제가 이루어진 건입니다!");
               }
