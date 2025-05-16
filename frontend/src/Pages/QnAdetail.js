@@ -55,7 +55,6 @@ function QnAdetail() {
     axios
       .get(`/qna/${qnaId}`)
       .then((res) => {
-      //  console.log(res);
         const data = res.data;
         setTitle(data.qnaTitle);
         setDate(data.qnaWriteDate.slice(0, 10));
@@ -63,7 +62,7 @@ function QnAdetail() {
         setContent(data.qnaContent);
         setComments(data.comments);
         setQnaWriter(data.qnaWriter);
-        setImg(data.qnaAttachedfile);
+        setImg(data.qnaImg);
         const commentsIndexArr = [];
         const commentContentArr = [];
         const commentEmailArr = [];
@@ -75,7 +74,7 @@ function QnAdetail() {
         setCommentsIndex(commentsIndexArr);
         setCommentEmail(commentEmailArr);
         setEditedComment(commentContentArr);
-        const imgUrl = data.qnaAttachedfile;
+        const imgUrl = data.qnaImg;
         setImg(imgUrl)
         const formData = new FormData();
         formData.append("image", imgUrl);
