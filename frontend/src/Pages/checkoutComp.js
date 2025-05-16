@@ -12,7 +12,7 @@ const CheckoutComp = () => {
   const storedInfo = JSON.parse(window.sessionStorage.getItem("checkoutInfo"));
   useEffect(() => {
   if (!isSuccess || !storedInfo) {
-    window.sessionStorage.removeItem("checkout");
+    window.sessionStorage.removeItem("checkoutInfo");
     navigate("/matching");
   }
 }, [isSuccess, storedInfo]);

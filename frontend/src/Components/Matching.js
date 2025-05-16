@@ -59,8 +59,6 @@ function Matching() {
           const {data:plannerEstimates} = await axios.get(`/estimate/planners/detail`, {
             params: { userEmail: loggedInEmail },
           });
-          // console.log("plannerEstimates")
-          // console.log(plannerEstimates)
           setPlannerEstimates(plannerEstimates)
         } catch (e) {
           console.log(e);
@@ -104,7 +102,7 @@ function Matching() {
     }
   }, [loggedInEmail, deletedPlanner, deletedUser ,cancelMatching, matchedUser, matchedPlanner]);
 
-  //매칭/거절 모달
+  //고객 => 플래너 매칭/거절 모달
   const matchOrDeletePlanner = (e) => {
     e.preventDefault();
 
@@ -113,7 +111,7 @@ function Matching() {
     setCurrentPlannerProfile(JSON.parse(profile));
   };
 
-  //매칭/거절 모달
+  //플래너 => 고객 매칭/거절 모달
   const matchOrDeleteUser = (e) => {
     e.preventDefault();
     const {bsEstimate:estimate} = e.target.dataset;
@@ -175,8 +173,7 @@ function Matching() {
           depositPrice = 150000;
         }
         setMatchedPlanner(matchedPlanner => !matchedPlanner);
-        navigate("/checkoutdeposit", {
-          state: {
+        sessionStorage.setItem("checkoutInfo", JSON.stringify({
             estimateId: currentUserEstimate.id,
             userName: currentUserEstimate.user.name,
             userPhone: currentUserEstimate.user.phoneNum,
@@ -185,8 +182,8 @@ function Matching() {
             depositprice: depositPrice,
             plannerImg: currentPlannerProfile.plannerProfileImg,
             plannerCareer: currentPlannerProfile.plannerCareerYears,
-          },
-        });  
+          }));
+        navigate("/checkoutdeposit");  
       })
       .catch((e) => {
         console.log(e);
@@ -197,6 +194,7 @@ function Matching() {
   const goMatchingUser = (e) => {
     const formData = new FormData();
     formData.append("plannerEmail", loggedInEmail);
+    formData.append("userEmail", currentUserEstimate.user.email);
     formData.append("estimateId", currentUserEstimate.id);
     axios
       .post(`/plannerProfile/matching/user`, formData)
@@ -249,6 +247,7 @@ function Matching() {
               newPaymentStatus.push(foundPayment)
             }
           })
+          console.log(newPaymentStatus)
           setEstimatesPaymentStatus(newPaymentStatus);
           setPaymentStatus(newPaymentStatus.filter(s => s !== null))
           // console.log("newPaymetnStatus")
@@ -331,8 +330,7 @@ function Matching() {
         // console.log(res);
         const status = res.data;
         if (status === "payment") {
-            navigate("/checkoutall", {
-              state: {
+            sessionStorage.setItem("checkoutInfo", JSON.stringify({
                 estimateId: estimateData.id,
                 userName: estimateData.user.name,
                 userPhone: estimateData.user.phoneNum,
@@ -340,13 +338,12 @@ function Matching() {
                 plannerName: estimateData.plannerProfiles?.[0].plannerName,
                 plannerImg: estimateData.plannerProfiles?.[0].plannerProfileImg,
                 depositprice: depositPrice,
-              },
-            });
+            }));
+            navigate("/checkoutall");
           } else if (status === "-1") {
             alert("오류 발생!");
           } else if (status === "deposit") {
-            navigate("/checkoutdeposit", {
-              state: {
+            sessionStorage.setItem("checkoutInfo", JSON.stringify({
                 estimateId: estimateData.id,
                 userName: estimateData.user.name,
                 userPhone: estimateData.user.phoneNum,
@@ -355,8 +352,8 @@ function Matching() {
                 plannerImg: estimateData.plannerProfiles?.[0].plannerProfileImg,
                 depositprice: depositPrice,
                 plannerCareer: estimateData.plannerProfiles?.[0].career,
-              },
-            });
+            }));
+            navigate("/checkoutdeposit");
           } else{
             alert("결제가 모두 완료된 상태입니다!");
           }

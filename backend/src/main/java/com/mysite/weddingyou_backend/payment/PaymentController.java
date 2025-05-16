@@ -194,7 +194,7 @@ public class PaymentController {
           targetEstimate.setMatchstatus(true);
           estimateService.save(targetEstimate);
 
-          PlannerUpdateDelete plannerInfo = plannerUpdateDeleteRepository.findByEmail(plannerList.get(0));
+          PlannerUpdateDelete plannerInfo = plannerUpdateDeleteRepository.findByEmail(plannerEmail);
         	PlannerProfileDTO profile = plannerProfileUtils.createOrUpdatePlannerProfile(plannerInfo);
         	plannerProfileService.save(profile);
         } catch (ParseException e) {

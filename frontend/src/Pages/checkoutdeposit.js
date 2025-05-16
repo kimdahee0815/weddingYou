@@ -14,6 +14,13 @@ import { v4 as uuidv4 } from 'uuid';
 function Checkoutdeposit() {
   const navigate = useNavigate();
 
+  const storedInfo = JSON.parse(window.sessionStorage.getItem("checkoutInfo"));
+  useEffect(() => {
+    if (!storedInfo) {
+      navigate("/matching");
+    }
+  }, [storedInfo]);
+
   const { 
     estimateId, 
     userName, 
@@ -23,7 +30,7 @@ function Checkoutdeposit() {
     depositprice,
     plannerImg,
     plannerCareer
-  } = useLocation().state;
+  } = storedInfo;
 
   const [quantity, setQuantity] = useState(1);
   const [paymentAmount, setPaymentAmount] = useState(depositprice * quantity);
@@ -70,22 +77,35 @@ function Checkoutdeposit() {
       }
   }, [depositprice, quantity, paymentMethod, paymentAmount, paymentStatus, depositAmount, depositStatus, paymentType, userEmail, plannerEmail, estimateId ]);
 
+  function isMobile() {
+    return /Mobi|Android|iPhone/i.test(navigator.userAgent);
+  }
+
+    const paymentParams = {
+      //pg: "kcp.A52CY",
+      channelKey: "channel-key-c64770de-2fa3-41c4-bb6b-e7026c633010",
+      pay_method: paymentMethod,
+      merchant_uid: `${uuidv4()}-${estimateId}`,
+      name: "플래너 매칭서비스",
+      amount: depositprice,
+      company: "Wedding You", 
+      buyer_email: sessionStorage.getItem("email"),
+      buyer_name: userName,
+      buyer_tel: userPhone,
+      //buyer_addr: "서울특별시 강남구 삼성동",
+      //buyer_postcode: "123-456",
+      language: "ko", 
+      //m_redirect_url: `${process.env.REACT_APP_API_URL || "http://localhost:3000"}/checkoutcomp`,
+  };
+
+  if (isMobile()) {
+    console.log("Mobile");
+    paymentParams.m_redirect_url = `${process.env.REACT_APP_API_URL || "http://localhost:3000"}/checkoutcomp`;
+  }
+
   function requestPay() {
     const { IMP } = window;
-    IMP.request_pay(
-      {
-        pg: "paypal.UFYSG9T7RFW2A",
-        pay_method: { paymentMethod },
-        merchant_uid: `${uuidv4()}-${estimateId}`,
-        name: "플래너 매칭 계약금",
-        amount: depositprice,
-        buyer_email: userEmail,
-        buyer_name: userName,
-        buyer_tel: userPhone,
-        m_redirect_url: `${process.env.REACT_APP_API_URL || "http://localhost:3000"}/checkoutcomp`,
-        // buyer_addr: "서울특별시 강남구 삼성동",
-        // buyer_postcode: "123-456",
-      },
+    IMP.request_pay(paymentParams,
       function (rsp) {
         // callback
         if (rsp.success) {

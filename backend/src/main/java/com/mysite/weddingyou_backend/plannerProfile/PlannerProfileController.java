@@ -351,7 +351,7 @@ public class PlannerProfileController {
   	//매칭 요청 온 고객 매칭하기
   		@PostMapping(value = "/plannerProfile/matching/user")
   		public int matchingUser(
-  		  @RequestParam("estimateId") Long estimateId, @RequestParam("plannerEmail") String plannerEmail)
+  		  @RequestParam("estimateId") Long estimateId, @RequestParam("plannerEmail") String plannerEmail,  @RequestParam("userEmail") String userEmail)
   								throws Exception {
   		    
   			Estimate targetEstimate = estimateRepository.findById(estimateId);
@@ -373,6 +373,42 @@ public class PlannerProfileController {
 						PlannerUpdateDelete plannerInfo = plannerUpdateDeleteRepository.findByEmail(obj.get(0));
         		PlannerProfileDTO profile = plannerProfileUtils.createOrUpdatePlannerProfile(plannerInfo);
         		plannerProfileService.save(profile);
+
+						List<Payment> targetPayments = paymentRepository.findByEstimateId(estimateId);
+						Payment targetPayment = targetPayments.stream()
+							.filter(p -> p.getPlannerEmail().equals(plannerEmail) && p.getUserEmail().equals(userEmail)).findFirst().orElse(null);
+						if(targetPayment == null){
+							PlannerLogin planner = plannerLoginRepository.findByEmail(plannerEmail);
+      				UserLogin user = userLoginRepository.findByEmail(userEmail);
+
+							BigDecimal depositAmount;
+							int plannerCareerYears = Integer.parseInt(planner.getPlannerCareerYears());
+      				if(plannerCareerYears >= 0 && plannerCareerYears <5) {
+        				depositAmount = new BigDecimal(50000);
+      				}else if(plannerCareerYears >= 5 && plannerCareerYears <15) {
+        				depositAmount = new BigDecimal(100000);
+      				}else {
+        				depositAmount = new BigDecimal(150000);
+      				}
+						
+							Payment payment = new Payment();
+        			payment.setPrice(depositAmount);
+        			payment.setQuantity(1);
+        			payment.setPaymentMethod("card");
+        			payment.setPaymentAmount(depositAmount);
+        			payment.setPaymentStatus("other");
+        			payment.setDepositAmount(depositAmount);
+        			payment.setDepositStatus("other");
+        			payment.setPaymentType("deposit");
+        			payment.setUserEmail(userEmail);
+        			payment.setPlannerEmail(plannerEmail);
+        			payment.setEstimateId(estimateId);
+        			payment.setPaymentDate(null);
+        			payment.setDepositDate(null);
+        			payment.setPlanner(planner);
+        			payment.setUser(user);
+        			paymentService.savePayment(payment);
+						}
 
   	  	  	res =1;
   	  	  }		
