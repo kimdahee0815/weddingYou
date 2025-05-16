@@ -73,7 +73,7 @@ public class UserUpdateDeleteService {
 				paymentRepository.deleteAll(payments);
 				List<Review> reviews = reviewRepository.findAllByUserEmail(user.getEmail());
 				reviewRepository.deleteAll(reviews);
-				List<Comment> comments = commentRepository.findAllByCommentWriter(user.getEmail());
+				List<Comment> comments = commentRepository.findAllByCommentEmail(user.getEmail());
 				commentRepository.deleteAll(comments);
 				List<Qna> qnas = qnaRepository.findAllByQnaWriter(user.getEmail());
 				qnaRepository.deleteAll(qnas);

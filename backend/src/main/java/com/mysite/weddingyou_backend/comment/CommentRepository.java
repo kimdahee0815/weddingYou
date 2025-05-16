@@ -10,7 +10,7 @@ import com.mysite.weddingyou_backend.review.Review;
 
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Long> {
-	List<Comment> findAllByCommentWriter(String email);
+	List<Comment> findAllByCommentEmail(String email);
 	List<Comment> findAllByReview(Review targetReview);
 	List<Comment> findAllByQna(Qna targetQna);
 }
