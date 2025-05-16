@@ -302,7 +302,6 @@ public class EstimateController {
 			if(targetData.getPlannermatching()!=null) {
 				plannerList = (ArrayList<String>) parser.parse(targetData.getPlannermatching());
 			}
-			 
 			
 			if(!plannerList.containsAll(obj)) {
 				Estimate data = new Estimate();

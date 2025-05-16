@@ -11,7 +11,7 @@ const CheckoutComp = () => {
   const isSuccess = query.get("imp_success") === "true";
   const storedInfo = JSON.parse(window.sessionStorage.getItem("checkoutInfo"));
   useEffect(() => {
-  if (!isSuccess || !storedInfo) {
+  if (!storedInfo) {
     window.sessionStorage.removeItem("checkoutInfo");
     navigate("/matching");
   }
