@@ -54,6 +54,6 @@
 
 ## 🖼 Preview
 
-![Preview](./weddingyou-gif.gif)
+![Preview](./weddingyou-gif2.gif)
 
 ---
