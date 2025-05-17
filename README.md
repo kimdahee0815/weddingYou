@@ -26,7 +26,7 @@
 - **⚙️ Spring Data JPA Relationships**:Extensive use of OneToMany, ManyToOne, and ManyToMany associations.
 - **⚡ Optimistic UI in React**: Instant UI updates for smoother UX during guest list edits, RSVP responses, etc.
 - **🌐 Dockerized Full Stack**: Unified Dockerfile and docker-compose setup for frontend-backend orchestration.
-- **📡 Deployed with Railway & Netlify**: Backend on Railway, Frontend on Netlify.
+- **📡 Deployed with Railway & Fly.io**: Backend on Railway, Frontend on Fly.io.
 - **📱 Responsive UI**: Optimized for various devices and screen sizes.
 
 ---
