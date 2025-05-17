@@ -77,7 +77,6 @@ function Ratingpage() {
                     const file = new File([blob], fileName, {
                       type: mimeType,
                     });
-                    console.log(file);
               
                     setImgArr(prev => [...prev, file]);
                     return new Promise((resolve, reject) => {

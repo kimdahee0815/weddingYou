@@ -219,8 +219,8 @@ function Matching() {
     axios
       .post(`/payment-status`, formData)
       .then((res) => {
-        console.log("payment-status")
-        console.log(res.data);
+        //console.log("payment-status")
+        //console.log(res.data);
         const paymentStatus = res.data;
         
         if (sessionStorage.getItem("category") === "user"){
@@ -235,8 +235,8 @@ function Matching() {
           })
           setEstimatesPaymentStatus(newPaymentStatus);
           setPaymentStatus(newPaymentStatus.filter(s => s !== null))
-          console.log("newPaymetnStatus")
-          console.log(newPaymentStatus);
+          //console.log("newPaymetnStatus")
+          //console.log(newPaymentStatus);
         }else if(sessionStorage.getItem("category") === "planner"){
           const newPaymentStatus = [];
           userEstimates.forEach(e => {
@@ -247,7 +247,7 @@ function Matching() {
               newPaymentStatus.push(foundPayment)
             }
           })
-          console.log(newPaymentStatus)
+          //console.log(newPaymentStatus)
           setEstimatesPaymentStatus(newPaymentStatus);
           setPaymentStatus(newPaymentStatus.filter(s => s !== null))
           // console.log("newPaymetnStatus")

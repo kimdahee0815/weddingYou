@@ -99,7 +99,7 @@ function Checkoutdeposit() {
   };
 
   if (isMobile()) {
-    console.log("Mobile");
+    //console.log("Mobile");
     paymentParams.m_redirect_url = `${process.env.REACT_APP_API_URL || "http://localhost:3000"}/checkoutcomp`;
   }
 

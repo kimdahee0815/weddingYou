@@ -43,7 +43,7 @@ function Noticedetail() {
         setView(data.noticeViewCount);
         setContent(data.noticeContent);
         const imgUrl = data.noticeImg;
-        console.log(imgUrl)
+        //console.log(imgUrl)
         const formData = new FormData();
         formData.append("image", imgUrl);
         setImg(imgUrl)

@@ -47,7 +47,7 @@ function Reviewdetail() {
     }
     setClicked(clickStates);
     const Rating = index + 1;
-    console.log(Rating);
+    //console.log(Rating);
     setReviewStars(Rating);
   };
 
