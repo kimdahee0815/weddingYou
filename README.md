@@ -1,6 +1,6 @@
 # <img src="frontend/public/Logo.ico" width="40" height="40" alt="Natours"/> WeddingYou – Smart Wedding Planning App 💍📅
 
-**WeddingYou** is an elegant and intuitive wedding planning application that streamlines every step of the wedding journey – from guest management to vendor scheduling. Built with **Spring Boot**, **React**, and **MySQL**, the platform leverages modern DevOps and cloud technologies like **Docker**, **Railway**, and **Netlify**, along with **Amazon S3** for media storage and **SMTP** for email communication. It also integrates **PortOne (Iamport)** for reliable and flexible payment processing. The app features robust JPA entity relationships and a responsive front-end enhanced with optimistic UI updates.
+**WeddingYou** is an elegant and intuitive wedding planning application that streamlines every step of the wedding journey – from guest management to vendor scheduling. Built with **Spring Boot**, **React**, and **MySQL**, the platform leverages modern DevOps and cloud technologies like **Docker**, **Fly.io**, **Railway**, and **Netlify**, along with **Amazon S3** for media storage and **SMTP** for email communication. It also integrates **PortOne (Iamport)** for reliable and flexible payment processing. The app features robust JPA entity relationships and a responsive front-end enhanced with optimistic UI updates.
 
 ---
 
@@ -10,7 +10,7 @@
 - **Backend:** Spring Boot
 - **Database:** MySQL (Railway)
 - **Authentication:** Role-based (User/Admin)
-- **Deployment:** Docker, Docker-Compose, Netlify, Railway
+- **Deployment:** Docker, Docker-Compose, Netlify, Fly.io
 
 ---
 
