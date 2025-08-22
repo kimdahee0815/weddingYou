@@ -18,6 +18,6 @@ public interface UserUpdateDeleteRepository extends JpaRepository<UserUpdateDele
 	//insert, update, delete 할때 필요함
 	@Modifying
 	@Transactional
-	@Query(value="update User set password = :password where email = :email", nativeQuery=true)
+	@Query(value="update user set password = :password where email = :email", nativeQuery=true)
 	public int updatePassword(String email, String password);
 }

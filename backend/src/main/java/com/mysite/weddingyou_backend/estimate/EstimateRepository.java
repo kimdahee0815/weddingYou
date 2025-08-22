@@ -11,12 +11,12 @@ import jakarta.transaction.Transactional;
 public interface EstimateRepository extends JpaRepository<Estimate, Integer> {
 
 	//전체 게시글 개수 조회
-	@Query(value = "select count(*) from Estimate",nativeQuery=true)
+	@Query(value = "SELECT count(*) FROM estimate",nativeQuery=true)
 	int getcount();
 	
 
 	//검색어를 통한 조회
-	@Query(value = "SELECT * FROM Estimate WHERE (e_region LIKE CONCAT('%', :search, '%') \r\n"
+	@Query(value = "SELECT * FROM estimate WHERE (e_region LIKE CONCAT('%', :search, '%') \r\n"
 			+ "OR e_dress LIKE CONCAT('%', :search, '%') \r\n"
 			+ "OR e_makeup LIKE CONCAT('%', :search, '%') \r\n"
 			+ "OR e_honeymoon LIKE CONCAT('%', :search, '%') \r\n"
@@ -36,7 +36,7 @@ public interface EstimateRepository extends JpaRepository<Estimate, Integer> {
 	
 	
 	//페이징을 위한 검색어 갯수 조회
-	@Query(value = "SELECT count(*) FROM Estimate WHERE (e_region LIKE CONCAT('%', :search, '%') \r\n"
+	@Query(value = "SELECT count(*) FROM estimate WHERE (e_region LIKE CONCAT('%', :search, '%') \r\n"
 			+ "OR e_dress LIKE CONCAT('%', :search, '%') \r\n"
 			+ "OR e_makeup LIKE CONCAT('%', :search, '%') \r\n"
 			+ "OR e_honeymoon LIKE CONCAT('%', :search, '%') \r\n"
@@ -49,7 +49,7 @@ public interface EstimateRepository extends JpaRepository<Estimate, Integer> {
 	
 	
 	//페이징을 위한 데이터 조회
-	@Query(value = "SELECT * FROM Estimate WHERE (e_region LIKE CONCAT('%', :search, '%') \r\n"
+	@Query(value = "SELECT * FROM estimate WHERE (e_region LIKE CONCAT('%', :search, '%') \r\n"
 			+ "OR e_dress LIKE CONCAT('%', :search, '%') \r\n"
 			+ "OR e_makeup LIKE CONCAT('%', :search, '%') \r\n"
 			+ "OR e_honeymoon LIKE CONCAT('%', :search, '%') \r\n"
@@ -71,7 +71,7 @@ public interface EstimateRepository extends JpaRepository<Estimate, Integer> {
 	
 	@Transactional
 	@Modifying
-	@Query(value="update Estimate set e_viewcount = e_viewcount+1 where e_id = :num",nativeQuery=true)
+	@Query(value="UPDATE estimate SET e_viewcount = e_viewcount+1 WHERE e_id = :num",nativeQuery=true)
 	void increaseViewCount(int num);
 
 	
@@ -84,7 +84,7 @@ public interface EstimateRepository extends JpaRepository<Estimate, Integer> {
 	void deleteById(Long estimateId);
 	
 	
-	@Query(value = "select * from Estimate Order By e_id desc LIMIT :start , :limit",nativeQuery=true)
+	@Query(value = "SELECT * FROM estimate Order By e_id desc LIMIT :start , :limit",nativeQuery=true)
 	List<Estimate> pageinglist(int start, int limit);
 	
 
