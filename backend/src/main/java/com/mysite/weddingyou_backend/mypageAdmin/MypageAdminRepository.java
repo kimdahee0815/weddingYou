@@ -8,85 +8,77 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+
 import jakarta.transaction.Transactional;
+
 
 @Repository
 public interface MypageAdminRepository extends JpaRepository<MypageAdmin, Long> {
-
-    boolean existsByUserEmail(String userEmail);
+	
+	boolean existsByUserEmail(String userEmail);
     boolean existsByPlannerEmail(String plannerEmail);
-
-    @Modifying
-    @Transactional
-    @Query(value = "UPDATE MypageAdmin SET user_name = :user_name, user_password = :user_password, user_phoneNum = :user_phoneNum " +
-            "WHERE admin_id = :admin_id", nativeQuery = true)
-    int updateUser(@Param("admin_id") Long admin_id,
-                   @Param("user_name") String user_name,
-                   @Param("user_password") String user_password,
-                   @Param("user_phoneNum") String user_phoneNum);
-
-    @Modifying
-    @Transactional
-    @Query(value = "UPDATE MypageAdmin SET planner_name = :planner_name, planner_password = :planner_password, planner_phoneNum = :planner_phoneNum " +
-            "WHERE admin_id = :admin_id", nativeQuery = true)
-    int updatePlanner(@Param("admin_id") Long admin_id,
-                      @Param("planner_name") String planner_name,
-                      @Param("planner_password") String planner_password,
-                      @Param("planner_phoneNum") String planner_phoneNum);
-
-    // 전체 데이터 개수 조회
-    @Query(value = "SELECT COUNT(*) FROM MypageAdmin", nativeQuery = true)
-    int getCount();
-
-    // 검색
-    @Query(value = "SELECT * FROM MypageAdmin WHERE " +
-            "(user_name ILIKE '%' || :search || '%' " +
-            "OR user_email ILIKE '%' || :search || '%' " +
-            "OR user_phoneNum ILIKE '%' || :search || '%' " +
-            "OR DATE(user_join_date) = DATE(:search) " +
-            "OR TO_CHAR(user_join_date, 'YYYY-MM') = :search " +
-            "OR TO_CHAR(user_join_date, 'MM-DD') = :search " +
-            "OR TO_CHAR(user_join_date, 'YYYY') = :search " +
-            "OR TO_CHAR(user_join_date, 'MM') = :search " +
-            "OR TO_CHAR(user_join_date, 'DD') = :search " +
-            "OR planner_name ILIKE '%' || :search || '%' " +
-            "OR planner_email ILIKE '%' || :search || '%' " +
-            "OR planner_phoneNum ILIKE '%' || :search || '%' " +
-            "OR DATE(planner_join_date) = DATE(:search) " +
-            "OR TO_CHAR(planner_join_date, 'YYYY-MM') = :search " +
-            "OR TO_CHAR(planner_join_date, 'MM-DD') = :search " +
-            "OR TO_CHAR(planner_join_date, 'YYYY') = :search " +
-            "OR TO_CHAR(planner_join_date, 'MM') = :search " +
-            "OR TO_CHAR(planner_join_date, 'DD') = :search " +
-            "OR UsersType ILIKE '%' || :search || '%') " +
-            "ORDER BY admin_id ASC",
+	
+  	@Modifying
+  	@Transactional
+  	@Query(value="update MypageAdmin set user_name = :user_name, user_password = :user_password, user_phoneNum = :user_phoneNum where admin_id = :admin_id", nativeQuery=true)
+  	public int updateUser(Long admin_id, String user_name, String user_password, String user_phoneNum);
+  	
+  	@Modifying
+  	@Transactional
+  	@Query(value="update MypageAdmin set planner_name = :planner_name, planner_password = :planner_password, planner_phoneNum = :planner_phoneNum where admin_id = :admin_id", nativeQuery=true)
+  	public int updatePlanner(Long admin_id, String planner_name, String planner_password, String planner_phoneNum);
+  	
+  	//전체 데이터 개수 조회
+  	@Query(value = "select count(*) from MypageAdmin", nativeQuery=true)
+  	int getCount();
+  	
+  	//검색
+  	@Query(value = "SELECT * FROM MypageAdmin WHERE (user_name LIKE CONCAT('%', :search, '%') \r\n"
+            + "OR user_email LIKE CONCAT('%', :search, '%') \r\n"
+            + "OR user_phoneNum LIKE CONCAT('%', :search, '%') \r\n"
+            + "OR DATE(user_join_date) = DATE(:search) \r\n"
+            + "OR TO_CHAR(user_join_date, 'YYYY-MM') = :search \r\n"
+            + "OR TO_CHAR(user_join_date, 'MM-DD') = :search \r\n"
+            + "OR TO_CHAR(user_join_date, 'YYYY') = :search \r\n"
+            + "OR TO_CHAR(user_join_date, 'MM') = :search \r\n"
+            + "OR TO_CHAR(user_join_date, 'DD') = :search \r\n"
+            + "OR planner_name LIKE CONCAT('%', :search, '%') \r\n"
+            + "OR planner_email LIKE CONCAT('%', :search, '%') \r\n"
+            + "OR planner_phoneNum LIKE CONCAT('%', :search, '%') \r\n"
+            + "OR DATE(planner_join_date) = DATE(:search) \r\n"
+            + "OR TO_CHAR(planner_join_date, '%Y-%m') = :search \r\n"
+            + "OR TO_CHAR(planner_join_date, '%m-%d') = :search \r\n"
+            + "OR TO_CHAR(planner_join_date, '%Y') = :search \r\n"
+            + "OR TO_CHAR(planner_join_date, '%m') = :search \r\n"
+            + "OR TO_CHAR(planner_join_date, '%d') = :search \r\n"
+            + "OR UsersType LIKE CONCAT('%', :search, '%'))"
+            + "ORDER BY admin_id ASC \r\n" ,
             nativeQuery = true)
-    Page<MypageAdmin> getSearchList(@Param("search") String search, Pageable pageable);
-
-    // 검색 데이터 개수 조회
-    @Query(value = "SELECT COUNT(*) FROM MypageAdmin WHERE " +
-            "(user_name ILIKE '%' || :search || '%' " +
-            "OR user_email ILIKE '%' || :search || '%' " +
-            "OR user_phoneNum ILIKE '%' || :search || '%' " +
-            "OR DATE(user_join_date) = DATE(:search) " +
-            "OR TO_CHAR(user_join_date, 'YYYY-MM') = :search " +
-            "OR TO_CHAR(user_join_date, 'MM-DD') = :search " +
-            "OR TO_CHAR(user_join_date, 'YYYY') = :search " +
-            "OR TO_CHAR(user_join_date, 'MM') = :search " +
-            "OR TO_CHAR(user_join_date, 'DD') = :search " +
-            "OR planner_name ILIKE '%' || :search || '%' " +
-            "OR planner_email ILIKE '%' || :search || '%' " +
-            "OR planner_phoneNum ILIKE '%' || :search || '%' " +
-            "OR DATE(planner_join_date) = DATE(:search) " +
-            "OR TO_CHAR(planner_join_date, 'YYYY-MM') = :search " +
-            "OR TO_CHAR(planner_join_date, 'MM-DD') = :search " +
-            "OR TO_CHAR(planner_join_date, 'YYYY') = :search " +
-            "OR TO_CHAR(planner_join_date, 'MM') = :search " +
-            "OR TO_CHAR(planner_join_date, 'DD') = :search " +
-            "OR UsersType ILIKE '%' || :search || '%')",
-            nativeQuery = true)
-    int getSearchCount(@Param("search") String search);
-
-    MypageAdmin findByUserEmail(String useremail);
-    MypageAdmin findByPlannerEmail(String planneremail);
+  	Page<MypageAdmin> getSearchList(@Param("search") String search, Pageable pageable);
+  	
+    //검색 데이터 개수 조회
+  	@Query(value = "select count(*) from MypageAdmin where (user_name LIKE CONCAT('%', :search, '%') \r\n"
+  			+ "OR user_email LIKE CONCAT('%', :search, '%') \r\n"
+            + "OR user_phoneNum LIKE CONCAT('%', :search, '%') \r\n"
+            + "OR DATE(user_join_date) = DATE(:search) \r\n"
+            + "OR TO_CHAR(user_join_date, 'YYYY-MM') = :search \r\n"
+            + "OR TO_CHAR(user_join_date, 'MM-DD') = :search \r\n"
+            + "OR TO_CHAR(user_join_date, 'YYYY') = :search \r\n"
+            + "OR TO_CHAR(user_join_date, 'MM') = :search \r\n"
+            + "OR TO_CHAR(user_join_date, 'DD') = :search \r\n"
+            + "OR planner_name LIKE CONCAT('%', :search, '%') \r\n"
+            + "OR planner_email LIKE CONCAT('%', :search, '%') \r\n"
+            + "OR planner_phoneNum LIKE CONCAT('%', :search, '%') \r\n"
+            + "OR DATE(planner_join_date) = DATE(:search) \r\n"
+            + "OR TO_CHAR(planner_join_date, '%Y-%m') = :search \r\n"
+            + "OR TO_CHAR(planner_join_date, '%m-%d') = :search \r\n"
+            + "OR TO_CHAR(planner_join_date, '%Y') = :search \r\n"
+            + "OR TO_CHAR(planner_join_date, '%m') = :search \r\n"
+            + "OR TO_CHAR(planner_join_date, '%d') = :search \r\n"
+            + "OR UsersType LIKE CONCAT('%', :search, '%'))"
+  			, nativeQuery=true)
+  	int getSearchCount(String search);
+  	
+  	MypageAdmin findByUserEmail(String useremail);
+  	MypageAdmin findByPlannerEmail(String planneremail);
 }
