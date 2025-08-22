@@ -45,7 +45,6 @@ public class QnaService {
         } else {
             qna.setQnaImg(qna.getQnaImg());
         }
-        qna.setQnaImg(qnaDTO.getQnaImg());
         Qna updatedQna = qnaRepository.save(qna);
         return QnaDTO.fromEntity(updatedQna);
     }
