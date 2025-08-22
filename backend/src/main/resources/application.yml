@@ -1,60 +1,60 @@
 logging:
-  level:
-    org.springframework.boot.context.config: DEBUG
+    level:
+        org.springframework.boot.context.config: DEBUG
 
 spring:
-  profiles:
-    active: ${SPRING_PROFILES_ACTIVE:dev}
-  datasource:
-    url: ${MYSQL_URL}
-    username: ${MYSQL_USER}
-    password: ${MYSQL_PASSWORD}
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    profiles:
+        active: ${SPRING_PROFILES_ACTIVE:prod}
+    datasource:
+        url: ${POSTGRES_URL}
+        username: ${POSTGRES_USER}
+        password: ${POSTGRES_PASSWORD}
+        driver-class-name: org.postgresql.Driver
 
-  jpa:
-    # true : 트랜잭션이 완료되도 영속성 컨텍스트는 유지된다.
-    # false : 트랜잭션을 종료할 때 영속성 컨텍스트는 종료된다. 
-    # open-in-view: true # true:기본값
-    hibernate:
-      # create : 기존의 테이블을 drop하고 다시 생성하는 것.애플리케이션이 실행되는 시점에 drop과 create가 일어난다.
-      # update : 기존에 테이블이 없을때는 새로 생성하지만 있으면 그대로 유지. 테이블에 추가되는 컬럼이 존재하면 해당 테이블을 업데이트 한다.
-      ddl-auto: update
-      naming:
-        # 엔티티(테이블)를 만들때 변수명 그대로 테이블 필드(컬럼)를 만든다
-        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
-    show-sql: true # 콘솔창에 sql 명령문을 출력
-    properties:
-      hibernate.format_sql: true # sql명령문을 보기 좋게 보여준다.
-      hibernate.globally_quoted_identifiers: true
-      hibernate.dialect: org.hibernate.dialect.MySQLDialect
+    jpa:
+        # true : 트랜잭션이 완료되도 영속성 컨텍스트는 유지된다.
+        # false : 트랜잭션을 종료할 때 영속성 컨텍스트는 종료된다.
+        # open-in-view: true # true:기본값
+        hibernate:
+            # create : 기존의 테이블을 drop하고 다시 생성하는 것.애플리케이션이 실행되는 시점에 drop과 create가 일어난다.
+            # update : 기존에 테이블이 없을때는 새로 생성하지만 있으면 그대로 유지. 테이블에 추가되는 컬럼이 존재하면 해당 테이블을 업데이트 한다.
+            ddl-auto: update
+            naming:
+                # 엔티티(테이블)를 만들때 변수명 그대로 테이블 필드(컬럼)를 만든다
+                physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+        show-sql: true # 콘솔창에 sql 명령문을 출력
+        properties:
+            hibernate.format_sql: true # sql명령문을 보기 좋게 보여준다.
+            hibernate.globally_quoted_identifiers: true
+            hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
 
-  mail:
-    host: ${EMAIL_HOST}
-    port: ${EMAIL_PORT}
-    username: ${EMAIL_USER}
-    password: ${EMAIL_PASSWORD}
-    properties:
-      mail.smtp.auth: true
-      mail.smtp.starttls.enable: true
-      
-  servlet:
-    multipart: 
-      max-file-size: 1000MB  #최대 파일 사이즈를 100MB로 지정
-      max-request-size: 1000MB
-      location: /Project/upload
+    mail:
+        host: ${EMAIL_HOST}
+        port: ${EMAIL_PORT}
+        username: ${EMAIL_USER}
+        password: ${EMAIL_PASSWORD}
+        properties:
+            mail.smtp.auth: true
+            mail.smtp.starttls.enable: true
+
+    servlet:
+        multipart:
+            max-file-size: 1000MB #최대 파일 사이즈를 100MB로 지정
+            max-request-size: 1000MB
+            location: /Project/upload
 
 cloud:
-  aws:
-    credentials:
-      access-key: ${AWS_ACCESS_KEY}
-      secret-key: ${AWS_SECRET_KEY}
-    region:
-      static: us-east-1
-    s3:
-      bucket: dahee-weddingyou-project
-    stack:
-      auto: false
+    aws:
+        credentials:
+            access-key: ${AWS_ACCESS_KEY}
+            secret-key: ${AWS_SECRET_KEY}
+        region:
+            static: us-east-1
+        s3:
+            bucket: dahee-weddingyou-project
+        stack:
+            auto: false
 
 server:
-  address: 0.0.0.0   
-  port: 8080        
+    address: 0.0.0.0
+    port: 8080
