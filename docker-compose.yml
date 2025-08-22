@@ -1,13 +1,14 @@
 services:
-  mysql:
-    image: mysql:8.0
+  postgres:
+    image: postgres:15
     environment:
-      MYSQL_ROOT_PASSWORD: 123456
-      MYSQL_DATABASE: weddingyou
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_DB: weddingyou
     ports:
-      - "3308:3306"
+      - "5432:5432"
     volumes:
-      - mysql_data:/var/lib/mysql
+      - pg_data:/var/lib/postgresql/data
     networks:
       - app-network
 
@@ -16,10 +17,10 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - mysql
+      - postgres
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/weddingyou?serverTimezone=Asia/Seoul
-      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/weddingyou
+      SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: 123456
       SPRING_PROFILES_ACTIVE: dev
       AWS_ACCESS_KEY: ${AWS_ACCESS_KEY}
@@ -47,4 +48,4 @@ networks:
     driver: bridge
 
 volumes:
-  mysql_data:
+  pg_data:
