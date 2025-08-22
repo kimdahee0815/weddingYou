@@ -40,6 +40,11 @@ public class QnaService {
         qna.setQnaTitle(qnaDTO.getQnaTitle());
         qna.setQnaContent(qnaDTO.getQnaContent());
         qna.setQnaWriteDate(LocalDateTime.now());
+        if(qnaDTO.getQnaImg() != null) {
+            qna.setQnaImg(qnaDTO.getQnaImg());
+        } else {
+            qna.setQnaImg(qna.getQnaImg());
+        }
         qna.setQnaImg(qnaDTO.getQnaImg());
         Qna updatedQna = qnaRepository.save(qna);
         return QnaDTO.fromEntity(updatedQna);
