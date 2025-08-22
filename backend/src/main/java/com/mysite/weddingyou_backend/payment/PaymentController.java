@@ -106,7 +106,7 @@ public class PaymentController {
         
       // getting planner data
       PlannerLogin planner = plannerLoginRepository.findByEmail(plannerEmail);
-      int plannerCareerYears = Integer.parseInt(planner.getPlannerCareerYears());
+      int plannerCareerYears = planner.getPlannerCareerYears();
       if(plannerCareerYears >= 0 && plannerCareerYears <5) {
         depositAmount = new BigDecimal(50000);
       }else if(plannerCareerYears >= 5 && plannerCareerYears <15) {
