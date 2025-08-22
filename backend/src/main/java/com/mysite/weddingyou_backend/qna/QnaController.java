@@ -91,7 +91,7 @@ public class QnaController {
     	qnaDTO.setQnaContent(content);
 
 			qnaDTO.setQnaImg(null);
-			if (!file.isEmpty()) {
+			if (file != null && !file.isEmpty()) {
 				String imgUrl = s3Service.uploadFile(file, "qna");
 				qnaDTO.setQnaImg(imgUrl); 
 			}
