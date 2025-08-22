@@ -11,32 +11,32 @@ import jakarta.transaction.Transactional;
 public interface EstimateRepository extends JpaRepository<Estimate, Integer> {
 
 	//전체 게시글 개수 조회
-	@Query(value = "SELECT count(*) FROM estimate",nativeQuery=true)
+	@Query(value = "SELECT count(*) FROM \"Estimate\"",nativeQuery=true)
 	int getcount();
 	
 
 	//검색어를 통한 조회
-	@Query(value = "SELECT * FROM estimate WHERE (e_region LIKE CONCAT('%', :search, '%') \r\n"
-			+ "OR e_dress LIKE CONCAT('%', :search, '%') \r\n"
-			+ "OR e_makeup LIKE CONCAT('%', :search, '%') \r\n"
-			+ "OR e_honeymoon LIKE CONCAT('%', :search, '%') \r\n"
-			+ "OR e_studio LIKE CONCAT('%', :search, '%') \r\n"
-			+ "OR e_weddingdate LIKE CONCAT('%', :search, '%') \r\n"
-			+ "OR e_date LIKE CONCAT('%', :search, '%') \r\n"
-			+ "OR e_requirement LIKE CONCAT('%', :search, '%') \r\n"
-			+ "OR TO_CHAR(e_date, 'YYYY-MM') = :search \r\n"
-			+ "OR TO_CHAR(e_date, 'MM-DD') = :search \r\n"
-			+ "OR TO_CHAR(e_date, 'YYYY') = :search \r\n"
-			+ "OR TO_CHAR(e_date, 'MM') = :search \r\n"
-			+ "OR TO_CHAR(e_date, 'DD') = :search \r\n"
-			+ "OR e_title LIKE CONCAT ('%', :search, '%'))"
-			+ "Order By e_id desc\r\n"
-			,nativeQuery=true)
+	@Query(value = "SELECT * FROM \"Estimate\" WHERE (e_region ILIKE '%' || :search || '%' " +
+        "OR e_dress ILIKE '%' || :search || '%' " +
+        "OR e_makeup ILIKE '%' || :search || '%' " +
+        "OR e_honeymoon ILIKE '%' || :search || '%' " +
+        "OR e_studio ILIKE '%' || :search || '%' " +
+        "OR e_weddingdate ILIKE '%' || :search || '%' " +
+        "OR TO_CHAR(e_date, 'YYYY-MM-DD') ILIKE '%' || :search || '%' " +
+        "OR e_requirement ILIKE '%' || :search || '%' " +
+        "OR TO_CHAR(e_date, 'YYYY-MM') ILIKE '%' || :search || '%' " +
+        "OR TO_CHAR(e_date, 'MM-DD') ILIKE '%' || :search || '%' " +
+        "OR TO_CHAR(e_date, 'YYYY') ILIKE '%' || :search || '%' " +
+        "OR TO_CHAR(e_date, 'MM') ILIKE '%' || :search || '%' " +
+        "OR TO_CHAR(e_date, 'DD') ILIKE '%' || :search || '%' " +
+        "OR e_title ILIKE '%' || :search || '%') " +
+        "ORDER BY e_id DESC",
+        nativeQuery = true)
 	List<Estimate> getsearchlist(String search);
 	
 	
 	//페이징을 위한 검색어 갯수 조회
-	@Query(value = "SELECT count(*) FROM estimate WHERE (e_region LIKE CONCAT('%', :search, '%') \r\n"
+	@Query(value = "SELECT count(*) FROM \"Estimate\" WHERE (e_region LIKE CONCAT('%', :search, '%') \r\n"
 			+ "OR e_dress LIKE CONCAT('%', :search, '%') \r\n"
 			+ "OR e_makeup LIKE CONCAT('%', :search, '%') \r\n"
 			+ "OR e_honeymoon LIKE CONCAT('%', :search, '%') \r\n"
@@ -49,14 +49,14 @@ public interface EstimateRepository extends JpaRepository<Estimate, Integer> {
 	
 	
 	//페이징을 위한 데이터 조회
-	@Query(value = "SELECT * FROM estimate WHERE (e_region LIKE CONCAT('%', :search, '%') \r\n"
+	@Query(value = "SELECT * FROM \"Estimate\" WHERE (e_region LIKE CONCAT('%', :search, '%') \r\n"
 			+ "OR e_dress LIKE CONCAT('%', :search, '%') \r\n"
 			+ "OR e_makeup LIKE CONCAT('%', :search, '%') \r\n"
 			+ "OR e_honeymoon LIKE CONCAT('%', :search, '%') \r\n"
 			+ "OR e_writer LIKE CONCAT('%', :search, '%') \r\n"
 			+ "OR e_studio LIKE CONCAT('%', :search, '%') \r\n"
 			+ "OR e_title LIKE CONCAT ('%', :search, '%')) "
-			+ "Order By e_id desc\r\n LIMIT :start , :limit"
+			+ "Order By e_id desc\r\n LIMIT :limit OFFSET :start"
 			,nativeQuery=true)
 	List<Estimate> getsearchlistpageing(int start, int limit, String search);
 	
@@ -71,7 +71,7 @@ public interface EstimateRepository extends JpaRepository<Estimate, Integer> {
 	
 	@Transactional
 	@Modifying
-	@Query(value="UPDATE estimate SET e_viewcount = e_viewcount+1 WHERE e_id = :num",nativeQuery=true)
+	@Query(value="UPDATE \"Estimate\" SET e_viewcount=e_viewcount+1 WHERE e_id=:num",nativeQuery=true)
 	void increaseViewCount(int num);
 
 	
@@ -84,7 +84,7 @@ public interface EstimateRepository extends JpaRepository<Estimate, Integer> {
 	void deleteById(Long estimateId);
 	
 	
-	@Query(value = "SELECT * FROM estimate Order By e_id desc LIMIT :start , :limit",nativeQuery=true)
+	@Query(value = "SELECT * FROM \"Estimate\" Order By e_id desc LIMIT :limit OFFSET :start",nativeQuery=true)
 	List<Estimate> pageinglist(int start, int limit);
 	
 
