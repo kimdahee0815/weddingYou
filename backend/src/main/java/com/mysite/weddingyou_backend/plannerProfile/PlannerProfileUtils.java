@@ -52,7 +52,7 @@ public class PlannerProfileUtils {
         profile.setPhoneNum(plannerInfo.getPhoneNum());
         profile.setPlannerProfileImg(plannerInfo.getPlannerImg());
         profile.setPlannerJoinDate(plannerInfo.getPlannerJoinDate());
-        profile.setCareer(Integer.parseInt(plannerInfo.getPlannerCareerYears()));
+        profile.setCareer(plannerInfo.getPlannerCareerYears());
         profile.setReviewCount(reviewStats.getReviewCount());
         profile.setReviewStars(reviewStats.getReviewStars());
         profile.setReviewUsers(reviewStats.getReviewUsers());

@@ -43,7 +43,7 @@ public class PlannerUpdateDelete {
 	private String plannerImg;
 	
 	@Column(name = "planner_career_years", nullable = false)
-	private String plannerCareerYears;
+	private int plannerCareerYears;
 
 	@Column(name = "planner_introduction", nullable = true)
 	private String introduction;

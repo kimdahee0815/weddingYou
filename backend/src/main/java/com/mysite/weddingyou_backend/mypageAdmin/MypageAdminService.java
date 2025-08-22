@@ -55,7 +55,7 @@ public class MypageAdminService {
 						plannerAdmin.setPlannerPassword(planner.getPassword());
 						plannerAdmin.setPlannerGender(planner.getGender());
 						plannerAdmin.setPlannerPhoneNum(planner.getPhoneNum());
-						plannerAdmin.setPlannerCareerYears(Integer.parseInt(planner.getPlannerCareerYears()));
+						plannerAdmin.setPlannerCareerYears(planner.getPlannerCareerYears());
 						plannerAdmin.setPlannerJoinDate(planner.getPlannerJoinDate());
 						mypageAdminRepository.save(plannerAdmin);
 				}

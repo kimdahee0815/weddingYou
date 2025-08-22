@@ -234,7 +234,7 @@ public class PlannerProfileController {
       			UserLogin user = userLoginRepository.findByEmail(targetData.getWriter());
 
 						BigDecimal depositAmount;
-						int plannerCareerYears = Integer.parseInt(planner.getPlannerCareerYears());
+						int plannerCareerYears = planner.getPlannerCareerYears();
       			if(plannerCareerYears >= 0 && plannerCareerYears <5) {
         			depositAmount = new BigDecimal(50000);
       			}else if(plannerCareerYears >= 5 && plannerCareerYears <15) {
@@ -382,7 +382,7 @@ public class PlannerProfileController {
       				UserLogin user = userLoginRepository.findByEmail(userEmail);
 
 							BigDecimal depositAmount;
-							int plannerCareerYears = Integer.parseInt(planner.getPlannerCareerYears());
+							int plannerCareerYears = planner.getPlannerCareerYears();
       				if(plannerCareerYears >= 0 && plannerCareerYears <5) {
         				depositAmount = new BigDecimal(50000);
       				}else if(plannerCareerYears >= 5 && plannerCareerYears <15) {

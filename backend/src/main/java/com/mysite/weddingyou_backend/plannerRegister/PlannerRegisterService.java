@@ -56,7 +56,7 @@ public class PlannerRegisterService {
         plannerInfo.setPassword(plannerDTO.getPassword());
         plannerInfo.setPhoneNum(plannerDTO.getPhoneNum());
         plannerInfo.setGender(plannerDTO.getGender());
-        plannerInfo.setPlannerCareerYears(String.valueOf(plannerDTO.getCareer()));
+        plannerInfo.setPlannerCareerYears(plannerDTO.getCareer());
         plannerInfo.setPlannerJoinDate(planner.getPlannerJoinDate());
         PlannerProfileDTO profile = plannerProfileUtils.createOrUpdatePlannerProfile(plannerInfo);
         plannerProfileService.save(profile);
