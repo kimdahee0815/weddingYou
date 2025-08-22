@@ -37,7 +37,7 @@ public class Qna {
     @Column(name = "qna_content")
     private String qnaContent;
     
-	@Column(name = "qna_attachedfile", length=1000000000)
+	@Column(name = "qna_attachedfile", length=1000000000, nullable=true)
 	private String qnaImg;
 
     @Column(name = "qna_write_date")
