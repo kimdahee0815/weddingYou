@@ -90,9 +90,6 @@ public class ItemService {
         item.setItemWriteDate(LocalDateTime.now());
         return itemRepository.save(item);
     }
-    
-
-	 
 
     public Item updateItem(Long itemId, ItemDTO itemDTO) {
         Item item = getItemById(itemId);
@@ -133,6 +130,5 @@ public class ItemService {
             .collect(Collectors.toList());
         return itemDTOs;
     }
-
 }
 

@@ -74,52 +74,53 @@ public class ItemController {
 	}
 
 	//검색
-	@RequestMapping("/search/{keyword}")
-	public HashMap<String, List<ItemDTO>> searchItems(@PathVariable ("keyword") String keyword, @RequestBody likeDTO like) {
-			List<ItemDTO> items =new ArrayList<>();
-	    items = itemService.searchItems(keyword);
-	    HashMap<String, List<ItemDTO>> sortedItemsMap = new HashMap<String, List<ItemDTO>>();
-	        
+	@RequestMapping("/search")
+	public HashMap<String, List<ItemDTO>> searchItems(
+        @RequestParam(value = "keyword", required = false) String keyword,
+        @RequestBody likeDTO like) {
+		List<ItemDTO> items =new ArrayList<>();
+		HashMap<String, List<ItemDTO>> sortedItemsMap = new HashMap<String, List<ItemDTO>>();
 	    List<ItemDTO> weddingHallItems = new ArrayList<>();
 	    List<ItemDTO> studioItems = new ArrayList<>();
 	    List<ItemDTO> dressItems = new ArrayList<>();
 	    List<ItemDTO> makeupItems = new ArrayList<>();
 	    List<ItemDTO> honeymoonItems = new ArrayList<>();
 	    List<ItemDTO> bouquetItems = new ArrayList<>();
-	        
+		
+		items = itemService.searchItems(keyword);
+	    
 	    if(items.size()!=0) {
 	        for(int i =0;i<items.size();i++) {
-	 	      Category1 category1 = items.get(i).getCategory1();
-	 	      if(category1.toString().equals("웨딩홀")) {
-	 	        weddingHallItems.add(items.get(i));
-	 	      }else if(category1.toString().equals("스튜디오")) {
-	 	        studioItems.add(items.get(i));
-	 	      }else if(category1.toString().equals("의상")) {
-	 	        dressItems.add(items.get(i));
-	 	      }else if(category1.toString().equals("메이크업")) {
-	 	        makeupItems.add(items.get(i));
-	 	      }else if(category1.toString().equals("신혼여행")) {
-	 	        honeymoonItems.add(items.get(i));
-	 	      }else if(category1.toString().equals("부케")) {
-	 	        bouquetItems.add(items.get(i));
-	 	      }
-	 	        	
+	 	      	Category1 category1 = items.get(i).getCategory1();
+	 	      	if(category1.toString().equals("웨딩홀")) {
+	 	        	weddingHallItems.add(items.get(i));
+	 	      	}else if(category1.toString().equals("스튜디오")) {
+	 	        	studioItems.add(items.get(i));
+	 	      	}else if(category1.toString().equals("의상")) {
+	 	        	dressItems.add(items.get(i));
+	 	      	}else if(category1.toString().equals("메이크업")) {
+	 	        	makeupItems.add(items.get(i));
+	 	      	}else if(category1.toString().equals("신혼여행")) {
+	 	        	honeymoonItems.add(items.get(i));
+	 	      	}else if(category1.toString().equals("부케")) {
+	 	        	bouquetItems.add(items.get(i));
+	 	      	}  	
 	 	    }
-	      Collections.sort(weddingHallItems, (a, b) -> b.getItemWriteDate().compareTo(a.getItemWriteDate()));
+	      	Collections.sort(weddingHallItems, (a, b) -> b.getItemWriteDate().compareTo(a.getItemWriteDate()));
 	 	    Collections.sort(studioItems, (a, b) -> b.getItemWriteDate().compareTo(a.getItemWriteDate()));
 	 	    Collections.sort(dressItems, (a, b) -> b.getItemWriteDate().compareTo(a.getItemWriteDate()));
 	 	    Collections.sort(makeupItems, (a, b) -> b.getItemWriteDate().compareTo(a.getItemWriteDate()));
 	 	    Collections.sort(honeymoonItems, (a, b) -> b.getItemWriteDate().compareTo(a.getItemWriteDate()));
 	 	    Collections.sort(bouquetItems, (a, b) -> b.getItemWriteDate().compareTo(a.getItemWriteDate()));
 
-				sortedItemsMap.put("weddingHall", weddingHallItems);
-				sortedItemsMap.put("studio", studioItems);
-				sortedItemsMap.put("clothes", dressItems);
-				sortedItemsMap.put("makeup", makeupItems);
-				sortedItemsMap.put("honeymoon", honeymoonItems);
-				sortedItemsMap.put("bouquet", bouquetItems);	        
-	    }
-	  return sortedItemsMap;
+			sortedItemsMap.put("weddingHall", weddingHallItems);
+			sortedItemsMap.put("studio", studioItems);
+			sortedItemsMap.put("clothes", dressItems);
+			sortedItemsMap.put("makeup", makeupItems);
+			sortedItemsMap.put("honeymoon", honeymoonItems);
+			sortedItemsMap.put("bouquet", bouquetItems);
+		}	      
+		return sortedItemsMap;  
 	}
 
 	// 이미지 목록 정렬

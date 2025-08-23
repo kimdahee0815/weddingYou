@@ -26,7 +26,7 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
        "LEFT JOIN FETCH i.like l " +
        "LEFT JOIN FETCH l.user " +
        "LEFT JOIN FETCH l.planner " +
-       "WHERE i.itemName LIKE %:keyword%")
+       "WHERE (:keyword IS NULL OR :keyword = '' OR LOWER(i.itemName) LIKE LOWER(CONCAT('%', :keyword, '%')))")
        List<Item> findByItemNameWithLikesAndUserPlanner(@Param("keyword") String keyword);
 
 	@Query("SELECT i FROM Item i LEFT JOIN FETCH i.like l LEFT JOIN FETCH l.user LEFT JOIN FETCH l.planner WHERE i.itemId = :itemId")
