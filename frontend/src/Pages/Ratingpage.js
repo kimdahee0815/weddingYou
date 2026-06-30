@@ -129,13 +129,13 @@ function Ratingpage() {
     formData.append("plannerEmail", plannerEmail);
     formData.append("estimateId", estimateId);
     if (reviewText === undefined || reviewText === "") {
-      alert("리뷰를 작성하시려면 리뷰 후기를 적어주세요!");
+      alert("Please enter a review before submitting!");
     } else {
       axios
         .post("/reviews", formData)
         .then((res) => {
          // console.log("성공:", res);
-          alert("리뷰 작성 완료!");
+          alert("Review submitted successfully!");
           navigate(`/`);
         })
         .catch((e) => {
@@ -175,7 +175,7 @@ function Ratingpage() {
   return (
     <div className="containerbox">
       <div className="mainlayout box1">
-        <p className="headtxt">서비스가 어떠셨나요?</p>
+        <p className="headtxt">How was the service?</p>
         <div className="plannerpro">
           {!plannerImg ? (
             <img
@@ -211,12 +211,12 @@ function Ratingpage() {
             <input type="hidden" value={rating} />
           </div>
           <div className="reviewsection">
-            <p className="reviewcont">이용후기</p>
+            <p className="reviewcont">Review</p>
             <textarea
               ref={reviewtext}
               className="form-control"
               rows="7"
-              placeholder="이용후기를 입력해주세요"
+              placeholder="Enter your review"
               style={{ fontSize: 20 }}
               onChange={(e) => {
                 setReviewText(e.target.value);
@@ -226,7 +226,7 @@ function Ratingpage() {
           </div>
           <div className="photouploadsection">
             <p className="uploadphoto" style={{ fontSize: "1.5em" }}>
-              사진 첨부
+              Attach Photo
             </p>
             <input
               type="file"
@@ -241,15 +241,15 @@ function Ratingpage() {
               style={{ fontSize: "1.5em" }}
               className="cursor imageBtn"
             >
-              사진선택
+              Select Photo
             </label>
 
             <div>
               <h5>
-                고객 첨부이미지{" "}
-                {previewUrl?.length !== 0 && <span>(클릭시 삭제됩니다)</span>}
+                Attached Images{" "}
+                {previewUrl?.length !== 0 && <span>(Click to delete)</span>}
               </h5>
-              {previewUrl?.length === 0 && <span>첨부 이미지가 없습니다.</span>}
+              {previewUrl?.length === 0 && <span>No attached images.</span>}
               <br></br>
               {previewUrl?.length !== 0 ? (
                 previewUrl?.map((url, index) => {
@@ -292,7 +292,7 @@ function Ratingpage() {
           </div>
           <div className="insertBtn" style={{ marginBottom: "50px" }}>
             <button className="reviewInsertBtn" onClick={insertReview}>
-              작성하기
+              Submit
             </button>
           </div>
         </form>

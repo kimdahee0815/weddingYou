@@ -14,7 +14,7 @@ function PlannerProfile() {
   const [sortClick, setSortClick] = useState(false);
   const [selectedSort, setSelectedSort] = useState(
     window.sessionStorage.getItem("profileSort")
-  ); // 초기 버튼명 설정
+  );
   const navigate = useNavigate();
 
   const handleSortClick = (sort) => {
@@ -51,8 +51,8 @@ function PlannerProfile() {
 
   useEffect(() => {
     if (sessionStorage.getItem("profileSort") === null) {
-      window.sessionStorage.setItem("profileSort", "플래너 등록순");
-      setSelectedSort("플래너 등록순");
+      window.sessionStorage.setItem("profileSort", "Registration Order");
+      setSelectedSort("Registration Order");
     }
   }, []);
 
@@ -62,7 +62,7 @@ function PlannerProfile() {
   return (
     <div className="containerbox">
       <div className="mainlayout box1">
-        <NavigationBar title={"플래너 프로필"} />
+        <NavigationBar title={"Planner Profiles"} />
         <br />
         <div
           style={{ display: "flex", justifyContent: "end", marginTop: "50px" }}
@@ -106,10 +106,10 @@ function PlannerProfile() {
                       type="button"
                       onClick={() => {
                         setSortClick(!sortClick);
-                        handleSortClick("별점 높은 순");
+                        handleSortClick("Highest Rating");
                       }}
                     >
-                      별점 높은 순
+                      Highest Rating
                     </button>
                   </li>
                   <li>
@@ -118,10 +118,10 @@ function PlannerProfile() {
                       type="button"
                       onClick={() => {
                         setSortClick(!sortClick);
-                        handleSortClick("후기순");
+                        handleSortClick("Most Reviews");
                       }}
                     >
-                      후기순
+                      Most Reviews
                     </button>
                   </li>
                   <li>
@@ -130,10 +130,10 @@ function PlannerProfile() {
                       type="button"
                       onClick={() => {
                         setSortClick(!sortClick);
-                        handleSortClick("경력순");
+                        handleSortClick("By Experience");
                       }}
                     >
-                      경력순
+                      By Experience
                     </button>
                   </li>
                   <li>
@@ -142,10 +142,10 @@ function PlannerProfile() {
                       type="button"
                       onClick={() => {
                         setSortClick(!sortClick);
-                        handleSortClick("매칭순");
+                        handleSortClick("Most Matched");
                       }}
                     >
-                      매칭순
+                      Most Matched
                     </button>
                   </li>
                   <li>
@@ -154,10 +154,10 @@ function PlannerProfile() {
                       type="button"
                       onClick={() => {
                         setSortClick(!sortClick);
-                        handleSortClick("최신순");
+                        handleSortClick("Latest");
                       }}
                     >
-                      최신순
+                      Latest
                     </button>
                   </li>
                   <li className="">
@@ -166,10 +166,10 @@ function PlannerProfile() {
                       type="button"
                       onClick={() => {
                         setSortClick(!sortClick);
-                        handleSortClick("플래너 등록순");
+                        handleSortClick("Registration Order");
                       }}
                     >
-                      플래너 등록순
+                      Registration Order
                     </button>
                   </li>
                 </ul>
@@ -196,7 +196,7 @@ function PlannerProfile() {
                     marginTop: "40px",
                   }}
                 >
-                  결과가 없습니다.
+                  No results found.
                 </div>
               ) : (
                 wholeItems.map((item, i) => (

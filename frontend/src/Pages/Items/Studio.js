@@ -10,9 +10,9 @@ import Sidesection from "../../Components/Sidesection";
 const Studio = () => {
   const { category1 } = useParams();
   const [currentItem, setCurrentItem] = useState();
-  const title = "스튜디오";
+  const title = "Studio";
   const engTitle = "studio";
-  const category2 = ["인물중심", "배경중심", "균형적인"];
+  const category2 = ["Subject-focused", "Background-focused", "Balanced"];
   const [isAdmin, setIsAdmin] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState(category2[0]);
   const [editMode, setEditMode] = useState(false);
@@ -144,7 +144,7 @@ const Studio = () => {
               height: "250px",
             }}
             data-bs-item={JSON.stringify(item)}
-            data-bs-category="스튜디오"
+            data-bs-category="Studio"
             />
           ))}
         </div>
@@ -214,7 +214,7 @@ const Studio = () => {
                       padding: "10px",
                     }}
                   >
-                    상세정보
+                    Details
                   </div>
                   <p
                     style={{
@@ -234,14 +234,14 @@ const Studio = () => {
                       onClick={handleEditClick}
                       data-bs-dismiss="modal"
                     >
-                      수정
+                      Edit
                     </button>
                     <button
                       className="delete-button"
                       data-bs-toggle="modal"
                       data-bs-target="#deleteItemModal"
                     >
-                      삭제
+                      Delete
                     </button>
                   </div>
                 )}
@@ -252,7 +252,7 @@ const Studio = () => {
                     data-bs-dismiss="modal"
                     onClick={gotoDetailInfo}
                   >
-                    상세정보 페이지 이동
+                    View Details Page
                   </button>
                 )}
                 <button
@@ -260,7 +260,7 @@ const Studio = () => {
                   class="btn btn-primary"
                   data-bs-dismiss="modal"
                 >
-                  닫기
+                  Close
                 </button>
               </div>
             </div>
@@ -283,11 +283,11 @@ const Studio = () => {
                   id="deleteItemModal"
                   style={{ fontSize: "1.4em" }}
                 >
-                  - 아이템 삭제 -
+                  - Delete Item -
                 </h1>
               </div>
               <div class="modal-body text-center" style={{ fontSize: "1.4em" }}>
-                정말 삭제하시겠습니까?
+                Are you sure you want to delete this?
               </div>
               <div class="modal-footer justify-content-center">
                 <button
@@ -295,10 +295,10 @@ const Studio = () => {
                   onClick={handleDeleteClick}
                   data-bs-dismiss="modal"
                 >
-                  예
+                  Yes
                 </button>
                 <button className="delete-button" data-bs-dismiss="modal">
-                  아니오
+                  No
                 </button>
               </div>
             </div>

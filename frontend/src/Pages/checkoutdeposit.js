@@ -86,7 +86,7 @@ function Checkoutdeposit() {
       channelKey: "channel-key-c64770de-2fa3-41c4-bb6b-e7026c633010",
       pay_method: paymentMethod,
       merchant_uid: `${uuidv4()}-${estimateId}`,
-      name: "플래너 매칭서비스",
+      name: "Planner Matching Service",
       amount: depositprice,
       company: "Wedding You", 
       buyer_email: sessionStorage.getItem("email"),
@@ -153,7 +153,7 @@ function Checkoutdeposit() {
   return (
     <div className="containerbox">
       <div className="mainlayout box1" style={{ height: "950px" }}>
-        <NavigationBar title={"결제하기 (계약금)"} />
+        <NavigationBar title={"Payment (Deposit)"} />
         <div className="plannerpro" style={{ marginTop: 110 }}>
           {!plannerImg ? (
             <img
@@ -179,7 +179,7 @@ function Checkoutdeposit() {
             style={{ fontSize: "0.9em" }}
             className="col-sm-4 col-form-label"
           >
-            상품명
+            Product Name
           </label>
           <div className="col-sm-8">
             <input
@@ -187,7 +187,7 @@ function Checkoutdeposit() {
               readonly
               className="form-control-plaintext"
               id="itemName"
-              value="맞춤형 웨딩플래너 서비스(계약)"
+              value="Customized Wedding Planner Service (Contract)"
               style={{ fontSize: "0.9em" }}
             />
           </div>
@@ -199,7 +199,7 @@ function Checkoutdeposit() {
             style={{ fontSize: "0.9em" }}
             className="col-sm-4 col-form-label"
           >
-            상품 상세정보
+            Product Details
           </label>
           <div className="col-sm-8">
             <input
@@ -207,7 +207,7 @@ function Checkoutdeposit() {
               readonlyvm
               className="form-control-plaintext"
               id="itemName"
-              value="플래너 매칭 계약금"
+              value="Planner Matching Deposit"
               style={{ fontSize: "0.9em" }}
             />
             <div
@@ -216,8 +216,7 @@ function Checkoutdeposit() {
                 marginRight: "15px",
               }}
             >
-              (경력 5년 미만 : 50,000 / 경력 15년 미만 : 100,000 / 경력 15년
-              이상 : 150,000)
+              (Under 5 years: 50,000 / Under 15 years: 100,000 / 15 years or more: 150,000)
             </div>
           </div>
         </div>
@@ -228,7 +227,7 @@ function Checkoutdeposit() {
             style={{ fontSize: "0.9em" }}
             className="col-sm-4 col-form-label"
           >
-            계약금 금액
+            Deposit Amount
           </label>
           <div className="col-sm-8">
             <input
@@ -238,7 +237,7 @@ function Checkoutdeposit() {
               id="itemName"
               value={`${depositAmount
                 .toString()
-                .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}원`}
+                .replace(/\B(?=(\d{3})+(?!\d))/g, ",")} KRW`}
               style={{ fontSize: "0.9em" }}
             />
           </div>
@@ -248,7 +247,7 @@ function Checkoutdeposit() {
           style={{ marginTop: "15px" }}
           className="checkoutBtn"
         >
-          결제하기
+          Pay Now
         </button>
         <Footer />
       </div>

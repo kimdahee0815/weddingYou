@@ -15,11 +15,11 @@ function UserUpdate() {
 
   let userOrPlanner = "";
   if (category === "user") {
-    userOrPlanner = "회원";
+    userOrPlanner = "Member";
   } else if (category === "planner") {
-    userOrPlanner = "플래너";
+    userOrPlanner = "Planner";
   }
-  const title = `${userOrPlanner}정보 수정`;
+  const title = `Edit ${userOrPlanner} Info`;
   const [name, setName] = useState("");
   const [defaultName, setDefaultName] = useState("");
   const [password, setPassword] = useState("");
@@ -97,7 +97,7 @@ function UserUpdate() {
     } else if (passwordCheck !== true) {
       //userupdate에 url로 접근할 경우 mypage로 navigate
       navigate(`/mypage/${category}`);
-      alert("정보수정을 하려면 비밀번호를 입력하세요!");
+      alert("Please enter your password to edit your information!");
     }
   }, []);
   const viewDefaultInfo = () => {
@@ -348,7 +348,7 @@ function UserUpdate() {
           passwordInput.current.classList.remove("is-valid");
           passwordInput.current.classList.remove("is-invalid");
         } else {
-          setPasswordMessage("올바른 비밀번호 형식입니다");
+          setPasswordMessage("Valid password format.");
           passwordInput.current.classList.remove("is-invalid");
           passwordInput.current.classList.add("is-valid");
           passwordFeedback.current.classList.remove("invisible");
@@ -358,10 +358,10 @@ function UserUpdate() {
         }
       } else {
         if (e.target.value === "") {
-          setPasswordMessage("비밀번호를 작성해주세요.");
+          setPasswordMessage("Please enter a password.");
         } else {
           setPasswordMessage(
-            "최소8자 이상, 대문자, 소문자, 숫자, 특수문자를 포함"
+            "At least 8 characters, including uppercase, lowercase, number, and special character."
           );
         }
         passwordFeedback.current.classList.remove("invisible");
@@ -385,7 +385,7 @@ function UserUpdate() {
           nameInput.current.classList.remove("is-valid");
           nameInput.current.classList.remove("is-invalid");
         } else {
-          setNameMessage("올바른 이름 형식입니다");
+          setNameMessage("Valid name format.");
           nameInput.current.classList.remove("is-invalid");
           nameInput.current.classList.add("is-valid");
           nameFeedback.current.classList.remove("invisible");
@@ -395,9 +395,9 @@ function UserUpdate() {
         }
       } else {
         if (e.target.value === "") {
-          setNameMessage("이름을 작성해주세요.");
+          setNameMessage("Please enter your name.");
         } else {
-          setNameMessage("한글 5자 이하");
+          setNameMessage("Up to 5 Korean characters.");
         }
         nameFeedback.current.classList.remove("invisible");
         nameFeedback.current.classList.remove("valid-feedback");
@@ -423,7 +423,7 @@ function UserUpdate() {
           phoneInput.current.classList.remove("is-valid");
           phoneInput.current.classList.remove("is-invalid");
         } else {
-          setPhoneMessage("올바른 핸드폰 번호입니다.");
+          setPhoneMessage("Valid phone number.");
           phoneInput.current.classList.remove("is-invalid");
           phoneInput.current.classList.add("is-valid");
           phoneFeedback.current.classList.remove("invisible");
@@ -433,9 +433,9 @@ function UserUpdate() {
         }
       } else {
         if (e.target.value === "") {
-          setPhoneMessage("핸드폰 번호를 입력해주세요");
+          setPhoneMessage("Please enter a phone number.");
         } else {
-          setPhoneMessage("올바른 핸드폰 번호가 아닙니다.");
+          setPhoneMessage("Invalid phone number.");
         }
         phoneFeedback.current.classList.remove("invisible");
         phoneFeedback.current.classList.remove("valid-feedback");
@@ -484,11 +484,11 @@ function UserUpdate() {
         }
       } else {
         if (parseInt(e.target.value) > 30) {
-          setCareerMessage("경력은 30년까지 입력 가능합니다.");
+          setCareerMessage("Career can be entered up to 30 years.");
         } else if (e.target.value === "") {
-          setCareerMessage("경력을 입력하세요.");
+          setCareerMessage("Please enter your career years.");
         } else {
-          setCareerMessage("올바른 경력을 입력하세요.");
+          setCareerMessage("Please enter a valid career duration.");
         }
         careerFeedback.current.classList.remove("invisible");
         careerFeedback.current.classList.remove("valid-feedback");
@@ -520,9 +520,9 @@ function UserUpdate() {
         }
       } else {
         if (length === 0) {
-          setIntroMessage("소개글을 써주세요!");
+          setIntroMessage("Please write an introduction!");
         } else {
-          setIntroMessage("소개글은 1000자 미만입니다.");
+          setIntroMessage("Introduction must be under 1000 characters.");
         }
 
         introFeedback.current.classList.remove("invisible");
@@ -621,7 +621,7 @@ function UserUpdate() {
               setGender(res.data.gender);
               setDefaultGender(res.data.gender);
 
-              alert("수정 완료!");
+              alert("Update complete!");
             })
             .catch((e) => {
               console.log(e);
@@ -665,7 +665,7 @@ function UserUpdate() {
               setDefaultCareer(res.data.plannerCareerYears);
               setIntroduction(res.data.introduction);
               setDefaultIntroduction(res.data.introduction);
-              alert("수정 완료!");
+              alert("Update complete!");
             })
             .catch((e) => {
               console.log(e);
@@ -729,10 +729,10 @@ function UserUpdate() {
     } else {
       if (allcheck === false) {
         //형식 틀릴 때
-        alert("수정 불가능합니다.");
+        alert("Cannot save changes.");
       } else if (anyChange === false) {
         //변경 내용 없을 때
-        alert("변경 내용이 없습니다.");
+        alert("No changes have been made.");
       }
       setDefaultValue();
     }
@@ -807,7 +807,7 @@ function UserUpdate() {
                     fontSize: "1.3em",
                   }}
                 >
-                  이메일
+                  Email
                 </label>
                 <div style={{ width: "250px", marginRight: "20px" }}>
                   <input
@@ -842,7 +842,7 @@ function UserUpdate() {
                     fontSize: "1.3em",
                   }}
                 >
-                  비밀번호
+                  Password
                 </label>
                 <div
                   class="has-validation "
@@ -882,7 +882,7 @@ function UserUpdate() {
                     fontSize: "1.3em",
                   }}
                 >
-                  이름
+                  Name
                 </label>
                 <div
                   class="has-validation "
@@ -922,7 +922,7 @@ function UserUpdate() {
                     fontSize: "1.3em",
                   }}
                 >
-                  휴대폰
+                  Phone
                 </label>
                 <div
                   class="has-validation"
@@ -962,7 +962,7 @@ function UserUpdate() {
                     fontSize: "1.3em",
                   }}
                 >
-                  성별
+                  Gender
                 </label>
                 <div
                   class="input-group"
@@ -991,7 +991,7 @@ function UserUpdate() {
                     class="form-control"
                     id="male"
                     aria-label="male btn"
-                    value="남자"
+                    value="Male"
                     style={{ background: "white", fontSize: "1.1em" }}
                     disabled
                   />
@@ -1014,13 +1014,13 @@ function UserUpdate() {
                     class="form-control"
                     id="female"
                     aria-label="female btn"
-                    value="여자"
+                    value="Female"
                     style={{ background: "white", fontSize: "1.1em" }}
                     disabled
                   />
                 </div>
               </div>
-              {userOrPlanner === "플래너" ? (
+              {userOrPlanner === "Planner" ? (
                 <div style={{ height: "360px" }}>
                   <div
                     class="justify-content-md-center "
@@ -1039,7 +1039,7 @@ function UserUpdate() {
                         fontSize: "1.3em",
                       }}
                     >
-                      경력
+                      Career
                     </label>
                     <div
                       class="has-validation "
@@ -1085,7 +1085,7 @@ function UserUpdate() {
                         fontSize: "1.3em",
                       }}
                     >
-                      소개글
+                      Introduction
                     </label>
                     <div
                       class="has-validation "
@@ -1123,7 +1123,7 @@ function UserUpdate() {
                   onClick={updateCheck}
                   style={category === "user" ? null : { marginTop: "-30px" }}
                 >
-                  회원정보 수정하기
+                  Update Profile
                 </button>
               </div>
             </form>
@@ -1190,7 +1190,7 @@ function UserUpdate() {
                     fontSize: "1.3em",
                   }}
                 >
-                  이메일
+                  Email
                 </label>
                 <div style={{ width: "250px", marginRight: "20px" }}>
                   <input
@@ -1225,7 +1225,7 @@ function UserUpdate() {
                     fontSize: "1.3em",
                   }}
                 >
-                  비밀번호
+                  Password
                 </label>
                 <div
                   class="has-validation "
@@ -1265,7 +1265,7 @@ function UserUpdate() {
                     fontSize: "1.3em",
                   }}
                 >
-                  이름
+                  Name
                 </label>
                 <div
                   class="has-validation "
@@ -1305,7 +1305,7 @@ function UserUpdate() {
                     fontSize: "1.3em",
                   }}
                 >
-                  휴대폰
+                  Phone
                 </label>
                 <div
                   class="has-validation"
@@ -1345,7 +1345,7 @@ function UserUpdate() {
                     fontSize: "1.3em",
                   }}
                 >
-                  성별
+                  Gender
                 </label>
                 <div
                   class="input-group"
@@ -1374,7 +1374,7 @@ function UserUpdate() {
                     class="form-control"
                     id="male"
                     aria-label="male btn"
-                    value="남자"
+                    value="Male"
                     style={{ background: "white", fontSize: "1.1em" }}
                     disabled
                   />
@@ -1397,13 +1397,13 @@ function UserUpdate() {
                     class="form-control"
                     id="female"
                     aria-label="female btn"
-                    value="여자"
+                    value="Female"
                     style={{ background: "white", fontSize: "1.1em" }}
                     disabled
                   />
                 </div>
               </div>
-              {userOrPlanner === "플래너" ? (
+              {userOrPlanner === "Planner" ? (
                 <div style={{ height: "360px" }}>
                   <div
                     class="justify-content-md-center "
@@ -1422,7 +1422,7 @@ function UserUpdate() {
                         fontSize: "1.3em",
                       }}
                     >
-                      경력
+                      Career
                     </label>
                     <div
                       class="has-validation "
@@ -1468,7 +1468,7 @@ function UserUpdate() {
                         fontSize: "1.3em",
                       }}
                     >
-                      소개글
+                      Introduction
                     </label>
                     <div
                       class="has-validation "
@@ -1506,7 +1506,7 @@ function UserUpdate() {
                   onClick={updateCheck}
                   style={category === "user" ? null : { marginTop: "-1px" }}
                 >
-                  회원정보 수정하기
+                  Update Profile
                 </button>
               </div>
             </form>
@@ -1531,7 +1531,7 @@ function UserUpdate() {
                   id="profileUpdateModal"
                   style={{ fontSize: "1.5em" }}
                 >
-                  - 프로필 변경 -
+                  - Change Profile Picture -
                 </h1>
                 <button
                   type="button"
@@ -1575,7 +1575,7 @@ function UserUpdate() {
                     class="form-control"
                     id="profileInput"
                     onChange={onChangeProfile}
-                    placeholder="업로드할 이미지"
+                    placeholder="Image to upload"
                     required
                     autocomplete="off"
                     enctype="multipart/form-data"
@@ -1589,7 +1589,7 @@ function UserUpdate() {
                   class="btn btn-secondary"
                   data-bs-dismiss="modal"
                 >
-                  닫기
+                  Close
                 </button>
                 <button
                   type="button"
@@ -1597,7 +1597,7 @@ function UserUpdate() {
                   data-bs-dismiss="modal"
                   onClick={updateProfile}
                 >
-                  변경하기
+                  Apply
                 </button>
               </div>
             </div>

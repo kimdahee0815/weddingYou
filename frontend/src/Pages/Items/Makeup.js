@@ -10,16 +10,16 @@ import Sidesection from "../../Components/Sidesection";
 const Makeup = () => {
   const { category1 } = useParams();
   const [currentItem, setCurrentItem] = useState();
-  const title = "메이크업";
+  const title = "Makeup";
   const engTitle = "makeup";
   const category2 = [
-    "헤어",
-    "로맨틱한",
-    "포인트",
-    "네추럴",
-    "스모키",
-    "큐티",
-    "러블리",
+    "Hair",
+    "Romantic",
+    "Point",
+    "Natural",
+    "Smoky",
+    "Cute",
+    "Lovely",
   ];
   const [isAdmin, setIsAdmin] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState(category2[0]);
@@ -153,7 +153,7 @@ const Makeup = () => {
                 height: "250px",
               }}
               data-bs-item={JSON.stringify(item)}
-              data-bs-category="메이크업"
+              data-bs-category="Makeup"
               />
             ))}
         </div>
@@ -223,7 +223,7 @@ const Makeup = () => {
                       padding: "10px",
                     }}
                   >
-                    상세정보
+                    Details
                   </div>
                   <p
                     style={{
@@ -243,14 +243,14 @@ const Makeup = () => {
                       onClick={handleEditClick}
                       data-bs-dismiss="modal"
                     >
-                      수정
+                      Edit
                     </button>
                     <button
                       className="delete-button"
                       data-bs-toggle="modal"
                       data-bs-target="#deleteItemModal"
                     >
-                      삭제
+                      Delete
                     </button>
                   </div>
                 )}
@@ -261,7 +261,7 @@ const Makeup = () => {
                     data-bs-dismiss="modal"
                     onClick={gotoDetailInfo}
                   >
-                    상세정보 페이지 이동
+                    View Details Page
                   </button>
                 )}
                 <button
@@ -269,7 +269,7 @@ const Makeup = () => {
                   class="btn btn-primary"
                   data-bs-dismiss="modal"
                 >
-                  닫기
+                  Close
                 </button>
               </div>
             </div>
@@ -292,11 +292,11 @@ const Makeup = () => {
                   id="deleteItemModal"
                   style={{ fontSize: "1.4em" }}
                 >
-                  - 아이템 삭제 -
+                  - Delete Item -
                 </h1>
               </div>
               <div class="modal-body text-center" style={{ fontSize: "1.4em" }}>
-                정말 삭제하시겠습니까?
+                Are you sure you want to delete this?
               </div>
               <div class="modal-footer justify-content-center">
                 <button
@@ -304,10 +304,10 @@ const Makeup = () => {
                   onClick={handleDeleteClick}
                   data-bs-dismiss="modal"
                 >
-                  예
+                  Yes
                 </button>
                 <button className="delete-button" data-bs-dismiss="modal">
-                  아니오
+                  No
                 </button>
               </div>
             </div>

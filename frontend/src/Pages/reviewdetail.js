@@ -296,13 +296,13 @@ function Reviewdetail() {
     formData.append("estimateId", estimateId);
     formData.append("reviewTitle", reviewTitle);
     if (reviewText === undefined || reviewText === "") {
-      alert("리뷰를 작성하시려면 리뷰 후기를 적어주세요!");
+      alert("Please enter a review before submitting!");
     } else {
       axios
         .post("/updatedreviews", formData)
         .then((res) => {
          // console.log("성공:", res);
-          alert("리뷰 수정 완료!");
+          alert("Review updated successfully!");
           navigate(`/review`);
         })
         .catch((e) => {
@@ -358,7 +358,7 @@ function Reviewdetail() {
   const handleDelete = () => {
     axios.delete(`/review/delete/${estimateId}`).then((res) => {
      // console.log(res);
-      alert(`글이 삭제되었습니다!`);
+      alert(`Post deleted!`);
       navigate(`/review`);
     });
     // window.location.reload(); // 페이지 새로고침
@@ -372,7 +372,7 @@ function Reviewdetail() {
 
     axios.post(`/deletecomment`, formData).then((res) => {
      // console.log(res);
-      alert(`댓글이 삭제되었습니다!`);
+      alert(`Comment deleted!`);
       setDeleted(!deleted);
     });
     // window.location.reload(); // 페이지 새로고침
@@ -400,7 +400,7 @@ function Reviewdetail() {
     return (
       <div className="containerbox">
         <div className="mainlayout box1">
-          <NavigationBar title={"이용후기"} />
+          <NavigationBar title={"Reviews"} />
           <div style={{ height: 64 }}></div>
           <div className="titleArea">
             <div style={{ display: "flex" }}>
@@ -419,7 +419,7 @@ function Reviewdetail() {
                     style={{ width: "90px" }}
                     onClick={reviewUpdateForm}
                   >
-                    수정
+                    Edit
                   </button>
                   <button
                     className="upAndDelBtn2"
@@ -427,7 +427,7 @@ function Reviewdetail() {
                     data-bs-target="#reviewDelete"
                     style={{ width: "90px" }}
                   >
-                    삭제
+                    Delete
                   </button>
                 </div>
               ) : null}
@@ -435,7 +435,7 @@ function Reviewdetail() {
 
             <div style={{ display: "flex" }}>
               <p className="dateTxt">{reviewDate.slice(0, 10)}</p>
-              <p className="viewCountTxt">조회수 : {reviewViews}</p>
+              <p className="viewCountTxt">Views: {reviewViews}</p>
               <div className="ratingStars">
                 <Rating />
               </div>{" "}
@@ -467,7 +467,7 @@ function Reviewdetail() {
                 <div class="modal-content">
                   <div class="modal-header">
                     <h1 class="modal-title fs-5" id="exampleModalLabel">
-                      이용후기 삭제
+                      Delete Review
                     </h1>
                     <button
                       type="button"
@@ -477,7 +477,7 @@ function Reviewdetail() {
                     ></button>
                   </div>
                   <div class="modal-body" style={{ fontSize: 26 }}>
-                    정말로 삭제하시겠습니까?
+                    Are you sure you want to delete?
                   </div>
                   <div class="modal-footer">
                     <button
@@ -486,14 +486,14 @@ function Reviewdetail() {
                       data-bs-dismiss="modal"
                       onClick={handleDelete}
                     >
-                      삭제
+                      Delete
                     </button>
                     <button
                       type="button"
                       class="btn btn-secondary"
                       data-bs-dismiss="modal"
                     >
-                      취소
+                      Cancel
                     </button>
                   </div>
                 </div>
@@ -503,10 +503,10 @@ function Reviewdetail() {
           <hr />
           <div className="contentbox-detail" style={{ paddingLeft: "20px" }}>
             <h5 style={{ marginBottom: "-15px" }}>
-              고객 첨부이미지
-              {images?.length !== 0 && <span>(클릭시 확대됩니다)</span>}
+              Attached Images
+              {images?.length !== 0 && <span>(Click to enlarge)</span>}
             </h5>
-            {images?.length === 0 && <span>첨부 이미지가 없습니다.</span>}
+            {images?.length === 0 && <span>No attached images.</span>}
             <br></br>
             <div>
               {images?.map((e, index) => {
@@ -542,7 +542,7 @@ function Reviewdetail() {
               })}
             </div>
           </div>
-          <p className="ComentTitle">댓글</p>
+          <p className="ComentTitle">Comments</p>
           <div className="ComentArea">
             {reviewCommentsIndex.map((index) => {
               // setEditedComment(reviewComments[index].commentContent);
@@ -572,7 +572,7 @@ function Reviewdetail() {
                           onClick={handleSaveClick}
                           className="writeBtn2"
                         >
-                          완료
+                          Done
                         </button>
                       </div>
                     ) : commentEmail[index] ===
@@ -586,7 +586,7 @@ function Reviewdetail() {
                           onClick={handleEditClick}
                           className="upAndDelBtn3"
                         >
-                          수정
+                          Edit
                         </button>
                         <button
                           className="upAndDelBtn3"
@@ -597,7 +597,7 @@ function Reviewdetail() {
                           data-bs-toggle="modal"
                           data-bs-target="#reviewComentDelete"
                         >
-                          삭제
+                          Delete
                         </button>
                         <div
                           class="modal fade"
@@ -613,7 +613,7 @@ function Reviewdetail() {
                                   class="modal-title fs-5"
                                   id="exampleModalLabel"
                                 >
-                                  댓글 삭제
+                                  Delete Comment
                                 </h1>
                                 <button
                                   type="button"
@@ -633,14 +633,14 @@ function Reviewdetail() {
                                   data-bs-dismiss="modal"
                                   onClick={handleDelete2}
                                 >
-                                  삭제
+                                  Delete
                                 </button>
                                 <button
                                   type="button"
                                   class="btn btn-secondary"
                                   data-bs-dismiss="modal"
                                 >
-                                  취소
+                                  Cancel
                                 </button>
                               </div>
                             </div>
@@ -671,7 +671,7 @@ function Reviewdetail() {
                   }}
                 ></input>
                 <button onClick={createcomment} className="writeBtn2">
-                  작성
+                  Submit
                 </button>
               </div>
             ) : null}
@@ -689,7 +689,7 @@ function Reviewdetail() {
     return (
       <div className="containerbox">
         <div className="mainlayout box1">
-          <NavigationBar title={"글수정"} />
+          <NavigationBar title={"Edit Review"} />
           <div style={{ height: 74 }}></div>
           <div className="titleArea" style={{ display: "flex" }}>
             <input
@@ -730,7 +730,7 @@ function Reviewdetail() {
             <textarea
               className="form-control contentinput"
               rows="15"
-              placeholder="수정내용을 입력해주세요"
+              placeholder="Enter your edit"
               value={reviewText}
               onChange={(e) => {
                 setReviewText(e.target.value);
@@ -742,7 +742,7 @@ function Reviewdetail() {
 
           <div className="photouploadsection">
             <p className="uploadphoto" style={{ fontSize: "1.5em" }}>
-              사진 첨부
+              Attach Photo
             </p>
             <input
               type="file"
@@ -757,15 +757,15 @@ function Reviewdetail() {
               style={{ fontSize: "1.5em" }}
               className="cursor imageBtn"
             >
-              사진선택
+              Select Photo
             </label>
 
             <div>
               <h5>
-                고객 첨부이미지{" "}
-                {previewUrl?.length !== 0 && <span>(클릭시 삭제됩니다)</span>}
+                Attached Images{" "}
+                {previewUrl?.length !== 0 && <span>(Click to delete)</span>}
               </h5>
-              {previewUrl?.length === 0 && <span>첨부 이미지가 없습니다.</span>}
+              {previewUrl?.length === 0 && <span>No attached images.</span>}
               <br></br>
               {previewUrl?.length !== 0 ? (
                 previewUrl?.map((url, index) => {
@@ -845,7 +845,7 @@ function Reviewdetail() {
           <br />
           <div className="writeBtnArea" style={{ marginTop: "-40px" }}>
             <button className="writeBtn" onClick={updateReview}>
-              수정하기
+              Save Changes
             </button>
           </div>
           <div style={{ height: 200 }}></div>

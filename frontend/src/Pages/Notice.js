@@ -45,20 +45,20 @@ function Notice() {
   return (
     <div className="containerbox">
       <div className="mainlayout box1">
-        <NavigationBar title={"공지사항"} />
+        <NavigationBar title={"Notice"} />
         <div style={{ height: 74 }}></div>
         <div className="noticeSection">
           <tabel>
             <thead>
               <tr>
                 <td style={{ width: 350 }}>
-                  <p className="noticeTxt">제목</p>
+                  <p className="noticeTxt">Title</p>
                 </td>
                 <td style={{ width: 120 }}>
-                  <p className="noticeTxtCenter">작성일</p>
+                  <p className="noticeTxtCenter">Date</p>
                 </td>
                 <td style={{ width: 80 }}>
-                  <p className="noticeTxtCenter">조회수</p>
+                  <p className="noticeTxtCenter">Views</p>
                 </td>
               </tr>
             </thead>
@@ -141,10 +141,10 @@ function Notice() {
           <button
             className="writeBtn"
             onClick={() => {
-              navigate(`/contentwrite`, { state: { page: "공지사항" } });
+              navigate(`/contentwrite`, { state: { page: "Notice" } });
             }}
           >
-            글쓰기
+            Write Post
           </button>
         ) : null}
 

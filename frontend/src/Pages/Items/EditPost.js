@@ -74,7 +74,7 @@ const EditPost = () => {
       })
       .then((res) => {
         //console.log(res);
-        alert("수정이 완료 되었습니다!");
+        alert("Edit completed successfully!");
         navigate(`/menu/${engTitle}`);
       })
       .catch((e) => {
@@ -84,7 +84,7 @@ const EditPost = () => {
   return (
     <div className="containerbox">
       <div className="mainlayout box1">
-        <NavigationBar title="글 수정" engTitle={engTitle} />
+        <NavigationBar title="Edit Post" engTitle={engTitle} />
         <div
           className="category-container"
           style={{ marginTop: "100px" }}
@@ -140,11 +140,11 @@ const EditPost = () => {
             }}
             style={{ fontSize: "1.3em" }}
           >
-            수정하기
+            Save Changes
           </button>
 
           <button className="cancel-button" onClick={handleCancel}>
-            취소
+            Cancel
           </button>
         </div>
         <Footer />
@@ -164,7 +164,7 @@ const EditPost = () => {
                   id="itemChangeModal"
                   style={{ fontSize: "1.5em" }}
                 >
-                  - 아이템 사진 변경 -
+                  - Change Item Photo -
                 </h1>
                 <button
                   type="button"
@@ -208,7 +208,7 @@ const EditPost = () => {
                     class="form-control"
                     id="profileInput"
                     onChange={onChangeItemPicture}
-                    placeholder="업로드할 이미지"
+                    placeholder="Image to upload"
                     required
                     autocomplete="off"
                     enctype="multipart/form-data"
@@ -222,7 +222,7 @@ const EditPost = () => {
                   class="btn btn-secondary"
                   data-bs-dismiss="modal"
                 >
-                  닫기
+                  Close
                 </button>
                 <button
                   type="button"
@@ -230,7 +230,7 @@ const EditPost = () => {
                   data-bs-dismiss="modal"
                   onClick={updateItemPicture}
                 >
-                  변경하기
+                  Apply Change
                 </button>
               </div>
             </div>

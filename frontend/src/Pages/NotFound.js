@@ -148,7 +148,7 @@ function NotFound() {
                 }
               }}
             >
-              돌아가기
+              Go Back
             </button>
           </div>
         </div>

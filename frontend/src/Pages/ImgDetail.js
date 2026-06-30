@@ -10,7 +10,7 @@ function ImgDetail() {
   return (
     <div className="containerbox">
       <div className="mainlayout box1">
-        <NavigationBar title={"상세정보창"} />
+        <NavigationBar title={"Detail Info"} />
         <div style={{ marginTop: "120px" }}>
           <div
             style={{

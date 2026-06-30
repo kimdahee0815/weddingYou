@@ -103,13 +103,13 @@ const AdminPage = () => {
 
   const onUserDataModify = (id, type) => {
     if (nameCheck == false) {
-      alert("이름의 형식이 올바르지 않습니다.");
+      alert("The name format is invalid.");
       return false;
     } else if (passwordCheck == false) {
-      alert("비밀번호의 형식이 올바르지 않습니다.");
+      alert("The password format is invalid.");
       return false;
     } else if (phoneCheck == false) {
-      alert("휴대폰번호의 형식이 올바르지 않습니다.");
+      alert("The phone number format is invalid.");
       return false;
     }
 
@@ -468,17 +468,17 @@ const AdminPage = () => {
   };
 
   const userSearching = () => {
-    if (userSearch.includes("일반")) {
+    if (userSearch.includes("Regular")) {
       setUserSearchPaeing("user");
-    } else if (userSearch.includes("플래너")) {
+    } else if (userSearch.includes("Planner")) {
       setUserSearchPaeing("planner");
     } else {
       setUserSearchPaeing(userSearch);
     }
     const judge = (userSearch) => {
-      if (userSearch.includes("일반")) {
+      if (userSearch.includes("Regular")) {
         return "user";
-      } else if (userSearch.includes("플래너")) {
+      } else if (userSearch.includes("Planner")) {
         return "planner";
       } else {
         return userSearch;
@@ -632,7 +632,7 @@ const AdminPage = () => {
   return (
     <div className="containerbox">
       <div className="mainlayout box1">
-        <NavigationBar title="마이페이지(관리자)" />
+        <NavigationBar title="My Page (Admin)" />
         <div className="adminpage-container">
           <div className={`adminpage-Administration ${rolldown}`}>
             <div
@@ -640,7 +640,7 @@ const AdminPage = () => {
               onClick={rolldownControl}
               data-id="0"
             >
-              유저관리
+              User Management
             </div>
             <div
               className="adminpage-Administration-list"
@@ -650,38 +650,38 @@ const AdminPage = () => {
                   className="adminpage-Administration-list-head"
                   style={{ width: "20%" }}
                 >
-                  이름
+                  Name
                 </div>
                 <div
                   className="adminpage-Administration-list-head"
                   style={{ width: "15%" }}
                 >
-                  고객구분
+                  Member Type
                 </div>
                 <div
                   className="adminpage-Administration-list-head"
                   style={{ width: "30%" }}
                 >
-                  휴대폰
+                  Phone
                 </div>
                 <div
                   className="adminpage-Administration-list-head"
                   style={{ width: "15%" }}
                 >
-                  성별
+                  Gender
                 </div>
                 <div
                   className="adminpage-Administration-list-head"
                   style={{ width: "20%" }}
                 >
-                  가입일자
+                  Join Date
                 </div>
               </div>
               {userList?.length === 0 && (
                 <div className="nonedata">
-                  <p>검색결과가 없습니다.</p>
+                  <p>No results found.</p>
                   <p style={{ fontSize: "20px" }}>
-                    검색어 : {userSearchPageing}
+                    Search term: {userSearchPageing}
                   </p>
                 </div>
               )}
@@ -702,7 +702,7 @@ const AdminPage = () => {
                         userPagePrev();
                       }}
                     >
-                      이전
+                      Prev
                     </div>
                   )}
                   {userPageLink.map((e, index) => {
@@ -723,7 +723,7 @@ const AdminPage = () => {
                         userPageNext();
                       }}
                     >
-                      다음
+                      Next
                     </div>
                   )}
                 </div>
@@ -735,7 +735,7 @@ const AdminPage = () => {
                       id="usersearch"
                       value={userSearch}
                       ref={userSearchRef}
-                      placeholder="유저검색"
+                      placeholder="Search users"
                       onChange={onUserSearchChange}
                       onKeyDown={(e) => {
                         if (e.key === "Enter" || e.code === "Enter") {
@@ -749,7 +749,7 @@ const AdminPage = () => {
                         userSearching();
                       }}
                     >
-                      검색
+                      Search
                     </button>
                   </div>
                   <div
@@ -772,7 +772,7 @@ const AdminPage = () => {
               onClick={rolldownControl}
               data-id="1"
             >
-              견적서게시물관리
+              Estimate Post Management
             </div>
             <div className="adminpage-Administration-list">
               <div className="adminpage-Administration-list-head-box">
@@ -780,32 +780,32 @@ const AdminPage = () => {
                   className="adminpage-Administration-list-head"
                   style={{ width: "14%" }}
                 >
-                  글번호
+                  Post No.
                 </div>
                 <div
                   className="adminpage-Administration-list-head"
                   style={{ width: "50%" }}
                 >
-                  제목
+                  Title
                 </div>
                 <div
                   className="adminpage-Administration-list-head"
                   style={{ width: "18%" }}
                 >
-                  매칭상태
+                  Match Status
                 </div>
                 <div
                   className="adminpage-Administration-list-head"
                   style={{ width: "18%" }}
                 >
-                  작성일시
+                  Date Written
                 </div>
               </div>
               {postList.length === 0 && (
                 <div className="nonedata">
-                  <p>검색결과가 없습니다.</p>
+                  <p>No results found.</p>
                   <p style={{ fontSize: "20px" }}>
-                    검색어 : {postSearchPageing}
+                    Search term: {postSearchPageing}
                   </p>
                 </div>
               )}
@@ -826,7 +826,7 @@ const AdminPage = () => {
                         postPagePrev();
                       }}
                     >
-                      이전
+                      Prev
                     </div>
                   )}
                   {postPageLink.map((e, index) => {
@@ -847,7 +847,7 @@ const AdminPage = () => {
                         postPageNext();
                       }}
                     >
-                      다음
+                      Next
                     </div>
                   )}
                 </div>
@@ -859,7 +859,7 @@ const AdminPage = () => {
                       id="postsearch"
                       value={postSearch}
                       ref={postSearchRef}
-                      placeholder="게시물검색"
+                      placeholder="Search posts"
                       onChange={onPostSearchChange}
                       onKeyDown={(e) => {
                         if (e.key === "Enter" || e.code === "Enter") {
@@ -873,7 +873,7 @@ const AdminPage = () => {
                         onSearching();
                       }}
                     >
-                      검색
+                      Search
                     </button>
                   </div>
                   <div className="전체보기버튼 cursor" onClick={postListReset}>
@@ -890,7 +890,7 @@ const AdminPage = () => {
               }}
               className="btn-colour-1"
             >
-              고객센터
+              Customer Center
             </button>
           </div>
           <div className="button-Box" style={{ height: "60px" }}>
@@ -902,7 +902,7 @@ const AdminPage = () => {
               }}
               className="btn-colour-1"
             >
-              로그아웃
+              Logout
             </button>
           </div>
           <div style={{ height: 94.19 }}></div>
@@ -984,8 +984,8 @@ const UserListData = ({ userList, userDetail }) => {
               className="adminpage-Administration-list-body"
               style={{ width: "15%" }}
             >
-              {e.type === "user" && <span>일반회원</span>}
-              {e.type === "planner" && <sapn>플래너회원</sapn>}
+              {e.type === "user" && <span>Regular Member</span>}
+              {e.type === "planner" && <sapn>Planner Member</sapn>}
             </div>
             <div
               className="adminpage-Administration-list-body"
@@ -999,10 +999,10 @@ const UserListData = ({ userList, userDetail }) => {
               style={{ width: "15%" }}
             >
               {e.type === "user" && (
-                <span>{e.userGender === "male" ? "남" : "여"}</span>
+                <span>{e.userGender === "male" ? "Male" : "Female"}</span>
               )}
               {e.type === "planner" && (
-                <sapn>{e.plannerGender === "male" ? "남" : "여"}</sapn>
+                <sapn>{e.plannerGender === "male" ? "Male" : "Female"}</sapn>
               )}
             </div>
             <div
@@ -1064,10 +1064,10 @@ const PostListData = ({ array2, postDetail }) => {
               style={{ width: "18%" }}
             >
               {e.matchstatus == true && (
-                <span className="matchTrue">매칭완료</span>
+                <span className="matchTrue">Matched</span>
               )}
               {e.matchstatus == false && (
-                <span className="matchFalse">매칭미완료</span>
+                <span className="matchFalse">Not Matched</span>
               )}
             </div>
             <div
@@ -1114,11 +1114,11 @@ const DetailModal = ({
               class="modal-title adminpage-modalheader"
               id="exampleModalLabel"
             >
-              {modalMode === "user" && "회원 상세정보"}
-              {modalMode === "userModifyForm" && "회원정보 수정"}
-              {modalMode === "userDelete" && "회원정보 삭제"}
-              {modalMode === "postDelete" && "게시글 삭제"}
-              {modalMode === "post" && "게시글 상세정보"}
+              {modalMode === "user" && "Member Details"}
+              {modalMode === "userModifyForm" && "Edit Member Info"}
+              {modalMode === "userDelete" && "Delete Member"}
+              {modalMode === "postDelete" && "Delete Post"}
+              {modalMode === "post" && "Post Details"}
             </h1>
             <button
               type="button"
@@ -1131,40 +1131,40 @@ const DetailModal = ({
             {/*내용입력 */}
             {modalMode == "user" && (
               <div className="Modal-detail">
-                <p>이름 : {userArticle.name}</p>
+                <p>Name : {userArticle.name}</p>
                 <p>
-                  구분 : &nbsp;
-                  {userArticle.type === "user" ? "일반회원" : "플래너회원"}
+                  Type : &nbsp;
+                  {userArticle.type === "user" ? "Regular Member" : "Planner Member"}
                 </p>
-                <p>이메일 : {userArticle.email}</p>
-                <p>비밀번호 : {userArticle.password}</p>
-                <p>성별 : {userArticle.gender === "male" ? "남" : "여"}</p>
-                <p>휴대폰 : {userArticle.phone}</p>
+                <p>Email : {userArticle.email}</p>
+                <p>Password : {userArticle.password}</p>
+                <p>Gender : {userArticle.gender === "male" ? "Male" : "Female"}</p>
+                <p>Phone : {userArticle.phone}</p>
                 {userArticle.type === "planner" && (
-                  <p> 경력 : {userArticle.careerYear}년</p>
+                  <p> Career : {userArticle.careerYear} years</p>
                 )}
-                <p>가입일자 : {userArticle.date}</p>
+                <p>Join Date : {userArticle.date}</p>
               </div>
             )}
             {modalMode == "post" && (
               <div className="Modal-detail">
-                <p>제목 : {postArticle.title}</p>
-                <p>글쓴이 : {postArticle.writer} </p>
+                <p>Title : {postArticle.title}</p>
+                <p>Author : {postArticle.writer} </p>
                 {postArticle.matchstatus == true ? (
-                  <p>매칭 플래너 : {postArticle.matchedplanner} </p>
+                  <p>Matched Planner : {postArticle.matchedplanner} </p>
                 ) : null}
-                <p>작성일시 : {postArticle.date}</p>
-                <p>조회수 : {postArticle.viewcount}</p>
+                <p>Date Written : {postArticle.date}</p>
+                <p>Views : {postArticle.viewcount}</p>
                 <p>
-                  매칭여부 :{" "}
-                  {postArticle.matchstatus == false ? "매칭미완료" : "매칭완료"}
+                  Matched :{" "}
+                  {postArticle.matchstatus == false ? "Not Matched" : "Matched"}
                 </p>
               </div>
             )}
             {modalMode == "userModifyForm" && (
               <div className="Modal-detail">
                 <p>
-                  이름 : &nbsp;
+                  Name : &nbsp;
                   <input
                     type="text"
                     onChange={onNameChange}
@@ -1174,13 +1174,13 @@ const DetailModal = ({
                   />
                 </p>
                 <p>
-                  고객 구분 :&nbsp;
-                  {userArticle.type === "user" ? "일반회원" : "플래너회원"}
+                  Member Type :&nbsp;
+                  {userArticle.type === "user" ? "Regular Member" : "Planner Member"}
                 </p>
-                <p>이메일 : {userArticle.email} </p>
-                <p>성별 : {userArticle.gender === "male" ? "남" : "여"}</p>
+                <p>Email : {userArticle.email} </p>
+                <p>Gender : {userArticle.gender === "male" ? "Male" : "Female"}</p>
                 <p>
-                  비밀번호 : &nbsp;
+                  Password : &nbsp;
                   <input
                     type="text"
                     onChange={onPasswordChange}
@@ -1189,7 +1189,7 @@ const DetailModal = ({
                   />
                 </p>
                 <p>
-                  휴대폰 : &nbsp;
+                  Phone : &nbsp;
                   <input
                     type="text"
                     onChange={onPhoneChange}
@@ -1199,19 +1199,19 @@ const DetailModal = ({
                   />
                 </p>
                 {userArticle.type === "planner" && (
-                  <p> 경력 : {userArticle.careerYear}년</p>
+                  <p> Career : {userArticle.careerYear} years</p>
                 )}
-                <p>가입일 : {userArticle.date}</p>
+                <p>Join Date : {userArticle.date}</p>
               </div>
             )}
             {modalMode == "postDelete" && (
               <div className="Modal-detail">
-                <p>{postArticle.writer}님의 게시글을 삭제하시겠습니까?</p>
+                <p>Are you sure you want to delete {postArticle.writer}'s post?</p>
               </div>
             )}
             {modalMode == "userDelete" && (
               <div className="Modal-detail">
-                <p>{userArticle.email}님의 회원정보를 삭제하시겠습니까?</p>
+                <p>Are you sure you want to delete {userArticle.email}'s account?</p>
               </div>
             )}
           </div>
@@ -1226,7 +1226,7 @@ const DetailModal = ({
                     setModalMode("userModifyForm");
                   }}
                 >
-                  수정하기
+                  Edit
                 </button>
                 <button
                   type="button"
@@ -1235,14 +1235,14 @@ const DetailModal = ({
                     setModalMode("userDelete");
                   }}
                 >
-                  계정삭제
+                  Delete Account
                 </button>
                 <button
                   type="button"
                   class="btn btn-secondary"
                   data-bs-dismiss="modal"
                 >
-                  닫기
+                  Close
                 </button>
               </>
             )}
@@ -1257,14 +1257,14 @@ const DetailModal = ({
                       onUserDataModify(userArticle.id, userArticle.type);
                     }}
                   >
-                    수정
+                    Save
                   </button>
                   <button
                     type="button"
                     class="btn btn-secondary"
                     data-bs-dismiss="modal"
                   >
-                    닫기
+                    Close
                   </button>
                 </>
               </>
@@ -1278,7 +1278,7 @@ const DetailModal = ({
                     navigate(`../estimatedetail/${postArticle.id}`);
                   }}
                 >
-                  게시글 상세보기
+                  View Post
                 </button>
                 <button
                   type="button"
@@ -1288,14 +1288,14 @@ const DetailModal = ({
                     setModalMode("postDelete")
                   }
                 >
-                  게시글 삭제
+                  Delete Post
                 </button>
                 <button
                   type="button"
                   class="btn btn-secondary"
                   data-bs-dismiss="modal"
                 >
-                  닫기
+                  Close
                 </button>
               </>
             )}
@@ -1308,10 +1308,10 @@ const DetailModal = ({
                     onPostDelete(postArticle.id);
                   }}
                 >
-                  삭제
+                  Delete
                 </button>
                 <button className="btn btn-secondary" data-bs-dismiss="modal">
-                  취소
+                  Cancel
                 </button>
               </>
             )}
@@ -1324,10 +1324,10 @@ const DetailModal = ({
                     onUserDelete(userArticle.id);
                   }}
                 >
-                  삭제
+                  Delete
                 </button>
                 <button className="btn btn-secondary" data-bs-dismiss="modal">
-                  취소
+                  Cancel
                 </button>
               </>
             )}

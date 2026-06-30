@@ -55,7 +55,7 @@ const EstimateForm = () => {
   //날짜
   const weddingdateSelect = (e) => {
     if (e.target.value < format(new Date(), "yyyy-MM-dd")) {
-      alert("오늘 이전의 날짜는 선택할 수 없습니다.");
+      alert("You cannot select a past date.");
       return false;
     } else {
       let copy = { ...weddingdate, [e.target.name]: e.target.value };
@@ -134,7 +134,7 @@ const EstimateForm = () => {
         count++;
       }
       if (count > 3) {
-        alert("드레스 스타일은 최대 3개까지 선택 가능합니다.");
+        alert("You can select up to 3 dress styles.");
         e.target.checked = false;
         return false;
       }
@@ -161,7 +161,7 @@ const EstimateForm = () => {
         count++;
       }
       if (count > 3) {
-        alert("메이크업 스타일은 최대 3개까지 선택 가능합니다.");
+        alert("You can select up to 3 makeup styles.");
         e.target.checked = false;
         return false;
       }
@@ -182,7 +182,7 @@ const EstimateForm = () => {
   //이미지 파일 첨부
   const imageSelect = (e) => {
     if (images.length >= 5 || e.target.files.length + images.length > 5) {
-      alert("파일 첨부는 5개까지 가능합니다.");
+      alert("You can attach up to 5 files.");
       e.target.value = null;
     } else {
       let copy = [...images];
@@ -232,7 +232,7 @@ const EstimateForm = () => {
 
   const onSubmit = () => {
     if (weddingdate.datefirst === "") {
-      alert("1순위 날짜 입력은 필수입니다.");
+      alert("1st priority date is required.");
       dateRef.current.focus();
       return false;
     }
@@ -240,13 +240,13 @@ const EstimateForm = () => {
       weddingdate.datefirst === weddingdate.datesecond ||
       weddingdate.datefirst === weddingdate.datethird
     ) {
-      alert("각각 다른 날짜를 선택해주세요");
+      alert("Please select different dates.");
       dateRef.current.focus();
       return false;
     }
 
     if (weddingregion.regionfirst === "") {
-      alert("1순위 지역 입력은 필수입니다.");
+      alert("1st priority region is required.");
       regionRef.current.focus();
       return false;
     }
@@ -257,17 +257,17 @@ const EstimateForm = () => {
       (weddingregion.regionsecond === weddingregion.regionthird &&
         (weddingregion.regionsecond !== "" || weddingregion.regionthird !== ""))
     ) {
-      alert("서로 다른 지역을 선택해주세요");
+      alert("Please select different regions.");
       regionRef.current.focus();
       return false;
     }
 
     if (studio === "") {
-      alert("스튜디오 선택은 필수입니다.");
+      alert("Studio selection is required.");
       return false;
     }
 
-    if (window.confirm("작성하시겠습니까?")) {
+    if (window.confirm("Would you like to submit?")) {
       let integerBudget;
       let formData = new FormData();
       if (budget === "") {
@@ -296,7 +296,7 @@ const EstimateForm = () => {
           navigate("/estimatelist");
         })
         .catch((e) => {
-          alert("홈페이지에 오류가 발생하였습니다. 다시 시도해주세요");
+          alert("An error occurred. Please try again.");
           console.log(e);
         });
     }
@@ -305,14 +305,14 @@ const EstimateForm = () => {
   return (
     <div className="containerbox">
       <div className="mainlayout box1" style={{ height: "100%" }}>
-        <NavigationBar title="내가 원하는 웨딩은?" />
+        <NavigationBar title="My Dream Wedding" />
         <div className="contentcontainer">
           <div className="contentbox">
             <h5>
-              희망 결혼 예정일
+              Desired Wedding Date
             </h5>
             <div className="choosebox">
-              <span>1순위</span>
+              <span>Priority 1</span>
               <input
                 type="date"
                 ref={dateRef}
@@ -323,7 +323,7 @@ const EstimateForm = () => {
               />
             </div>
             <div className="choosebox">
-              <span>2순위</span>
+              <span>Priority 2</span>
               <input
                 type="date"
                 className="form-control"
@@ -333,7 +333,7 @@ const EstimateForm = () => {
               />
             </div>
             <div className="choosebox">
-              <span>3순위</span>
+              <span>Priority 3</span>
               <input
                 type="date"
                 className="form-control"
@@ -345,9 +345,9 @@ const EstimateForm = () => {
             {/* <hr></hr> */}
           </div>
           <div className="contentbox">
-            <h5>희망 결혼 지역</h5>
+            <h5>Desired Wedding Region</h5>
             <div className="choosebox">
-              <span>1순위</span>
+              <span>Priority 1</span>
               {/* <input
               type="text"
               className="w-100 form-control"
@@ -362,14 +362,14 @@ const EstimateForm = () => {
               />
             </div>
             <div className="choosebox">
-              <span>2순위</span>
+              <span>Priority 2</span>
               <RegionList
                 name="regionsecond"
                 weddingregionSelect={weddingregionSelect}
               />
             </div>
             <div className="choosebox">
-              <span>3순위</span>
+              <span>Priority 3</span>
               <RegionList
                 name="regionthird"
                 weddingregionSelect={weddingregionSelect}
@@ -377,7 +377,7 @@ const EstimateForm = () => {
             </div>
           </div>
           <div className="contentbox">
-            <h5>예산</h5>
+            <h5>Budget</h5>
             <div className="choosebox">
               <input
                 type="text"
@@ -392,7 +392,7 @@ const EstimateForm = () => {
                   increasebudget1(1000000);
                 }}
               >
-                +1백만
+                +1M
               </div>
               <div
                 className="budget-btn cursor"
@@ -400,7 +400,7 @@ const EstimateForm = () => {
                   increasebudget1(100000);
                 }}
               >
-                +1십만
+                +100K
               </div>
               <div
                 className="budget-btn cursor"
@@ -408,13 +408,13 @@ const EstimateForm = () => {
                   increasebudget1(10000);
                 }}
               >
-                +1만
+                +10K
               </div>
             </div>
-            <span>원</span>
+            <span>KRW</span>
           </div>
           <div className="contentbox">
-            <h5>스튜디오</h5>
+            <h5>Studio</h5>
             <div className="choosebox">
               <input
                 id="person"
@@ -426,7 +426,7 @@ const EstimateForm = () => {
                 className="displaynone"
               />
               <label htmlFor="person" className="label-design w-100 cursor">
-                인물중심
+                Subject-Focused
               </label>
             </div>
             <div className="choosebox">
@@ -440,7 +440,7 @@ const EstimateForm = () => {
                 className="displaynone"
               />
               <label htmlFor="background" className="label-design w-100 cursor">
-                배경중심
+                Background-Focused
               </label>
             </div>
             <div className="choosebox">
@@ -454,12 +454,12 @@ const EstimateForm = () => {
                 className="displaynone"
               />
               <label htmlFor="balanced" className="label-design w-100 cursor">
-                균형적인
+                Balanced
               </label>
             </div>
             <div>
               <span>
-                스튜디오 스타일이 궁금하다면?&nbsp;
+                Want to know about studio styles?&nbsp;
                 <span
                   type="button"
                   className="badge bg-primary"
@@ -473,7 +473,7 @@ const EstimateForm = () => {
           </div>
 
           <div className="contentbox">
-            <h5>신부 드레스 (3개까지 선택가능)</h5>
+            <h5>Bridal Dress (up to 3)</h5>
             <div className="choosebox">
               <input
                 id="머메이드"
@@ -484,10 +484,10 @@ const EstimateForm = () => {
                 className="displaynone"
               />
               <label htmlFor="머메이드" className="label-design w-100 cursor">
-                머메이드
+                Mermaid
                 {dress.includes("머메이드") ? (
                   <span className="ranking">
-                    {dress.indexOf("머메이드") + 1}순위
+                    #{dress.indexOf("머메이드") + 1}
                   </span>
                 ) : (
                   ""
@@ -504,10 +504,10 @@ const EstimateForm = () => {
                 className="displaynone"
               />
               <label htmlFor="A라인" className="label-design w-100 cursor">
-                A라인
+                A-Line
                 {dress.includes("A라인") ? (
                   <span className="ranking">
-                    {dress.indexOf("A라인") + 1}순위
+                    #{dress.indexOf("A라인") + 1}
                   </span>
                 ) : (
                   ""
@@ -524,10 +524,10 @@ const EstimateForm = () => {
                 className="displaynone"
               />
               <label htmlFor="H라인" className="label-design w-100 cursor">
-                H라인
+                H-Line
                 {dress.includes("H라인") ? (
                   <span className="ranking">
-                    {dress.indexOf("H라인") + 1}순위
+                    #{dress.indexOf("H라인") + 1}
                   </span>
                 ) : (
                   ""
@@ -544,10 +544,10 @@ const EstimateForm = () => {
                 className="displaynone"
               />
               <label htmlFor="벨라인" className="label-design w-100 cursor">
-                벨라인
+                Ball Gown
                 {dress.includes("벨라인") ? (
                   <span className="ranking">
-                    {dress.indexOf("벨라인") + 1}순위
+                    #{dress.indexOf("벨라인") + 1}
                   </span>
                 ) : (
                   ""
@@ -564,10 +564,10 @@ const EstimateForm = () => {
                 className="displaynone"
               />
               <label htmlFor="엠파이어" className="label-design w-100 cursor">
-                엠파이어
+                Empire
                 {dress.includes("엠파이어") ? (
                   <span className="ranking">
-                    {dress.indexOf("엠파이어") + 1}순위
+                    #{dress.indexOf("엠파이어") + 1}
                   </span>
                 ) : (
                   ""
@@ -584,10 +584,10 @@ const EstimateForm = () => {
                 className="displaynone"
               />
               <label htmlFor="프린세스" className="label-design w-100 cursor">
-                프린세스
+                Princess
                 {dress.includes("프린세스") ? (
                   <span className="ranking">
-                    {dress.indexOf("프린세스") + 1}순위
+                    #{dress.indexOf("프린세스") + 1}
                   </span>
                 ) : (
                   ""
@@ -595,7 +595,7 @@ const EstimateForm = () => {
               </label>
             </div>
             <span>
-              드레스 스타일이 궁금하다면?&nbsp;
+              Want to know about dress styles?&nbsp;
               <span
                 type="button"
                 className="badge bg-primary"
@@ -607,7 +607,7 @@ const EstimateForm = () => {
             </span>
           </div>
           <div className="contentbox">
-            <h5>신부 메이크업 (3개까지 선택가능)</h5>
+            <h5>Bridal Makeup (up to 3)</h5>
             <div className="choosebox">
               <input
                 id="로맨틱한"
@@ -618,10 +618,10 @@ const EstimateForm = () => {
                 className="displaynone"
               />
               <label htmlFor="로맨틱한" className="label-design w-100 cursor">
-                로맨틱한
+                Romantic
                 {makeup.includes("로맨틱한") ? (
                   <span className="ranking">
-                    {makeup.indexOf("로맨틱한") + 1}순위
+                    #{makeup.indexOf("로맨틱한") + 1}
                   </span>
                 ) : (
                   ""
@@ -638,10 +638,10 @@ const EstimateForm = () => {
                 className="displaynone"
               />
               <label htmlFor="포인트" className="label-design w-100 cursor">
-                포인트
+                Point
                 {makeup.includes("포인트") ? (
                   <span className="ranking">
-                    {makeup.indexOf("포인트") + 1}순위
+                    #{makeup.indexOf("포인트") + 1}
                   </span>
                 ) : (
                   ""
@@ -658,10 +658,10 @@ const EstimateForm = () => {
                 className="displaynone"
               />
               <label htmlFor="내추럴" className="label-design w-100 cursor">
-                내추럴
+                Natural
                 {makeup.includes("내추럴") ? (
                   <span className="ranking">
-                    {makeup.indexOf("내추럴") + 1}순위
+                    #{makeup.indexOf("내추럴") + 1}
                   </span>
                 ) : (
                   ""
@@ -678,10 +678,10 @@ const EstimateForm = () => {
                 className="displaynone"
               />
               <label htmlFor="스모키" className="label-design w-100 cursor">
-                스모키
+                Smoky
                 {makeup.includes("스모키") ? (
                   <span className="ranking">
-                    {makeup.indexOf("스모키") + 1}순위
+                    #{makeup.indexOf("스모키") + 1}
                   </span>
                 ) : (
                   ""
@@ -698,10 +698,10 @@ const EstimateForm = () => {
                 className="displaynone"
               />
               <label htmlFor="큐티" className="label-design w-100 cursor">
-                큐티
+                Cute
                 {makeup.includes("큐티") ? (
                   <span className="ranking">
-                    {makeup.indexOf("큐티") + 1}순위
+                    #{makeup.indexOf("큐티") + 1}
                   </span>
                 ) : (
                   ""
@@ -718,10 +718,10 @@ const EstimateForm = () => {
                 className="displaynone"
               />
               <label htmlFor="러블리" className="label-design w-100 cursor">
-                러블리
+                Lovely
                 {makeup.includes("러블리") ? (
                   <span className="ranking">
-                    {makeup.indexOf("러블리") + 1}순위
+                    #{makeup.indexOf("러블리") + 1}
                   </span>
                 ) : (
                   ""
@@ -729,7 +729,7 @@ const EstimateForm = () => {
               </label>
             </div>
             <span>
-              메이크업 스타일이 궁금하다면?&nbsp;
+              Want to know about makeup styles?&nbsp;
               <span
                 type="button"
                 className="badge bg-primary"
@@ -741,7 +741,7 @@ const EstimateForm = () => {
             </span>
           </div>
           <div className="contentbox">
-            <h5>신혼여행</h5>
+            <h5>Honeymoon</h5>
             <div className="choosebox">
               <input
                 id="해외"
@@ -753,7 +753,7 @@ const EstimateForm = () => {
                 className="displaynone"
               />
               <label htmlFor="해외" className="label-design w-100 cursor">
-                해외
+                International
               </label>
             </div>
             <div className="choosebox">
@@ -767,7 +767,7 @@ const EstimateForm = () => {
                 className="displaynone"
               />
               <label htmlFor="국내" className="label-design w-100 cursor">
-                국내
+                Domestic
               </label>
             </div>
             <div className={`hideeee ${acco1}`}>
@@ -778,68 +778,68 @@ const EstimateForm = () => {
                 style={{ fontSize: 17 }}
               >
                 <option selected={acco1 === "view"} disabled>
-                  해외 여행지를 선택해주세요
+                  Select international destination
                 </option>
-                <optgroup label="아시아">
-                  <option value="해외-발리">발리</option>
-                  <option value="해외-코타키나발루">코타키나발루</option>
-                  <option value="해외-푸꾸옥제도">푸꾸옥제도</option>
-                  <option value="해외-하노이">하노이</option>
-                  <option value="해외-다낭">다낭</option>
-                  <option value="해외-호치민">호치민</option>
-                  <option value="해외-태국(방콕)">태국</option>
-                  <option value="해외-후쿠오카">후쿠오카</option>
-                  <option value="해외-오사카">오사카</option>
-                  <option value="해외-괌">괌</option>
+                <optgroup label="Asia">
+                  <option value="해외-발리">Bali</option>
+                  <option value="해외-코타키나발루">Kota Kinabalu</option>
+                  <option value="해외-푸꾸옥제도">Phu Quoc Islands</option>
+                  <option value="해외-하노이">Hanoi</option>
+                  <option value="해외-다낭">Da Nang</option>
+                  <option value="해외-호치민">Ho Chi Minh City</option>
+                  <option value="해외-태국(방콕)">Thailand (Bangkok)</option>
+                  <option value="해외-후쿠오카">Fukuoka</option>
+                  <option value="해외-오사카">Osaka</option>
+                  <option value="해외-괌">Guam</option>
                 </optgroup>
-                <optgroup label="북미">
-                  <option value="해외-하와이">하와이</option>
-                  <option value="해외-라스베이거스">라스베이거스</option>
-                  <option value="해외-로스앤젤레스">로스앤젤레스</option>
-                  <option value="해외-샌프란시스코">샌프란시스코</option>
-                  <option value="해외-뉴욕">뉴욕</option>
-                  <option value="해외-알래스카">알래스카</option>
-                  <option value="해외-캐나다">캐나다</option>
-                  <option value="해외-멕시코">멕시코</option>
+                <optgroup label="North America">
+                  <option value="해외-하와이">Hawaii</option>
+                  <option value="해외-라스베이거스">Las Vegas</option>
+                  <option value="해외-로스앤젤레스">Los Angeles</option>
+                  <option value="해외-샌프란시스코">San Francisco</option>
+                  <option value="해외-뉴욕">New York</option>
+                  <option value="해외-알래스카">Alaska</option>
+                  <option value="해외-캐나다">Canada</option>
+                  <option value="해외-멕시코">Mexico</option>
                 </optgroup>
-                <optgroup label="유럽">
-                  <option value="해외-파리">파리</option>
-                  <option value="해외-로마">로마</option>
-                  <option value="해외-베니스">베니스</option>
-                  <option value="해외-프라하">프라하</option>
-                  <option value="해외-마드리드">마드리드</option>
-                  <option value="해외-바르셀로나">바르셀로나</option>
-                  <option value="해외-프라하">프라하</option>
-                  <option value="해외-산토리니">산토리니</option>
-                  <option value="해외-런던">런던</option>
+                <optgroup label="Europe">
+                  <option value="해외-파리">Paris</option>
+                  <option value="해외-로마">Rome</option>
+                  <option value="해외-베니스">Venice</option>
+                  <option value="해외-프라하">Prague</option>
+                  <option value="해외-마드리드">Madrid</option>
+                  <option value="해외-바르셀로나">Barcelona</option>
+                  <option value="해외-프라하">Prague</option>
+                  <option value="해외-산토리니">Santorini</option>
+                  <option value="해외-런던">London</option>
                 </optgroup>
-                <optgroup label="중동">
-                  <option value="해외-두바이">두바이</option>
-                  <option value="해외-아부다비">아부다비</option>
+                <optgroup label="Middle East">
+                  <option value="해외-두바이">Dubai</option>
+                  <option value="해외-아부다비">Abu Dhabi</option>
                 </optgroup>
-                <optgroup label="오세아니아">
-                  <option value="해외-시드니">시드니</option>
-                  <option value="해외-골드코스트">골드코스트</option>
-                  <option value="해외-케언즈">케언즈</option>
-                  <option value="해외-뉴질랜드">뉴질랜드</option>
+                <optgroup label="Oceania">
+                  <option value="해외-시드니">Sydney</option>
+                  <option value="해외-골드코스트">Gold Coast</option>
+                  <option value="해외-케언즈">Cairns</option>
+                  <option value="해외-뉴질랜드">New Zealand</option>
                 </optgroup>
-                <optgroup label="북유럽">
-                  <option value="해외-스웨덴">스웨덴</option>
-                  <option value="해외-노르웨이">노르웨이</option>
-                  <option value="해외-핀란드">핀란드</option>
-                  <option value="해외-덴마크">덴마크</option>
+                <optgroup label="Northern Europe">
+                  <option value="해외-스웨덴">Sweden</option>
+                  <option value="해외-노르웨이">Norway</option>
+                  <option value="해외-핀란드">Finland</option>
+                  <option value="해외-덴마크">Denmark</option>
                 </optgroup>
-                <optgroup label="남미">
-                  <option value="해외-칠레">칠레</option>
-                  <option value="해외-아르헨티나">아르헨티나</option>
-                  <option value="해외-페루">페루</option>
+                <optgroup label="South America">
+                  <option value="해외-칠레">Chile</option>
+                  <option value="해외-아르헨티나">Argentina</option>
+                  <option value="해외-페루">Peru</option>
                 </optgroup>
-                <optgroup label="아프리카">
-                  <option value="해외-모로코">모로코</option>
-                  <option value="해외-남아공">남아공</option>
+                <optgroup label="Africa">
+                  <option value="해외-모로코">Morocco</option>
+                  <option value="해외-남아공">South Africa</option>
                 </optgroup>
-                <optgroup label="기타">
-                  <option value="해외-기타">기타</option>
+                <optgroup label="Other">
+                  <option value="해외-기타">Other</option>
                 </optgroup>
               </select>
             </div>
@@ -851,68 +851,68 @@ const EstimateForm = () => {
                 style={{ fontSize: 17 }}
               >
                 <option selected={acco2 === "view"} disabled>
-                  국내여행지를 선택해주세요
+                  Select domestic destination
                 </option>
-                <optgroup label="섬">
-                  <option value="국내-제주도">제주도</option>
-                  <option value="국내-울릉도">울릉도</option>
-                  <option value="국내-남해도">남해도</option>
-                  <option value="국내-강화도">강화도</option>
-                  <option value="국내-완도">완도</option>
-                  <option value="국내-거제도"></option>
+                <optgroup label="Islands">
+                  <option value="국내-제주도">Jeju Island</option>
+                  <option value="국내-울릉도">Ulleungdo</option>
+                  <option value="국내-남해도">Namhaedo</option>
+                  <option value="국내-강화도">Ganghwado</option>
+                  <option value="국내-완도">Wando</option>
+                  <option value="국내-거제도">Geojedo</option>
                 </optgroup>
-                <optgroup label="경기도">
-                  <option value="국내-가평">가평</option>
-                  <option value="국내-파주">파주</option>
-                  <option value="국내-양평">양평</option>
+                <optgroup label="Gyeonggi-do">
+                  <option value="국내-가평">Gapyeong</option>
+                  <option value="국내-파주">Paju</option>
+                  <option value="국내-양평">Yangpyeong</option>
                 </optgroup>
-                <optgroup label="경상남도">
-                  <option value="국내-남해">남해</option>
-                  <option value="국내-통영">통영</option>
-                  <option value="국내-부산">부산</option>
+                <optgroup label="South Gyeongsang">
+                  <option value="국내-남해">Namhae</option>
+                  <option value="국내-통영">Tongyeong</option>
+                  <option value="국내-부산">Busan</option>
                 </optgroup>
-                <optgroup label="경상북도">
-                  <option value="국내-안동">안동</option>
-                  <option value="국내-경주">경주</option>
-                  <option value="국내-포항">포항</option>
+                <optgroup label="North Gyeongsang">
+                  <option value="국내-안동">Andong</option>
+                  <option value="국내-경주">Gyeongju</option>
+                  <option value="국내-포항">Pohang</option>
                 </optgroup>
-                <optgroup label="전라남도">
-                  <option value="국내-목포">목포</option>
-                  <option value="국내-여수">여수</option>
-                  <option value="국내-순천">순천</option>
+                <optgroup label="South Jeolla">
+                  <option value="국내-목포">Mokpo</option>
+                  <option value="국내-여수">Yeosu</option>
+                  <option value="국내-순천">Suncheon</option>
                 </optgroup>
-                <optgroup label="전라북도">
-                  <option value="국내-전주">전주</option>
-                  <option value="국내-군산">군산</option>
-                  <option value="국내-순천">순천</option>
-                  <option value="국내-고창">고창</option>
+                <optgroup label="North Jeolla">
+                  <option value="국내-전주">Jeonju</option>
+                  <option value="국내-군산">Gunsan</option>
+                  <option value="국내-순천">Suncheon</option>
+                  <option value="국내-고창">Gochang</option>
                 </optgroup>
-                <optgroup label="충청남도">
-                  <option value="국내-보령">보령</option>
-                  <option value="국내-태안">태안</option>
-                  <option value="국내-아산">아산</option>
+                <optgroup label="South Chungcheong">
+                  <option value="국내-보령">Boryeong</option>
+                  <option value="국내-태안">Taean</option>
+                  <option value="국내-아산">Asan</option>
                 </optgroup>
-                <optgroup label="충청북도">
-                  <option value="국내-청주">청주</option>
-                  <option value="국내-단양">단양</option>
-                  <option value="국내-제천">제천</option>
+                <optgroup label="North Chungcheong">
+                  <option value="국내-청주">Cheongju</option>
+                  <option value="국내-단양">Danyang</option>
+                  <option value="국내-제천">Jecheon</option>
                 </optgroup>
-                <optgroup label="강원도">
-                  <option value="국내-강릉">강릉</option>
-                  <option value="국내-속초">속초</option>
-                  <option value="국내-양양">양양</option>
-                  <option value="국내-춘천">춘천</option>
-                  <option value="국내-홍천">홍천</option>
+                <optgroup label="Gangwon-do">
+                  <option value="국내-강릉">Gangneung</option>
+                  <option value="국내-속초">Sokcho</option>
+                  <option value="국내-양양">Yangyang</option>
+                  <option value="국내-춘천">Chuncheon</option>
+                  <option value="국내-홍천">Hongcheon</option>
                 </optgroup>
-                <optgroup label="기타">
-                  <option value="국내-기타">기타</option>
+                <optgroup label="Other">
+                  <option value="국내-기타">Other</option>
                 </optgroup>
               </select>
             </div>
           </div>
 
           <div className="contentbox">
-            <h5>이미지첨부</h5>
+            <h5>Attach Images</h5>
             <div className="choosebox" style={{ width: "70%" }}>
               <input
                 type="file"
@@ -923,7 +923,7 @@ const EstimateForm = () => {
                 className="displaynone"
               />
               <label htmlFor="uploadimage" className="cursor imageupload-btn">
-                이미지첨부하기
+                Attach Images
               </label>
               <div style={{ marginTop: 5 }}>
                 {images.map((image, index) => {
@@ -961,14 +961,14 @@ const EstimateForm = () => {
             </div>
           </div>
           <div className="contentbox" style={{ borderBottom: "none" }}>
-            <h5>추가 요청사항</h5>
+            <h5>Additional Requests</h5>
             <div className="choosebox w-100">
               <textarea
                 className="form-control"
                 rows="7"
                 value={requirement}
                 onChange={requirementChange}
-                placeholder="추가 요청사항을 입력해주세요"
+                placeholder="Enter any additional requests"
                 style={{ fontSize: 20 }}
               ></textarea>
             </div>
@@ -981,7 +981,7 @@ const EstimateForm = () => {
               className="btn-colour-1"
               style={{ marginRight: "15px" }}
             >
-              작성하기
+              Submit
             </button>
             <button
               onClick={() => {
@@ -989,7 +989,7 @@ const EstimateForm = () => {
               }}
               className="btn-colour-1"
             >
-              취소
+              Cancel
             </button>
           </div>
         </div>
@@ -1022,7 +1022,7 @@ const StudioModal = () => {
         <div className="modal-content">
           <div className="modal-header">
             <h1 className="modal-title fs-5" id="exampleModalLabel">
-              <span>스튜디오</span>
+              <span>Studio</span>
             </h1>
             <button
               type="button"
@@ -1036,37 +1036,37 @@ const StudioModal = () => {
               <AccordionComp
                 heading={1}
                 collapse="one"
-                topic="인물중심 스튜디오"
+                topic="Subject-Focused Studio"
                 image1="https://www.iwedding.co.kr/_next/image?url=https%3A%2F%2Fwww.iwedding.co.kr%2Fcenter%2Fwebsite%2Fbrandplus%2F1667180129.jpg&w=1920&q=75"
                 image2="https://www.iwedding.co.kr/center/iweddingb/product/800_11679_1665982500_05988600_3232256100.jpg"
                 image3="https://www.iwedding.co.kr/center/iweddingb/product/800_21706_1744682085_20124700_3232256100.jpg"
-                comment1="깔끔한 배경에서 인물중심의 촬영을 진행해요!"
-                comment2="심플하고 깨끗한 이미지의 결과물!"
-                comment3="오래두고 보아도 질리지 않는 장점이 있어요!"
+                comment1="Shoot in a clean background with the subject as the focus!"
+                comment2="Simple and clean image results!"
+                comment3="A timeless style you won't get tired of!"
                 _id="accordionExample1"
               />
               <AccordionComp
                 heading={2}
                 collapse="two"
-                topic="배경중심 스튜디오"
+                topic="Background-Focused Studio"
                 image1="https://www.iwedding.co.kr/_next/image?url=https%3A%2F%2Fwww.iwedding.co.kr%2Fcenter%2Fwebsite%2Fbrandplus%2F1663831599.jpg&w=1920&q=75"
                 image2="https://www.iwedding.co.kr/_next/image?url=https%3A%2F%2Fwww.iwedding.co.kr%2Fcenter%2Fwebsite%2Fbrandplus%2F1663808804.jpg&w=1920&q=75"
                 image3="https://www.iwedding.co.kr/center/iweddingb/product/800_13581_1665985281_96465800_3232256098.jpg"
-                comment1="촬영 자체의 특별한 경험을 선사해요!"
-                comment2="스튜디오 고유의 배경과 분위기를 담을 수 있답니다!"
-                comment3="화려한 배경 덕에 부담이 덜해요!"
+                comment1="A truly unique and special shooting experience!"
+                comment2="Captures the studio's unique backdrop and atmosphere!"
+                comment3="The stunning background takes the pressure off the subject!"
                 _id="accordionExample1"
               />
               <AccordionComp
                 heading={3}
                 collapse="three"
-                topic="균형적인 스튜디오"
+                topic="Balanced Studio"
                 image1="https://www.iwedding.co.kr/center/iweddingb/product/800_12512_1666920642_83238100_3232256098.jpg"
                 image2="https://www.iwedding.co.kr/center/iweddingb/product/800_21644_1743578819_86544800_3232256099.jpg"
                 image3="https://www.iwedding.co.kr/center/iweddingb/product/800_13300_1668503581_00621700_3232256098.jpg"
-                comment1="요즘 가장 인기있는 스타일이에요!"
-                comment2="배경과 인물 모두 예쁘게 담을 수 있답니다~"
-                comment3="자연스러운 행동위주의 연출도 가능해요!"
+                comment1="The most popular style right now!"
+                comment2="Beautifully captures both the background and the subject!"
+                comment3="Natural, movement-based direction is also possible!"
                 _id="accordionExample1"
               />
             </div>
@@ -1077,7 +1077,7 @@ const StudioModal = () => {
               className="btn btn-secondary"
               data-bs-dismiss="modal"
             >
-              닫기
+              Close
             </button>
           </div>
         </div>
@@ -1099,7 +1099,7 @@ const DressModal = () => {
         <div className="modal-content">
           <div className="modal-header">
             <h1 className="modal-title fs-5" id="exampleModalLabel">
-              <span>드레스</span>
+              <span>Dress</span>
             </h1>
             <button
               type="button"
@@ -1113,73 +1113,73 @@ const DressModal = () => {
               <AccordionComp
                 heading={4}
                 collapse="four"
-                topic="머메이드"
+                topic="Mermaid"
                 image1="https://www.iwedding.co.kr/center/iweddingb/product/500_14205_1740477105_22685400_3232256100.jpg"
                 image2="https://www.iwedding.co.kr/center/iweddingb/product/800_4250_1668583465_80283900_3232256100.jpg"
                 image3="https://www.iwedding.co.kr/center/iweddingb/product/800___1665453271_05641100_3232256098.jpg"
-                comment1="키가 크시고 마르신 분들에게 추천해요!"
-                comment2="허리와 힙을 강조해요!"
-                comment3="하지만 움직임에 제약이 많은 단점이 있습니다."
+                comment1="Recommended for tall and slender brides!"
+                comment2="Accentuates the waist and hips!"
+                comment3="Downside: movement can be quite restricted."
                 _id="accordionExample2"
               />
               <AccordionComp
                 heading={5}
                 collapse="five"
-                topic="A라인"
+                topic="A-Line"
                 image1="https://www.iwedding.co.kr/center/iweddingb/product/500_6164_1707382072_27779700_3232256100.jpg"
                 image2="https://www.iwedding.co.kr/center/iweddingb/product/800_4365_1674628854_18110500_3232256100.jpg"
                 image3="https://www.iwedding.co.kr/center/iweddingb/product/500_18789_1724896464_10868200_3232256100.jpg"
-                comment1="어떤 체형이든 잘 어울립니다!"
-                comment2="키가 커보이는 스타일이에요!"
-                comment3="하체가 통통하신 분들에게도 추천!"
+                comment1="Flattering on any body type!"
+                comment2="Creates a taller, more elongated silhouette!"
+                comment3="Great for brides with fuller hips too!"
                 _id="accordionExample2"
               />
               <AccordionComp
                 heading={6}
                 collapse="six"
-                topic="H라인"
+                topic="H-Line"
                 image1="https://www.iwedding.co.kr/center/iweddingb/product/800_4794_1679476555_79191600_3232256099.jpg"
                 image2="https://www.iwedding.co.kr/center/iweddingb/product/800___1665130500_49819100_3232256100.jpg"
                 image3="https://www.iwedding.co.kr/center/iweddingb/product/800___1665454832_07143300_3232256099.jpg"
-                comment1="섹시함과 성숙함을 함께 나타낼 수 있어요!"
-                comment2="날씬하신 분들께 추천합니다!"
-                comment3="슬림한 느낌을 줍니다"
+                comment1="Exudes both sexiness and sophistication!"
+                comment2="Recommended for slimmer brides!"
+                comment3="Creates a sleek, streamlined look."
                 _id="accordionExample2"
               />
               <AccordionComp
                 heading={7}
                 collapse="seven"
-                topic="벨라인"
+                topic="Ball Gown"
                 image1="https://www.iwedding.co.kr/center/iweddingb/product/800_5218_1675921472_92970900_3232256099.jpg"
                 image2="https://www.iwedding.co.kr/center/iweddingb/product/800_4796_1679476532_21876000_3232256099.jpg"
                 image3="https://www.iwedding.co.kr/center/iweddingb/product/500_co_sl_d203_12009_1641797900_48156600_3232256098.jpg"
-                comment1="허리부터 풍성하게 퍼지는 라인이 특징입니다"
-                comment2="통통한 하체를 커버하기에 좋습니다"
-                comment3="키가 작고 마른 신부님들에게도 추천해요!"
+                comment1="Features a full, sweeping skirt from the waist!"
+                comment2="Great for covering fuller hips!"
+                comment3="Also recommended for petite and slim brides!"
                 _id="accordionExample2"
               />
               <AccordionComp
                 heading={8}
                 collapse="eight"
-                topic="엠파이어"
+                topic="Empire"
                 image1="https://www.iwedding.co.kr/center/iweddingb/product/800_14083_1675239691_84022800_3232256098.jpg"
                 image2="https://m.ygdress.com/web/product/big/WDI123_1.jpg"
                 image3="https://www.iwedding.co.kr/center/iweddingb/product/800_co_sl_d276_6631_1582187346_70709200_3232256098.jpg"
-                comment1="날씬해보이는 드레스 스타일입니다!"
-                comment2="직사각형 체형분들에게 추천해요"
-                comment3="하체가 길어보인답니다~"
+                comment1="A style that creates a slimming effect!"
+                comment2="Recommended for rectangular body types!"
+                comment3="Makes the lower body appear longer!"
                 _id="accordionExample2"
               />
               <AccordionComp
                 heading={9}
                 collapse="nine"
-                topic="프린세스"
+                topic="Princess"
                 image1="https://s.alicdn.com/@sc04/kf/He4aa94853fc040afadede77579e839afM.jpg_720x720q50.jpg"
                 image2="https://tshop.r10s.jp/soerutistore/cabinet/a00009/hsppq260_3.jpg"
                 image3="https://ko.come4buy.com/cdn/shop/products/color-sexy-off-shoulder-champagne-221010004002p.jpg?v=1665407903"
-                comment1="화려한 장식을 더한 드레스입니다!"
-                comment2="여성적인 매력을 어필하기에 좋아요!"
-                comment3="허리선이 굵은 분들에게 추천해요!"
+                comment1="An ornate dress adorned with lavish embellishments!"
+                comment2="Perfect for showcasing feminine charm!"
+                comment3="Great for brides with a fuller waistline!"
                 _id="accordionExample2"
               />
             </div>
@@ -1190,7 +1190,7 @@ const DressModal = () => {
               className="btn btn-secondary"
               data-bs-dismiss="modal"
             >
-              닫기
+              Close
             </button>
           </div>
         </div>
@@ -1212,7 +1212,7 @@ const MakeupModal = () => {
         <div className="modal-content">
           <div className="modal-header">
             <h1 className="modal-title fs-5" id="exampleModalLabel">
-              <span>메이크업</span>
+              <span>Makeup</span>
             </h1>
             <button
               type="button"
@@ -1226,73 +1226,73 @@ const MakeupModal = () => {
               <AccordionComp
                 heading={10}
                 collapse="ten"
-                topic="로맨틱한"
+                topic="Romantic"
                 image1="https://www.iwedding.co.kr/center/iweddingb/product/500_18854_1713148057_93536100_3232256098.jpg"
                 image2="https://www.iwedding.co.kr/center/iweddingb/product/800_co_sl_m056_14449_1640850193_39487800_3232256099.jpg"
                 image3="https://www.iwedding.co.kr/center/iweddingb/product/800_co_sl_m205_13076_1624261891_10019500_3232256100.jpg"
-                comment1="촉촉하고 투명한 느낌을 줍니다!"
-                comment2="핑크색의 색조를 많이 사용해요!"
-                comment3="피부가 하얀분들에게 추천해요!"
+                comment1="Creates a dewy, translucent look!"
+                comment2="Uses lots of pink tones!"
+                comment3="Recommended for fair-skinned brides!"
                 _id="accordionExample3"
               />
               <AccordionComp
                 heading={11}
                 collapse="eleven"
-                topic="포인트"
+                topic="Point"
                 image1="https://www.iwedding.co.kr/center/iweddingb/product/800_17895_1680164863_59917800_3232256100.jpg"
                 image2="https://www.iwedding.co.kr/center/iweddingb/product/800_17622_1673943339_73525400_3232256100.jpg"
                 image3="https://www.iwedding.co.kr/center/iweddingb/product/800_co_sl_m051_15898_1654237244_14286700_3232256099.jpg"
-                comment1="내추럴 메이크업에서 포인트를 더한 메이크업입니다!"
-                comment2="수수한 느낌보다는 화려한 느낌을 살려줍니다"
-                comment3="스타일이 조금은 과해서 스튜디오 촬영 때 많이 이용되는 스타일입니다"
+                comment1="Natural makeup with a bold accent feature!"
+                comment2="Brings out a glamorous rather than plain look!"
+                comment3="A slightly dramatic style often used for studio shoots!"
                 _id="accordionExample3"
               />
               <AccordionComp
                 heading={12}
                 collapse="twelve"
-                topic="내추럴"
+                topic="Natural"
                 image1="https://www.iwedding.co.kr/center/iweddingb/product/800_co_sl_m114_1711_1647822940_71648700_3232256099.jpg"
                 image2="https://www.iwedding.co.kr/center/iweddingb/product/500_19784_1726797137_19254800_3232256099.jpg"
                 image3="https://www.iwedding.co.kr/center/iweddingb/product/500_21296_1737529431_13114900_3232256099.jpg"
-                comment1="가장 기본적인 스타일입니다!"
-                comment2="평소 메이크업을 잘 하지 않는 분들에게 추천드려요"
-                comment3="자연스럽고 깨끗해 보이는 점이 장점입니다."
+                comment1="The most classic and basic style!"
+                comment2="Recommended for those who rarely wear makeup!"
+                comment3="Looks naturally fresh and clean."
                 _id="accordionExample3"
               />
               <AccordionComp
                 heading={13}
                 collapse="thirteen"
-                topic="스모키"
+                topic="Smoky"
                 image1="https://www.iwedding.co.kr/center/iweddingb/product/800_co_sl_m122_1845_1628473766_68122500_3232256099.jpg"
                 image2="https://www.iwedding.co.kr/center/iweddingb/product/800_1844_1678866654_71494500_3232256100.jpg"
                 image3="https://mblogthumb-phinf.pstatic.net/20121226_198/subrpiad8_1356501790498I2fV2_JPEG/naver_com_20121226_150126.jpg?type=w420"
-                comment1="눈매를 강조하는 화장입니다!"
-                comment2="이목구비가 뚜렷하게 보이는 장점이 있어요!"
-                comment3="하지만 평소에 인상이 쎄시다면 추천드리지 않습니다"
+                comment1="A look that emphasizes the eyes!"
+                comment2="Makes facial features appear sharper and more defined!"
+                comment3="Not recommended if you naturally have a strong impression!"
                 _id="accordionExample3"
               />
               <AccordionComp
                 heading={14}
                 collapse="fourteen"
-                topic="큐티"
+                topic="Cute"
                 image1="https://www.iwedding.co.kr/center/iweddingb/product/800_co_sl_m205_13078_1624261921_87529100_3232256100.jpg"
                 image2="https://www.iwedding.co.kr/center/iweddingb/product/500_15867_1721615248_13048300_3232256099.jpg"
                 image3="https://www.iwedding.co.kr/center/iweddingb/product/500_19545_1706497746_44991600_3232256098.jpg"
-                comment1="상큼하고 귀여운 모습의 연출이 가능해요"
-                comment2="동그랗게 올린 머리가 특징입니다!"
-                comment3="얼굴이 크시거나, 이마가 넓으시다면 피하시는 게 좋습니다"
+                comment1="Creates a fresh and adorable look!"
+                comment2="Features hair styled up in a round bun!"
+                comment3="Not ideal for those with a larger face or wide forehead!"
                 _id="accordionExample3"
               />
               <AccordionComp
                 heading={15}
                 collapse="fifteen"
-                topic="러블리"
+                topic="Lovely"
                 image1="https://www.iwedding.co.kr/center/iweddingb/product/500_20668_1727155037_05244900_3232256099.jpg"
                 image2="https://www.iwedding.co.kr/_next/image?url=https%3A%2F%2Fwww.iwedding.co.kr%2Fcenter%2Fwebsite%2Fbrandplus%2F1663894788.jpg&w=1920&q=75"
                 image3="https://www.iwedding.co.kr/center/iweddingb/product/800_co_sl_m175_6093_1604471404_02327900_3232256100.jpg"
-                comment1="얼굴에 화사함을 주는 스타일입니다"
-                comment2="어려보이는 효과를 줍니다"
-                comment3="갓 짜낸 과즙을 담아낸 듯한 스타일이에요"
+                comment1="A style that adds radiance to your face!"
+                comment2="Creates a youthful, younger-looking effect!"
+                comment3="Like freshly squeezed citrus captured in makeup!"
                 _id="accordionExample3"
               />
             </div>
@@ -1303,7 +1303,7 @@ const MakeupModal = () => {
               className="btn btn-secondary"
               data-bs-dismiss="modal"
             >
-              닫기
+              Close
             </button>
           </div>
         </div>
@@ -1357,7 +1357,7 @@ const AccordionComp = ({
           </div>
 
           <div className="Accordion-explanation">
-            <h5>설명 및 특징</h5>
+            <h5>Description & Features</h5>
             <ul>
               <li>- {comment1}</li>
               <li>- {comment2}</li>
@@ -1461,8 +1461,8 @@ const RegionList = ({ name, weddingregionSelect, regionRef }) => {
         onChange={weddingregionSelect}
         ref={regionRef}
       >
-        <option value="">미선택</option>
-        <optgroup label="제주도 및 광역시">
+        <option value="">Not selected</option>
+        <optgroup label="Jeju & Metropolitan Cities">
           <option value="부산광역시">부산광역시</option>
           <option value="인천광역시">인천광역시</option>
           <option value="대구광역시">대구광역시</option>
@@ -1471,7 +1471,7 @@ const RegionList = ({ name, weddingregionSelect, regionRef }) => {
           <option value="울산광역시">울산광역시</option>
           <option value="제주도">제주도</option>
         </optgroup>
-        <optgroup label="서울">
+        <optgroup label="Seoul">
           <option value="서울강남구">강남구</option>
           <option value="서울강동구">강동구</option>
           <option value="서울강북구">강북구</option>
@@ -1498,7 +1498,7 @@ const RegionList = ({ name, weddingregionSelect, regionRef }) => {
           <option value="서울중구">중구</option>
           <option value="서울중랑구">중랑구</option>
         </optgroup>
-        <optgroup label="경기도">
+        <optgroup label="Gyeonggi-do">
           <option value="가평군">가평군</option>
           <option value="고양시">고양시</option>
           <option value="과천시">과천시</option>
@@ -1531,7 +1531,7 @@ const RegionList = ({ name, weddingregionSelect, regionRef }) => {
           <option value="하남시">하남시</option>
           <option value="화성시">화성시</option>
         </optgroup>
-        <optgroup label="강원도">
+        <optgroup label="Gangwon-do">
           <option value="강릉시">강릉시</option>
           <option value="고성군">고성군</option>
           <option value="동해시">동해시</option>
@@ -1551,7 +1551,7 @@ const RegionList = ({ name, weddingregionSelect, regionRef }) => {
           <option value="화천군">화천군</option>
           <option value="횡성군">횡성군</option>
         </optgroup>
-        <optgroup label="충청남도">
+        <optgroup label="South Chungcheong">
           <option value="계룡시">계룡시</option>
           <option value="공주시">공주시</option>
           <option value="금산군">금산군</option>
@@ -1568,7 +1568,7 @@ const RegionList = ({ name, weddingregionSelect, regionRef }) => {
           <option value="태안군">태안군</option>
           <option value="홍성군">홍성군</option>
         </optgroup>
-        <optgroup label="충청북도">
+        <optgroup label="North Chungcheong">
           <option value="괴산군">괴산군</option>
           <option value="단양군">단양군</option>
           <option value="보은군">보은군</option>
@@ -1582,7 +1582,7 @@ const RegionList = ({ name, weddingregionSelect, regionRef }) => {
           <option value="청주시">청주시</option>
           <option value="충주시">충주시</option>
         </optgroup>
-        <optgroup label="전라북도">
+        <optgroup label="North Jeolla">
           <option value="고창군">고창군</option>
           <option value="군산시">군산시</option>
           <option value="김제시">김제시</option>
@@ -1596,7 +1596,7 @@ const RegionList = ({ name, weddingregionSelect, regionRef }) => {
           <option value="전주시">전주시</option>
           <option value="정읍시">정읍시</option>
         </optgroup>
-        <optgroup label="전라남도">
+        <optgroup label="South Jeolla">
           <option value="강진군">강진군</option>
           <option value="고흥군">고흥군</option>
           <option value="곡성군">곡성군</option>
@@ -1620,7 +1620,7 @@ const RegionList = ({ name, weddingregionSelect, regionRef }) => {
           <option value="해남군">해남군</option>
           <option value="화순군">화순군</option>
         </optgroup>
-        <optgroup label="경상북도">
+        <optgroup label="North Gyeongsang">
           <option value="경산시">경산시</option>
           <option value="경주시">경주시</option>
           <option value="고령군">고령군</option>
@@ -1645,7 +1645,7 @@ const RegionList = ({ name, weddingregionSelect, regionRef }) => {
           <option value="칠곡군">칠곡군</option>
           <option value="포항시">포항시</option>
         </optgroup>
-        <optgroup label="경상북도">
+        <optgroup label="North Gyeongsang">
           <option value="경산시">경산시</option>
           <option value="경주시">경주시</option>
           <option value="고령군">고령군</option>
@@ -1670,7 +1670,7 @@ const RegionList = ({ name, weddingregionSelect, regionRef }) => {
           <option value="칠곡군">칠곡군</option>
           <option value="포항시">포항시</option>
         </optgroup>
-        <optgroup label="경상남도">
+        <optgroup label="South Gyeongsang">
           <option value="거제시">거제시</option>
           <option value="거창군">거창군</option>
           <option value="고성군">고성군</option>

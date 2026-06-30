@@ -12,7 +12,7 @@ import Sidesection from "../Components/Sidesection";
 function PasswordSearch() {
   const [inputId, setInputId] = useState("");
   const [hidden, setHidden1] = useState(true);
-  const [Role, setRole] = useState("회원");
+  const [Role, setRole] = useState("Member");
 
   const handleInputId = (e) => {
     setInputId(e.target.value);
@@ -23,7 +23,7 @@ function PasswordSearch() {
   };
 
   const onClicksend = () => {
-    if (Role === "회원") {
+    if (Role === "Member") {
       axios
         .post("/user/forgotPassword", {
           email: inputId,
@@ -34,7 +34,7 @@ function PasswordSearch() {
             //console.log("======================", "유저 임시비밀번호 전송성공");
           } else {
             setHidden1(true);
-            alert("입력하신 id 가 일치하지 않습니다.");
+            alert("The ID you entered does not match.");
             document.location.href = "/passwordSearch";
           }
         })
@@ -42,7 +42,7 @@ function PasswordSearch() {
           alert("Error Occured!");
           document.location.href = "/passwordSearch";
         });
-    } else if (Role === "플래너") {
+    } else if (Role === "Planner") {
       axios
         .post("/planner/forgotPassword", {
           email: inputId,
@@ -56,7 +56,7 @@ function PasswordSearch() {
             // );
           } else {
             setHidden1(true);
-            alert("입력하신 id 가 일치하지 않습니다.");
+            alert("The ID you entered does not match.");
             document.location.href = "/passwordSearch";
           }
         })
@@ -70,7 +70,7 @@ function PasswordSearch() {
   return (
     <div className="containerbox">
       <div className="mainlayout box1">
-        <NavigationBar title={"비밀번호 찾기"} />
+        <NavigationBar title={"Find Password"} />
         <br />
         <div
           className="container text-center"
@@ -81,7 +81,7 @@ function PasswordSearch() {
             <div className="col-8">
               <div className="infotext">
                 <i className="bi bi-dash-lg"></i>&nbsp;&nbsp;
-                <span style={{ fontSize: "1.5em" }}>임시 비밀번호 받기</span>
+                <span style={{ fontSize: "1.5em" }}>Get Temporary Password</span>
                 &nbsp;&nbsp;
                 <i className="bi bi-dash-lg"></i>
               </div>
@@ -93,9 +93,9 @@ function PasswordSearch() {
               <div className="col-2"></div>
               <div className="col-8">
                 <div className="infotext2" style={{ fontSize: "1.2em" }}>
-                  등록되어 있는 이메일을 입력하시고
+                  Please enter your registered email address
                   <br />
-                  임시 비밀번호 전송 버튼을 눌러주세요.
+                  and click the "Send Temporary Password" button.
                 </div>
               </div>
               <div className="col-2"></div>
@@ -108,7 +108,7 @@ function PasswordSearch() {
                 <input
                   type="text"
                   className="inputarea"
-                  placeholder="이메일"
+                  placeholder="Email"
                   value={inputId}
                   onChange={handleInputId}
                   style={{ fontSize: "1.3em" }}
@@ -119,10 +119,10 @@ function PasswordSearch() {
                   <input
                     class="form-check-input mt-0"
                     type="radio"
-                    value="회원"
+                    value="Member"
                     name="Role"
-                    htmlFor="회원"
-                    checked={Role === "회원"}
+                    htmlFor="Member"
+                    checked={Role === "Member"}
                     onChange={handleRole}
                     aria-label="Radio button for following text input"
                     style={{ cursor: "pointer" }}
@@ -133,7 +133,7 @@ function PasswordSearch() {
                   class="form-control"
                   id="custom"
                   aria-label="custom btn"
-                  value="회원"
+                  value="Member"
                   disabled
                   style={{ background: "white", fontSize: "1.3em" }}
                 />
@@ -141,10 +141,10 @@ function PasswordSearch() {
                   <input
                     class="form-check-input mt-0"
                     type="radio"
-                    value="플래너"
+                    value="Planner"
                     name="Role"
-                    checked={Role === "플래너"}
-                    htmlFor="플래너"
+                    checked={Role === "Planner"}
+                    htmlFor="Planner"
                     onChange={handleRole}
                     aria-label="Radio button for following text input"
                     style={{ cursor: "pointer" }}
@@ -155,7 +155,7 @@ function PasswordSearch() {
                   class="form-control"
                   id="planner"
                   aria-label="palnner btn"
-                  value="플래너"
+                  value="Planner"
                   disabled
                   style={{ background: "white", fontSize: "1.3em" }}
                 />
@@ -175,7 +175,7 @@ function PasswordSearch() {
                   onClick={onClicksend}
                   style={{ fontSize: "1.2em" }}
                 >
-                  임시 비밀번호 전송
+                  Send Temporary Password
                 </button>
               </div>
             </div>
@@ -195,7 +195,7 @@ function PasswordSearch() {
                 <div className="infotext4">
                   <i className="bi bi-dash-lg"></i>&nbsp;&nbsp;
                   <span style={{ fontSize: "1.3em" }}>
-                    임시 비밀번호 전송 완료
+                    Temporary Password Sent Successfully
                   </span>
                   &nbsp;&nbsp;
                   <i className="bi bi-dash-lg"></i>
@@ -203,9 +203,9 @@ function PasswordSearch() {
               </div>
               <div class="modal-body infotext4">
                 <div className="infotext4" style={{ fontSize: "1.2em" }}>
-                  임시 비밀번호가 이메일로 전송되었습니다.
+                  A temporary password has been sent to your email.
                   <br />
-                  확인 후 로그인과 비밀번호 변경을 해주세요!
+                  Please check your email, then log in and change your password!
                 </div>
               </div>
               <div class="modal-footer infotext4">
@@ -222,7 +222,7 @@ function PasswordSearch() {
                       fontSize: "1.2em",
                     }}
                   >
-                    임시 로그인 하기
+                    Temporary Login
                   </Link>
                 </button>
               </div>

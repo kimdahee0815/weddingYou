@@ -25,7 +25,7 @@ public class UserRegisterService {
 
     public UserRegister createUser(UserRegisterDTO userDTO) throws Exception {
     	if(plannerRepository.findByEmail(userDTO.getEmail())!=null) {
-   		 throw new Exception("플래너의 이메일과 중복됩니다.");
+   		 throw new Exception("This email is already in use by a planner account.");
     	}
         UserRegister user = new UserRegister();
         user.setName(userDTO.getName());

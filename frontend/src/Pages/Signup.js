@@ -14,7 +14,7 @@ function Signup() {
   return (
     <div className="bg containerbox">
       <div className="mainlayout box1">
-        <NavigationBar title={"회원가입"} />
+        <NavigationBar title={"Sign Up"} />
 
         <div className="Signup-logo" style={{ marginTop: "200px" }}>
         </div>
@@ -27,7 +27,7 @@ function Signup() {
             className="btn-colour-1"
             style={{ marginRight: "15px" }}
           >
-            일반회원
+            Regular Member
           </button>
           <button
             onClick={() => {
@@ -35,7 +35,7 @@ function Signup() {
             }}
             className="btn-colour-1"
           >
-            플래너 회원
+            Planner Member
           </button>
         </div>
         {/*빈공간 채우는 박스입니다. */}

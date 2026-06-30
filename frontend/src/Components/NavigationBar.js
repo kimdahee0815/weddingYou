@@ -80,7 +80,7 @@ function NavigationBar({ title, goUpdate, category1, isAdmin, engTitle }) {
                 marginRight: "-3px",
               }}
             >
-              글쓰기
+              Write Post
             </button>
           ) : null}
         </div>
@@ -141,7 +141,7 @@ function NavigationBar({ title, goUpdate, category1, isAdmin, engTitle }) {
                 marginRight: "-3px",
               }}
             >
-              글쓰기
+              Write Post
             </button>
           ) : null}
         </div>

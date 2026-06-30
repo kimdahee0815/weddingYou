@@ -72,7 +72,7 @@ public class MypageAdminController {
 	@PostMapping("/init")
     public ResponseEntity<String> initializeMypageAdminData() {
         mypageAdminService.initializeMypageAdmins();
-        return ResponseEntity.ok("MypageAdmin 초기화 완료");
+        return ResponseEntity.ok("MypageAdmin initialization complete");
     }
 
 	//전체 사용자 정보 리스트 조회

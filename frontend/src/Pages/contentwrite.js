@@ -17,7 +17,7 @@ function ContentWrite() {
 
   const navigate = useNavigate();
   const writeContent = () => {
-    if (page === "공지사항") {
+    if (page === "Notice") {
       const formData = new FormData();
       formData.append("file", img);
       formData.append("title", title);
@@ -27,7 +27,7 @@ function ContentWrite() {
         .then((res) => {
           //console.log(res);
           if (res.data != null) {
-            alert(`공지사항 글 작성이 완료되었습니다!`);
+            alert(`Notice post has been submitted!`);
             navigate(`/noticepage`);
           }
         })
@@ -45,7 +45,7 @@ function ContentWrite() {
         .then((res) => {
           //console.log(res);
           if (res.data != null) {
-            alert(`Q&A 글 작성이 완료되었습니다!`);
+            alert(`Q&A post has been submitted!`);
             navigate(`/qnapage`);
           }
         })
@@ -70,12 +70,12 @@ function ContentWrite() {
   return (
     <div className="containerbox">
       <div className="mainlayout box1">
-        <NavigationBar title={`${page} 글작성`} />
+        <NavigationBar title={`${page} Write Post`} />
         <div style={{ height: 74 }}></div>
         <div className="titleArea">
           <input
             type="text"
-            placeholder="제목"
+            placeholder="Title"
             className="form-control titleinput"
             value={title}
             onChange={(e) => {
@@ -89,7 +89,7 @@ function ContentWrite() {
           <textarea
             className="form-control contentinput"
             rows="15"
-            placeholder="내용을 입력해주세요"
+            placeholder="Enter content here"
             value={content}
             onChange={(e) => {
               setContent(e.target.value);
@@ -100,7 +100,7 @@ function ContentWrite() {
         <hr />
         <div className="fileatt">
           <p className="uploadphoto" style={{ fontSize: "1.5em" }}>
-            사진 첨부
+            Attach Photo
           </p>
           <input
             type="file"
@@ -114,7 +114,7 @@ function ContentWrite() {
             className="cursor imageBtn"
             style={{ fontSize: "1.5em" }}
           >
-            사진선택
+            Select Photo
           </label>
           <img
             src={previewUrl}
@@ -132,7 +132,7 @@ function ContentWrite() {
         <br />
         <div className="writeBtnArea">
           <button className="writeBtn" onClick={writeContent}>
-            작성하기
+            Submit
           </button>
         </div>
         <div style={{ height: 200 }}></div>

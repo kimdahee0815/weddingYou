@@ -104,14 +104,14 @@ function Noticedetail() {
       return (
         <div style={{ display: "inline-block" }}>
           <button className="upAndDelBtn" onClick={noticeupdateform}>
-            수정
+            Edit
           </button>
           <button
             className="upAndDelBtn"
             data-bs-toggle="modal"
             data-bs-target="#noticeDelete"
           >
-            삭제
+            Delete
           </button>
         </div>
       );
@@ -124,7 +124,7 @@ function Noticedetail() {
     return (
       <div className="containerbox">
         <div className="mainlayout box1">
-          <NavigationBar title={"공지사항"} />
+          <NavigationBar title={"Notice"} />
           <div style={{ height: 64 }}></div>
           <div className="titleArea">
             <p
@@ -137,7 +137,7 @@ function Noticedetail() {
               <p className="dateTxt" style={{ marginLeft: "10px" }}>
                 {date}
               </p>
-              <p className="viewCountTxt">조회수 : {view}</p>
+              <p className="viewCountTxt">Views: {view}</p>
               <Buttons checkadmin={checkadminsession} />
             </div>
           </div>
@@ -163,7 +163,7 @@ function Noticedetail() {
                   marginBottom: "-30px",
                 }}
               >
-                <p style={{ fontSize: "1.5em" }}>사진 첨부</p>
+                <p style={{ fontSize: "1.5em" }}>Attached Photo</p>
                 <img
                   src={previewUrl}
                   alt=""
@@ -190,7 +190,7 @@ function Noticedetail() {
               <div class="modal-content">
                 <div class="modal-header">
                   <h1 class="modal-title fs-5" id="exampleModalLabel">
-                    공지사항 삭제
+                    Delete Notice
                   </h1>
                   <button
                     type="button"
@@ -200,7 +200,7 @@ function Noticedetail() {
                   ></button>
                 </div>
                 <div class="modal-body" style={{ fontSize: 26 }}>
-                  정말로 삭제하시겠습니까?
+                  Are you sure you want to delete this?
                 </div>
                 <div class="modal-footer">
                   <button
@@ -209,14 +209,14 @@ function Noticedetail() {
                     onClick={handleDelete}
                     data-bs-dismiss="modal"
                   >
-                    삭제
+                    Delete
                   </button>
                   <button
                     type="button"
                     class="btn btn-secondary"
                     data-bs-dismiss="modal"
                   >
-                    취소
+                    Cancel
                   </button>
                 </div>
               </div>
@@ -234,7 +234,7 @@ function Noticedetail() {
     return (
       <div className="containerbox">
         <div className="mainlayout box1">
-          <NavigationBar title={"공지사항 글수정"} />
+          <NavigationBar title={"Edit Notice"} />
           <div style={{ height: 74 }}></div>
           <div className="titleArea">
             <input
@@ -271,7 +271,7 @@ function Noticedetail() {
           <hr />
           <div className="fileatt">
             <p className="uploadphoto" style={{ fontSize: "1.5em" }}>
-              사진 첨부
+              Attach Photo
             </p>
             <input
               type="file"
@@ -285,7 +285,7 @@ function Noticedetail() {
               style={{ fontSize: "1.5em" }}
               className="cursor imageBtn"
             >
-              사진선택
+              Select Photo
             </label>
             {previewUrl !== "" ? (
               <img
@@ -305,7 +305,7 @@ function Noticedetail() {
           <br />
           <div className="writeBtnArea">
             <button className="writeBtn" onClick={updatenotice}>
-              수정하기
+              Save Changes
             </button>
           </div>
           <div style={{ height: 200 }}></div>

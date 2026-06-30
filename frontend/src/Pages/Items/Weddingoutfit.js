@@ -10,17 +10,17 @@ import Sidesection from "../../Components/Sidesection";
 const Weddingoutfit = () => {
   const { category1 } = useParams();
   const [currentItem, setCurrentItem] = useState();
-  const title = "의상";
+  const title = "Outfit";
   const engTitle = "weddingoutfit";
   const category2 = [
-    "머메이드",
-    "A라인",
-    "H라인",
-    "벨라인",
-    "엠파이어",
-    "프린세스",
-    "남성예복",
-    "한복",
+    "Mermaid",
+    "A-line",
+    "H-line",
+    "Ball Gown",
+    "Empire",
+    "Princess",
+    "Men's Suit",
+    "Hanbok",
   ];
 
   const [isAdmin, setIsAdmin] = useState(true);
@@ -158,7 +158,7 @@ const Weddingoutfit = () => {
               height: "250px",
             }}
             data-bs-item={JSON.stringify(item)}
-            data-bs-category="의상"
+            data-bs-category="Outfit"
             />
           ))}
         </div>
@@ -228,7 +228,7 @@ const Weddingoutfit = () => {
                       padding: "10px",
                     }}
                   >
-                    상세정보
+                    Details
                   </div>
                   <p
                     style={{
@@ -248,14 +248,14 @@ const Weddingoutfit = () => {
                       onClick={handleEditClick}
                       data-bs-dismiss="modal"
                     >
-                      수정
+                      Edit
                     </button>
                     <button
                       className="delete-button"
                       data-bs-toggle="modal"
                       data-bs-target="#deleteItemModal"
                     >
-                      삭제
+                      Delete
                     </button>
                   </div>
                 )}
@@ -266,7 +266,7 @@ const Weddingoutfit = () => {
                     data-bs-dismiss="modal"
                     onClick={gotoDetailInfo}
                   >
-                    상세정보 페이지 이동
+                    View Details Page
                   </button>
                 )}
                 <button
@@ -274,7 +274,7 @@ const Weddingoutfit = () => {
                   class="btn btn-primary"
                   data-bs-dismiss="modal"
                 >
-                  닫기
+                  Close
                 </button>
               </div>
             </div>
@@ -297,11 +297,11 @@ const Weddingoutfit = () => {
                   id="deleteItemModal"
                   style={{ fontSize: "1.4em" }}
                 >
-                  - 아이템 삭제 -
+                  - Delete Item -
                 </h1>
               </div>
               <div class="modal-body text-center" style={{ fontSize: "1.4em" }}>
-                정말 삭제하시겠습니까?
+                Are you sure you want to delete this?
               </div>
               <div class="modal-footer justify-content-center">
                 <button
@@ -309,10 +309,10 @@ const Weddingoutfit = () => {
                   onClick={handleDeleteClick}
                   data-bs-dismiss="modal"
                 >
-                  예
+                  Yes
                 </button>
                 <button className="delete-button" data-bs-dismiss="modal">
-                  아니오
+                  No
                 </button>
               </div>
             </div>

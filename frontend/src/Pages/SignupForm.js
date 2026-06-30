@@ -253,7 +253,7 @@ function SignupForm() {
           phoneNum: phone,
           gender: gender,
           career: career,
-          introduction: "아직 소개글이 없습니다!",
+          introduction: "No introduction yet!",
         })
         .then((res) => {
         //  console.log(res);
@@ -279,59 +279,59 @@ function SignupForm() {
       <div className="bg containerbox">
         <div className="mainlayout box1">
           {category === "user" ? (
-            <NavigationBar title={"일반회원"} />
+            <NavigationBar title={"Regular Member"} />
           ) : (
-            <NavigationBar title={"플래너회원"} />
+            <NavigationBar title={"Planner Member"} />
           )}
 
           <div className="Signup-guidebar">
             <div className="guideline"></div>
-            <span style={{ fontSize: "1.3em" }}>회원가입</span>
+            <span style={{ fontSize: "1.3em" }}>Sign Up</span>
             <div className="guideline"></div>
           </div>
 
           <div className="Signup-inputwrap">
             <InputComp
-              content="이름"
+              content="Name"
               EventHandler={EventHandlerName}
               style={namestyle}
-              message="올바른 이름을 작성해주세요"
+              message="Please enter a valid name."
               length={5}
               type="text"
             />
             <InputComp
-              content="이메일"
+              content="Email"
               EventHandler={EventHandleremail}
               style={emailstyle}
               message={
                 duplicatecheck === false
-                  ? "중복된 이메일입니다."
-                  : "올바른 이메일 형식으로 작성해주세요"
+                  ? "This email is already in use."
+                  : "Please enter a valid email format."
               }
               length={100}
               type="text"
             />
             <InputComp
-              content="비밀번호"
+              content="Password"
               EventHandler={EventHandlerPassword}
               style={passwordstyle}
-              message="최소8자 이상, 대문자, 소문자, 숫자, 특수문자를 포함"
+              message="At least 8 characters, including uppercase, lowercase, number, and special character."
               length={20}
               type="password"
             />
             <InputComp
-              content="비밀번호 확인"
+              content="Confirm Password"
               EventHandler={EventHandlerPassword2}
               style={passwordstyle2}
-              message="비밀번호 불일치"
+              message="Passwords do not match."
               length={20}
               type="password"
             />
             <InputComp
-              content="핸드폰"
+              content="Phone Number"
               EventHandler={EventHandlerPhone}
               style={phonestyle}
-              message="올바른 핸드폰 번호가 아닙니다."
+              message="Invalid phone number."
               length={13}
               type="text"
               value={phone}
@@ -342,7 +342,7 @@ function SignupForm() {
                 className="form-label col col-md-2 mt-2"
                 style={{ flex: "1 0 0%", fontSize: "1.2em" }}
               >
-                성별
+                Gender
               </label>
               <div class="input-group" id="gender">
                 <div class="input-group-text">
@@ -363,7 +363,7 @@ function SignupForm() {
                   class="form-control"
                   id="male"
                   aria-label="male btn"
-                  value="남자"
+                  value="Male"
                   disabled
                   style={{ background: "white", fontSize: "1.2em" }}
                 />
@@ -385,7 +385,7 @@ function SignupForm() {
                   class="form-control"
                   id="female"
                   aria-label="female btn"
-                  value="여자"
+                  value="Female"
                   disabled
                   style={{ background: "white", fontSize: "1.2em" }}
                 />
@@ -393,14 +393,14 @@ function SignupForm() {
             </div>
             {category === "planner" && (
               <InputComp
-                content="경력 (단위: 년 , 최대 30)"
+                content="Career (unit: years, max 30)"
                 type="number"
                 value={career}
                 EventHandler={EventHandlerCareer}
                 message={
                   career > 30
-                    ? "경력은 30년까지 입력 가능합니다."
-                    : "올바른 숫자를 입력해주세요"
+                    ? "Career can be entered up to 30 years."
+                    : "Please enter a valid number."
                 }
                 style={careerstyle}
                 length={2}
@@ -415,48 +415,48 @@ function SignupForm() {
             <CheckboxComp
               Handler={CheckHandlerAll}
               checked={check.ageCheck && check.membershipCheck}
-              message="모두확인, 동의합니다."
+              message="I have checked and agree to all."
             />
 
             <CheckboxComp
               Handler={CheckHandler}
               checked={check.ageCheck}
-              message="만14세 이상입니다. (필수)"
+              message="I am 14 years of age or older. (Required)"
               name="ageCheck"
             />
 
             <CheckboxComp
               Handler={CheckHandler}
               checked={check.membershipCheck}
-              message="회원약관 (필수)"
+              message="Terms of Membership (Required)"
               name="membershipCheck"
             />
 
             <div className="Signup-contentbox">
               <div className="contentbar">
-                <span style={{ fontSize: "1.2em" }}>개인정보수집</span>
+                <span style={{ fontSize: "1.2em" }}>Personal Information Collection</span>
               </div>
               <div className="left">
-                <span style={{ fontSize: "1em" }}>목적</span>
+                <span style={{ fontSize: "1em" }}>Purpose</span>
               </div>
               <div className="right">
                 <span style={{ fontSize: "1em" }}>
-                  개인 식별,서비스 제공을 위한 연락처 수집
+                  Collection of contact information for identification and service provision
                 </span>
               </div>
               <div className="left">
-                <span style={{ fontSize: "1em" }}>항목</span>
+                <span style={{ fontSize: "1em" }}>Items</span>
               </div>
               <div className="right">
                 <span style={{ fontSize: "1em" }}>
-                  개인정보 및 이용상품 정보 등
+                  Personal information and purchased product details, etc.
                 </span>
               </div>
               <div className="left">
-                <span style={{ fontSize: "1em" }}>기간</span>
+                <span style={{ fontSize: "1em" }}>Period</span>
               </div>
               <div className="right">
-                <span style={{ fontSize: "1em" }}>회원 탈퇴 시 즉시 파기</span>
+                <span style={{ fontSize: "1em" }}>Immediately destroyed upon membership withdrawal</span>
               </div>
             </div>
             <div style={{ clear: "both" }}></div>
@@ -483,7 +483,7 @@ function SignupForm() {
               }}
               id="signupbtn"
             >
-              가입하기
+              Register
             </button>
           </div>
           <div style={{ height: 94.19 }}></div>

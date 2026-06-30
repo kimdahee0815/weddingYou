@@ -12,7 +12,7 @@ import Sidesection from "../Components/Sidesection";
 function TemporaryPasswordLogin() {
   const [inputId, setInputId] = useState("");
   const [inputPw, setInputPw] = useState("");
-  const [Role, setRole] = useState("회원");
+  const [Role, setRole] = useState("Member");
 
   const handleKeyPress = (event) => {
     if (event.key === "Enter") {
@@ -36,7 +36,7 @@ function TemporaryPasswordLogin() {
   const navigate = useNavigate();
 
   const onClickLogin = () => {
-    if (Role === "회원") {
+    if (Role === "Member") {
       axios
         .post("/user/login", {
           email: inputId,
@@ -45,9 +45,9 @@ function TemporaryPasswordLogin() {
         .then((res) => {
          // console.log("res.data.email :: ", res.data.email);
           if (inputId === null || inputPw === null) {
-            alert("회원정보를 입력해주세요");
+            alert("Please enter your account information.");
           } else if (res.data.email === undefined || res.data.email === null) {
-            alert("입력하신 id나 password가 일치하지 않습니다.");
+            alert("The ID or password you entered does not match.");
           } else {
             // id, pw 모두 일치 userId = userId1, msg = undefined
             // console.log("======================", "로그인 성공");
@@ -62,7 +62,7 @@ function TemporaryPasswordLogin() {
           }
         })
         .catch();
-    } else if (Role === "플래너") {
+    } else if (Role === "Planner") {
       axios
         .post("/planner/login", {
           email: inputId,
@@ -71,9 +71,9 @@ function TemporaryPasswordLogin() {
         .then((res) => {
          // console.log("res.data.email :: ", res.data.email);
           if (inputId === null || inputPw === null) {
-            alert("회원정보를 입력해주세요");
+            alert("Please enter your account information.");
           } else if (res.data.email === undefined || res.data.email === null) {
-            alert("입력하신 id나 password가 일치하지 않습니다.");
+            alert("The ID or password you entered does not match.");
           } else {
             // id, pw 모두 일치 userId = userId1, msg = undefined
           //  console.log("======================", "로그인 성공");
@@ -94,12 +94,12 @@ function TemporaryPasswordLogin() {
   return (
     <div className="containerbox">
       <div className="mainlayout box1">
-        <NavigationBar title={"임시 로그인"} />
+        <NavigationBar title={"Temporary Login"} />
         <div className="container text-center" style={{ marginTop: "100px" }}>
           <div className="row">
             <div className="col"></div>
             <div className="col-6">
-              <img className="logo" src={imgLogo} alt="로고" />
+              <img className="logo" src={imgLogo} alt="logo" />
             </div>
             <div className="col"></div>
           </div>
@@ -115,7 +115,7 @@ function TemporaryPasswordLogin() {
                 <input
                   type="text"
                   className="inputarea"
-                  placeholder="아이디(이메일)"
+                  placeholder="ID (Email)"
                   maxLength="100"
                   value={inputId}
                   onChange={handleInputId}
@@ -124,7 +124,7 @@ function TemporaryPasswordLogin() {
                 <input
                   type="password"
                   className="inputarea"
-                  placeholder="임시 비밀번호"
+                  placeholder="Temporary Password"
                   value={inputPw}
                   onChange={handleInputPw}
                   style={{ fontSize: "1.2em" }}
@@ -135,10 +135,10 @@ function TemporaryPasswordLogin() {
                     <input
                       class="form-check-input mt-0"
                       type="radio"
-                      value="회원"
+                      value="Member"
                       name="Role"
-                      htmlFor="회원"
-                      checked={Role === "회원"}
+                      htmlFor="Member"
+                      checked={Role === "Member"}
                       onChange={handleRole}
                       aria-label="Radio button for following text input"
                       style={{ cursor: "pointer" }}
@@ -149,7 +149,7 @@ function TemporaryPasswordLogin() {
                     class="form-control"
                     id="custom"
                     aria-label="custom btn"
-                    value="회원"
+                    value="Member"
                     disabled
                     style={{ background: "white", fontSize: "1.2em" }}
                   />
@@ -157,10 +157,10 @@ function TemporaryPasswordLogin() {
                     <input
                       class="form-check-input mt-0"
                       type="radio"
-                      value="플래너"
+                      value="Planner"
                       name="Role"
-                      checked={Role === "플래너"}
-                      htmlFor="플래너"
+                      checked={Role === "Planner"}
+                      htmlFor="Planner"
                       onChange={handleRole}
                       aria-label="Radio button for following text input"
                       style={{ cursor: "pointer" }}
@@ -171,7 +171,7 @@ function TemporaryPasswordLogin() {
                     class="form-control"
                     id="planner"
                     aria-label="palnner btn"
-                    value="플래너"
+                    value="Planner"
                     disabled
                     style={{ background: "white", fontSize: "1.2em" }}
                   />
@@ -182,7 +182,7 @@ function TemporaryPasswordLogin() {
           </div>
           <br />
           <button type="button" className="btn-colour-1" onClick={onClickLogin}>
-            로그인
+            Login
           </button>
           <br />
           <br />

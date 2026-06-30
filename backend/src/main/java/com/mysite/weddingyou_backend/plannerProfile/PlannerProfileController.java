@@ -216,7 +216,7 @@ public class PlannerProfileController {
   			}
   			 
   			if(userList.size()!=0  && userList.containsAll(obj)){
-  				throw new Exception("중복됩니다!");
+  				throw new Exception("Duplicate entry!");
   			}else{
 					Estimate data = new Estimate();
   				data.setUserMatching(usermatching);

@@ -11,9 +11,9 @@ const Bouquet = () => {
   const { category1 } = useParams();
   const [currentItem, setCurrentItem] = useState();
 
-  const title = "부케";
+  const title = "Bouquet";
   const engTitle = "bouquet";
-  const category2 = ["라운드", "드롭", "케스케이드", "핸드타이드"];
+  const category2 = ["Round", "Drop", "Cascade", "Hand-tied"];
   const [isAdmin, setIsAdmin] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState(category2[0]);
   const [editMode, setEditMode] = useState(false);
@@ -144,7 +144,7 @@ const Bouquet = () => {
                 height: "250px",
               }}
               data-bs-item={JSON.stringify(item)}
-              data-bs-category="부케"           
+              data-bs-category="Bouquet"
               />
             ))}
         </div>
@@ -214,7 +214,7 @@ const Bouquet = () => {
                       padding: "10px",
                     }}
                   >
-                    상세정보
+                    Details
                   </div>
                   <p
                     style={{
@@ -234,14 +234,14 @@ const Bouquet = () => {
                       onClick={handleEditClick}
                       data-bs-dismiss="modal"
                     >
-                      수정
+                      Edit
                     </button>
                     <button
                       className="delete-button"
                       data-bs-toggle="modal"
                       data-bs-target="#deleteItemModal"
                     >
-                      삭제
+                      Delete
                     </button>
                   </div>
                 )}
@@ -252,7 +252,7 @@ const Bouquet = () => {
                     data-bs-dismiss="modal"
                     onClick={gotoDetailInfo}
                   >
-                    상세정보 페이지 이동
+                    View Details Page
                   </button>
                 )}
 
@@ -261,7 +261,7 @@ const Bouquet = () => {
                   class="btn btn-primary"
                   data-bs-dismiss="modal"
                 >
-                  닫기
+                  Close
                 </button>
               </div>
             </div>
@@ -284,11 +284,11 @@ const Bouquet = () => {
                   id="deleteItemModal"
                   style={{ fontSize: "1.4em" }}
                 >
-                  - 아이템 삭제 -
+                  - Delete Item -
                 </h1>
               </div>
               <div class="modal-body text-center" style={{ fontSize: "1.4em" }}>
-                정말 삭제하시겠습니까?
+                Are you sure you want to delete this?
               </div>
               <div class="modal-footer justify-content-center">
                 <button
@@ -296,10 +296,10 @@ const Bouquet = () => {
                   onClick={handleDeleteClick}
                   data-bs-dismiss="modal"
                 >
-                  예
+                  Yes
                 </button>
                 <button className="delete-button" data-bs-dismiss="modal">
-                  아니오
+                  No
                 </button>
               </div>
             </div>

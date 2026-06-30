@@ -10,21 +10,21 @@ import Loadingimg3 from "../Assets/loading img3.jpg";
 import Sidesection from "../Components/Sidesection";
 
 const Category1 = [
-  { label: "웨딩홀", value: "weddinghall" },
-  { label: "의상", value: "weddingoutfit" },
-  { label: "스튜디오", value: "studio" },
-  { label: "메이크업", value: "makeup" },
-  { label: "신혼여행", value: "honeymoon" },
-  { label: "부케", value: "bouquet" },
+  { label: "Wedding Hall", value: "weddinghall" },
+  { label: "Outfit", value: "weddingoutfit" },
+  { label: "Studio", value: "studio" },
+  { label: "Makeup", value: "makeup" },
+  { label: "Honeymoon", value: "honeymoon" },
+  { label: "Bouquet", value: "bouquet" },
 ];
 
 const Service = [
-  { label: "고객센터", value: "customercenter" },
-  { label: "이용후기", value: "review" },
+  { label: "Customer Center", value: "customercenter" },
+  { label: "Reviews", value: "review" },
 ];
 
 const MenuList = () => {
-  const title = "메뉴";
+  const title = "Menu";
   const [num, setNum] = useState(0);
 
   const images = [Loadingimg1, Loadingimg2, Loadingimg3];

@@ -7,29 +7,29 @@ import "../../Css/WritePost.css";
 import selectImg from "../../Assets/selectImg.webp";
 import Sidesection from "../../Components/Sidesection";
 const categoryOptions = {
-  weddinghall: ["일반", "호텔", "채플", "스몰", "야외", "전통혼례"],
+  weddinghall: ["Standard", "Hotel", "Chapel", "Small", "Outdoor", "Traditional"],
   weddingoutfit: [
-    "머메이드",
-    "A라인",
-    "H라인",
-    "벨라인",
-    "엠파이어",
-    "프린세스",
-    "남성예복",
-    "한복",
+    "Mermaid",
+    "A-line",
+    "H-line",
+    "Ball Gown",
+    "Empire",
+    "Princess",
+    "Men's Suit",
+    "Hanbok",
   ],
-  studio: ["인물중심", "배경중심", "균형적인"],
-  makeup: ["헤어", "로맨틱한", "포인트", "네추럴", "스모키", "큐티", "러블리"],
-  honeymoon: ["해외", "국내"],
-  bouquet: ["라운드", "드롭", "케스케이드", "핸드타이드"],
+  studio: ["Subject-focused", "Background-focused", "Balanced"],
+  makeup: ["Hair", "Romantic", "Point", "Natural", "Smoky", "Cute", "Lovely"],
+  honeymoon: ["International", "Domestic"],
+  bouquet: ["Round", "Drop", "Cascade", "Hand-tied"],
 };
 const selectedCategory = {
-  weddinghall: "웨딩홀",
-  weddingoutfit: "의상",
-  studio: "스튜디오",
-  makeup: "메이크업",
-  honeymoon: "신혼여행",
-  bouquet: "부케",
+  weddinghall: "Wedding Hall",
+  weddingoutfit: "Outfit",
+  studio: "Studio",
+  makeup: "Makeup",
+  honeymoon: "Honeymoon",
+  bouquet: "Bouquet",
 };
 
 const WritePost = () => {
@@ -73,14 +73,14 @@ const WritePost = () => {
           .catch((e) => {
             console.log("실패:", e);
             if (e.response.data.message === "파일이 중복됩니다!") {
-              alert("첨부파일이 중복됩니다!");
+              alert("This file is a duplicate!");
             }
           });
       } else {
-        alert("이미지를 선택해주세요!");
+        alert("Please select an image!");
       }
     } else {
-      alert("제목과 내용을 입력하세요!");
+      alert("Please enter a title and content!");
     }
   };
   const imgFile = useRef();
@@ -113,7 +113,7 @@ const WritePost = () => {
   return (
     <div className="containerbox">
       <div className="mainlayout box1">
-        <NavigationBar title="글 작성" />
+        <NavigationBar title="Write Post" />
         <div className="category-container" style={{ marginTop: "100px" }}>
           <div className="category-buttons">
             {categoryOptions[category1].map((option, index) => (
@@ -136,19 +136,19 @@ const WritePost = () => {
           <input
             className="title-input"
             type="text"
-            placeholder="제목"
+            placeholder="Title"
             value={itemName}
             onChange={(event) => setItemName(event.target.value)}
           />
           <textarea
             className="content-textarea"
-            placeholder="내용"
+            placeholder="Content"
             value={content}
             onChange={(event) => setContent(event.target.value)}
           />
           <textarea
             className="content-textarea"
-            placeholder="상세내용"
+            placeholder="Detailed Content"
             value={imgDetailContent}
             onChange={(event) => setImgDetailContent(event.target.value)}
           />
@@ -179,11 +179,11 @@ const WritePost = () => {
             }}
             style={{ fontSize: "1.3em" }}
           >
-            게시하기
+            Post
           </button>
 
           <button className="cancel-button" onClick={handleCancel}>
-            취소
+            Cancel
           </button>
         </div>
         <Footer />

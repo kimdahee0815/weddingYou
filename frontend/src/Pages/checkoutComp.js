@@ -35,14 +35,14 @@ const CheckoutComp = () => {
       return (
         <div>
           <p className="checkoutmsg">
-            계약금 결제가 완료되었습니다!
-            <br /> 빠른시일 내에 플래너가 연락드릴 예정입니다!
+            Your deposit payment has been completed!
+            <br /> Your planner will contact you shortly!
           </p>
           <button
             className="checkoutBtn1"
             onClick={() => navigate("/matching")}
           >
-            견적 확정하러 가기
+            Go to Confirm Estimate
           </button>
         </div>
       );
@@ -50,7 +50,7 @@ const CheckoutComp = () => {
       return (
         <div>
           <p className="checkoutmsg">
-            매칭비용 결제가 완료되었습니다!
+            Your matching fee payment has been completed!
             <br />
             🎉 Wish You A Perfect Wedding 🎉
           </p>
@@ -68,7 +68,7 @@ const CheckoutComp = () => {
               })
             }
           >
-            이용후기 작성하기
+            Write a Review
           </button>
         </div>
       );
@@ -81,7 +81,7 @@ const CheckoutComp = () => {
         <div className="checkoutbox">
           <div>
             <p className="titlemsg" style={{ fontSize: "1.8em" }}>
-              결제 완료
+              Payment Complete
             </p>
             <Checkout checkout={checkoutsession} />
           </div>

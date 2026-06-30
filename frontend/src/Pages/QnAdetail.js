@@ -129,7 +129,7 @@ function QnAdetail() {
       .delete(`/qna/delete/${qnaId}`)
       .then((res) => {
         //console.log(res);
-        alert(`Q&A 글이 삭제되었습니다!`);
+        alert(`Q&A post deleted!`);
         navigate(`/qnapage`);
       })
       .catch((e) => {
@@ -167,7 +167,7 @@ function QnAdetail() {
 
     axios.post(`/qna/deletecomment`, formData).then((res) => {
      // console.log(res);
-      alert(`댓글이 삭제되었습니다!`);
+      alert(`Comment deleted!`);
       setDeleted(!deleted);
     });
     // window.location.reload(); // 페이지 새로고침
@@ -201,19 +201,19 @@ function QnAdetail() {
             <p className="titleTxt">{title}</p>
             <p className="dateTxt">{date}</p>
             <p className="viewCountTxt" style={{ marginRight: "20px" }}>
-              조회수 : {view}
+              Views: {view}
             </p>
             {qnaWriter === sessionStorage.getItem("email") ? (
               <div style={{ display: "inline-block" }}>
                 <button className="upAndDelBtn2" onClick={qnaUpdateForm}>
-                  수정
+                  Edit
                 </button>
                 <button
                   className="upAndDelBtn2"
                   data-bs-toggle="modal"
                   data-bs-target="#qnaDelete"
                 >
-                  삭제
+                  Delete
                 </button>
               </div>
             ) : null}
@@ -240,7 +240,7 @@ function QnAdetail() {
                   marginBottom: "20px",
                 }}
               >
-                <p style={{ fontSize: "1.5em" }}>고객 첨부 이미지</p>
+                <p style={{ fontSize: "1.5em" }}>Attached Image</p>
                 <img
                   src={previewUrl}
                   alt=""
@@ -265,7 +265,7 @@ function QnAdetail() {
               <div class="modal-content">
                 <div class="modal-header">
                   <h1 class="modal-title fs-5" id="exampleModalLabel">
-                    Q&A 삭제
+                    Delete Q&A
                   </h1>
                   <button
                     type="button"
@@ -275,7 +275,7 @@ function QnAdetail() {
                   ></button>
                 </div>
                 <div class="modal-body" style={{ fontSize: 26 }}>
-                  정말로 삭제하시겠습니까?
+                  Are you sure you want to delete?
                 </div>
                 <div class="modal-footer">
                   <button
@@ -284,21 +284,21 @@ function QnAdetail() {
                     data-bs-dismiss="modal"
                     onClick={handleDelete}
                   >
-                    삭제
+                    Delete
                   </button>
                   <button
                     type="button"
                     class="btn btn-secondary"
                     data-bs-dismiss="modal"
                   >
-                    취소
+                    Cancel
                   </button>
                 </div>
               </div>
             </div>
           </div>
           <hr />
-          <p className="ComentTitle">답변</p>
+          <p className="ComentTitle">Answers</p>
           <div className="ComentArea" style={{ marginBottom: "20px" }}>
             {commentsIndex.map((index) => {
               // setEditedComment(comments[index].commentContent);
@@ -328,7 +328,7 @@ function QnAdetail() {
                           onClick={handleSaveClick}
                           className="writeBtn2"
                         >
-                          완료
+                          Done
                         </button>
                       </div>
                     ) : commentEmail[index] ===
@@ -342,7 +342,7 @@ function QnAdetail() {
                           onClick={handleEditClick}
                           className="upAndDelBtn3"
                         >
-                          수정
+                          Edit
                         </button>
                         <button
                           className="upAndDelBtn3"
@@ -353,7 +353,7 @@ function QnAdetail() {
                           data-bs-toggle="modal"
                           data-bs-target="#reviewComentDelete"
                         >
-                          삭제
+                          Delete
                         </button>
                         <div
                           class="modal fade"
@@ -369,7 +369,7 @@ function QnAdetail() {
                                   class="modal-title fs-5"
                                   id="exampleModalLabel"
                                 >
-                                  댓글 삭제
+                                  Delete Comment
                                 </h1>
                                 <button
                                   type="button"
@@ -389,14 +389,14 @@ function QnAdetail() {
                                   data-bs-dismiss="modal"
                                   onClick={handleDelete2}
                                 >
-                                  삭제
+                                  Delete
                                 </button>
                                 <button
                                   type="button"
                                   class="btn btn-secondary"
                                   data-bs-dismiss="modal"
                                 >
-                                  취소
+                                  Cancel
                                 </button>
                               </div>
                             </div>
@@ -428,7 +428,7 @@ function QnAdetail() {
                   }}
                 ></input>
                 <button className="writeBtn2" onClick={createcomment}>
-                  작성
+                  Submit
                 </button>
               </div>
             ) : null}
@@ -446,7 +446,7 @@ function QnAdetail() {
     return (
       <div className="containerbox">
         <div className="mainlayout box1">
-          <NavigationBar title={"글수정"} />
+          <NavigationBar title={"Edit Post"} />
           <div style={{ height: 74 }}></div>
           <div className="titleArea">
             <input
@@ -482,7 +482,7 @@ function QnAdetail() {
           <hr />
           <div className="fileatt">
             <p className="uploadphoto" style={{ fontSize: "1.5em" }}>
-              사진 첨부
+              Attach Photo
             </p>
             <input
               type="file"
@@ -496,7 +496,7 @@ function QnAdetail() {
               className="cursor imageBtn"
               style={{ fontSize: "1.5em" }}
             >
-              사진선택
+              Select Photo
             </label>
             {previewUrl !== "" ? (
               <img
@@ -516,7 +516,7 @@ function QnAdetail() {
           <br />
           <div className="writeBtnArea">
             <button className="writeBtn" onClick={updateQna}>
-              수정하기
+              Save Changes
             </button>
           </div>
           <div style={{ height: 200 }}></div>

@@ -7,7 +7,7 @@ import axios from "axios";
 import Sidesection from "../Components/Sidesection";
 
 function Review() {
-  const [selectedSort, setSelectedSort] = useState("정렬"); // 초기 버튼명 설정
+  const [selectedSort, setSelectedSort] = useState("Sort");
   const [reviewTitle, setReviewTitle] = useState([]);
   const [reviewStars, setReviewStars] = useState([]);
   const [reviewComments, setReviewComments] = useState([]);
@@ -72,7 +72,7 @@ function Review() {
       .then((res) => {
        // console.log(res);
         let data = res.data;
-        if (selectedSort === "별점순") {
+        if (selectedSort === "By Rating") {
           data.sort(function (a, b) {
            // console.log(a.reviewStars);
             if (a.reviewStars < b.reviewStars) return 1;
@@ -81,7 +81,7 @@ function Review() {
               return new Date(a.reviewDate) - new Date(b.reviewDate);
             }
           });
-        } else if (selectedSort === "조회순") {
+        } else if (selectedSort === "By Views") {
           data.sort(function (a, b) {
             if (a.reviewCounts < b.reviewCounts) return 1;
             if (a.reviewCounts > b.reviewCounts) return -1;
@@ -89,7 +89,7 @@ function Review() {
               return new Date(a.reviewDate) - new Date(b.reviewDate);
             }
           });
-        } else if (selectedSort === "댓글순") {
+        } else if (selectedSort === "By Comments") {
           data.sort(function (a, b) {
             if (a.comments.length < b.comments.length) return 1;
             if (a.comments.length > b.comments.length) return -1;
@@ -97,7 +97,7 @@ function Review() {
               return new Date(a.reviewDate) - new Date(b.reviewDate);
             }
           });
-        } else if (selectedSort === "최신순") {
+        } else if (selectedSort === "Latest") {
           data.sort(function (a, b) {
             return new Date(a.reviewDate) - new Date(b.reviewDate);
           });
@@ -215,7 +215,7 @@ function Review() {
   return (
     <div className="containerbox">
       <div className="mainlayout box1">
-        <NavigationBar title={"이용후기"} />
+        <NavigationBar title={"Reviews"} />
         <div style={{ marginTop: 75 }}>
           <div class="dropdown  right-sort">
             <button
@@ -231,36 +231,36 @@ function Review() {
                 <button
                   class="dropdown-item "
                   type="button"
-                  onClick={() => handleSortClick("별점순")}
+                  onClick={() => handleSortClick("By Rating")}
                 >
-                  별점순
+                  By Rating
                 </button>
               </li>
               <li>
                 <button
                   class="dropdown-item"
                   type="button"
-                  onClick={() => handleSortClick("댓글순")}
+                  onClick={() => handleSortClick("By Comments")}
                 >
-                  댓글순
+                  By Comments
                 </button>
               </li>
               <li>
                 <button
                   class="dropdown-item"
                   type="button"
-                  onClick={() => handleSortClick("조회순")}
+                  onClick={() => handleSortClick("By Views")}
                 >
-                  조회순
+                  By Views
                 </button>
               </li>
               <li className="">
                 <button
                   class="dropdown-item "
                   type="button"
-                  onClick={() => handleSortClick("최신순")}
+                  onClick={() => handleSortClick("Latest")}
                 >
-                  최신순
+                  Latest
                 </button>
               </li>
             </ul>
@@ -271,16 +271,16 @@ function Review() {
             <thead>
               <tr>
                 <td style={{ width: 350 }}>
-                  <p className="noticeTxt">제목</p>
+                  <p className="noticeTxt">Title</p>
                 </td>
                 <td style={{ width: 60 }}>
-                  <p className="noticeTxtCenter">별점</p>
+                  <p className="noticeTxtCenter">Rating</p>
                 </td>
                 <td style={{ width: 80 }}>
-                  <p className="noticeTxtCenter">댓글</p>
+                  <p className="noticeTxtCenter">Comments</p>
                 </td>
                 <td style={{ width: 80 }}>
-                  <p className="noticeTxtCenter">조회수</p>
+                  <p className="noticeTxtCenter">Views</p>
                 </td>
               </tr>
             </thead>
@@ -337,16 +337,16 @@ function Review() {
                 setSelected(true);
               }}
             >
-              글쓰기
+              Write Review
             </button>
           ) : (
             <button
               class="writeBtn"
               onClick={() => {
-                alert("리뷰를 쓰려면 견적서 결제 내역이 있어야 합니다!");
+                alert("You need a completed payment to write a review!");
               }}
             >
-              글쓰기
+              Write Review
             </button>
           )
         ) : null}
@@ -371,7 +371,7 @@ function Review() {
                   id="chooseEstimate"
                   style={{ fontSize: "1.9em" }}
                 >
-                  견적서 선택하기
+                  Select Estimate
                 </h1>
                 <button
                   type="button"
@@ -412,7 +412,7 @@ function Review() {
                     }}
                   >
                     {estimateIndex.map((index) => {
-                      return <option value={index}>견적서{index + 1}</option>;
+                      return <option value={index}>Estimate {index + 1}</option>;
                     })}
                   </select>
 
@@ -422,7 +422,7 @@ function Review() {
                       padding: "10px",
                     }}
                   >
-                    견적서 상세정보
+                    Estimate Details
                   </div>
                   <p
                     style={{
@@ -436,7 +436,7 @@ function Review() {
                     {estimateData !== null ? (
                       <div className="contentcontainer-detail">
                         <div className="contentbox-detail">
-                          <h5 onClick={() => {}}>희망 결혼 예정일</h5>
+                          <h5 onClick={() => {}}>Desired Wedding Date</h5>
                           {JSON.parse(estimateData?.weddingdate).map(
                             (e, index) => {
                               return (
@@ -445,7 +445,7 @@ function Review() {
                                     <></>
                                   ) : (
                                     <>
-                                      <div>{index + 1}순위</div>
+                                      <div>Priority {index + 1}</div>
                                       <div className="result-detail">{e}</div>
                                     </>
                                   )}
@@ -455,7 +455,7 @@ function Review() {
                           )}
                         </div>
                         <div className="contentbox-detail">
-                          <h5>희망 결혼 지역</h5>
+                          <h5>Desired Wedding Region</h5>
                           {JSON.parse(estimateData?.region).map((e, index) => {
                             return (
                               <div className="choosebox-detail">
@@ -472,18 +472,18 @@ function Review() {
                           })}
                         </div>
                         <div className="contentbox-detail">
-                          <h5>예산 한도</h5>
+                          <h5>Budget Limit</h5>
                           <div
                             className="choosebox-detail"
                             style={{ width: "150px" }}
                           >
                             <div className="result-detail">
-                              {estimateData?.budget.toLocaleString()}원
+                              {estimateData?.budget.toLocaleString()} KRW
                             </div>
                           </div>
                         </div>
                         <div className="contentbox-detail">
-                          <h5>희망 스튜디오 스타일</h5>
+                          <h5>Desired Studio Style</h5>
                           <div className="choosebox-detail">
                             <div className="result-detail">
                               {estimateData?.studio}
@@ -492,11 +492,11 @@ function Review() {
                         </div>
 
                         <div className="contentbox-detail">
-                          <h5>신부 드레스 스타일</h5>
+                          <h5>Bridal Dress Style</h5>
                           {estimateData?.dress === "[]" && (
                             <div className="choosebox-detail">
                               <div className="result-noneChoose">
-                                *선택사항 없음*
+                                *No option selected*
                               </div>
                             </div>
                           )}
@@ -517,11 +517,11 @@ function Review() {
                           <div></div>
                         </div>
                         <div className="contentbox-detail">
-                          <h5>신부 메이크업 스타일</h5>
+                          <h5>Bridal Makeup Style</h5>
                           {estimateData?.dress === "[]" && (
                             <div className="choosebox-detail">
                               <div className="result-noneChoose">
-                                *선택사항 없음*
+                                *No option selected*
                               </div>
                             </div>
                           )}
@@ -541,11 +541,11 @@ function Review() {
                           })}
                         </div>
                         <div className="contentbox-detail">
-                          <h5>희망 신혼여행지</h5>
+                          <h5>Desired Honeymoon Destination</h5>
                           <div className="choosebox-detail">
                             {estimateData?.honeymoon === "" && (
                               <div className="result-noneChoose">
-                                *선택사항 없음*
+                                *No option selected*
                               </div>
                             )}
                             {estimateData?.honeymoon !== "" && (
@@ -558,7 +558,7 @@ function Review() {
 
                         <div className="contentbox-detail">
                           {images?.length === 0 ? (
-                            <h5>고객 첨부이미지 </h5>
+                            <h5>Attached Images</h5>
                           ) : (
                             <h5 style={{ marginTop: "-20px" }}>
                               고객 첨부이미지{" "}
@@ -566,7 +566,7 @@ function Review() {
                           )}
 
                           {images.length === 0 && (
-                            <span>첨부 이미지가 없습니다.</span>
+                            <span>No attached images.</span>
                           )}
                           <br></br>
                           <div>
@@ -598,13 +598,13 @@ function Review() {
                           className="contentbox-detail"
                           style={{ borderBottom: "none", marginTop: "10px" }}
                         >
-                          <h5>고객 요청사항</h5>
+                          <h5>Customer Requests</h5>
                           <div
                             className="choosebox-detail w-100"
                             style={{ color: "black" }}
                           >
                             {estimateData?.requirement === "" && (
-                              <span>고객요청사항이 없습니다.</span>
+                              <span>No customer requests.</span>
                             )}
                             {estimateData?.requirement}
                           </div>
@@ -621,14 +621,14 @@ function Review() {
                   data-bs-dismiss="modal"
                   onClick={goChooseEstimate}
                 >
-                  선택
+                  Select
                 </button>
                 <button
                   type="button"
                   class="btn btn-secondary"
                   data-bs-dismiss="modal"
                 >
-                  취소
+                  Cancel
                 </button>
               </div>
             </div>

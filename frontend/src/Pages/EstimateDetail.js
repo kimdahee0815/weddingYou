@@ -55,7 +55,7 @@ const EstimateDetail = () => {
   };
 
   const estimateDelete = async () => {
-    if (window.confirm("견적서 게시글을 삭제하시겠습니까?")) {
+    if (window.confirm("Are you sure you want to delete this estimate post?")) {
       try {
         let response = await axios.get(
           "/estimate/delete",
@@ -81,12 +81,12 @@ const EstimateDetail = () => {
         .post(`/estimate/insert/matchingplanner`, formData)
         .then((res) => {
         //  console.log(res);
-          alert("매칭 신청되었습니다!");
+          alert("Matching application submitted!");
         })
         .catch((e) => {
           console.log(e);
           if (e.response.data.message === "중복됩니다!") {
-            alert("이미 매칭 신청한 회원입니다!");
+            alert("You have already applied for matching!");
           }
         });
     } else {
@@ -102,17 +102,17 @@ const EstimateDetail = () => {
           .post(`/estimate/insert/matchingplanner`, formData)
           .then((res) => {
            // console.log(res);
-            alert("매칭 신청되었습니다!");
+            alert("Matching application submitted!");
           })
           .catch((e) => {
             console.log(e);
 
             if (e.response.data.message === "중복됩니다!") {
-              alert("이미 매칭 신청한 회원입니다!");
+              alert("You have already applied for matching!");
             }
           });
       } else {
-        alert("이미 매칭 신청한 회원입니다!");
+        alert("You have already applied for matching!");
       }
     }
   };
@@ -131,7 +131,7 @@ const EstimateDetail = () => {
           }
         >
           <NavigationBar
-            title={`${estimateData.writer.slice(0, 3) + "*** 님의 견적서"}`}
+            title={`${estimateData.writer.slice(0, 3) + "***'s Estimate"}`}
           />
           <div
             className="scrolltop"
@@ -144,7 +144,7 @@ const EstimateDetail = () => {
           {scrollControl === false ? (
             <div className="match-complete-box">
               <div className="match-complete-box-content">
-                <h1>매칭이 완료된 게시글입니다.</h1>
+                <h1>This post has been matched.</h1>
                 <div className="match-complete-btn-box">
                   <button
                     className="match-complete-btn"
@@ -152,7 +152,7 @@ const EstimateDetail = () => {
                       setScrollControl(true);
                     }}
                   >
-                    그래도볼래요
+                    View Anyway
                   </button>
                 </div>
                 <div className="match-complete-btn-box">
@@ -162,7 +162,7 @@ const EstimateDetail = () => {
                       navigate(-1);
                     }}
                   >
-                    뒤로가기
+                    Go Back
                   </button>
                 </div>
               </div>
@@ -173,7 +173,7 @@ const EstimateDetail = () => {
 
           <div className="contentcontainer-detail">
             <div className="contentbox-detail">
-              <h5>희망 결혼 예정일</h5>
+              <h5>Desired Wedding Date</h5>
               {JSON.parse(estimateData.weddingdate).map((e, index) => {
                 return (
                   <div className="choosebox-detail">
@@ -181,7 +181,7 @@ const EstimateDetail = () => {
                       <></>
                     ) : (
                       <>
-                        <div>{index + 1}순위</div>
+                        <div>Priority {index + 1}</div>
                         <div className="result-detail">{e}</div>
                       </>
                     )}
@@ -190,7 +190,7 @@ const EstimateDetail = () => {
               })}
             </div>
             <div className="contentbox-detail">
-              <h5>희망 결혼 지역</h5>
+              <h5>Desired Wedding Region</h5>
               {JSON.parse(estimateData.region).map((e, index) => {
                 return (
                   <div className="choosebox-detail">
@@ -198,7 +198,7 @@ const EstimateDetail = () => {
                       <></>
                     ) : (
                       <>
-                        <div>{index + 1}순위</div>
+                        <div>Priority {index + 1}</div>
                         <div className="result-detail">{e}</div>
                       </>
                     )}
@@ -207,15 +207,15 @@ const EstimateDetail = () => {
               })}
             </div>
             <div className="contentbox-detail">
-              <h5>예산 한도</h5>
+              <h5>Budget Limit</h5>
               <div className="choosebox-detail" style={{ width: "150px" }}>
                 <div className="result-detail">
-                  {estimateData.budget.toLocaleString()}원
+                  {estimateData.budget.toLocaleString()} KRW
                 </div>
               </div>
             </div>
             <div className="contentbox-detail">
-              <h5>희망 스튜디오 스타일</h5>
+              <h5>Desired Studio Style</h5>
               <div className="choosebox-detail">
                 <div className="result-detail">{estimateData.studio}</div>
               </div>
@@ -235,10 +235,10 @@ const EstimateDetail = () => {
             </div>
 
             <div className="contentbox-detail">
-              <h5>신부 드레스 스타일</h5>
+              <h5>Bridal Dress Style</h5>
               {estimateData.dress === "[]" && (
                 <div className="choosebox-detail">
-                  <div className="result-noneChoose">*선택사항 없음*</div>
+                  <div className="result-noneChoose">*No option selected*</div>
                 </div>
               )}
               {JSON.parse(estimateData.dress).map((e, index) => {
@@ -248,7 +248,7 @@ const EstimateDetail = () => {
                       <></>
                     ) : (
                       <>
-                        <div>{index + 1}순위</div>
+                        <div>Priority {index + 1}</div>
                         <div className="result-detail">{e}</div>
                       </>
                     )}
@@ -259,10 +259,10 @@ const EstimateDetail = () => {
               </div>
             </div>
             <div className="contentbox-detail">
-              <h5>신부 메이크업 스타일</h5>
+              <h5>Bridal Makeup Style</h5>
               {estimateData.dress === "[]" && (
                 <div className="choosebox-detail">
-                  <div className="result-noneChoose">*선택사항 없음*</div>
+                  <div className="result-noneChoose">*No option selected*</div>
                 </div>
               )}
               {JSON.parse(estimateData.makeup).map((e, index) => {
@@ -272,7 +272,7 @@ const EstimateDetail = () => {
                       <></>
                     ) : (
                       <>
-                        <div>{index + 1}순위</div>
+                        <div>Priority {index + 1}</div>
                         <div className="result-detail">{e}</div>
                       </>
                     )}
@@ -283,10 +283,10 @@ const EstimateDetail = () => {
               </div>
             </div>
             <div className="contentbox-detail">
-              <h5>희망 신혼여행지</h5>
+              <h5>Desired Honeymoon Destination</h5>
               <div className="choosebox-detail">
                 {estimateData.honeymoon === "" && (
-                  <div className="result-noneChoose">*선택사항 없음*</div>
+                  <div className="result-noneChoose">*No option selected*</div>
                 )}
                 {estimateData.honeymoon !== "" && (
                   <div className="result-detail">
@@ -298,10 +298,10 @@ const EstimateDetail = () => {
 
             <div className="contentbox-detail">
               <h5>
-                고객 첨부이미지{" "}
-                {images?.length !== 0 && <span>(클릭시 확대됩니다)</span>}
+                Attached Images{" "}
+                {images?.length !== 0 && <span>(Click to enlarge)</span>}
               </h5>
-              {images?.length === 0 && <span>첨부 이미지가 없습니다.</span>}
+              {images?.length === 0 && <span>No attached images.</span>}
               <br></br>
               <div>
                 {images?.map((e, index) => {
@@ -339,13 +339,13 @@ const EstimateDetail = () => {
             </div>
 
             <div className="contentbox-detail" style={{ borderBottom: "none" }}>
-              <h5>고객 요청사항</h5>
+              <h5>Customer Requests</h5>
               <div
                 className="choosebox-detail w-100"
                 style={{ color: "black" }}
               >
                 {estimateData.requirement === "" && (
-                  <span>고객요청사항이 없습니다.</span>
+                  <span>No customer requests.</span>
                 )}
                 <div style={{ whiteSpace: "pre-wrap" }}>
                   {estimateData.requirement}
@@ -364,7 +364,7 @@ const EstimateDetail = () => {
                       className="btn-colour-1"
                       style={{ marginRight: "10px" }}
                     >
-                      수정하기
+                      Edit
                     </button>
 
                     <button
@@ -374,7 +374,7 @@ const EstimateDetail = () => {
                       className="btn-colour-1"
                       style={{ marginLeft: "10px" }}
                     >
-                      삭제하기
+                      Delete
                     </button>
                   </>
                 )}
@@ -385,7 +385,7 @@ const EstimateDetail = () => {
                     onClick={goMatching}
                     className="btn-colour-1"
                   >
-                    매칭신청하기
+                    Apply for Matching
                   </button>
                 )}
               {estimateData.matchstatus === true ||
@@ -398,7 +398,7 @@ const EstimateDetail = () => {
                     className="btn-colour-1"
                     style={{ marginRight: "10px" }}
                   >
-                    뒤로가기
+                    Go Back
                   </button>
                 ))}
             </div>

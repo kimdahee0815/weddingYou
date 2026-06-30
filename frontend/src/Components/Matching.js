@@ -200,10 +200,10 @@ function Matching() {
       .post(`/plannerProfile/matching/user`, formData)
       .then((res) => {
         if (res.data === 1) {
-          alert("해당 고객과 매칭되었습니다!");
+          alert("You have been matched with this customer!");
           setMatchedUser(matchedUser => !matchedUser);
         } else {
-          alert("매칭 오류입니다. 다시 시도해주세요.");
+          alert("Matching error. Please try again.");
         }
       })
       .catch((e) => {
@@ -281,7 +281,7 @@ function Matching() {
         }
       })
       .then((res) => {
-        alert("해당 고객과의 매칭이 취소되었습니다!");
+        alert("Your match with this customer has been cancelled!");
         setDeletedUser(deletedUser => !deletedUser);
       })
       .catch((e) => {
@@ -296,7 +296,7 @@ function Matching() {
           }
         })
         .then((res) => {
-          alert("해당 플래너와의 매칭이 취소되었습니다!");
+          alert("Your match with this planner has been cancelled!");
           setDeletedPlanner(deletedPlanner => !deletedPlanner);
         })
         .catch((e) => {
@@ -341,7 +341,7 @@ function Matching() {
             }));
             navigate("/checkoutall");
           } else if (status === "-1") {
-            alert("오류 발생!");
+            alert("An error occurred!");
           } else if (status === "deposit") {
             sessionStorage.setItem("checkoutInfo", JSON.stringify({
                 estimateId: estimateData.id,
@@ -355,7 +355,7 @@ function Matching() {
             }));
             navigate("/checkoutdeposit");
           } else{
-            alert("결제가 모두 완료된 상태입니다!");
+            alert("Payment has already been completed!");
           }
         })
       .catch((e) => {
@@ -368,7 +368,7 @@ function Matching() {
     const {bsPlanner} = e.target.dataset
     const planner = JSON.parse(bsPlanner);
     if(!planner){
-      alert("해당 플래너는 탈퇴한 회원입니다.");
+      alert("This planner has withdrawn their membership.");
       return;
     }
     setCurrentPlannerProfile(planner);
@@ -392,7 +392,7 @@ function Matching() {
     const estimate = JSON.parse(bsEstimate);
     const formData = new FormData();
     if (estimate.plannerProfiles.length === 0 || !estimate.plannerProfiles) {
-      alert("해당 플래너는 탈퇴한 회원입니다.");
+      alert("This planner has withdrawn their membership.");
       return;
     }
     formData.append("targetEstimateId", estimate.id);
@@ -413,7 +413,7 @@ function Matching() {
     <div className="containerbox">
       <div className="mainlayout box1">
         <hr />
-        <NavigationBar title={"나의 매칭 목록"} />
+        <NavigationBar title={"My Match List"} />
         {sessionStorage.getItem("category") === "user" ? (
           <div style={{ minHeight: "100vh", height: "100%" }}>
             <p
@@ -428,7 +428,7 @@ function Matching() {
                 marginBottom: "30px",
               }}
             >
-              매칭된 플래너
+              Matched Planners
             </p>
 
             {matchedPlanners.length !== 0 ? (
@@ -459,7 +459,7 @@ function Matching() {
                             display: "flex",
                           }}
                         >
-                          -견적서{estimateIndex+1}-
+                          -Estimate {estimateIndex+1}-
                         </div>
 
                         {paymentStatus?.[estimateIndex] && paymentStatus?.[estimateIndex]?.paymentStatus === "paid" ? (
@@ -479,7 +479,7 @@ function Matching() {
                               paddingTop: "2px",
                             }}
                           >
-                            결제완료!
+                            Payment Complete!
                           </div>
                         ) : paymentStatus?.[estimateIndex] && paymentStatus?.[estimateIndex]?.depositStatus === "paid" ? (
                           <div
@@ -498,7 +498,7 @@ function Matching() {
                             paddingTop: "2px",
                           }}
                         >
-                          계약금 결제 완료!
+                          Deposit Paid!
                         </div>
                           
                         ) : paymentStatus?.[estimateIndex] && paymentStatus?.[estimateIndex]?.depositStatus !== "paid" ? (
@@ -518,7 +518,7 @@ function Matching() {
                             paddingTop: "2px",
                           }}
                         >
-                          미결제
+                          Unpaid
                         </div>
                         ) : null}
                       </div>
@@ -561,7 +561,7 @@ function Matching() {
                            data-bs-planner={JSON.stringify(profile)}
                            onClick={goPlannerProfile}
                          >
-                           프로필 보기
+                           View Profile
                          </button>
                          <br />
                          <div className="matchingBtnList">
@@ -570,7 +570,7 @@ function Matching() {
                              data-bs-estimate={JSON.stringify(estimate)}
                              onClick={goPay}
                            >
-                             결제하기
+                             Pay Now
                            </button>
                            {paymentStatus?.[estimateIndex] && paymentStatus?.[estimateIndex]?.paymentStatus === "paid" ? (
                              <button
@@ -578,7 +578,7 @@ function Matching() {
                                data-bs-estimate={JSON.stringify(estimate)}
                                onClick={writeReview}
                              >
-                               리뷰쓰기
+                               Write Review
                              </button>
                            ) : (
                              <button
@@ -589,7 +589,7 @@ function Matching() {
                                data-bs-planner={JSON.stringify(profile)}
                                onClick={CancelMatchingModal}
                              >
-                               매칭취소
+                               Cancel Match
                              </button>
                            )}
                          </div>
@@ -609,7 +609,7 @@ function Matching() {
                   marginBottom: "60px",
                 }}
               >
-                아직 매칭된 플래너가 없습니다.
+                No matched planners yet.
               </div>
             )}
 
@@ -624,7 +624,7 @@ function Matching() {
                 marginBottom: "30px",
               }}
             >
-              매칭 요청 온 플래너 목록
+              Planners Who Sent Match Requests
             </p>
             <div>
               {plannerEstimates.length !== 0 ? (
@@ -658,7 +658,7 @@ function Matching() {
                                 display: "inline-block",
                               }}
                             >
-                              -견적서{estimateIndex + 1}-
+                              -Estimate {estimateIndex + 1}-
                             </div>
                             <div
                               style={{
@@ -682,7 +682,7 @@ function Matching() {
                                     marginRight: "-8px",
                                   }}
                                 >
-                                  결제완료!
+                                  Payment Complete!
                                 </div>
                               ) : estimatesPaymentStatus?.[estimateIndex] && estimatesPaymentStatus?.[estimateIndex]?.depositStatus === "paid" ? (
                                 <div
@@ -701,7 +701,7 @@ function Matching() {
                                   marginRight: "-8px",
                                 }}
                               >
-                                계약금 결제 완료!
+                                Deposit Paid!
                               </div>
                               ) : estimatesPaymentStatus?.[estimateIndex] && estimatesPaymentStatus?.[estimateIndex]?.depositStatus !== "paid" ? (
                                 <div
@@ -720,7 +720,7 @@ function Matching() {
                                     marginRight: "-8px",
                                   }}
                                 >
-                                  미결제
+                                  Unpaid
                                 </div>
                               ) : null}
                             </div>
@@ -733,7 +733,7 @@ function Matching() {
                                   navigate(`/estimatedetail/${estimate.id}`);
                                 }}
                               >
-                                견적서보기
+                                View Estimate
                               </button>
                             </div>
                           </div>
@@ -772,7 +772,7 @@ function Matching() {
                                       height: "55px",
                                     }}
                                   />
-                                  짝이에요!
+                                  It's a match!
                                 </div>:
                                   <div
                                   style={{
@@ -790,7 +790,7 @@ function Matching() {
                                       height: "55px",
                                     }}
                                   />
-                                  짝이에요!
+                                  It's a match!
                                 </div>:null
                                 :null}
                                 </div>
@@ -804,7 +804,7 @@ function Matching() {
                                     data-bs-planner={JSON.stringify(profile)}
                                     onClick={goPlannerProfile}
                                   >
-                                    프로필 보기
+                                    View Profile
                                   </button>
                                 </div>
                                 <div>
@@ -815,7 +815,7 @@ function Matching() {
                                       data-bs-estimate={JSON.stringify(estimate)}
                                       onClick={writeReview}
                                     >
-                                      리뷰쓰기
+                                      Write Review
                                     </button>
                                   ) : (
                                     <button
@@ -827,7 +827,7 @@ function Matching() {
                                       data-bs-profile={JSON.stringify(profile)}
                                       onClick={matchOrDeletePlanner}
                                     >
-                                      매칭/거절
+                                      Match/Decline
                                     </button>
                                   )}
                                 </div>
@@ -848,7 +848,7 @@ function Matching() {
                     marginBottom: "60px",
                   }}
                 >
-                  아직 매칭 요청한 플래너가 없습니다.
+                  No planners have sent a match request yet.
                 </div>
               )}
 
@@ -865,7 +865,7 @@ function Matching() {
                 <div className="modal-content">
                   <div className="modal-header">
                     <h1 className="modal-title fs-2" id="CancelMatching">
-                      매칭을 취소하시겠습니까?
+                      Would you like to cancel the match?
                     </h1>
                     <button
                       type="button"
@@ -875,8 +875,8 @@ function Matching() {
                     ></button>
                   </div>
                   <div className="modal-body" style={{ fontSize: "1.5em" }}>
-                    매칭을 취소하실경우 해당 플래너에게 지불한 계약금은 환불되지
-                    않습니다
+                    If you cancel the match, the deposit paid to the planner
+                    will not be refunded.
                   </div>
                   <div className="modal-footer">
                     <button
@@ -885,14 +885,14 @@ function Matching() {
                       data-bs-dismiss="modal"
                       onClick={CancelMatching}
                     >
-                      매칭 취소하기
+                      Cancel Match
                     </button>
                     <button
                       type="button"
                       className="btn btn-secondary"
                       data-bs-dismiss="modal"
                     >
-                      매칭 유지하기
+                      Keep Match
                     </button>
                   </div>
                 </div>
@@ -909,7 +909,7 @@ function Matching() {
                 <div className="modal-content">
                   <div className="modal-header">
                     <h1 className="modal-title fs-2" id="CancelMatching">
-                      해당 플래너와 매칭하시겠습니까?
+                      Would you like to match with this planner?
                     </h1>
                     <button
                       type="button"
@@ -919,8 +919,8 @@ function Matching() {
                     ></button>
                   </div>
                   <div className="modal-body" style={{ fontSize: "1.5em" }}>
-                    매칭시 다른플래너들의 요청은 모두 거절되고 계약금 결제
-                    페이지로 이동합니다.
+                    Upon matching, all other planner requests will be declined
+                    and you will be taken to the deposit payment page.
                   </div>
                   <div className="modal-footer">
                     <button
@@ -929,7 +929,7 @@ function Matching() {
                       data-bs-dismiss="modal"
                       onClick={goMatchingPlanner}
                     >
-                      매칭하기
+                      Match
                     </button>
                     <button
                       type="button"
@@ -938,7 +938,7 @@ function Matching() {
                       ref={deleteBtn}
                       onClick={confirmDeleteMatchingPlanner}
                     >
-                      거절하기
+                      Decline
                     </button>
                   </div>
                 </div>
@@ -960,7 +960,7 @@ function Matching() {
                 marginBottom: "30px",
               }}
             >
-              매칭된 고객
+              Matched Customers
             </p>
 
             {matchedUsers.length !== 0 ? (
@@ -992,7 +992,7 @@ function Matching() {
                             display: "flex",
                           }}
                         >
-                          -견적서{estimateIndex + 1}-
+                          -Estimate {estimateIndex + 1}-
                         </div>
                         {paymentStatus?.[estimateIndex]?.paymentStatus === "paid" ? (
                           <div
@@ -1011,7 +1011,7 @@ function Matching() {
                               paddingTop: "2px",
                             }}
                           >
-                            결제완료!
+                            Payment Complete!
                           </div>
                         ) : paymentStatus?.[estimateIndex]?.depositStatus === "paid" ? (
                           <div
@@ -1030,7 +1030,7 @@ function Matching() {
                             paddingTop: "2px",
                           }}
                         >
-                          계약금 결제 완료!
+                          Deposit Paid!
                         </div>
                           
                         ) : paymentStatus?.[estimateIndex]?.depositStatus !== "paid" ? (
@@ -1050,7 +1050,7 @@ function Matching() {
                             paddingTop: "2px",
                           }}
                         >
-                          미결제
+                          Unpaid
                         </div>
                         ) : null}
                       </div>
@@ -1093,7 +1093,7 @@ function Matching() {
                           );
                         }}
                       >
-                        견적서 보기
+                        View Estimate
                       </button>
                       <br />
                       <div
@@ -1106,11 +1106,11 @@ function Matching() {
                             data-bs-estimateNum={estimate.id}
                             onClick={() => {
                               alert(
-                                `결제 완료한 고객과는 매칭 취소가 불가합니다!`
+                                `Cannot cancel a match with a customer who has already completed payment!`
                               );
                             }}
                           >
-                            매칭취소
+                            Cancel Match
                           </button>
                         ) : (
                           <button
@@ -1120,7 +1120,7 @@ function Matching() {
                             data-bs-estimate={JSON.stringify(estimate)}
                             onClick={CancelMatchingModal}
                           >
-                            매칭취소
+                            Cancel Match
                           </button>
                         )}
                       </div>
@@ -1138,7 +1138,7 @@ function Matching() {
                   marginBottom: "60px",
                 }}
               >
-                아직 매칭된 고객이 없습니다.
+                No matched customers yet.
               </div>
             )}
 
@@ -1153,7 +1153,7 @@ function Matching() {
                 marginBottom: "30px",
               }}
             >
-              매칭 요청 온 고객 목록
+              Customers Who Sent Match Requests
             </p>
             {userEstimates.length !== 0 ? (
               userEstimates.map((estimate, estimateIndex) => {
@@ -1191,7 +1191,7 @@ function Matching() {
                               height: "80px",
                             }}
                           >
-                            -견적서{estimateIndex + 1}-
+                            -Estimate {estimateIndex + 1}-
                           </div>
                           <div
                             style={{
@@ -1217,7 +1217,7 @@ function Matching() {
                                   marginLeft: "70px",
                                 }}
                               >
-                                결제완료!
+                                Payment Complete!
                               </div>
                             ) : estimatesPaymentStatus?.[estimateIndex] && estimatesPaymentStatus?.[estimateIndex].depositStatus === "paid" ? (
                               <div
@@ -1238,7 +1238,7 @@ function Matching() {
                                 marginLeft: "40px",
                               }}
                             >
-                              계약금 결제 완료!
+                              Deposit Paid!
                             </div>
                             ) :  estimatesPaymentStatus?.[estimateIndex] && estimatesPaymentStatus?.[estimateIndex].depositStatus !== "paid" ? (
                               <div
@@ -1258,7 +1258,7 @@ function Matching() {
                                   marginLeft: "70px",
                                 }}
                               >
-                                미결제
+                                Unpaid
                               </div>
                             ) : null}
                           </div>
@@ -1268,7 +1268,7 @@ function Matching() {
                               data-bs-id={estimate.id}
                               onClick={goToEstimate}
                             >
-                              견적서 보기
+                              View Estimate
                             </button>
                           </div>
                         </div>
@@ -1304,7 +1304,7 @@ function Matching() {
                                       height: "55px",
                                     }}
                                   />
-                                  짝이에요!
+                                  It's a match!
                                 </div>: <div
                                   style={{
                                     fontSize: "0.8em",
@@ -1321,7 +1321,7 @@ function Matching() {
                                       height: "55px",
                                     }}
                                   />
-                                  짝이에요!
+                                  It's a match!
                                 </div>
                                   :null
                                  :null}
@@ -1332,11 +1332,11 @@ function Matching() {
                               className="plannerMatchingBtn"
                               onClick={() => {
                                 alert(
-                                  `결제 완료한 고객과는 매칭 취소가 불가합니다!`
+                                  `Cannot cancel a match with a customer who has already completed payment!`
                                 );
                               }}
                             >
-                              매칭/거절
+                              Match/Decline
                             </button>
                           ) : (
                             <button
@@ -1347,7 +1347,7 @@ function Matching() {
                               onClick={matchOrDeleteUser}
                               style={{ width: "150px", marginLeft: "120px" }}
                             >
-                              매칭/거절
+                              Match/Decline
                             </button>
                           )}
                         </div>
@@ -1366,7 +1366,7 @@ function Matching() {
                   marginBottom: "60px",
                 }}
               >
-                아직 매칭 요청한 고객이 없습니다.
+                No customers have sent a match request yet.
               </div>
             )}
 
@@ -1388,7 +1388,7 @@ function Matching() {
                       id="CancelMatchingCustomer"
                       style={{ fontSize: "1.6em" }}
                     >
-                      매칭을 취소하시겠습니까?
+                      Would you like to cancel the match?
                     </h1>
                     <button
                       type="button"
@@ -1398,7 +1398,7 @@ function Matching() {
                     ></button>
                   </div>
                   <div className="modal-body" style={{ fontSize: "1.5em" }}>
-                    매칭을 취소하실경우 해당 고객과의 매칭이 거부됩니다.
+                    If you cancel the match, the match with this customer will be rejected.
                   </div>
                   <div className="modal-footer">
                     <button
@@ -1407,14 +1407,14 @@ function Matching() {
                       data-bs-dismiss="modal"
                       onClick={CancelMatching}
                     >
-                      매칭 취소하기
+                      Cancel Match
                     </button>
                     <button
                       type="button"
                       className="btn btn-secondary"
                       data-bs-dismiss="modal"
                     >
-                      매칭 유지하기
+                      Keep Match
                     </button>
                   </div>
                 </div>
@@ -1435,7 +1435,7 @@ function Matching() {
                       id="MatchOrCancelCustomer"
                       style={{ fontSize: "1.6em" }}
                     >
-                      해당 고객과 매칭하시겠습니까?
+                      Would you like to match with this customer?
                     </h1>
                     <button
                       type="button"
@@ -1445,7 +1445,7 @@ function Matching() {
                     ></button>
                   </div>
                   <div className="modal-body" style={{ fontSize: "1.5em" }}>
-                    매칭시 해당 고객에게 매칭 메시지가 전송 됩니다.
+                    Upon matching, a match notification will be sent to the customer.
                   </div>
                   <div className="modal-footer">
                     <button
@@ -1454,7 +1454,7 @@ function Matching() {
                       onClick={goMatchingUser}
                       data-bs-dismiss="modal"
                     >
-                      매칭하기
+                      Match
                     </button>
                     <button
                       type="button"
@@ -1462,7 +1462,7 @@ function Matching() {
                       data-bs-dismiss="modal"
                       onClick={confirmDeleteMatchingUser}
                     >
-                      거절하기
+                      Decline
                     </button>
                   </div>
                 </div>

@@ -94,7 +94,7 @@ public class PlannerUpdateDeleteController {
       plannerProfileService.save(profile);
 
 		}else {
-			throw new Exception("이메일이 중복됩니다!");
+			throw new Exception("This email is already in use!");
 		}
 		
 		return searchedPlanner;

@@ -10,18 +10,18 @@ import axios from "axios";
 import Sidesection from "../Components/Sidesection";
 
 const category = [
-  "웨딩홀",
-  "스튜디오",
-  "의상",
-  "메이크업",
-  "신혼여행",
-  "부케",
+  "Wedding Hall",
+  "Studio",
+  "Outfit",
+  "Makeup",
+  "Honeymoon",
+  "Bouquet",
 ];
 
 function LikeList() {
   const [wholeItems, setWholeItems] = useState([]);
-  const [selectedItem, setSelectedItem] = useState("카테고리"); 
-  const [selectedSort, setSelectedSort] = useState("정렬"); 
+  const [selectedItem, setSelectedItem] = useState("Category");
+  const [selectedSort, setSelectedSort] = useState("Sort");
   const [update, setUpdate] = useState(false);
   const [finish, setFinish] = useState(false);
 
@@ -212,7 +212,7 @@ const Like = ({ isLiked, itemId, onLikeToggle }) => {
   return (
     <div className="containerbox">
       <div className="mainlayout box1">
-        <NavigationBar title={"찜목록"} goUpdate={goUpdate} />
+        <NavigationBar title={"Wishlist"} goUpdate={goUpdate} />
         {finish === false ? (
           <Animation />
         ) : (
@@ -258,63 +258,63 @@ const Like = ({ isLiked, itemId, onLikeToggle }) => {
                             <button
                               class="dropdown-item"
                               type="button"
-                              onClick={() => handleItemClick("전체")}
+                              onClick={() => handleItemClick("All")}
                             >
-                              전체
+                              All
                             </button>
                           </li>
                           <li>
                             <button
                               class="dropdown-item"
                               type="button"
-                              onClick={() => handleItemClick("웨딩홀")}
+                              onClick={() => handleItemClick("Wedding Hall")}
                             >
-                              웨딩홀
+                              Wedding Hall
                             </button>
                           </li>
                           <li>
                             <button
                               class="dropdown-item"
                               type="button"
-                              onClick={() => handleItemClick("스튜디오")}
+                              onClick={() => handleItemClick("Studio")}
                             >
-                              스튜디오
+                              Studio
                             </button>
                           </li>
                           <li>
                             <button
                               class="dropdown-item"
                               type="button"
-                              onClick={() => handleItemClick("의상")}
+                              onClick={() => handleItemClick("Outfit")}
                             >
-                              의상
+                              Outfit
                             </button>
                           </li>
                           <li>
                             <button
                               class="dropdown-item"
                               type="button"
-                              onClick={() => handleItemClick("메이크업")}
+                              onClick={() => handleItemClick("Makeup")}
                             >
-                              메이크업
+                              Makeup
                             </button>
                           </li>
                           <li>
                             <button
                               class="dropdown-item"
                               type="button"
-                              onClick={() => handleItemClick("신혼여행")}
+                              onClick={() => handleItemClick("Honeymoon")}
                             >
-                              신혼여행
+                              Honeymoon
                             </button>
                           </li>
                           <li>
                             <button
                               class="dropdown-item"
                               type="button"
-                              onClick={() => handleItemClick("부케")}
+                              onClick={() => handleItemClick("Bouquet")}
                             >
-                              부케
+                              Bouquet
                             </button>
                           </li>
                         </ul>
@@ -340,27 +340,27 @@ const Like = ({ isLiked, itemId, onLikeToggle }) => {
                             <button
                               class="dropdown-item "
                               type="button"
-                              onClick={() => handleSortClick("가나다순")}
+                              onClick={() => handleSortClick("Alphabetical")}
                             >
-                              가나다순
+                              Alphabetical
                             </button>
                           </li>
                           <li>
                             <button
                               class="dropdown-item"
                               type="button"
-                              onClick={() => handleSortClick("인기순")}
+                              onClick={() => handleSortClick("Most Popular")}
                             >
-                              인기순
+                              Most Popular
                             </button>
                           </li>
                           <li>
                             <button
                               class="dropdown-item"
                               type="button"
-                              onClick={() => handleSortClick("최신순")}
+                              onClick={() => handleSortClick("Latest")}
                             >
-                              최신순
+                              Latest
                             </button>
                           </li>
                         </ul>
@@ -380,7 +380,7 @@ const Like = ({ isLiked, itemId, onLikeToggle }) => {
                           marginTop: "40px",
                         }}
                       >
-                        결과가 없습니다.
+                        No results found.
                       </div>
                     ) : (
                       wholeItems.map((likeItem) => (

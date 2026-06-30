@@ -30,23 +30,23 @@ function Sidesection() {
         <div className="sideMainsection">
           <img src={imgLogo} className="sidelogoimg" />
           <br />
-          <p className="fy">당신을 위한</p>&nbsp;
-          <p className="wp">웨딩플래너</p>
+          <p className="fy">Just for you</p>&nbsp;
+          <p className="wp">Wedding Planner</p>
           <p className="wy">Wedding You</p>
           <hr />
           <span className="matchingtxt">
             {" "}
-            지금바로 앱에서 <br /> 쉽고 편리하게 매칭하세요!
+            Match easily and conveniently <br /> on the app right now!
           </span>
           <br />
           <div className="down">
             <div className="qrdown">
-              <p className="downtxt">QR코드 다운로드</p>
+              <p className="downtxt">Download QR Code</p>
 
               <img src={QRcode} className="downimg" />
             </div>
             <div className="storedown">
-              <p className="downtxt">&nbsp;&nbsp;앱스토어 다운로드</p>
+              <p className="downtxt">&nbsp;&nbsp;App Store Download</p>
               <img src={appdown} className="downimg" />
             </div>
           </div>

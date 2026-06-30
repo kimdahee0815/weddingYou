@@ -96,7 +96,7 @@ function QnA() {
           </span>
           <input
             className="form-control"
-            placeholder="검색어를 입력해주세요"
+            placeholder="Enter a search term"
             type="text"
             aria-describedby="search"
             value={searchKeyword}
@@ -111,13 +111,13 @@ function QnA() {
             <thead>
               <tr>
                 <td style={{ width: 350 }}>
-                  <p className="noticeTxt">제목</p>
+                  <p className="noticeTxt">Title</p>
                 </td>
                 <td style={{ width: 120 }}>
-                  <p className="noticeTxtCenter">댓글</p>
+                  <p className="noticeTxtCenter">Comments</p>
                 </td>
                 <td style={{ width: 80 }}>
-                  <p className="noticeTxtCenter">조회수</p>
+                  <p className="noticeTxtCenter">Views</p>
                 </td>
               </tr>
             </thead>
@@ -207,7 +207,7 @@ function QnA() {
             navigate(`/contentwrite`, { state: { page: "Q&A" } });
           }}
         >
-          글쓰기
+          Write
         </button>
 
         <div style={{ height: 90 }}></div>

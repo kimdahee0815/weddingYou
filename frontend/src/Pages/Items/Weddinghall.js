@@ -10,9 +10,9 @@ import "../../Css/items.css";
 const Weddinghall = ({ postSubmitted }) => {
   const { category1 } = useParams();
   const [currentItem, setCurrentItem] = useState();
-  const title = "웨딩홀";
+  const title = "Wedding Hall";
   const engTitle = "weddinghall";
-  const category2 = ["일반", "호텔", "채플", "스몰", "야외", "전통혼례"];
+  const category2 = ["Standard", "Hotel", "Chapel", "Small", "Outdoor", "Traditional"];
   const [isAdmin, setIsAdmin] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(category2[0]);
   const [editMode, setEditMode] = useState(false);
@@ -147,7 +147,7 @@ const Weddinghall = ({ postSubmitted }) => {
                 height: "250px",
               }}
               data-bs-item={JSON.stringify(item)}
-              data-bs-category="웨딩홀"
+              data-bs-category="Wedding Hall"
             />
           ))}
         </div>
@@ -217,7 +217,7 @@ const Weddinghall = ({ postSubmitted }) => {
                       padding: "10px",
                     }}
                   >
-                    상세정보
+                    Details
                   </div>
                   <p
                     style={{
@@ -237,14 +237,14 @@ const Weddinghall = ({ postSubmitted }) => {
                       onClick={handleEditClick}
                       data-bs-dismiss="modal"
                     >
-                      수정
+                      Edit
                     </button>
                     <button
                       className="delete-button"
                       data-bs-toggle="modal"
                       data-bs-target="#deleteItemModal"
                     >
-                      삭제
+                      Delete
                     </button>
                   </div>
                 )}
@@ -255,7 +255,7 @@ const Weddinghall = ({ postSubmitted }) => {
                     data-bs-dismiss="modal"
                     onClick={gotoDetailInfo}
                   >
-                    상세정보 페이지 이동
+                    View Details Page
                   </button>
                 )}
                 <button
@@ -263,7 +263,7 @@ const Weddinghall = ({ postSubmitted }) => {
                   class="btn btn-primary"
                   data-bs-dismiss="modal"
                 >
-                  닫기
+                  Close
                 </button>
               </div>
             </div>
@@ -286,11 +286,11 @@ const Weddinghall = ({ postSubmitted }) => {
                   id="deleteItemModal"
                   style={{ fontSize: "1.4em" }}
                 >
-                  - 아이템 삭제 -
+                  - Delete Item -
                 </h1>
               </div>
               <div class="modal-body text-center" style={{ fontSize: "1.4em" }}>
-                정말 삭제하시겠습니까?
+                Are you sure you want to delete this?
               </div>
               <div class="modal-footer justify-content-center">
                 <button
@@ -298,10 +298,10 @@ const Weddinghall = ({ postSubmitted }) => {
                   onClick={handleDeleteClick}
                   data-bs-dismiss="modal"
                 >
-                  예
+                  Yes
                 </button>
                 <button className="delete-button" data-bs-dismiss="modal">
-                  아니오
+                  No
                 </button>
               </div>
             </div>

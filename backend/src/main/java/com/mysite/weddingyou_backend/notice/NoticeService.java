@@ -32,7 +32,7 @@ public class NoticeService {
 	}
 
 	public NoticeDTO updateNotice(Long noticeId, NoticeDTO noticeDTO) {
-		Notice notice = noticeRepository.findById(noticeId).orElseThrow(() -> new IllegalArgumentException("불러오기 실패"));
+		Notice notice = noticeRepository.findById(noticeId).orElseThrow(() -> new IllegalArgumentException("Failed to load notice"));
 		notice.setNoticeImg(noticeDTO.getNoticeImg());
 		notice.setNoticeTitle(noticeDTO.getNoticeTitle());
 		notice.setNoticeContent(noticeDTO.getNoticeContent());
@@ -46,12 +46,12 @@ public class NoticeService {
 	}
 
 	public NoticeDTO getNoticeById(Long noticeId) {
-		Notice notice = noticeRepository.findById(noticeId).orElseThrow(() -> new IllegalArgumentException("불러오기 실패"));
+		Notice notice = noticeRepository.findById(noticeId).orElseThrow(() -> new IllegalArgumentException("Failed to load notice"));
 		return NoticeDTO.fromEntity(notice);
 	}
 	
 	public Notice getNoticeById2(Long noticeId) {
-		Notice notice = noticeRepository.findById(noticeId).orElseThrow(() -> new IllegalArgumentException("불러오기 실패"));
+		Notice notice = noticeRepository.findById(noticeId).orElseThrow(() -> new IllegalArgumentException("Failed to load notice"));
 		return notice;
 	}
 

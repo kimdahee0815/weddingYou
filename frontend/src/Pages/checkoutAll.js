@@ -56,7 +56,7 @@ function CheckoutAll() {
         channelKey: "channel-key-c64770de-2fa3-41c4-bb6b-e7026c633010",
         pay_method: paymentMethod,
         merchant_uid: `${uuidv4()}-${estimateId}`,
-        name: "플래너 매칭서비스",
+        name: "Planner Matching Service",
         amount: paymentAmount - depositAmount,
         company: "Wedding You", 
         buyer_email: sessionStorage.getItem("email"),
@@ -93,9 +93,9 @@ function CheckoutAll() {
              // console.log(res);
               const value = res.data;
               if (value === "depositnonvalid") {
-                alert("계약금 결제 먼저 해주세요.");
+                alert("Please complete the deposit payment first.");
               } else if (value === "nonvalid") {
-                alert("유효하지 않은 결제 유형입니다.");
+                alert("Invalid payment type.");
               } else if (value === "checkall") {
                 //계약금 처리만 된 상태(취소 상태로 paymentStatus 자동으로 바뀜)
               } else if (value === "all") {
@@ -109,7 +109,7 @@ function CheckoutAll() {
                 }));
                 navigate("/checkoutcomp");
               } else if (value === "completed") {
-                alert("이미 전체 결제가 이루어진 건입니다!");
+                alert("This order has already been fully paid!");
               }
             })
             .catch((e) => {
@@ -131,9 +131,9 @@ function CheckoutAll() {
              // console.log(res);
               const value = res.data;
               if (value === "depositnonvalid") {
-                alert("계약금 결제 먼저 해주세요.");
+                alert("Please complete the deposit payment first.");
               } else if (value === "nonvalid") {
-                alert("유효하지 않은 결제 유형입니다.");
+                alert("Invalid payment type.");
               } else if (value === "checkall") {
                 //계약금 처리만 된 상태(취소 상태로 paymentStatus 자동으로 바뀜)
               } else if (value === "all") {
@@ -147,7 +147,7 @@ function CheckoutAll() {
                 }));
                 navigate("/checkoutcomp");
               } else if (value === "completed") {
-                alert("이미 전체 결제가 이루어진 건입니다!");
+                alert("This order has already been fully paid!");
               }
             })
             .catch((e) => {
@@ -174,9 +174,9 @@ function CheckoutAll() {
           //console.log(res);
               const value = res.data;
               if (value === "depositnonvalid") {
-                alert("계약금 결제 먼저 해주세요.");
+                alert("Please complete the deposit payment first.");
               } else if (value === "nonvalid") {
-                alert("유효하지 않은 결제 유형입니다.");
+                alert("Invalid payment type.");
               } else if (value === "checkall") {
                 //계약금 처리만 된 상태(취소 상태로 paymentStatus 자동으로 바뀜)
               } else if (value === "all") {
@@ -190,7 +190,7 @@ function CheckoutAll() {
                 }));
                 navigate("/checkoutcomp");
               } else if (value === "completed") {
-                alert("이미 전체 결제가 이루어진 건입니다!");
+                alert("This order has already been fully paid!");
               }
         })
         .catch((e) => {
@@ -210,7 +210,7 @@ function CheckoutAll() {
   return (
     <div className="containerbox">
       <div className="mainlayout box1" style={{ minHeight: "100vh" }}>
-        <NavigationBar title={"결제하기"} />
+        <NavigationBar title={"Payment"} />
         <div className="plannerpro" style={{ marginTop: 110 }}>
           {!plannerImg ? (
             <img
@@ -235,7 +235,7 @@ function CheckoutAll() {
             style={{ fontSize: "0.9em" }}
             className="col-sm-4 col-form-label"
           >
-            상품명
+            Product Name
           </label>
           <div className="col-sm-8">
             <input
@@ -243,7 +243,7 @@ function CheckoutAll() {
               readonly
               className="form-control-plaintext"
               id="itemName"
-              value="맞춤형 웨딩플래너 서비스"
+              value="Customized Wedding Planner Service"
               style={{ fontSize: "0.9em" }}
             />
           </div>
@@ -255,16 +255,16 @@ function CheckoutAll() {
             style={{ fontSize: "0.9em" }}
             className="col-sm-4 col-form-label"
           >
-            상품 상세정보
+            Product Details
           </label>
           <div className="col-sm-8">
             <p className="detailcheckout" style={{ fontSize: "0.9em" }}>
-              전체금액 - 계약금
+              Total Amount - Deposit
               <br /> (
               {paymentAmount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-              원) - (
+               KRW) - (
               {depositprice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-              원)
+               KRW)
             </p>
           </div>
         </div>
@@ -275,7 +275,7 @@ function CheckoutAll() {
             style={{ fontSize: "0.9em" }}
             className="col-sm-4 col-form-label"
           >
-            상품 금액
+            Product Price
           </label>
           <div className="col-sm-8">
             <input
@@ -283,7 +283,7 @@ function CheckoutAll() {
               readonly
               className="form-control-plaintext"
               id="itemName"
-              value={`${paymentAmount - depositAmount}원`}
+              value={`${paymentAmount - depositAmount} KRW`}
               style={{ fontSize: "0.9em" }}
             />
           </div>
@@ -293,7 +293,7 @@ function CheckoutAll() {
           className="checkoutBtn"
           style={{ marginTop: "10px" }}
         >
-          결제하기
+          Pay Now
         </button>
         <Footer />
         {/* 플래너 매칭 비용 modal 창 */}
@@ -314,7 +314,7 @@ function CheckoutAll() {
                   id="plannerMatchingPriceModal"
                   style={{ fontSize: "1.5em" }}
                 >
-                  - 플래너 매칭 비용 입력 -
+                  - Enter Planner Matching Fee -
                 </h1>
               </div>
               <div class="modal-body">
@@ -345,7 +345,7 @@ function CheckoutAll() {
                           "valid-feedback"
                         );
                         setPlannerMatchingPriceMessage(
-                          "금액은 0이 될 수 없습니다."
+                          "Amount cannot be 0."
                         );
                         plannerMatchingPriceConfirm.current.disabled = true;
                       } else {
@@ -366,7 +366,7 @@ function CheckoutAll() {
                             "valid-feedback"
                           );
                           setPlannerMatchingPriceMessage(
-                            "금액을 입력해주세요!"
+                            "Please enter an amount!"
                           );
                           plannerMatchingPriceConfirm.current.disabled = true;
                         } else if (isNaN(e.target.value)) {
@@ -385,7 +385,7 @@ function CheckoutAll() {
                           plannerMatchingPriceFeedback.current.classList.remove(
                             "valid-feedback"
                           );
-                          setPlannerMatchingPriceMessage("숫자를 입력하세요!");
+                          setPlannerMatchingPriceMessage("Please enter a number!");
                           plannerMatchingPriceConfirm.current.disabled = true;
                         } else if (parseInt(e.target.value) <= depositAmount) {
                           plannerMatchingPriceCheckInput.current.classList.add(
@@ -404,7 +404,7 @@ function CheckoutAll() {
                             "valid-feedback"
                           );
                           setPlannerMatchingPriceMessage(
-                            "예약금보다 작거나 같은 금액은 입력 불가입니다!"
+                            "Amount cannot be less than or equal to the deposit!"
                           );
                           plannerMatchingPriceConfirm.current.disabled = true;
                         } else {
@@ -429,7 +429,7 @@ function CheckoutAll() {
                       }
                     }}
                     style={{ fontSize: "1.2em" }}
-                    placeholder="플래너와 상의한 매칭 비용을 입력해주세요."
+                    placeholder="Please enter the matching fee agreed with your planner."
                     //    onKeyPress={submitPasswordCheck}
                     required
                     autocomplete="off"
@@ -455,7 +455,7 @@ function CheckoutAll() {
                   }}
                   disabled
                 >
-                  확인
+                  Confirm
                 </button>
               </div>
             </div>

@@ -10,7 +10,7 @@ import Animation from "../Components/Animation";
 import Sidesection from "../Components/Sidesection";
 
 function Mypage() {
-  const title = "마이페이지";
+  const title = "My Page";
   const navigate = useNavigate();
 
   const [name, setName] = useState("");
@@ -151,9 +151,9 @@ function Mypage() {
         .post("/user/userSearch", { email: userEmail })
         .then((res) => {
           if (passwordCheck === res.data.password) {
-            setPasswordCheckMessage("비밀번호 확인 완료!");
+            setPasswordCheckMessage("Password verified!");
           } else {
-            setPasswordCheckMessage("비밀번호가 틀립니다. 다시 입력하세요.");
+            setPasswordCheckMessage("Incorrect password. Please try again.");
           }
         })
         .catch((e) => {
@@ -165,9 +165,9 @@ function Mypage() {
         .post("/planner/plannerSearch", { email: userEmail })
         .then((res) => {
           if (passwordCheck === res.data.password) {
-            setPasswordCheckMessage("비밀번호 확인 완료!");
+            setPasswordCheckMessage("Password verified!");
           } else {
-            setPasswordCheckMessage("비밀번호가 틀립니다. 다시 입력하세요.");
+            setPasswordCheckMessage("Incorrect password. Please try again.");
           }
         })
         .catch((e) => {
@@ -224,10 +224,10 @@ function Mypage() {
         passwordConfirm.current.disabled = false;
       } else {
         if (e.target.value === "") {
-          setPasswordMessage("비밀번호를 입력해주세요.");
+          setPasswordMessage("Please enter your password.");
         } else {
           setPasswordMessage(
-            "최소8자 이상, 대문자, 소문자, 숫자, 특수문자를 포함"
+            "At least 8 characters including uppercase, lowercase, numbers, and special characters"
           );
         }
 
@@ -257,7 +257,7 @@ function Mypage() {
   };
 
   const gotoUpdatePage = () => {
-    if (passwordcheckmessage === "비밀번호 확인 완료!") {
+    if (passwordcheckmessage === "Password verified!") {
       navigate(`/mypage/${category}/userupdate`, {
         state: {
           passwordCheck: true,
@@ -333,7 +333,7 @@ function Mypage() {
                     fontSize: "1.3em",
                   }}
                 >
-                  이메일
+                  Email
                 </label>
                 <div
                   className=" mb-4"
@@ -363,7 +363,7 @@ function Mypage() {
                     fontSize: "1.3em",
                   }}
                 >
-                  비밀번호
+                  Password
                 </label>
                 <div
                   className="has-validation  mb-4"
@@ -393,7 +393,7 @@ function Mypage() {
                     fontSize: "1.3em",
                   }}
                 >
-                  이름
+                  Name
                 </label>
                 <div
                   className="has-validation  mb-4"
@@ -423,7 +423,7 @@ function Mypage() {
                     fontSize: "1.3em",
                   }}
                 >
-                  휴대폰
+                  Phone
                 </label>
                 <div
                   className="has-validation  mb-4"
@@ -453,7 +453,7 @@ function Mypage() {
                     fontSize: "1.3em",
                   }}
                 >
-                  성별
+                  Gender
                 </label>
                 <div
                   class="input-group"
@@ -476,7 +476,7 @@ function Mypage() {
                     class="form-control"
                     id="male"
                     aria-label="male btn"
-                    value="남자"
+                    value="Male"
                     disabled
                     style={{ fontSize: "1.1em" }}
                   />
@@ -497,7 +497,7 @@ function Mypage() {
                     class="form-control"
                     id="female"
                     aria-label="female btn"
-                    value="여자"
+                    value="Female"
                     disabled
                     style={{ fontSize: "1.1em" }}
                   />
@@ -522,7 +522,7 @@ function Mypage() {
                         fontSize: "1.3em",
                       }}
                     >
-                      경력
+                      Career
                     </label>
                     <div
                       class="has-validation "
@@ -560,7 +560,7 @@ function Mypage() {
                         fontSize: "1.3em",
                       }}
                     >
-                      소개글
+                      Introduction
                     </label>
                     <div style={{ width: "250px", marginRight: "20px" }}>
                       <textarea
@@ -570,7 +570,7 @@ function Mypage() {
                         style={{ overflowY: "scroll",  fontSize: "1.1em" }}
                         value={introduction}
                         onChange={onChange}
-                        placeholder="아직 소개글이 없습니다."
+                        placeholder="No introduction yet."
                         autoComplete="off"
                         cols="10"
                         rows="8"
@@ -589,7 +589,7 @@ function Mypage() {
                 onClick={deletePassword}
                 style={{ marginTop: "20px" }}
               >
-                정보 수정하기
+                Edit Profile
               </button>
 
               <div>
@@ -600,7 +600,7 @@ function Mypage() {
                     navigate("/login");
                   }}
                 >
-                  로그아웃
+                  Log Out
                 </button>
                 <button
                   type="button"
@@ -608,7 +608,7 @@ function Mypage() {
                   data-bs-toggle="modal"
                   data-bs-target="#deleteMemberModal"
                 >
-                  회원탈퇴
+                  Delete Account
                 </button>
               </div>
             </form>
@@ -665,7 +665,7 @@ function Mypage() {
                     fontSize: "1.3em",
                   }}
                 >
-                  이메일
+                  Email
                 </label>
                 <div
                   className=" mb-4"
@@ -695,7 +695,7 @@ function Mypage() {
                     fontSize: "1.3em",
                   }}
                 >
-                  비밀번호
+                  Password
                 </label>
                 <div
                   className="has-validation  mb-4"
@@ -725,7 +725,7 @@ function Mypage() {
                     fontSize: "1.3em",
                   }}
                 >
-                  이름
+                  Name
                 </label>
                 <div
                   className="has-validation  mb-4"
@@ -755,7 +755,7 @@ function Mypage() {
                     fontSize: "1.3em",
                   }}
                 >
-                  휴대폰
+                  Phone
                 </label>
                 <div
                   className="has-validation  mb-4"
@@ -785,7 +785,7 @@ function Mypage() {
                     fontSize: "1.3em",
                   }}
                 >
-                  성별
+                  Gender
                 </label>
                 <div
                   class="input-group"
@@ -808,7 +808,7 @@ function Mypage() {
                     class="form-control"
                     id="male"
                     aria-label="male btn"
-                    value="남자"
+                    value="Male"
                     disabled
                     style={{ fontSize: "1.1em" }}
                   />
@@ -829,7 +829,7 @@ function Mypage() {
                     class="form-control"
                     id="female"
                     aria-label="female btn"
-                    value="여자"
+                    value="Female"
                     disabled
                     style={{ fontSize: "1.1em" }}
                   />
@@ -854,7 +854,7 @@ function Mypage() {
                         fontSize: "1.3em",
                       }}
                     >
-                      경력
+                      Career
                     </label>
                     <div
                       class="has-validation "
@@ -892,7 +892,7 @@ function Mypage() {
                         fontSize: "1.3em",
                       }}
                     >
-                      소개글
+                      Introduction
                     </label>
                     <div style={{ width: "250px", marginRight: "20px" }}>
                       <textarea
@@ -902,7 +902,7 @@ function Mypage() {
                         style={{ overflowY: "scroll" ,fontSize: "1.1em"}}
                         value={introduction}
                         onChange={onChange}
-                        placeholder="아직 소개글이 없습니다."
+                        placeholder="No introduction yet."
                         autoComplete="off"
                         cols="10"
                         rows="8"
@@ -921,7 +921,7 @@ function Mypage() {
                 onClick={deletePassword}
                 style={{ marginTop: "20px" }}
               >
-                정보 수정하기
+                Edit Profile
               </button>
 
               <div>
@@ -932,7 +932,7 @@ function Mypage() {
                     navigate("/login");
                   }}
                 >
-                  로그아웃
+                  Log Out
                 </button>
                 <button
                   type="button"
@@ -940,7 +940,7 @@ function Mypage() {
                   data-bs-toggle="modal"
                   data-bs-target="#deleteMemberModal"
                 >
-                  회원탈퇴
+                  Delete Account
                 </button>
               </div>
             </form>
@@ -965,7 +965,7 @@ function Mypage() {
                   id="passwordcheckmodal"
                   style={{ fontSize: "1.5em" }}
                 >
-                  - 비밀번호 확인 -
+                  - Password Verification -
                 </h1>
                 <button
                   type="button"
@@ -985,7 +985,7 @@ function Mypage() {
                     value={passwordCheck}
                     onChange={onChange}
                     style={{ fontSize: "1.2em" }}
-                    placeholder="현재 비밀번호를 입력해주세요."
+                    placeholder="Please enter your current password."
                     onKeyPress={submitPasswordCheck}
                     required
                     autocomplete="off"
@@ -1007,7 +1007,7 @@ function Mypage() {
                   data-bs-dismiss="modal"
                   onClick={deletePassword}
                 >
-                  닫기
+                  Close
                 </button>
                 <button
                   type="button"
@@ -1017,7 +1017,7 @@ function Mypage() {
                   ref={passwordConfirm}
                   disabled
                 >
-                  확인
+                  Confirm
                 </button>
               </div>
             </div>
@@ -1041,7 +1041,7 @@ function Mypage() {
                   id="passwordcheckMessageModal"
                   style={{ fontSize: "1.5em" }}
                 >
-                  - 비밀번호 확인 -
+                  - Password Verification -
                 </h1>
                 <button
                   type="button"
@@ -1061,7 +1061,7 @@ function Mypage() {
                   data-bs-dismiss="modal"
                   onClick={deletePassword}
                 >
-                  닫기
+                  Close
                 </button>
                 <button
                   type="button"
@@ -1069,7 +1069,7 @@ function Mypage() {
                   data-bs-dismiss="modal"
                   onClick={gotoUpdatePage}
                 >
-                  확인
+                  Confirm
                 </button>
               </div>
             </div>
@@ -1092,11 +1092,11 @@ function Mypage() {
                   id="deleteMemberModal"
                   style={{ fontSize: "1.4em" }}
                 >
-                  - 회원 탈퇴 -
+                  - Delete Account -
                 </h1>
               </div>
               <div class="modal-body text-center" style={{ fontSize: "1.2em" }}>
-                그동안 감사했습니다😢 이렇게 가신다니 아쉬워요 (T_T)
+                Thank you for everything😢 We're sad to see you go (T_T)
               </div>
               <div class="modal-footer justify-content-center">
                 <button
@@ -1109,7 +1109,7 @@ function Mypage() {
                   }}
                   style={{ fontSize: "1.3em" }}
                 >
-                  메인페이지로
+                  Go to Main Page
                 </button>
               </div>
             </div>

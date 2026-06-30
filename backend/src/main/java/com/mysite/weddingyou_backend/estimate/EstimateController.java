@@ -146,7 +146,7 @@ public class EstimateController {
 		data.setWriter(writer);
 		data.setImg(list.toString());
 		data.setMatchstatus(false);
-		data.setTitle(writer + "님의 견적서");
+		data.setTitle(writer + "'s Estimate");
 		data.setDate(LocalDate.now());
 		data.setViewcount(0);		
 		data.setPlannermatching("[]");
@@ -268,7 +268,7 @@ public class EstimateController {
 		data.setWriter(writer);
 		data.setImg(list.toString());
 		data.setMatchstatus(false);
-		data.setTitle(writer + "님의 견적서");
+		data.setTitle(writer + "'s Estimate");
 		data.setDate(LocalDate.parse(date));
 		data.setViewcount(viewcount);		
 		data.setId(id);
@@ -349,7 +349,7 @@ public class EstimateController {
 					}
 				}
 			}else if(plannerList.size()!=0  && plannerList.containsAll(obj)){
-				throw new Exception("중복됩니다!");
+				throw new Exception("Duplicate entry!");
 			}
 			
 		}
@@ -379,11 +379,11 @@ public class EstimateController {
 								.collect(Collectors.toList());
 						return targetEstimates;
 				} else {
-						throw new Exception("정보가 존재하지 않습니다!");
+						throw new Exception("No information found!");
 				}
 				}
-			
-			
+
+
 		//견적서 매칭원하는 플래너 정보 가져오기
 		@GetMapping(value = "/planners/detail")
 		public List<Estimate> getPlannersDetail(@RequestParam("userEmail") String userEmail) throws Exception {
@@ -417,10 +417,10 @@ public class EstimateController {
         return targetEstimates;
 
     } else {
-        throw new Exception("정보가 존재하지 않습니다!");
+        throw new Exception("No information found!");
     }
 	}
-				
+
 				//견적서 매칭원하는 플래너 이름 삭제하기
 				@DeleteMapping(value = "/matching/planner")
 				public int deleteMatchingPlanner(@RequestParam("deletePlanner") String deletePlanner, 
@@ -671,7 +671,7 @@ public class EstimateController {
 
 	@RequestMapping("/getsearchlistcount")
 	public int getsearchlistcount(@RequestBody Map<String, Object> requestParams) {
-		System.out.println("여기"+requestParams.get("search"));
+		System.out.println("search: "+requestParams.get("search"));
 		String search = (String)requestParams.get("search");
 		return estimateService.getsearchlistcount(search);
 	}

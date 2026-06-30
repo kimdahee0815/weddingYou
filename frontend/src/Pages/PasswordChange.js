@@ -27,7 +27,7 @@ function PasswordChange() {
     //임시비밀번호 입력하지 않고 passwordchange url 접근 불가
     if (temporaryPasswordCheck !== true) {
       navigate(`/passwordSearch/temporaryPasswordLogin`);
-      alert("비밀번호 변경을 하려면 임시 비밀번호를 입력하세요!");
+      alert("Please enter your temporary password to change your password!");
     }
   }, []);
 
@@ -108,7 +108,7 @@ function PasswordChange() {
   return (
     <div className="containerbox">
       <div className="mainlayout box1">
-        <NavigationBar title={"비밀번호 변경하기"} />
+        <NavigationBar title={"Change Password"} />
         <div
           className="container text-center"
           style={{ marginTop: "50px", height: "400px" }}
@@ -116,7 +116,7 @@ function PasswordChange() {
           <div className="row">
             <div className="col"></div>
             <div className="col-6">
-              <img className="logo" src={imgLogo} alt="로고" />
+              <img className="logo" src={imgLogo} alt="logo" />
             </div>
             <div className="col"></div>
           </div>
@@ -129,18 +129,18 @@ function PasswordChange() {
               {/* <p className="loginmessage">변경할 비밀번호를 입력하세요</p> */}
               <div className="mb-3">
                 <InputComp
-                  content="변경할 비밀번호"
+                  content="New Password"
                   EventHandler={EventHandlerPassword}
                   style={passwordstyle}
-                  message="최소8자 이상, 대문자, 소문자, 숫자, 특수문자를 포함"
+                  message="At least 8 characters, including uppercase, lowercase, number, and special character."
                   length={20}
                   type="password"
                 />
                 <InputComp
-                  content="비밀번호 확인"
+                  content="Confirm Password"
                   EventHandler={EventHandlerPassword2}
                   style={passwordstyle2}
-                  message="비밀번호 불일치"
+                  message="Passwords do not match."
                   length={20}
                   type="password"
                 />
@@ -161,7 +161,7 @@ function PasswordChange() {
             id="changepasswordbtn"
             onClick={onClickpwUpdate}
           >
-            비밀번호 변경하기
+            Change Password
           </button>
           {/* </form> */}
           <br />
@@ -173,7 +173,7 @@ function PasswordChange() {
                 textDecorationLine: "none",
               }}
             >
-              메인으로 돌아가기
+              Back to Main
             </Link>
           </button>
           <br />
@@ -191,16 +191,16 @@ function PasswordChange() {
               <div class="modal-header">
                 <div className="infotext4">
                   <i className="bi bi-dash-lg"></i>&nbsp;&nbsp;
-                  <span style={{ fontSize: "1.4em" }}>비밀번호 변경 완료</span>
+                  <span style={{ fontSize: "1.4em" }}>Password Changed Successfully</span>
                   &nbsp;&nbsp;
                   <i className="bi bi-dash-lg"></i>
                 </div>
               </div>
               <div class="modal-body infotext4">
                 <div className="infotext4" style={{ fontSize: "1.2em" }}>
-                  비밀번호가 변경되었습니다.
+                  Your password has been changed.
                   <br />
-                  바뀐 비밀번호로 로그인해주세요!
+                  Please log in with your new password!
                 </div>
               </div>
               <div class="modal-footer infotext4">
@@ -217,7 +217,7 @@ function PasswordChange() {
                       textDecorationLine: "none",
                     }}
                   >
-                    메인으로 돌아가기
+                    Back to Main
                   </Link>
                 </button>
               </div>

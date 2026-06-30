@@ -25,10 +25,10 @@ const SignupSuccess = () => {
         <div className="Signup-backicon" onClick={handleBack}>
           <i class="bi bi-chevron-left" style={{ fontSize: 30 }}></i>
         </div>
-        <div className="Signup-header">회원가입 완료</div>
+        <div className="Signup-header">Registration Complete</div>
         <div className="Signup-guidebar">
           <div className="guideline"></div>
-          <span style={{ fontSize: "23px" }}>회원가입 완료</span>
+          <span style={{ fontSize: "23px" }}>Registration Complete</span>
           <div className="guideline"></div>
         </div>
 
@@ -37,7 +37,7 @@ const SignupSuccess = () => {
             className="Signup-SuccessMessage"
             style={{ top: top, opacity: opacity }}
           >
-            <p>🎉 회원가입을 진심으로 축하드립니다 🎉</p>
+            <p>🎉 Congratulations on your registration! 🎉</p>
             <p>(●'◡'●)</p>
           </div>
           <div
@@ -51,7 +51,7 @@ const SignupSuccess = () => {
               className="btn-colour-1"
               style={{ width: 256 }}
             >
-              로그인하러 가기
+              Go to Login
             </button>
           </div>
         </div>

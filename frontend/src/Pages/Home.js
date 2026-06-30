@@ -9,7 +9,7 @@ import Sidesection from "../Components/Sidesection";
 
 import axios from "axios";
 
-const category = ["웨딩홀", "스튜디오", "의상", "메이크업", "신혼여행", "부케"];
+const category = ["Wedding Hall", "Studio", "Outfit", "Makeup", "Honeymoon", "Bouquet"];
 const englishCategory = ["weddingHall", "studio", "clothes", "makeup", "honeymoon", "bouquet"];
 function Home() {
     const navigate = useNavigate();
@@ -218,7 +218,7 @@ function Home() {
                                 className="mainlogo"
                                 src={imgLogo}
                                 style={{ cursor: "pointer" }}
-                                alt="로고"
+                                alt="logo"
                                 data-bs-toggle="modal"
                                 data-bs-target="#logoutmodal"
                             />
@@ -230,7 +230,7 @@ function Home() {
                                 onClick={() => {
                                     navigate("/login");
                                 }}
-                                alt="로고"
+                                alt="logo"
                             />
                         )}
 
@@ -238,7 +238,7 @@ function Home() {
                             type="text"
                             name="search"
                             className="searchbar"
-                            placeholder="검색어를 입력하세요!"
+                            placeholder="Enter your search term!"
                             value={searchItem}
                             onChange={handleChange}
                             onKeyPress={handleKeyPress}
@@ -292,7 +292,7 @@ function Home() {
                                 className="mainlogo"
                                 src={imgLogo}
                                 style={{ cursor: "pointer" }}
-                                alt="로고"
+                                alt="logo"
                                 data-bs-toggle="modal"
                                 data-bs-target="#logoutmodal"
                             />
@@ -304,14 +304,14 @@ function Home() {
                                 onClick={() => {
                                     navigate("/login");
                                 }}
-                                alt="로고"
+                                alt="logo"
                             />
                         )}
                         <input
                             type="text"
                             name="search"
                             className="searchbar"
-                            placeholder="검색어를 입력하세요!"
+                            placeholder="Enter your search term!"
                             value={searchItem}
                             onChange={handleChange}
                             onKeyPress={handleKeyPress}
@@ -463,7 +463,7 @@ function Home() {
                                                         </div>
                                                     ))
                                                 ) : (
-                                                    <div style={{ fontSize: "1.3em" }}>아직 이미지가 없습니다!</div>
+                                                    <div style={{ fontSize: "1.3em" }}>No images yet!</div>
                                                 )}
                                             </div>
                                             <button
@@ -556,7 +556,7 @@ function Home() {
                                                             padding: "10px",
                                                         }}
                                                     >
-                                                        상세정보
+                                                        Details
                                                         {isLoggedIn ? (
                                                             selectLikeState ? (
                                                                 <button
@@ -584,7 +584,7 @@ function Home() {
                                                                             d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"
                                                                         />
                                                                     </svg>
-                                                                    찜하기
+                                                                    Wishlist
                                                                 </button>
                                                             ) : (
                                                                 <button
@@ -609,7 +609,7 @@ function Home() {
                                                                     >
                                                                         <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z" />
                                                                     </svg>
-                                                                    찜하기
+                                                                    Wishlist
                                                                 </button>
                                                             )
                                                         ) : null}
@@ -633,10 +633,10 @@ function Home() {
                                                     data-bs-dismiss="modal"
                                                     onClick={gotoDetailInfo}
                                                 >
-                                                    상세정보 페이지 이동
+                                                    Go to Details Page
                                                 </button>
                                                 <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
-                                                    닫기
+                                                    Close
                                                 </button>
                                             </div>
                                         </div>
@@ -681,7 +681,7 @@ function Home() {
                                                     height: "50px",
                                                 }}
                                             >
-                                                <span>견적작성하기</span>
+                                                <span>Write Estimate</span>
                                             </div>
                                         </div>
                                     </div>
@@ -706,7 +706,7 @@ function Home() {
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h1 class="modal-title fs-5" id="exampleModalLabel">
-                                    로그아웃
+                                    Logout
                                 </h1>
                                 <button
                                     type="button"
@@ -716,7 +716,7 @@ function Home() {
                                 ></button>
                             </div>
                             <div class="modal-body" style={{ fontSize: 26 }}>
-                                로그아웃하시겠습니까?
+                                Are you sure you want to log out?
                             </div>
                             <div class="modal-footer">
                                 <button
@@ -728,10 +728,10 @@ function Home() {
                                         navigate("/login");
                                     }}
                                 >
-                                    네
+                                    Yes
                                 </button>
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                                    아니요
+                                    No
                                 </button>
                             </div>
                         </div>

@@ -13,7 +13,7 @@ import Sidesection from "../Components/Sidesection";
 function Login() {
   const [inputId, setInputId] = useState("");
   const [inputPw, setInputPw] = useState("");
-  const [Role, setRole] = useState("회원");
+  const [Role, setRole] = useState("Member");
   // console.log("-=-=-=-=-=-=-=-=-=-=-==-=-=-=-");
   // console.log(sessionStorage.getItem("email"));
   // console.log(sessionStorage.getItem("email") !== null);
@@ -42,7 +42,7 @@ function Login() {
   };
 
   const onClickLogin = () => {
-    if (Role === "회원") {
+    if (Role === "Member") {
       axios
         .post("/user/login", {
           email: inputId,
@@ -51,9 +51,9 @@ function Login() {
         .then((res) => {
          // console.log("res.data.email :: ", res.data.email);
           if (inputId === null || inputPw === null) {
-            alert("회원정보를 입력해주세요");
+            alert("Please enter your account information.");
           } else if (res.data.email === undefined || res.data.email === null) {
-            alert("입력하신 id나 password가 일치하지 않습니다.");
+            alert("The ID or password you entered does not match.");
           } else {
            // console.log("======================", "유저 로그인 성공");
             sessionStorage.setItem("email", res.data.email);
@@ -65,7 +65,7 @@ function Login() {
         .catch((e) => {
           console.log(e);
         });
-    } else if (Role === "플래너") {
+    } else if (Role === "Planner") {
       axios
         .post("/planner/login", {
           email: inputId,
@@ -74,9 +74,9 @@ function Login() {
         .then((res) => {
         //  console.log("res.data.email :: ", res.data.email);
           if (inputId === null || inputPw === null) {
-            alert("회원정보를 입력해주세요");
+            alert("Please enter your account information.");
           } else if (res.data.email === undefined || res.data.email === null) {
-            alert("입력하신 id나 password가 일치하지 않습니다.");
+            alert("The ID or password you entered does not match.");
           } else {
            // console.log("======================", "플래너 로그인 성공");
             sessionStorage.setItem("email", res.data.email);
@@ -94,12 +94,12 @@ function Login() {
   return (
     <div className="containerbox">
       <div className="mainlayout box1">
-        <NavigationBar title={"로그인"} />
+        <NavigationBar title={"Login"} />
         <div className="container text-center" style={{ marginTop: "50px" }}>
           <div className="row">
             <div className="col"></div>
             <div className="col-6">
-              <img className="logo" src={imgLogo} alt="로고" />
+              <img className="logo" src={imgLogo} alt="logo" />
             </div>
             <div className="col"></div>
           </div>
@@ -123,7 +123,7 @@ function Login() {
                   <input
                     type="text"
                     className="form-control inputarea"
-                    placeholder="아이디(이메일)"
+                    placeholder="ID (Email)"
                     required=""
                     value={inputId}
                     onChange={handleInputId}
@@ -132,7 +132,7 @@ function Login() {
                   <input
                     type="password"
                     className="form-control inputarea"
-                    placeholder="비밀번호"
+                    placeholder="Password"
                     required=""
                     value={inputPw}
                     onChange={handleInputPw}
@@ -144,10 +144,10 @@ function Login() {
                       <input
                         class="form-check-input mt-0"
                         type="radio"
-                        value="회원"
+                        value="Member"
                         name="Role"
-                        htmlFor="회원"
-                        checked={Role === "회원"}
+                        htmlFor="Member"
+                        checked={Role === "Member"}
                         onChange={handleRole}
                         aria-label="Radio button for following text input"
                         style={{ cursor: "pointer" }}
@@ -158,7 +158,7 @@ function Login() {
                       class="form-control"
                       id="custom"
                       aria-label="custom btn"
-                      value="회원"
+                      value="Member"
                       disabled
                       style={{ background: "white", fontSize: "1.3em" }}
                     />
@@ -166,10 +166,10 @@ function Login() {
                       <input
                         class="form-check-input mt-0"
                         type="radio"
-                        value="플래너"
+                        value="Planner"
                         name="Role"
-                        checked={Role === "플래너"}
-                        htmlFor="플래너"
+                        checked={Role === "Planner"}
+                        htmlFor="Planner"
                         onChange={handleRole}
                         aria-label="Radio button for following text input"
                         style={{ cursor: "pointer" }}
@@ -180,7 +180,7 @@ function Login() {
                       class="form-control"
                       id="planner"
                       aria-label="palnner btn"
-                      value="플래너"
+                      value="Planner"
                       disabled
                       style={{ background: "white", fontSize: "1.3em" }}
                     />
@@ -191,7 +191,7 @@ function Login() {
                   className="searchmessage"
                   style={{ fontSize: "1.1em" }}
                 >
-                  비밀번호를 잊으셨나요?
+                  Forgot your password?
                 </Link>
               </div>
               <div className="col"></div>
@@ -203,15 +203,15 @@ function Login() {
               onClick={onClickLogin}
               style={{ fontSize: "1.2em" }}
             >
-              로그인
+              Login
             </button>
           </form>
           <br />
           <br />
           <p style={{ fontSize: "1.2em" }}>
-            처음 오셨나요? &nbsp;&nbsp;&nbsp;&nbsp;
+            New here? &nbsp;&nbsp;&nbsp;&nbsp;
             <Link to="/signup" className="signupmessage">
-              회원가입
+              Sign Up
             </Link>
           </p>
         </div>

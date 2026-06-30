@@ -71,7 +71,7 @@ function CustomerCenter() {
   return (
     <div className="containerbox">
       <div className="mainlayout box1">
-        <NavigationBar title={"고객센터"} />
+        <NavigationBar title={"Customer Center"} />
         <div style={{ height: 80 }}></div>
         <div className="noticeSection">
           <table>
@@ -83,7 +83,7 @@ function CustomerCenter() {
                     className="LinkTxt"
                     style={{ fontSize: "1.8em" }}
                   >
-                    공지사항
+                    Notice
                   </Link>
                 </td>
                 <td></td>

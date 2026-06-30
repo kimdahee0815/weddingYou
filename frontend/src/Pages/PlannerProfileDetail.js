@@ -65,12 +65,12 @@ function PlannerProfileDetail() {
       axios
         .post(`/plannerProfile/matching/users`, formData)
         .then((res) => {
-          alert("매칭 신청되었습니다!");
+          alert("Matching request submitted!");
         })
         .catch((e) => {
           console.log(e);
           if (e.response.data.message === "중복됩니다!") {
-            alert("이미 매칭 신청한 플래너입니다!");
+            alert("You have already requested matching with this planner!");
           }
         });
     } else {
@@ -85,16 +85,16 @@ function PlannerProfileDetail() {
         axios
           .post(`/plannerProfile/matching/users`, formData)
           .then((res) => {
-            alert("매칭 신청되었습니다!");
+            alert("Matching request submitted!");
           })
           .catch((e) => {
             console.log(e);
             if (e.response.data.message === "중복됩니다!") {
-              alert("이미 매칭 신청한 플래너입니다!");
+              alert("You have already requested matching with this planner!");
             }
           });
       } else {
-        alert("이미 매칭 신청한 플래너입니다!");
+        alert("You have already requested matching with this planner!");
       }
     }
     setSendRequestPlanner(prev => !prev)
@@ -105,7 +105,7 @@ function PlannerProfileDetail() {
   return (
     <div className="containerbox">
       <div className="mainlayout box1">
-        <NavigationBar title={`${profileDetail.plannerName}의 프로필`} />
+        <NavigationBar title={`${profileDetail.plannerName}'s Profile`} />
         <br />
         <div
           class="container text-center"
@@ -158,10 +158,10 @@ function PlannerProfileDetail() {
                   height: "60px",
                 }}
               >
-                리뷰 개수 : {profileDetail.reviews?.length} <br />
-                평균 별점 : {profileDetail.avgReviewStars} <br />
-                경력 : {profileDetail.career} <br />
-                휴대폰번호 <br /> {profileDetail.phoneNum}
+                Reviews: {profileDetail.reviews?.length} <br />
+                Avg. Rating: {profileDetail.avgReviewStars} <br />
+                Experience: {profileDetail.career} <br />
+                Phone <br /> {profileDetail.phoneNum}
               </div>
             </div>
           </div>
@@ -176,7 +176,7 @@ function PlannerProfileDetail() {
                 marginTop: "13px",
               }}
             >
-              자기소개
+              Introduction
             </div>
             <textarea
               style={{
@@ -193,8 +193,8 @@ function PlannerProfileDetail() {
               id=""
               cols="41"
               rows="8"
-              placeholder="아직 자기소개가 없습니다!"
-              value={profileDetail.introduction || "아직 자기소개가 없습니다!"}
+              placeholder="No introduction yet!"
+              value={profileDetail.introduction || "No introduction yet!"}
               disabled
             ></textarea>
           </div>
@@ -211,7 +211,7 @@ function PlannerProfileDetail() {
                 overflowY: "scroll",
               }}
             >
-              포트폴리오
+              Portfolio
             </div>
             <div
               style={{
@@ -221,7 +221,7 @@ function PlannerProfileDetail() {
                 marginRight: "30px",
               }}
             >
-              총 매칭수 : {profileDetail.matchingCount}
+              Total Matches: {profileDetail.matchingCount}
             </div>
 
             {profileDetail.reviews?.length === 0 ? (
@@ -250,7 +250,7 @@ function PlannerProfileDetail() {
                       justifyContent: "start",
                     }}
                   >
-                    아직 포트폴리오가 없습니다!
+                    No portfolio yet!
                   </div>
                 </div>
               </div>
@@ -290,7 +290,7 @@ function PlannerProfileDetail() {
                             paddingTop: "10px",
                           }}
                         >
-                          {index + 1}.{`${review.user.name} - ${review.reviewStars}점\n`}
+                          {index + 1}.{`${review.user.name} - ${review.reviewStars} stars\n`}
                           <br />
                         </div>
                         <div
@@ -319,7 +319,7 @@ function PlannerProfileDetail() {
                 data-bs-target="#chooseEstimate"
                 style={{ marginTop: "50px" }}
               >
-                견적요청
+                Request Estimate
               </button>
             ) : (
               <button
@@ -327,7 +327,7 @@ function PlannerProfileDetail() {
                 onClick={goMatch}
                 style={{ marginTop: "50px" }}
               >
-                견적요청
+                Request Estimate
               </button>
             )
           ) : null}
@@ -352,7 +352,7 @@ function PlannerProfileDetail() {
                   id="chooseEstimate"
                   style={{ fontSize: "1.9em" }}
                 >
-                  견적서 선택하기
+                  Select Estimate
                 </h1>
                 <button
                   type="button"
@@ -388,7 +388,7 @@ function PlannerProfileDetail() {
                     }}
                   >
                     {estimates?.map((estimate, index) => {
-                      return <option value={index}>견적서{index + 1}</option>;
+                      return <option value={index}>Estimate {index + 1}</option>;
                     })}
                   </select>
 
@@ -398,7 +398,7 @@ function PlannerProfileDetail() {
                       padding: "10px",
                     }}
                   >
-                    견적서 상세정보
+                    Estimate Details
                   </div>
                   <p
                     style={{
@@ -411,7 +411,7 @@ function PlannerProfileDetail() {
                     {currentEstimate ? (
                         <div className="contentcontainer-detail">
                           <div className="contentbox-detail">
-                            <h5>희망 결혼 예정일</h5>
+                            <h5>Preferred Wedding Date</h5>
                             {JSON.parse(currentEstimate?.weddingdate).map(
                               (date, index) => {
                               return (
@@ -420,7 +420,7 @@ function PlannerProfileDetail() {
                                     <></>
                                   ) : (
                                     <>
-                                      <div>{index + 1}순위</div>
+                                      <div>Priority {index + 1}</div>
                                       <div className="result-detail">{date}</div>
                                     </>
                                   )}
@@ -430,7 +430,7 @@ function PlannerProfileDetail() {
                           )}
                           </div>
                           <div className="contentbox-detail">
-                            <h5>희망 결혼 지역</h5>
+                            <h5>Preferred Wedding Region</h5>
                               {JSON.parse(currentEstimate?.region).map((region, index) => {
                                 return (
                               <div className="choosebox-detail">
@@ -438,7 +438,7 @@ function PlannerProfileDetail() {
                                   <></>
                                 ) : (
                                   <>
-                                    <div>{index + 1}순위</div>
+                                    <div>Priority {index + 1}</div>
                                     <div className="result-detail">{region}</div>
                                   </>
                                 )}
@@ -447,18 +447,18 @@ function PlannerProfileDetail() {
                           })}
                           </div>
                           <div className="contentbox-detail">
-                            <h5>예산 한도</h5>
+                            <h5>Budget Limit</h5>
                             <div
                               className="choosebox-detail"
                               style={{ width: "150px" }}
                             >
                               <div className="result-detail">
-                                {currentEstimate?.budget.toLocaleString()}원
+                                ₩{currentEstimate?.budget.toLocaleString()}
                               </div>
                             </div>
                           </div>
                           <div className="contentbox-detail">
-                            <h5>희망 스튜디오 스타일</h5>
+                            <h5>Preferred Studio Style</h5>
                             <div className="choosebox-detail">
                               <div className="result-detail">
                                 {currentEstimate?.studio}
@@ -466,11 +466,11 @@ function PlannerProfileDetail() {
                             </div>
                           </div>
                           <div className="contentbox-detail">
-                            <h5>신부 드레스 스타일</h5>
+                            <h5>Bride Dress Style</h5>
                             {JSON.parse(currentEstimate?.dress).length === 0 && (
                               <div className="choosebox-detail">
                                 <div className="result-noneChoose">
-                                  *선택사항 없음*
+                                  *No selection*
                                 </div>
                               </div>
                             )}
@@ -481,7 +481,7 @@ function PlannerProfileDetail() {
                                     <></>
                                   ) : (
                                     <>
-                                      <div>{index + 1}순위</div>
+                                      <div>Priority {index + 1}</div>
                                       <div className="result-detail">{dress}</div>
                                     </>
                                   )}
@@ -490,11 +490,11 @@ function PlannerProfileDetail() {
                             })}
                           </div>
                           <div className="contentbox-detail">
-                            <h5>신부 메이크업 스타일</h5>
+                            <h5>Bride Makeup Style</h5>
                             {JSON.parse(currentEstimate?.makeup).length === 0 && (
                               <div className="choosebox-detail">
                                 <div className="result-noneChoose">
-                                  *선택사항 없음*
+                                  *No selection*
                                 </div>
                               </div>
                             )}
@@ -505,7 +505,7 @@ function PlannerProfileDetail() {
                                   <></>
                                 ) : (
                                   <>
-                                    <div>{index + 1}순위</div>
+                                    <div>Priority {index + 1}</div>
                                     <div className="result-detail">{makeup}</div>
                                   </>
                                 )}
@@ -514,11 +514,11 @@ function PlannerProfileDetail() {
                             })}
                           </div>
                           <div className="contentbox-detail">
-                            <h5>희망 신혼여행지</h5>
+                            <h5>Preferred Honeymoon Destination</h5>
                             <div className="choosebox-detail">
                               {currentEstimate?.honeymoon === "" && (
                                 <div className="result-noneChoose">
-                                  *선택사항 없음*
+                                  *No selection*
                                 </div>
                               )}
                               {currentEstimate?.honeymoon !== "" && (
@@ -531,15 +531,15 @@ function PlannerProfileDetail() {
 
                           <div className="contentbox-detail">
                             {JSON.parse(currentEstimate?.img)?.length === 0 ? (
-                              <h5>고객 첨부이미지 </h5>
+                              <h5>Customer Attached Images </h5>
                             ) : (
                               <h5 style={{ marginTop: "-20px" }}>
-                                고객 첨부이미지
+                                Customer Attached Images
                               </h5>
                             )}
 
                             {JSON.parse(currentEstimate?.img)?.length === 0 && (
-                              <span>첨부 이미지가 없습니다.</span>
+                              <span>No attached images.</span>
                             )}
                             <br></br>
                             <div>
@@ -571,13 +571,13 @@ function PlannerProfileDetail() {
                             className="contentbox-detail"
                             style={{ borderBottom: "none", marginTop: "10px" }}
                           >
-                            <h5>고객 요청사항</h5>
+                            <h5>Customer Requests</h5>
                             <div
                               className="choosebox-detail w-100"
                               style={{ color: "black" }}
                             >
                               {currentEstimate?.requirement === "" && (
-                                <span>고객요청사항이 없습니다.</span>
+                                <span>No customer requests.</span>
                               )}
                               {currentEstimate?.requirement}
                             </div>
@@ -594,14 +594,14 @@ function PlannerProfileDetail() {
                   data-bs-dismiss="modal"
                   onClick={goChooseEstimate}
                 >
-                  선택
+                  Select
                 </button>
                 <button
                   type="button"
                   class="btn btn-secondary"
                   data-bs-dismiss="modal"
                 >
-                  취소
+                  Cancel
                 </button>
               </div>
             </div>
