@@ -59,6 +59,7 @@ public class ItemController {
 	
 	@RequestMapping(value="/itemList/{category1}")
 	public List<ItemDTO> getItemsByCategory1(@PathVariable String category1) {
+		System.out.println(">>>>>>>> getItemsByCategory1 실행 : " + category1);
 		Category1 cat1 = StringToCategory1Converter.fromString(category1);
 		List<ItemDTO> items = itemService.getItemsByCategory1(cat1);
 		return items;
