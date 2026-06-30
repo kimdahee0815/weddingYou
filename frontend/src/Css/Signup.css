@@ -1,23 +1,22 @@
 /*main.css 내용으로 대체*/
 .Signup-wrap {
-width: 560px;
+    width: 560px;
 
-min-height:100vh;
-margin: 0 auto;
-background: white;
-border: 2px solid rgb(173, 166, 166);
-border-radius: 10px;
-font-family: 'omyu_pretty';
-
+    min-height: 100vh;
+    margin: 0 auto;
+    background: white;
+    border: 2px solid rgb(173, 166, 166);
+    border-radius: 10px;
+    font-family: "omyu_pretty";
 }
 
 ::-webkit-scrollbar {
     display: none;
-  }
+}
 
-.bg{
-    background: rgb(240,240,240);
-    min-height:100vh;
+.bg {
+    background: rgb(240, 240, 240);
+    min-height: 100vh;
 }
 
 .Signup-header {
@@ -46,8 +45,6 @@ font-family: 'omyu_pretty';
     position: relative;
 }
 
-
-
 .Signup-button {
     width: 256px;
     height: 100px;
@@ -70,7 +67,6 @@ font-family: 'omyu_pretty';
     cursor: pointer;
 }
 
-
 /*가이드 바 CSS시작*/
 .Signup-guidebar {
     margin: 0px auto;
@@ -90,11 +86,8 @@ font-family: 'omyu_pretty';
 }
 /*가이드 바 CSS끝*/
 
-
-
-
 /*인풋 CSS*/
-.Signup-inputwrap{
+.Signup-inputwrap {
     width: 256px;
     height: 100%;
     /* background-color: aquamarine; */
@@ -102,10 +95,9 @@ font-family: 'omyu_pretty';
 }
 /*인풋 CSS 끝*/
 
-
 /*개인정보 제공동의 CSS*/
 .Signup-acceptwrap {
-    width: 256px;
+    width: 380px;
     height: 250px;
     /* background: darkorange; */
     margin: 0 auto;
@@ -113,7 +105,7 @@ font-family: 'omyu_pretty';
     padding: 1px;
 }
 
-.Signup-checkbox{
+.Signup-checkbox {
     width: 100%;
     height: 25px;
     /* background: darkolivegreen; */
@@ -123,9 +115,9 @@ font-family: 'omyu_pretty';
 .Signup-contentbox {
     width: 100%;
     margin: 0 auto;
-    height: 130px;
-    border : 1px solid gainsboro;
-    margin-top:30px;
+    height: 200px;
+    border: 1px solid gainsboro;
+    margin-top: 30px;
     padding: 5px;
 }
 .left {
@@ -140,7 +132,7 @@ font-family: 'omyu_pretty';
     background-color: white;
     float: left;
 }
-.left span{
+.left span {
     font-size: 12px;
     color: grey;
 }
@@ -148,12 +140,11 @@ font-family: 'omyu_pretty';
     font-size: 12px;
 }
 
-.contentbar{
+.contentbar {
     width: 100%;
     height: 25%;
 }
 /*개인정보 제공 동의 CSS 끝*/
-
 
 /*버튼*/
 .btn-custom {
@@ -164,9 +155,9 @@ font-family: 'omyu_pretty';
     border-color: rgba(138, 138, 138, 0.533);
     background-color: white;
 }
-.btn-custom:hover{
+.btn-custom:hover {
     background: black;
-    color : white;
+    color: white;
     transition: all 0.3s;
 }
 .btn-custom:disabled {
@@ -188,10 +179,8 @@ font-family: 'omyu_pretty';
 }
 /*버튼관련 CSS 끝*/
 
-
-
 /*회원가입 성공 페이지 CSS*/
-.Signup-Successbox{
+.Signup-Successbox {
     width: 400px;
     height: 720px;
     margin: 0 auto;
@@ -199,17 +188,16 @@ font-family: 'omyu_pretty';
     position: relative;
 }
 
-.Signup-SuccessMessage{
+.Signup-SuccessMessage {
     width: 100%;
     height: 70px;
     position: absolute;
     /* background: darkcyan; */
     text-align: center;
     transition: all 1s;
-    top : 20px;
+    top: 20px;
     opacity: 1;
     font-size: 23px;
-
 }
 /*회원가입 성공 페이지 CSS 끝*/
 
@@ -218,7 +206,7 @@ font-family: 'omyu_pretty';
     --bs-btn-color: var(--bs-white);
     --bs-btn-bg: var(--bd-violet);
     --bs-btn-border-color: var(--bd-violet);
-    --bs-btn-border-radius: .5rem;
+    --bs-btn-border-radius: 0.5rem;
     --bs-btn-hover-color: var(--bs-white);
     --bs-btn-hover-bg: #{shade-color($bd-violet, 10%)};
     --bs-btn-hover-border-color: #{shade-color($bd-violet, 10%)};
@@ -226,4 +214,4 @@ font-family: 'omyu_pretty';
     --bs-btn-active-color: var(--bs-btn-hover-color);
     --bs-btn-active-bg: #{shade-color($bd-violet, 20%)};
     --bs-btn-active-border-color: #{shade-color($bd-violet, 20%)};
-  }
+}

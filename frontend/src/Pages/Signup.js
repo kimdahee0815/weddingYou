@@ -7,47 +7,46 @@ import NavigationBar from "../Components/NavigationBar";
 import Sidesection from "../Components/Sidesection";
 
 function Signup() {
-  const navigate = useNavigate();
-  const handleBack = () => {
-    navigate(-1);
-  };
-  return (
-    <div className="bg containerbox">
-      <div className="mainlayout box1">
-        <NavigationBar title={"Sign Up"} />
+    const navigate = useNavigate();
+    const handleBack = () => {
+        navigate(-1);
+    };
+    return (
+        <div className="bg containerbox">
+            <div className="mainlayout box1">
+                <NavigationBar title={"Sign Up"} />
 
-        <div className="Signup-logo" style={{ marginTop: "200px" }}>
-        </div>
+                <div className="Signup-logo" style={{ marginTop: "200px" }}></div>
 
-        <div className="Signup-button">
-          <button
-            onClick={() => {
-              navigate("./user");
-            }}
-            className="btn-colour-1"
-            style={{ marginRight: "15px" }}
-          >
-            Regular Member
-          </button>
-          <button
-            onClick={() => {
-              navigate("./planner");
-            }}
-            className="btn-colour-1"
-          >
-            Planner Member
-          </button>
+                <div className="Signup-button">
+                    <button
+                        onClick={() => {
+                            navigate("./user");
+                        }}
+                        className="btn-colour-1"
+                        style={{ marginRight: "15px" }}
+                    >
+                        Member
+                    </button>
+                    <button
+                        onClick={() => {
+                            navigate("./planner");
+                        }}
+                        className="btn-colour-1"
+                    >
+                        Planner Member
+                    </button>
+                </div>
+                {/*빈공간 채우는 박스입니다. */}
+                <div style={{ height: 150 }}></div>
+                <Footer />
+            </div>
+            <div className="box2"></div>
+            <div className="box3">
+                <Sidesection />
+            </div>
         </div>
-        {/*빈공간 채우는 박스입니다. */}
-        <div style={{ height: 150 }}></div>
-        <Footer />
-      </div>
-      <div className="box2"></div>
-      <div className="box3">
-        <Sidesection />
-      </div>
-    </div>
-  );
+    );
 }
 
 export default Signup;
