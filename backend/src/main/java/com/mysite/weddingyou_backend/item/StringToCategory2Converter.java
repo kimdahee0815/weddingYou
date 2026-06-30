@@ -27,6 +27,10 @@ public class StringToCategory2Converter implements Converter<String, Item.Catego
 
     @Override
     public Item.Category2 convert(String source) {
+        return fromString(source);
+    }
+
+    public static Item.Category2 fromString(String source) {
         Item.Category2 result = MAP.get(source);
         if (result == null) {
             throw new IllegalArgumentException("Unknown Category2: " + source);

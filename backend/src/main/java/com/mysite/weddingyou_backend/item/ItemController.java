@@ -58,18 +58,17 @@ public class ItemController {
 	}
 	
 	@RequestMapping(value="/itemList/{category1}")
-	public List<ItemDTO> getItemsByCategory1(@PathVariable Category1 category1) {
-		List<ItemDTO> items =null;
-		items = itemService.getItemsByCategory1(category1);
-
-	  return items;
+	public List<ItemDTO> getItemsByCategory1(@PathVariable String category1) {
+		Category1 cat1 = StringToCategory1Converter.fromString(category1);
+		List<ItemDTO> items = itemService.getItemsByCategory1(cat1);
+		return items;
 	}
-	
-	@RequestMapping(value="/itemList/{category1}/{category2}")
-	public List<ItemDTO> getImagesByCategory1AndCategory2(@PathVariable Category1 category1, @PathVariable Category2 category2) {
-		List<ItemDTO> items =null;
-	  items = itemService.getItemsByCategory1AndCategory2(category1, category2);
 
+	@RequestMapping(value="/itemList/{category1}/{category2}")
+	public List<ItemDTO> getImagesByCategory1AndCategory2(@PathVariable String category1, @PathVariable String category2) {
+		Category1 cat1 = StringToCategory1Converter.fromString(category1);
+		Category2 cat2 = StringToCategory2Converter.fromString(category2);
+		List<ItemDTO> items = itemService.getItemsByCategory1AndCategory2(cat1, cat2);
 		return items;
 	}
 
