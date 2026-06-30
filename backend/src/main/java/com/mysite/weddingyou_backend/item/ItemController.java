@@ -1,4 +1,4 @@
-﻿package com.mysite.weddingyou_backend.item;
+package com.mysite.weddingyou_backend.item;
 
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
