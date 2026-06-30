@@ -34,7 +34,7 @@ function Signup() {
                         }}
                         className="btn-colour-1"
                     >
-                        Planner Member
+                        Planner
                     </button>
                 </div>
                 {/*빈공간 채우는 박스입니다. */}
