@@ -1,53 +1,52 @@
-.footer{
+.footer {
     width: 558px;
-    display:flex;
-    padding:0;
-    padding-top:20px;
-    position:fixed;
-    bottom:0;
+    display: flex;
+    padding: 0;
+    padding-top: 20px;
+    position: fixed;
+    bottom: 0;
     padding-bottom: 15px;
     background-color: white;
     box-sizing: content-box;
     border-left: 2px solid rgb(173, 166, 166);
-    border-right:2px solid rgb(173, 166, 166);
-    margin-left:-1.7px;
+    border-right: 2px solid rgb(173, 166, 166);
+    margin-left: -1.7px;
     border-radius: 0 0 10px 10px;
     z-index: 100;
-    font-size:1.3em;
+    font-size: 1.3em;
 }
 
-.footer-border-remove{
+.footer-border-remove {
     width: 558px;
-    display:flex;
-    padding:0;
-    padding-top:20px;
-    position:fixed;
-    bottom:0;
+    display: flex;
+    padding: 0;
+    padding-top: 20px;
+    position: fixed;
+    bottom: 0;
     padding-bottom: 15px;
     background-color: white;
     box-sizing: content-box;
     border-left: 2px solid rgb(173, 166, 166);
-    border-right:2px solid rgb(173, 166, 166);
-    margin-left:-1.7px;
+    border-right: 2px solid rgb(173, 166, 166);
+    margin-left: -1.7px;
     z-index: 100;
-    font-size:1.3em;
+    font-size: 1.3em;
 }
 
-.icon{
-    display:flex;
+.icon {
+    display: flex;
     flex-direction: column;
-    padding:0 31px;
-    margin-left: 1px;
+    padding: 0 27px;
+    margin-left: 2px;
     align-items: center;
 }
 
-
-.icon:hover{
-    cursor:pointer;
+.icon:hover {
+    cursor: pointer;
 }
 
-.icon p{
-    font-size:0.8em;
-    margin:0 auto;
+.icon p {
+    font-size: 0.8em;
+    margin: 0 auto;
     font-weight: bold;
 }
