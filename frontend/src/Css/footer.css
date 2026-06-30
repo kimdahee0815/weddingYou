@@ -17,7 +17,7 @@
 }
 
 .footer-border-remove {
-    width: 558px;
+    /* width: 558px; */
     display: flex;
     padding: 0;
     padding-top: 20px;
@@ -26,9 +26,9 @@
     padding-bottom: 15px;
     background-color: white;
     box-sizing: content-box;
-    border-left: 2px solid rgb(173, 166, 166);
+    /* border-left: 2px solid rgb(173, 166, 166);
     border-right: 2px solid rgb(173, 166, 166);
-    margin-left: -1.7px;
+    margin-left: -1.7px; */
     z-index: 100;
     font-size: 1.3em;
 }
