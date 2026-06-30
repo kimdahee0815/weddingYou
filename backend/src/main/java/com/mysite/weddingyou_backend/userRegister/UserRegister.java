@@ -2,6 +2,8 @@ package com.mysite.weddingyou_backend.userRegister;
 
 import java.time.LocalDateTime;
 
+import org.hibernate.annotations.CreationTimestamp;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -39,7 +41,8 @@ public class UserRegister {
     @Enumerated(EnumType.STRING) // Enum 값을 String 형태로 저장
     private Gender gender;
 
-    @Column(name = "user_join_date", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP", nullable = false)
+    @CreationTimestamp
+    @Column(name = "user_join_date", nullable = false, updatable = false)
     private LocalDateTime userJoinDate;
     
     public enum Gender {
