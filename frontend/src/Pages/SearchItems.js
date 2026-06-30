@@ -15,7 +15,7 @@ import "swiper/css/pagination";
 import "swiper/css/effect-coverflow";
 
 const category = ["Wedding Hall", "Studio", "Outfit", "Makeup", "Honeymoon", "Bouquet"];
-const englishCategory = ["weddingHall", "studio", "clothes", "makeup", "honeymoon", "bouquet"];
+const englishCategory = ["weddingHall", "studio", "weddingOutfit", "makeup", "honeymoon", "bouquet"];
 function SearchItems() {
     const navigate = useNavigate();
 

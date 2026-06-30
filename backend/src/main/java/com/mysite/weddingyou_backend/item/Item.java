@@ -82,22 +82,22 @@ public class Item {
     private Category2 category2;
 	
 		public enum Category1 {
-			전체, 카테고리, 웨딩홀, 의상, 스튜디오, 메이크업, 신혼여행,부케
+			All, Category, WeddingHall, Outfit, Studio, Makeup, Honeymoon, Bouquet
 		}
-	
+
 		public enum Category2 {
-			//웨딩홀
-			일반, 호텔, 채플, 스몰, 야외, 전통혼례,
-			//의상
-			한복, 머메이드, A라인, H라인, 벨라인, 엠파이어, 프린세스, 남성예복, 
-			//스튜디오
-			인물중심, 배경중심, 균형적인,
-			//메이크업
-			헤어, 스모키, 러블리, 큐티, 네추럴, 포인트, 로맨틱한,
-			//신혼여행
-			국내, 해외,
-			//부케
-			라운드, 드롭,케스케이드, 핸드타이드
+			// Wedding Hall
+			Standard, Hotel, Chapel, Small, Outdoor, Traditional,
+			// Outfit
+			Mermaid, Aline, Hline, BallGown, Empire, Princess, MensSuit, Hanbok,
+			// Studio
+			SubjectFocused, BackgroundFocused, Balanced,
+			// Makeup
+			Hair, Romantic, Point, Natural, Smoky, Cute, Lovely,
+			// Honeymoon
+			International, Domestic,
+			// Bouquet
+			Round, Drop, Cascade, HandTied
 		}
 
 }

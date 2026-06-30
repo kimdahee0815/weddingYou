@@ -7,21 +7,22 @@ import "../../Css/menuList.css";
 import "../../Css/items.css";
 import Sidesection from "../../Components/Sidesection";
 
+const title = "Outfit";
+const engTitle = "weddingOutfit";
+const category2 = [
+  "Mermaid",
+  "A-line",
+  "H-line",
+  "Ball Gown",
+  "Empire",
+  "Princess",
+  "Men's Suit",
+  "Hanbok",
+];
+
 const Weddingoutfit = () => {
   const { category1 } = useParams();
   const [currentItem, setCurrentItem] = useState();
-  const title = "Outfit";
-  const engTitle = "weddingoutfit";
-  const category2 = [
-    "Mermaid",
-    "A-line",
-    "H-line",
-    "Ball Gown",
-    "Empire",
-    "Princess",
-    "Men's Suit",
-    "Hanbok",
-  ];
 
   const [isAdmin, setIsAdmin] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState(category2[0]);
@@ -39,7 +40,7 @@ const Weddingoutfit = () => {
       setIsAdmin(false);
     }
     axios
-      .get(`/item/itemList/${title}/${selectedCategory}`)
+      .get(`/item/itemList/${engTitle}/${selectedCategory}`)
       .then((res) => {
         const dataList = res.data;
         const items = [...dataList];

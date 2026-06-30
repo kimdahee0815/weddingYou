@@ -1,4 +1,4 @@
-package com.mysite.weddingyou_backend.item;
+﻿package com.mysite.weddingyou_backend.item;
 
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
@@ -92,19 +92,19 @@ public class ItemController {
 	    if(items.size()!=0) {
 	        for(int i =0;i<items.size();i++) {
 	 	      	Category1 category1 = items.get(i).getCategory1();
-	 	      	if(category1.toString().equals("웨딩홀")) {
+	 	      	if(category1 == Category1.WeddingHall) {
 	 	        	weddingHallItems.add(items.get(i));
-	 	      	}else if(category1.toString().equals("스튜디오")) {
+	 	      	}else if(category1 == Category1.Studio) {
 	 	        	studioItems.add(items.get(i));
-	 	      	}else if(category1.toString().equals("의상")) {
+	 	      	}else if(category1 == Category1.Outfit) {
 	 	        	dressItems.add(items.get(i));
-	 	      	}else if(category1.toString().equals("메이크업")) {
+	 	      	}else if(category1 == Category1.Makeup) {
 	 	        	makeupItems.add(items.get(i));
-	 	      	}else if(category1.toString().equals("신혼여행")) {
+	 	      	}else if(category1 == Category1.Honeymoon) {
 	 	        	honeymoonItems.add(items.get(i));
-	 	      	}else if(category1.toString().equals("부케")) {
+	 	      	}else if(category1 == Category1.Bouquet) {
 	 	        	bouquetItems.add(items.get(i));
-	 	      	}  	
+	 	      	}
 	 	    }
 	      	Collections.sort(weddingHallItems, (a, b) -> b.getItemWriteDate().compareTo(a.getItemWriteDate()));
 	 	    Collections.sort(studioItems, (a, b) -> b.getItemWriteDate().compareTo(a.getItemWriteDate()));

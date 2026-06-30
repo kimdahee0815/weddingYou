@@ -7,12 +7,13 @@ import "../../Css/menuList.css";
 import "../../Css/items.css";
 import Sidesection from "../../Components/Sidesection";
 
+const title = "Studio";
+const engTitle = "studio";
+const category2 = ["Subject-focused", "Background-focused", "Balanced"];
+
 const Studio = () => {
   const { category1 } = useParams();
   const [currentItem, setCurrentItem] = useState();
-  const title = "Studio";
-  const engTitle = "studio";
-  const category2 = ["Subject-focused", "Background-focused", "Balanced"];
   const [isAdmin, setIsAdmin] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState(category2[0]);
   const [editMode, setEditMode] = useState(false);
@@ -29,7 +30,7 @@ const Studio = () => {
       setIsAdmin(false);
     }
     axios
-      .get(`/item/itemList/${title}/${selectedCategory}`)
+      .get(`/item/itemList/${engTitle}/${selectedCategory}`)
       .then((res) => {
         const dataList = res.data;
         const items = [...dataList];

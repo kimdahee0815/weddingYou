@@ -7,8 +7,8 @@ import "../../Css/WritePost.css";
 import selectImg from "../../Assets/selectImg.webp";
 import Sidesection from "../../Components/Sidesection";
 const categoryOptions = {
-  weddinghall: ["Standard", "Hotel", "Chapel", "Small", "Outdoor", "Traditional"],
-  weddingoutfit: [
+  weddingHall: ["Standard", "Hotel", "Chapel", "Small", "Outdoor", "Traditional"],
+  weddingOutfit: [
     "Mermaid",
     "A-line",
     "H-line",
@@ -24,12 +24,12 @@ const categoryOptions = {
   bouquet: ["Round", "Drop", "Cascade", "Hand-tied"],
 };
 const selectedCategory = {
-  weddinghall: "Wedding Hall",
-  weddingoutfit: "Outfit",
-  studio: "Studio",
-  makeup: "Makeup",
-  honeymoon: "Honeymoon",
-  bouquet: "Bouquet",
+  weddingHall: "weddingHall",
+  weddingOutfit: "weddingOutfit",
+  studio: "studio",
+  makeup: "makeup",
+  honeymoon: "honeymoon",
+  bouquet: "bouquet",
 };
 
 const WritePost = () => {
@@ -41,9 +41,6 @@ const WritePost = () => {
   const [image, setImage] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(selectImg);
   const [category2, setCategory2] = useState(categoryOptions[category1][0]);
-  const [selectedCategory1, setSelectedCategory1] = useState(
-    selectedCategory[category1]
-  );
 
   const postItem = () => {
     if (content !== "" && itemName !== "") {
@@ -51,7 +48,7 @@ const WritePost = () => {
         const formData = new FormData();
         formData.append("itemName", itemName);
         formData.append("content", content);
-        formData.append("category1", selectedCategory1);
+        formData.append("category1", selectedCategory[category1]);
         formData.append("category2", category2);
         formData.append("file", image);
         formData.append("imgContent", imgDetailContent);

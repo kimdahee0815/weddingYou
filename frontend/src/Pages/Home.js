@@ -9,8 +9,8 @@ import Sidesection from "../Components/Sidesection";
 
 import axios from "axios";
 
-const category = ["Wedding Hall", "Studio", "Outfit", "Makeup", "Honeymoon", "Bouquet"];
-const englishCategory = ["weddingHall", "studio", "clothes", "makeup", "honeymoon", "bouquet"];
+const categoryIds = ["weddingHall", "studio", "weddingOutfit", "makeup", "honeymoon", "bouquet"];
+const categoryLabels = ["Wedding Hall", "Studio", "Outfit", "Makeup", "Honeymoon", "Bouquet"];
 function Home() {
     const navigate = useNavigate();
 
@@ -90,7 +90,7 @@ function Home() {
     useEffect(() => {
         const getWholeItems = async () => {
             try {
-                const promises = category.map((c) => axios.get(`/item/itemList/${c}`));
+                const promises = categoryIds.map((c) => axios.get(`/item/itemList/${c}`));
                 const responses = await Promise.all(promises);
                 let items = responses.map((res) => res.data);
                 // console.log(items.map(itemList => itemList.map(item => ({
@@ -110,10 +110,10 @@ function Home() {
                                 item.like?.some(
                                     (like) =>
                                         like.user?.email === sessionStorage.getItem("email") ||
-                                        like.planner?.email === sessionStorage.getItem("email")
+                                        like.planner?.email === sessionStorage.getItem("email"),
                                 ) || false,
-                        }))
-                    )
+                        })),
+                    ),
                 );
                 setFinish(true);
             } catch (error) {
@@ -150,9 +150,9 @@ function Home() {
                                   likeCount: item.likeCount + (isLikedNow ? -1 : 1),
                                   isLiked: !isLikedNow,
                               }
-                            : item
-                    )
-                )
+                            : item,
+                    ),
+                ),
             );
 
             try {
@@ -174,14 +174,14 @@ function Home() {
                                       likeCount: item.likeCount + (isLikedNow ? 1 : -1),
                                       isLiked: isLikedNow,
                                   }
-                                : item
-                        )
-                    )
+                                : item,
+                        ),
+                    ),
                 );
                 return false;
             }
         },
-        [currentItem?.itemId]
+        [currentItem?.itemId],
     );
 
     const handleLikeClick = async () => {
@@ -365,14 +365,14 @@ function Home() {
                                 }}
                             >
                                 <ul class="nav sortingList" style={{ width: "525px" }}>
-                                    {category.map((item, index) => (
+                                    {categoryLabels.map((label, index) => (
                                         <li class="nav-item" key={index}>
                                             <div
                                                 class="nav-link"
                                                 onClick={() => scrollToHeading(index)}
                                                 style={{ cursor: "pointer" }}
                                             >
-                                                {item}
+                                                {label}
                                             </div>
                                         </li>
                                     ))}
@@ -400,7 +400,7 @@ function Home() {
                                             >
                                                 <path d="M4 1c2.21 0 4 1.755 4 3.92C8 2.755 9.79 1 12 1s4 1.755 4 3.92c0 3.263-3.234 4.414-7.608 9.608a.513.513 0 0 1-.784 0C3.234 9.334 0 8.183 0 4.92 0 2.755 1.79 1 4 1z" />
                                             </svg>
-                                            &nbsp;{`${englishCategory[categoryIndex]}`}&nbsp;
+                                            &nbsp;{categoryLabels[categoryIndex]}&nbsp;
                                             <svg
                                                 xmlns="http://www.w3.org/2000/svg"
                                                 width="20"
@@ -414,7 +414,7 @@ function Home() {
                                         </h4>
                                         <br />
                                         <div
-                                            id={`${englishCategory[categoryIndex]}Fade`}
+                                            id={`${categoryIds[categoryIndex]}Fade`}
                                             className="carousel slide carousel-fade"
                                             data-bs-ride="carousel"
                                             data-bs-interval="5000"
@@ -449,7 +449,7 @@ function Home() {
                                                                 data-bs-toggle="modal"
                                                                 data-bs-target="#imgDetailModal"
                                                                 data-bs-item={JSON.stringify(item)}
-                                                                data-bs-category={category[categoryIndex]}
+                                                                data-bs-category={categoryIds[categoryIndex]}
                                                                 onClick={showingDetail}
                                                                 src={item.itemImg}
                                                                 loading="lazy"
@@ -469,7 +469,7 @@ function Home() {
                                             <button
                                                 class="carousel-control-prev"
                                                 type="button"
-                                                data-bs-target={`#${englishCategory[categoryIndex]}Fade`}
+                                                data-bs-target={`#${categoryIds[categoryIndex]}Fade`}
                                                 data-bs-slide="prev"
                                             >
                                                 <span
@@ -481,7 +481,7 @@ function Home() {
                                             <button
                                                 class="carousel-control-next"
                                                 type="button"
-                                                data-bs-target={`#${englishCategory[categoryIndex]}Fade`}
+                                                data-bs-target={`#${categoryIds[categoryIndex]}Fade`}
                                                 data-bs-slide="next"
                                             >
                                                 <span

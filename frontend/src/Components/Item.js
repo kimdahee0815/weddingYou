@@ -12,9 +12,9 @@ const Item = () => {
   const { category1 } = useParams();
 
   switch (category1) {
-    case "weddinghall":
+    case "weddingHall":
       return <Weddinghall />;
-    case "weddingoutfit":
+    case "weddingOutfit":
       return <Weddingoutfit />;
     case "studio":
       return <Studio />;

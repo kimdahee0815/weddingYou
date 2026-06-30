@@ -446,7 +446,7 @@ const DataListComp = ({ list, navigate }) => {
       </>
     );
   } else {
-    <div>검색결과가 없습니다.</div>;
+    return <div>No results found.</div>;
   }
 };
 

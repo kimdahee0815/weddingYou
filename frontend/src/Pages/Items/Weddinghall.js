@@ -7,12 +7,13 @@ import Sidesection from "../../Components/Sidesection";
 import "../../Css/menuList.css";
 import "../../Css/items.css";
 
+const title = "Wedding Hall";
+const engTitle = "weddingHall";
+const category2 = ["Standard", "Hotel", "Chapel", "Small", "Outdoor", "Traditional"];
+
 const Weddinghall = ({ postSubmitted }) => {
   const { category1 } = useParams();
   const [currentItem, setCurrentItem] = useState();
-  const title = "Wedding Hall";
-  const engTitle = "weddinghall";
-  const category2 = ["Standard", "Hotel", "Chapel", "Small", "Outdoor", "Traditional"];
   const [isAdmin, setIsAdmin] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(category2[0]);
   const [editMode, setEditMode] = useState(false);
@@ -29,7 +30,7 @@ const Weddinghall = ({ postSubmitted }) => {
       setIsAdmin(false);
     }
     axios
-      .get(`/item/itemList/${title}/${selectedCategory}`)
+      .get(`/item/itemList/${engTitle}/${selectedCategory}`)
       .then((res) => {
         const dataList = res.data;
         const items = [...dataList];

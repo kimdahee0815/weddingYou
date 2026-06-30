@@ -379,7 +379,7 @@ function QnAdetail() {
                                 ></button>
                               </div>
                               <div class="modal-body" style={{ fontSize: 26 }}>
-                                정말로 삭제하시겠습니까?
+                                Are you sure you want to delete this?
                               </div>
                               <div class="modal-footer">
                                 <button

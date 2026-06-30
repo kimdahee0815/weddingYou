@@ -463,7 +463,7 @@ function Review() {
                                   <></>
                                 ) : (
                                   <>
-                                    <div>{index + 1}순위</div>
+                                    <div>#{index + 1}</div>
                                     <div className="result-detail">{e}</div>
                                   </>
                                 )}
@@ -507,7 +507,7 @@ function Review() {
                                   <></>
                                 ) : (
                                   <>
-                                    <div>{index + 1}순위</div>
+                                    <div>#{index + 1}</div>
                                     <div className="result-detail">{e}</div>
                                   </>
                                 )}

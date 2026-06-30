@@ -59,9 +59,9 @@ function NavigationBar({ title, goUpdate, category1, isAdmin, engTitle }) {
           ) : (
             <div className="empty"></div>
           )}
-          {(path.indexOf("menu/weddinghall") === 1 ||
+          {(path.indexOf("menu/weddingHall") === 1 ||
             path.indexOf("menu/studio") === 1 ||
-            path.indexOf("menu/weddingoutfit") === 1 ||
+            path.indexOf("menu/weddingOutfit") === 1 ||
             path.indexOf("menu/makeup") === 1 ||
             path.indexOf("menu/honeymoon") === 1 ||
             path.indexOf("menu/bouquet") === 1) &&
@@ -120,9 +120,9 @@ function NavigationBar({ title, goUpdate, category1, isAdmin, engTitle }) {
           ) : (
             <div className="empty"></div>
           )}
-          {(path.indexOf("menu/weddinghall") === 1 ||
+          {(path.indexOf("menu/weddingHall") === 1 ||
             path.indexOf("menu/studio") === 1 ||
-            path.indexOf("menu/weddingoutfit") === 1 ||
+            path.indexOf("menu/weddingOutfit") === 1 ||
             path.indexOf("menu/makeup") === 1 ||
             path.indexOf("menu/honeymoon") === 1 ||
             path.indexOf("menu/bouquet") === 1) &&

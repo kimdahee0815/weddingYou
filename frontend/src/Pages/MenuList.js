@@ -10,8 +10,8 @@ import Loadingimg3 from "../Assets/loading img3.jpg";
 import Sidesection from "../Components/Sidesection";
 
 const Category1 = [
-  { label: "Wedding Hall", value: "weddinghall" },
-  { label: "Outfit", value: "weddingoutfit" },
+  { label: "Wedding Hall", value: "weddingHall" },
+  { label: "Outfit", value: "weddingOutfit" },
   { label: "Studio", value: "studio" },
   { label: "Makeup", value: "makeup" },
   { label: "Honeymoon", value: "honeymoon" },
