@@ -1,5 +1,5 @@
 .footer {
-    width: 558px;
+    /* width: 558px; */
     display: flex;
     padding: 0;
     padding-top: 20px;
@@ -8,10 +8,11 @@
     padding-bottom: 15px;
     background-color: white;
     box-sizing: content-box;
-    border-left: 2px solid rgb(173, 166, 166);
-    border-right: 2px solid rgb(173, 166, 166);
-    margin-left: -1.7px;
+    /* border-left: 2px solid rgb(173, 166, 166);
+    border-right: 2px solid rgb(173, 166, 166); */
+    /* margin-left: -1.7px; */
     border-radius: 0 0 10px 10px;
+    margin-bottom: 5px;
     z-index: 100;
     font-size: 1.3em;
 }
