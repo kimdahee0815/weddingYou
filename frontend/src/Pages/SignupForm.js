@@ -100,9 +100,9 @@ function SignupForm() {
     }, [checkAll, namecheck, emailcheck, passwordcheck, passwordcheck2, phonecheck, careercheck, duplicatecheck]);
 
     const EventHandlerName = (e) => {
-        const koreanNameRegExp = /^[가-힣\s]+$/;
+        const nameRegExp = /^[가-힣a-zA-Z\s]+$/;
         setName(e.target.value);
-        if (koreanNameRegExp.test(e.target.value)) {
+        if (nameRegExp.test(e.target.value)) {
             setNamecheck(true);
             setNamestyle("is-valid");
         } else {
@@ -280,7 +280,7 @@ function SignupForm() {
                             EventHandler={EventHandlerName}
                             style={namestyle}
                             message="Please enter a valid name."
-                            length={5}
+                            length={20}
                             type="text"
                         />
                         <InputComp
