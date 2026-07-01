@@ -11,6 +11,14 @@ import axios from "axios";
 
 const categoryIds = ["weddingHall", "studio", "weddingOutfit", "makeup", "honeymoon", "bouquet"];
 const categoryLabels = ["Wedding Hall", "Studio", "Outfit", "Makeup", "Honeymoon", "Bouquet"];
+const categoryIcons = [
+    "bi-building", // Wedding Hall
+    "bi-camera", // Studio
+    "bi-bag", // Outfit
+    "bi-brush", // Makeup
+    "bi-heart-fill", // Honeymoon
+    "bi-flower1", // Bouquet
+];
 function Home() {
     const navigate = useNavigate();
 
@@ -356,23 +364,25 @@ function Home() {
                         <div className="NavBar">
                             <nav
                                 id="navbar-example2"
-                                class="navbar bg-light px-3 mb-3"
+                                className="navbar bg-light px-3 mb-3"
                                 style={{
                                     position: "fixed",
                                     top: 80,
                                     zIndex: 99,
                                     background: "white",
+                                    width: "556px",
                                 }}
                             >
-                                <ul class="nav sortingList" style={{ width: "525px" }}>
+                                <ul className="nav sortingList">
                                     {categoryLabels.map((label, index) => (
-                                        <li class="nav-item" key={index}>
+                                        <li className="nav-item" key={index}>
                                             <div
-                                                class="nav-link"
+                                                className="nav-link"
                                                 onClick={() => scrollToHeading(index)}
                                                 style={{ cursor: "pointer" }}
                                             >
-                                                {label}
+                                                <i className={`bi ${categoryIcons[index]}`}></i>
+                                                <span>{label}</span>
                                             </div>
                                         </li>
                                     ))}
@@ -385,7 +395,7 @@ function Home() {
                                 data-bs-smooth-scroll="true"
                                 class="scrollspy-example bg-light p-3 rounded-2"
                                 tabindex="0"
-                                style={{ marginTop: "130px" }}
+                                style={{ marginTop: "175px" }}
                             >
                                 {wholeItems.map((items, categoryIndex) => (
                                     <div key={categoryIndex}>
@@ -663,10 +673,7 @@ function Home() {
                                 }}
                             >
                                 {window.sessionStorage.getItem("category") === "user" && (
-                                    <div
-                                        className="estimate-write-btn"
-                                        onClick={() => navigate("/estimateform")}
-                                    >
+                                    <div className="estimate-write-btn" onClick={() => navigate("/estimateform")}>
                                         <i className="bi bi-pencil-square"></i>
                                         <span className="estimate-write-btn-text">Estimate</span>
                                     </div>

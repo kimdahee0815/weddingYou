@@ -16,49 +16,48 @@
 
 .likeicon {
     position: absolute;
-  margin: 10px 10px 10px 20px;
+    margin: 10px 10px 10px 20px;
 }
 
 .likeicon:hover {
-  fill: rgb(255, 0, 0);
-  cursor: pointer;
+    fill: rgb(255, 0, 0);
+    cursor: pointer;
 }
 
 .likeiconfill {
-  fill : rgb(255, 0, 0);
-  margin: 10px 10px 10px 20px;
-  position: absolute;
-  top: 0;
-  left: 0;
-  opacity: 0;
-  transition: opacity 0.2s;
+    fill: rgb(255, 0, 0);
+    margin: 10px 10px 10px 20px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    transition: opacity 0.2s;
 }
 
 .likeiconfill:hover {
-  opacity: 1;
-  cursor: pointer;
+    opacity: 1;
+    cursor: pointer;
 }
 
 .probutton {
-  box-sizing: content-box;
-  position: fixed;
-  margin-left: 480px;
-  left: auto;
-  bottom: 105px;
-  float: right;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  background-color: #00c3ff;
-  color: rgb(0, 0, 0);
-  text-align: center;
-  font-size: 16px;
-  cursor: pointer;
-  border-style: solid;
-  border-width: 2px;
-  z-index: 100;
+    box-sizing: content-box;
+    position: fixed;
+    margin-left: 480px;
+    left: auto;
+    bottom: 105px;
+    float: right;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #00c3ff;
+    color: rgb(0, 0, 0);
+    text-align: center;
+    font-size: 16px;
+    cursor: pointer;
+    border-style: solid;
+    border-width: 2px;
+    z-index: 100;
 }
-  
 
 .probutton:hover {
     border-color: rgb(132, 0, 255);
@@ -83,8 +82,60 @@
     font-size: 1.5rem;
 }
 
+#navbar-example2 {
+    padding: 14px 2px 0 !important;
+    border-bottom: 1px solid #eee;
+    font-size: 1.4em;
+}
+
 .sortingList {
-    font-size: 1.4rem;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    width: 100% !important;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sortingList .nav-item {
+    display: flex;
+}
+
+.sortingList .nav-link {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 4px 14px;
+    color: #999;
+    font-size: 0.78em;
+    font-weight: 500;
+    letter-spacing: -0.2px;
+    white-space: nowrap;
+    border-bottom: 2px solid transparent;
+    transition:
+        color 0.25s ease,
+        border-color 0.25s ease;
+}
+
+.sortingList .nav-link i {
+    font-size: 1.15em;
+    transition: transform 0.25s ease;
+}
+
+.sortingList .nav-link:hover {
+    color: #407ef1;
+}
+
+.sortingList .nav-link:hover i {
+    transform: translateY(-2px);
+}
+
+.sortingList .nav-link.active {
+    color: #407ef1;
+    font-weight: 700;
+    border-bottom: 2px solid #407ef1;
 }
 
 .likeListBtn {

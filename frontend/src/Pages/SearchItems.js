@@ -6,7 +6,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, EffectCoverflow, Pagination } from "swiper";
+import { EffectCoverflow, Navigation, Pagination } from 'swiper/modules';
 import Animation from "../Components/Animation";
 import Sidesection from "../Components/Sidesection";
 import "swiper/css";
