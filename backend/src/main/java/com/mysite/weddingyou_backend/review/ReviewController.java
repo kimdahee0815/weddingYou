@@ -285,7 +285,7 @@ public class ReviewController {
 	
 	@PostMapping(value = "/existreviewpaid")
 	public ArrayList<String> checkPaidReview(
-	        @RequestParam("userEmail") String userEmail
+	        @RequestParam(required=false) String userEmail
 	        ) throws IOException {
 		int res =0;
 		ArrayList<String> result = new ArrayList<>();
