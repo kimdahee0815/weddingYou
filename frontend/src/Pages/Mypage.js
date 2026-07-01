@@ -571,7 +571,7 @@ function Mypage() {
                             <div
                                 style={{
                                     display: "flex",
-                                    alignItems: "center",
+                                    alignItems: "end",
                                     justifyContent: "space-evenly",
                                     maginTop: "20px",
                                 }}
@@ -892,7 +892,7 @@ function Mypage() {
                             <div
                                 style={{
                                     display: "flex",
-                                    alignItems: "center",
+                                    alignItems: "end",
                                     justifyContent: "space-evenly",
                                     maginTop: "20px",
                                 }}

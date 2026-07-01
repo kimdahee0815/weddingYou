@@ -36,11 +36,10 @@ function PlannerProfileDetail() {
                 const data = res.data;
                 // console.log(data);
                 setProfileDetail(data);
-
-                const formData = new FormData();
-                formData.append("userEmail", sessionStorage.getItem("email"));
-
-                const { data: estimates } = await axios.post(`/plannerProfile/unmatched-estimates`, formData);
+                const userEmail = sessionStorage.getItem("email");
+                const { data: estimates } = await axios.post(`/plannerProfile/unmatched-estimates`, null, {
+                    params: { userEmail },
+                });
                 setEstimates(estimates);
 
                 if (estimates.length !== 0) {
