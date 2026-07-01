@@ -2,15 +2,14 @@ div {
     box-sizing: border-box;
 }
 
-
 /*공통 폰트사이즈 20px*/
 /*height가 없으므로 내용물 없으면 표시되지 않음.*/
 .adminpage-container {
-        width: 85%;
-        margin: 0 auto;
-        margin-top: 100px; 
-        /* background: coral; */
-        padding: 0.1px 0px;
+    width: 85%;
+    margin: 0 auto;
+    margin-top: 100px;
+    /* background: coral; */
+    padding: 0.1px 0px;
 }
 
 .adminpage-Administration {
@@ -54,11 +53,11 @@ div {
     border: 1px solid black;
 }
 
-.adminpage-pagingAndResearchBox{
+.adminpage-pagingAndResearchBox {
     width: 100%;
     height: 100px;
     /* background: red; */
-    position : absolute;
+    position: absolute;
     bottom: 0;
 }
 .adminpage-pagingAndResearchBox div {
@@ -84,14 +83,10 @@ div {
     /* background: red; */
 }
 
-
-
-
 .adminpage-pagingAndResearchBox .form-control {
     width: 50%;
     height: 40px;
 }
-
 
 .adminpage-Administration-list-head-box {
     width: 100%;
@@ -122,7 +117,6 @@ div {
     font-weight: bold;
 }
 
-
 .form-control-width {
     width: 200px;
     display: inline-block;
@@ -135,7 +129,7 @@ div {
 }
 
 .pageing-select {
-    color : blue;
+    color: blue;
     text-decoration: underline;
 }
 
@@ -155,11 +149,8 @@ div {
     padding-top: 150px;
 }
 
-
-
-
 .adminpage-researchBox_ {
-    width: 50%;
+    width: 60%;
     height: 40px;
     /* background: blue; */
     overflow: hidden;
@@ -180,7 +171,6 @@ div {
     font-size: 15px;
     border-top-right-radius: 10px;
     border-bottom-right-radius: 10px;
-
 }
 
 .전체보기버튼 {
@@ -190,11 +180,10 @@ div {
     display: flex;
     justify-content: center;
     align-items: center;
-    color : gray
+    color: gray;
 }
 
-
-.전체보기버튼:hover  i{
+.전체보기버튼:hover i {
     color: black;
     animation-name: 빙글빙글;
     animation-duration: 0.7s;
@@ -210,33 +199,28 @@ div {
     }
 }
 
-
 .Modal-detail {
     font-size: 20px;
 }
 
-
 .btnColor {
     background: #407ef1;
-    color : white
+    color: white;
 }
 
 .btnColor:hover {
     color: #ffffff;
     background-color: #105ff1;
-    transition:0.5s;
-  }
+    transition: 0.5s;
+}
 
 .matchTrue {
-    color :green;
+    color: green;
     text-decoration: underline;
 }
 .matchFalse {
-    color:  gray;
+    color: gray;
 }
-
-
-
 
 .button-Box {
     width: 256px;
