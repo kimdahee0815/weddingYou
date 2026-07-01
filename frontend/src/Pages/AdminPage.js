@@ -615,7 +615,7 @@ const AdminPage = () => {
                                     Name
                                 </div>
                                 <div className="adminpage-Administration-list-head" style={{ width: "15%" }}>
-                                    Member Type
+                                    Type
                                 </div>
                                 <div className="adminpage-Administration-list-head" style={{ width: "30%" }}>
                                     Phone
@@ -1046,7 +1046,7 @@ const DetailModal = ({
                                     />
                                 </p>
                                 <p>
-                                    Member Type :&nbsp;
+                                    Type :&nbsp;
                                     {userArticle.type === "user" ? "Member" : "Planner"}
                                 </p>
                                 <p>Email : {userArticle.email} </p>
