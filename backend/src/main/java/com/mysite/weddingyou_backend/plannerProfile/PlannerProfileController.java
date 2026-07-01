@@ -159,7 +159,7 @@ public class PlannerProfileController {
     }
 	}
     
-    @PostMapping("/plannerProfile/detail")
+    @GetMapping("/plannerProfile/detail")
     public PlannerProfileDTO getProfileDetail(@RequestParam("plannerEmail") String plannerEmail) throws ParseException {
     	PlannerProfileDTO targetPlannerProfile = plannerService.getPlannerByEmail(plannerEmail);
     	
