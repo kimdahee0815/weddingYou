@@ -9,319 +9,294 @@ import Sidesection from "../../Components/Sidesection";
 
 const title = "Makeup";
 const engTitle = "makeup";
-const category2 = [
-  "Hair",
-  "Romantic",
-  "Point",
-  "Natural",
-  "Smoky",
-  "Cute",
-  "Lovely",
-];
+const category2 = ["Hair", "Romantic", "Point", "Natural", "Smoky", "Cute", "Lovely"];
 
 const Makeup = () => {
-  const { category1 } = useParams();
-  const [currentItem, setCurrentItem] = useState();
-  const [isAdmin, setIsAdmin] = useState(true);
-  const [selectedCategory, setSelectedCategory] = useState(category2[0]);
-  const [editMode, setEditMode] = useState(false);
-  const [itemList, setItemList] = useState([]);
+    const { category1 } = useParams();
+    const [currentItem, setCurrentItem] = useState();
+    const [isAdmin, setIsAdmin] = useState(true);
+    const [selectedCategory, setSelectedCategory] = useState(category2[0]);
+    const [editMode, setEditMode] = useState(false);
+    const [itemList, setItemList] = useState([]);
 
-  const navigate = useNavigate();
+    const navigate = useNavigate();
 
-  const [update, setUpdate] = useState(false);
+    const [update, setUpdate] = useState(false);
 
-  useEffect(() => {
-    if (sessionStorage.getItem("email") === "admin@email.com") {
-      setIsAdmin(true);
-    } else {
-      setIsAdmin(false);
-    }
-    axios
-      .get(`/item/itemList/${engTitle}/${selectedCategory}`)
-      .then((res) => {
-        const dataList = res.data;
-        const items = [...dataList];
-        setItemList(items);
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-  }, [selectedCategory, update]);
+    useEffect(() => {
+        if (sessionStorage.getItem("email") === "admin@email.com") {
+            setIsAdmin(true);
+        } else {
+            setIsAdmin(false);
+        }
+        axios
+            .get(`/item/itemList/${engTitle}/${selectedCategory}`)
+            .then((res) => {
+                const dataList = res.data;
+                const items = [...dataList];
+                setItemList(items);
+            })
+            .catch((e) => {
+                console.log(e);
+            });
+    }, [selectedCategory, update]);
 
-  const showingDetail = (e) => {
-    let {
-      bsItem:item,
-    } = e.target.dataset
+    const showingDetail = (e) => {
+        let { bsItem: item } = e.target.dataset;
 
-    item = JSON.parse(item);
-    setCurrentItem(item);
-  };
+        item = JSON.parse(item);
+        setCurrentItem(item);
+    };
 
-  const handleCategoryClick = (category) => {
-    setSelectedCategory(category);
-  };
+    const handleCategoryClick = (category) => {
+        setSelectedCategory(category);
+    };
 
-  const handleEditClick = () => {
-    setEditMode(true);
-    const itemId = currentItem.itemId;
-    navigate(`/editpost/${itemId}`, {
-      state: {
-        originalTitle: currentItem.itemName,
-        originalContent: currentItem.content,
-        engTitle: engTitle,
-        originalimgDetailContent: currentItem.imgContent,
-      },
-    });
-  };
+    const handleEditClick = () => {
+        setEditMode(true);
+        const itemId = currentItem.itemId;
+        navigate(`/editpost/${itemId}`, {
+            state: {
+                originalTitle: currentItem.itemName,
+                originalContent: currentItem.content,
+                engTitle: engTitle,
+                originalimgDetailContent: currentItem.imgContent,
+            },
+        });
+    };
 
-  const handleDeleteClick = () => {
-    axios
-      .post(`/item/deleteItem/${currentItem.itemId}`)
-      .then((res) => {
-       // console.log(res);
-        setUpdate(!update);
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-  };
-
-  useEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-  }, [selectedCategory, update]);
-
-  const gotoDetailInfo = (e) => {
-    navigate("/imgDetail", {
-      state: { 
-        itemId: currentItem.itemId, 
-        imgsrc: currentItem.itemImg, 
-        content: currentItem.content,
-        imgContent: currentItem.imgContent,
-        itemName: currentItem.itemName  
-      },
-    });
-  };
-  return (
-    <div className="containerbox">
-      <div className="mainlayout box1">
-        <NavigationBar title={title} category1={category1} isAdmin={isAdmin} />
-        <div
-          className="category-wrapper"
-          style={{
-            position: "fixed",
-            top: "58px",
-            background: "white",
-            height: "70px",
-            width: "557px",
-          }}
-        >
-          {category2.map((category) => (
-            <div
-              key={category}
-              className={`category ${
-                selectedCategory === category ? "active" : ""
-              }`}
-              onClick={() => {
-                handleCategoryClick(category);
+    const handleDeleteClick = () => {
+        axios
+            .post(`/item/deleteItem/${currentItem.itemId}`)
+            .then((res) => {
+                // console.log(res);
                 setUpdate(!update);
-              }}
-              style={{ fontSize: "1.3em", marginTop: "20px" }}
-            >
-              {category}
-            </div>
-          ))}
-        </div>
-        <div
-          className="image-wrapper"
-          style={{
-            marginTop: "150px",
-            minHeight: "100%",
-            marginBottom: "100px",
-          }}
-        >
-            {itemList.map((item) => (
-              <img
-              //   key={image.id}
-              src={item.itemImg}
-              alt=""
-              onClick={showingDetail}
-              data-bs-toggle="modal"
-              data-bs-target="#imgDetailModal"
-              style={{
-                cursor: "pointer",
-                width: "250px",
-                height: "250px",
-              }}
-              data-bs-item={JSON.stringify(item)}
-              data-bs-category="Makeup"
-              />
-            ))}
-        </div>
+            })
+            .catch((e) => {
+                console.log(e);
+            });
+    };
 
-        <Footer />
-        {/* 이미지 상세정보 모달창 */}
-        <div
-          class="modal fade"
-          id="imgDetailModal"
-          tabindex="-1"
-          aria-labelledby="imgDetailModal"
-          aria-hidden="true"
-        >
-          <div
-            class="modal-dialog modal-dialog-centered"
-            style={{ width: "510px" }}
-          >
-            <div class="modal-content">
-              <div class="modal-header">
-                <h1
-                  class="modal-title justify-content-center "
-                  id="imgDetailModal"
-                  style={{ fontSize: "1.9em" }}
-                >
-                  - {currentItem?.itemName} -
-                </h1>
-                <button
-                  type="button"
-                  class="btn-close"
-                  data-bs-dismiss="modal"
-                  aria-label="Close"
-                ></button>
-              </div>
-              <div
-                class="modal-body"
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alginItems: "center",
-                  displayContent: "center",
-                  height: "100%",
-                  width: "100%",
-                  marginTop: "50px",
-                }}
-              >
+    useEffect(() => {
+        window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+    }, [selectedCategory, update]);
+
+    const gotoDetailInfo = (e) => {
+        navigate("/imgDetail", {
+            state: {
+                itemId: currentItem.itemId,
+                imgsrc: currentItem.itemImg,
+                content: currentItem.content,
+                imgContent: currentItem.imgContent,
+                itemName: currentItem.itemName,
+            },
+        });
+    };
+    return (
+        <div className="containerbox">
+            <div className="mainlayout box1">
+                <NavigationBar title={title} category1={category1} isAdmin={isAdmin} />
                 <div
-                  class="has-validation"
-                  style={{
-                    height: "100%",
-                    width: "480px",
-                  }}
+                    className="category-wrapper"
+                    style={{
+                        position: "fixed",
+                        top: "58px",
+                        background: "white",
+                        height: "70px",
+                        fontSize: "0.87em",
+                    }}
                 >
-                  <img
-                    src={currentItem?.itemImg}
-                    style={{
-                      width: "430px",
-                      height: "470px",
-                      marginBottom: "20px",
-                      marginTop: "-50px",
-                      marginLeft: "20px",
-                    }}
-                    alt=""
-                  />
-                  <div
-                    style={{
-                      fontSize: "1.5em",
-                      padding: "10px",
-                    }}
-                  >
-                    Details
-                  </div>
-                  <p
-                    style={{
-                      fontSize: "1.3em",
-                      width: "460px",
-                      border: "1px solid black",
-                      padding: "10px",
-                    }}
-                  >{currentItem?.content}</p>
+                    {category2.map((category) => (
+                        <div
+                            key={category}
+                            className={`category ${selectedCategory === category ? "active" : ""}`}
+                            onClick={() => {
+                                handleCategoryClick(category);
+                                setUpdate(!update);
+                            }}
+                            style={{ fontSize: "1.3em", marginTop: "20px" }}
+                        >
+                            {category}
+                        </div>
+                    ))}
                 </div>
-              </div>
-              <div class="modal-footer">
-                {isAdmin && (
-                  <div className="button-wrapper" style={{ width: "320px" }}>
-                    <button
-                      className="edit-button"
-                      onClick={handleEditClick}
-                      data-bs-dismiss="modal"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      className="delete-button"
-                      data-bs-toggle="modal"
-                      data-bs-target="#deleteItemModal"
-                    >
-                      Delete
-                    </button>
-                  </div>
-                )}
-                {isAdmin === true ? null : (
-                  <button
-                    type="button"
-                    class="btn btn-secondary"
-                    data-bs-dismiss="modal"
-                    onClick={gotoDetailInfo}
-                  >
-                    View Details Page
-                  </button>
-                )}
-                <button
-                  type="button"
-                  class="btn btn-primary"
-                  data-bs-dismiss="modal"
+                <div
+                    className="image-wrapper"
+                    style={{
+                        marginTop: "150px",
+                        minHeight: "100%",
+                        marginBottom: "100px",
+                    }}
                 >
-                  Close
-                </button>
-              </div>
+                    {itemList.map((item) => (
+                        <img
+                            //   key={image.id}
+                            src={item.itemImg}
+                            alt=""
+                            onClick={showingDetail}
+                            data-bs-toggle="modal"
+                            data-bs-target="#imgDetailModal"
+                            style={{
+                                cursor: "pointer",
+                                width: "250px",
+                                height: "250px",
+                            }}
+                            data-bs-item={JSON.stringify(item)}
+                            data-bs-category="Makeup"
+                        />
+                    ))}
+                </div>
+
+                <Footer />
+                {/* 이미지 상세정보 모달창 */}
+                <div
+                    class="modal fade"
+                    id="imgDetailModal"
+                    tabindex="-1"
+                    aria-labelledby="imgDetailModal"
+                    aria-hidden="true"
+                >
+                    <div class="modal-dialog modal-dialog-centered" style={{ width: "510px" }}>
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1
+                                    class="modal-title justify-content-center "
+                                    id="imgDetailModal"
+                                    style={{ fontSize: "1.9em" }}
+                                >
+                                    - {currentItem?.itemName} -
+                                </h1>
+                                <button
+                                    type="button"
+                                    class="btn-close"
+                                    data-bs-dismiss="modal"
+                                    aria-label="Close"
+                                ></button>
+                            </div>
+                            <div
+                                class="modal-body"
+                                style={{
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    alginItems: "center",
+                                    displayContent: "center",
+                                    height: "100%",
+                                    width: "100%",
+                                    marginTop: "50px",
+                                }}
+                            >
+                                <div
+                                    class="has-validation"
+                                    style={{
+                                        height: "100%",
+                                        width: "480px",
+                                    }}
+                                >
+                                    <img
+                                        src={currentItem?.itemImg}
+                                        style={{
+                                            width: "430px",
+                                            height: "470px",
+                                            marginBottom: "20px",
+                                            marginTop: "-50px",
+                                            marginLeft: "20px",
+                                        }}
+                                        alt=""
+                                    />
+                                    <div
+                                        style={{
+                                            fontSize: "1.5em",
+                                            padding: "10px",
+                                        }}
+                                    >
+                                        Details
+                                    </div>
+                                    <p
+                                        style={{
+                                            fontSize: "1.3em",
+                                            width: "460px",
+                                            border: "1px solid black",
+                                            padding: "10px",
+                                        }}
+                                    >
+                                        {currentItem?.content}
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                {isAdmin && (
+                                    <div className="button-wrapper" style={{ width: "320px" }}>
+                                        <button
+                                            className="edit-button"
+                                            onClick={handleEditClick}
+                                            data-bs-dismiss="modal"
+                                        >
+                                            Edit
+                                        </button>
+                                        <button
+                                            className="delete-button"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#deleteItemModal"
+                                        >
+                                            Delete
+                                        </button>
+                                    </div>
+                                )}
+                                {isAdmin === true ? null : (
+                                    <button
+                                        type="button"
+                                        class="btn btn-secondary"
+                                        data-bs-dismiss="modal"
+                                        onClick={gotoDetailInfo}
+                                    >
+                                        View Details Page
+                                    </button>
+                                )}
+                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
+                                    Close
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {/*이미지 상세정보 모달창  */}
+                {/* 아이템 삭제 메시지 창 */}
+                <div
+                    class="modal fade"
+                    id="deleteItemModal"
+                    tabindex="-1"
+                    aria-labelledby="deleteItemModal"
+                    aria-hidden="true"
+                >
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title text-center " id="deleteItemModal" style={{ fontSize: "1.4em" }}>
+                                    - Delete Item -
+                                </h1>
+                            </div>
+                            <div class="modal-body text-center" style={{ fontSize: "1.4em" }}>
+                                Are you sure you want to delete this?
+                            </div>
+                            <div class="modal-footer justify-content-center">
+                                <button className="edit-button" onClick={handleDeleteClick} data-bs-dismiss="modal">
+                                    Yes
+                                </button>
+                                <button className="delete-button" data-bs-dismiss="modal">
+                                    No
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {/* 아이템 삭제 메시지 창 */}
             </div>
-          </div>
-        </div>
-        {/*이미지 상세정보 모달창  */}
-        {/* 아이템 삭제 메시지 창 */}
-        <div
-          class="modal fade"
-          id="deleteItemModal"
-          tabindex="-1"
-          aria-labelledby="deleteItemModal"
-          aria-hidden="true"
-        >
-          <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h1
-                  class="modal-title text-center "
-                  id="deleteItemModal"
-                  style={{ fontSize: "1.4em" }}
-                >
-                  - Delete Item -
-                </h1>
-              </div>
-              <div class="modal-body text-center" style={{ fontSize: "1.4em" }}>
-                Are you sure you want to delete this?
-              </div>
-              <div class="modal-footer justify-content-center">
-                <button
-                  className="edit-button"
-                  onClick={handleDeleteClick}
-                  data-bs-dismiss="modal"
-                >
-                  Yes
-                </button>
-                <button className="delete-button" data-bs-dismiss="modal">
-                  No
-                </button>
-              </div>
+            <div className="box2"></div>
+            <div className="box3">
+                <Sidesection />
             </div>
-          </div>
         </div>
-        {/* 아이템 삭제 메시지 창 */}
-      </div>
-      <div className="box2"></div>
-      <div className="box3">
-        <Sidesection />
-      </div>
-    </div>
-  );
+    );
 };
 
 export default Makeup;
