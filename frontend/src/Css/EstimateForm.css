@@ -29,13 +29,13 @@
     font-size: var(--main-font-size);
 }
 .choosebox {
-    display: inline-block;
+    display: inline-flex;
     width: 33%;
-    /* background: cadetblue; */
     padding: 3px;
+    box-sizing: border-box;
     font-size: var(--main-font-size);
+    flex-wrap: wrap;
 }
-
 .width100 {
     width: 100%;
 }
@@ -50,7 +50,12 @@
     box-shadow: 1px 1px 1px #eee;
     border: 0.5px solid #eee;
     width: 90%;
-    float: left;
+    flex: 1;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
     transition: all 0.2s;
     position: relative;
 }
@@ -185,7 +190,6 @@
 
 .imagefilenamebox {
     padding: 3px;
-    width: 33%;
     float: left;
 }
 .imagefilenamecontent {
