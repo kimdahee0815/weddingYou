@@ -221,7 +221,7 @@ function Review() {
                         >
                             {selectedSort}
                         </button>
-                        <ul class="dropdown-menu sortItem">
+                        <ul class="dropdown-menu sortItem right-sort dropdown-menu-end">
                             <li className="">
                                 <button
                                     class="dropdown-item "
