@@ -50,9 +50,9 @@ const AdminPage = () => {
     // const [matchedPlanner, setMatchedPlanner] = useState("");
 
     const onNameChange = (e) => {
-        const koreanNameRegExp = /^[가-힣\s]{1,5}$/;
+        const nameRegExp = /^[가-힣a-zA-Z\s]+$/;
         setUserName(e.target.value);
-        if (koreanNameRegExp.test(e.target.value)) {
+        if (nameRegExp.test(e.target.value)) {
             // console.log("형식에 맞음");
             document.querySelector(".userNameModify").classList.remove("is-invalid");
             document.querySelector(".userNameModify").classList.add("is-valid");
