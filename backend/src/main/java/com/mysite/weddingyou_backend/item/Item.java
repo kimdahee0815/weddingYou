@@ -37,10 +37,10 @@ public class Item {
 		@Column(name = "item_img")
     private String itemImg;
 
-		@Column(name="content",nullable=false)
+		@Column(name="content",nullable=false, columnDefinition = "TEXT")
 		private String content;
 	
-		@Column(name="img_content",nullable=false)
+		@Column(name="img_content",nullable=false, columnDefinition = "TEXT")
 		private String imgContent;
 	
 		@JsonManagedReference
