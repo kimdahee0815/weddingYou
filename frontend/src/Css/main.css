@@ -45,6 +45,7 @@ body {
     border-radius: 10px;
     height: 50px;
     font-size: 1.2em;
+    width: 250px;
 }
 
 .btn-colour-1:hover {
