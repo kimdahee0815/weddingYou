@@ -7,243 +7,228 @@ import "../../Css/WritePost.css";
 import Sidesection from "../../Components/Sidesection";
 
 const EditPost = () => {
-  const { itemId } = useParams();
-  const location = useLocation();
-  const originalContent = location.state.originalContent;
-  const originalimgDetailContent = location.state.originalimgDetailContent;
-  const originalTitle = location.state.originalTitle;
-  const engTitle = location.state.engTitle;
-  const navigate = useNavigate();
-  const [itemName, setItemName] = useState(originalTitle);
-  const [content, setContent] = useState(originalContent);
-  const [image, setImage] = useState(null);
-  const [previewUrl, setPreviewUrl] = useState(null);
-  const [selectedFile, setSelectedFile] = useState(image);
-  const [imgDetailContent, setImgDetailContent] = useState(
-    originalimgDetailContent
-  );
+    const { itemId } = useParams();
+    const location = useLocation();
+    const originalContent = location.state.originalContent;
+    const originalimgDetailContent = location.state.originalimgDetailContent;
+    const originalTitle = location.state.originalTitle;
+    const engTitle = location.state.engTitle;
+    const navigate = useNavigate();
+    const [itemName, setItemName] = useState(originalTitle);
+    const [content, setContent] = useState(originalContent);
+    const [image, setImage] = useState(null);
+    const [previewUrl, setPreviewUrl] = useState(null);
+    const [selectedFile, setSelectedFile] = useState(image);
+    const [imgDetailContent, setImgDetailContent] = useState(originalimgDetailContent);
 
-  const handleCancel = () => {
-    navigate(`/menu/${engTitle}`);
-  };
-
-  useEffect(() => {
-    axios
-      .get(`/item/getitemImg/${itemId}`, {
-        responseType: 'blob'  
-      })
-      .then((res) => {
-        const imageUrl = URL.createObjectURL(res.data);
-        setImage(imageUrl);
-        const reader = new FileReader();
-        reader.onload = () => {
-          setPreviewUrl(reader.result);       
-        };
-        reader.readAsDataURL(res.data);
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-  }, [itemId]);
-
-  const onChangeItemPicture = (e) => {
-    const selectedFile = e.target.files[0];
-    setSelectedFile(selectedFile);
-    const fileReader = new FileReader();
-    fileReader.onload = () => {
-      setPreviewUrl(fileReader.result);
-    };
-    fileReader.readAsDataURL(selectedFile);
-  };
-
-  const updateItemPicture = (e) => {
-    setImage(previewUrl);
-  };
-  const updateItem = (e) => {
-    const formData = new FormData();
-
-    if (selectedFile) {
-      formData.append("file", selectedFile);
-    }
-    formData.append("itemName", itemName);
-    formData.append("content", content);
-    formData.append("imgContent", imgDetailContent);
-    axios
-      .post(`/item/updateItem/${itemId}`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      })
-      .then((res) => {
-        //console.log(res);
-        alert("Edit completed successfully!");
+    const handleCancel = () => {
         navigate(`/menu/${engTitle}`);
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-  };
-  return (
-    <div className="containerbox">
-      <div className="mainlayout box1">
-        <NavigationBar title="Edit Post" engTitle={engTitle} />
-        <div
-          className="category-container"
-          style={{ marginTop: "100px" }}
-        ></div>
-        <div className="post-inputwrap">
-          <img
-            src={image}
-            style={{
-              width: "200px",
-              height: "200px",
-              cursor: "pointer",
-              marginBottom: "30px",
-              marginLeft: "110px",
-            }}
-            data-bs-toggle="modal"
-            data-bs-target="#itemChangeModal"
-            alt=""
-          />
-          <input
-            className="title-input"
-            type="text"
-            placeholder={originalTitle}
-            value={itemName}
-            onChange={(event) => {
-              setItemName(event.target.value);
-            }}
-          />
-          <textarea
-            className="content-textarea"
-            placeholder={originalContent}
-            value={content}
-            onChange={(event) => {
-              setContent(event.target.value);
-            }}
-          />
-          <textarea
-            className="content-textarea"
-            placeholder={imgDetailContent}
-            value={imgDetailContent}
-            onChange={(event) => {
-              setImgDetailContent(event.target.value);
-            }}
-          />
-        </div>
-        <div
-          className="button-wrap"
-          style={{ marginLeft: "170px", marginBottom: "110px" }}
-        >
-          <button
-            className="submit-button"
-            onClick={() => {
-              updateItem();
-            }}
-            style={{ fontSize: "1.3em" }}
-          >
-            Save Changes
-          </button>
+    };
 
-          <button className="cancel-button" onClick={handleCancel}>
-            Cancel
-          </button>
-        </div>
-        <Footer />
-        {/* 아이템 변경 업로드 파일 올리는 모달창 */}
-        <div
-          class="modal fade"
-          id="itemChangeModal"
-          tabindex="-1"
-          aria-labelledby="itemChangeModal"
-          aria-hidden="true"
-        >
-          <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h1
-                  class="modal-title justify-content-center "
-                  id="itemChangeModal"
-                  style={{ fontSize: "1.5em" }}
-                >
-                  - Change Item Photo -
-                </h1>
-                <button
-                  type="button"
-                  class="btn-close"
-                  data-bs-dismiss="modal"
-                  aria-label="Close"
-                ></button>
-              </div>
-              <div
-                class="modal-body"
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alginItems: "center",
-                  displayContent: "center",
-                  height: "100%",
-                  width: "100%",
-                  marginTop: "50px",
-                }}
-              >
-                <div
-                  class="has-validation col col-md-10"
-                  style={{ height: "100%", width: "100%" }}
-                >
-                  <img
-                    src={previewUrl}
-                    style={{
-                      width: "200px",
-                      height: "200px",
-                      marginBottom: "20px",
-                      marginTop: "-50px",
-                      cursor: "pointer",
-                      marginLeft: "140px",
-                    }}
-                    alt=""
-                    data-bs-toggle="modal"
-                    data-bs-target="#itemChangeModal"
-                  />
-                  <input
-                    type="file"
-                    class="form-control"
-                    id="profileInput"
-                    onChange={onChangeItemPicture}
-                    placeholder="Image to upload"
-                    required
-                    autocomplete="off"
-                    enctype="multipart/form-data"
-                    style={{ fontSize: "1.3em" }}
-                  />
+    useEffect(() => {
+        axios
+            .get(`/item/getitemImg/${itemId}`, {
+                responseType: "blob",
+            })
+            .then((res) => {
+                const imageUrl = URL.createObjectURL(res.data);
+                setImage(imageUrl);
+                const reader = new FileReader();
+                reader.onload = () => {
+                    setPreviewUrl(reader.result);
+                };
+                reader.readAsDataURL(res.data);
+            })
+            .catch((e) => {
+                console.log(e);
+            });
+    }, [itemId]);
+
+    const onChangeItemPicture = (e) => {
+        const selectedFile = e.target.files[0];
+        setSelectedFile(selectedFile);
+        const fileReader = new FileReader();
+        fileReader.onload = () => {
+            setPreviewUrl(fileReader.result);
+        };
+        fileReader.readAsDataURL(selectedFile);
+    };
+
+    const updateItemPicture = (e) => {
+        setImage(previewUrl);
+    };
+    const updateItem = (e) => {
+        const formData = new FormData();
+
+        if (selectedFile) {
+            formData.append("file", selectedFile);
+        }
+        formData.append("itemName", itemName);
+        formData.append("content", content);
+        formData.append("imgContent", imgDetailContent);
+        axios
+            .post(`/item/updateItem/${itemId}`, formData, {
+                headers: { "Content-Type": "multipart/form-data" },
+            })
+            .then((res) => {
+                //console.log(res);
+                alert("Edit completed successfully!");
+                navigate(`/menu/${engTitle}`);
+            })
+            .catch((e) => {
+                console.log(e);
+            });
+    };
+    return (
+        <div className="containerbox">
+            <div className="mainlayout box1">
+                <NavigationBar title="Edit Post" engTitle={engTitle} />
+                <div className="category-container" style={{ marginTop: "100px" }}></div>
+                <div className="post-inputwrap">
+                    <img
+                        src={image}
+                        style={{
+                            width: "200px",
+                            height: "200px",
+                            cursor: "pointer",
+                            marginBottom: "30px",
+                            marginLeft: "110px",
+                        }}
+                        data-bs-toggle="modal"
+                        data-bs-target="#itemChangeModal"
+                        alt=""
+                    />
+                    <input
+                        className="title-input"
+                        type="text"
+                        placeholder={originalTitle}
+                        value={itemName}
+                        onChange={(event) => {
+                            setItemName(event.target.value);
+                        }}
+                    />
+                    <textarea
+                        className="content-textarea"
+                        placeholder={originalContent}
+                        value={content}
+                        onChange={(event) => {
+                            setContent(event.target.value);
+                        }}
+                    />
+                    <textarea
+                        className="content-textarea"
+                        placeholder={imgDetailContent}
+                        value={imgDetailContent}
+                        onChange={(event) => {
+                            setImgDetailContent(event.target.value);
+                        }}
+                    />
                 </div>
-              </div>
-              <div class="modal-footer">
-                <button
-                  type="button"
-                  class="btn btn-secondary"
-                  data-bs-dismiss="modal"
+                <div className="button-wrap" style={{ justifyContent: "center", marginBottom: "7rem" }}>
+                    <button
+                        className="submit-button"
+                        onClick={() => {
+                            updateItem();
+                        }}
+                        style={{ fontSize: "1.3em" }}
+                    >
+                        Save Changes
+                    </button>
+
+                    <button className="cancel-button" onClick={handleCancel}>
+                        Cancel
+                    </button>
+                </div>
+                <Footer />
+                {/* 아이템 변경 업로드 파일 올리는 모달창 */}
+                <div
+                    class="modal fade"
+                    id="itemChangeModal"
+                    tabindex="-1"
+                    aria-labelledby="itemChangeModal"
+                    aria-hidden="true"
                 >
-                  Close
-                </button>
-                <button
-                  type="button"
-                  class="btn btn-primary"
-                  data-bs-dismiss="modal"
-                  onClick={updateItemPicture}
-                >
-                  Apply Change
-                </button>
-              </div>
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1
+                                    class="modal-title justify-content-center "
+                                    id="itemChangeModal"
+                                    style={{ fontSize: "1.5em" }}
+                                >
+                                    - Change Item Photo -
+                                </h1>
+                                <button
+                                    type="button"
+                                    class="btn-close"
+                                    data-bs-dismiss="modal"
+                                    aria-label="Close"
+                                ></button>
+                            </div>
+                            <div
+                                class="modal-body"
+                                style={{
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    alginItems: "center",
+                                    displayContent: "center",
+                                    height: "100%",
+                                    width: "100%",
+                                    marginTop: "50px",
+                                }}
+                            >
+                                <div class="has-validation col col-md-10" style={{ height: "100%", width: "100%" }}>
+                                    <img
+                                        src={previewUrl}
+                                        style={{
+                                            width: "200px",
+                                            height: "200px",
+                                            marginBottom: "20px",
+                                            marginTop: "-50px",
+                                            cursor: "pointer",
+                                            marginLeft: "140px",
+                                        }}
+                                        alt=""
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#itemChangeModal"
+                                    />
+                                    <input
+                                        type="file"
+                                        class="form-control"
+                                        id="profileInput"
+                                        onChange={onChangeItemPicture}
+                                        placeholder="Image to upload"
+                                        required
+                                        autocomplete="off"
+                                        enctype="multipart/form-data"
+                                        style={{ fontSize: "1.3em" }}
+                                    />
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                    Close
+                                </button>
+                                <button
+                                    type="button"
+                                    class="btn btn-primary"
+                                    data-bs-dismiss="modal"
+                                    onClick={updateItemPicture}
+                                >
+                                    Apply Change
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {/*아이템 변경 업로드 파일 올리는 모달창 */}
             </div>
-          </div>
+            <div className="box2"></div>
+            <div className="box3">
+                <Sidesection />
+            </div>
         </div>
-        {/*아이템 변경 업로드 파일 올리는 모달창 */}
-      </div>
-      <div className="box2"></div>
-      <div className="box3">
-        <Sidesection />
-      </div>
-    </div>
-  );
+    );
 };
 
 export default EditPost;
