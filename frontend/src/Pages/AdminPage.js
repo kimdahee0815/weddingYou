@@ -926,9 +926,10 @@ const PostListData = ({ array2, postDetail }) => {
     return (
         <>
             {array2.map((e, index) => {
-                // console.log("matchedplanner:" + JSON.parse(e.plannermatching)[0]);
-                const matchedplanner = JSON.parse(e.plannermatching)[0];
-                // setMatchedPlanner(matchedplanner);
+                const matchedplanner = e.plannermatching
+                    ? JSON.parse(e.plannermatching)[0]
+                    : null;
+
                 return (
                     <div
                         className="adminpage-Administration-list-body-box cursor"
