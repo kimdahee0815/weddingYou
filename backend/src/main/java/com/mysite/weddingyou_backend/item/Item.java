@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.mysite.weddingyou_backend.like.LikeEntity;
 
@@ -82,7 +83,12 @@ public class Item {
     private Category2 category2;
 	
 		public enum Category1 {
-			All, Category, WeddingHall, Outfit, Studio, Makeup, Honeymoon, Bouquet
+			All, Category, WeddingHall, Outfit, Studio, Makeup, Honeymoon, Bouquet;
+		
+			@JsonCreator
+    		public static Category1 fromJson(String value) {
+        		return StringToCategory1Converter.fromString(value);
+    		}
 		}
 
 		public enum Category2 {
@@ -97,7 +103,12 @@ public class Item {
 			// Honeymoon
 			International, Domestic,
 			// Bouquet
-			Round, Drop, Cascade, HandTied
+			Round, Drop, Cascade, HandTied;
+
+			@JsonCreator
+    		public static Category2 fromJson(String value) {
+        		return StringToCategory2Converter.fromString(value);
+    		}
 		}
 
 }

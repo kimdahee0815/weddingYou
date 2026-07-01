@@ -6,7 +6,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { EffectCoverflow, Navigation, Pagination } from 'swiper/modules';
+import { EffectCoverflow, Navigation, Pagination } from "swiper/modules";
 import Animation from "../Components/Animation";
 import Sidesection from "../Components/Sidesection";
 import "swiper/css";
@@ -371,7 +371,7 @@ function SearchItems() {
                                     top: 80,
                                     zIndex: 99,
                                     background: "white",
-                                    width: "557px",
+                                    width: "553px",
                                 }}
                             >
                                 <ul class="nav sortingList" style={{ width: "525px" }}>
@@ -487,10 +487,7 @@ function SearchItems() {
                                 }}
                             >
                                 {window.sessionStorage.getItem("category") === "user" && (
-                                    <div
-                                        className="estimate-write-btn"
-                                        onClick={() => navigate("/estimateform")}
-                                    >
+                                    <div className="estimate-write-btn" onClick={() => navigate("/estimateform")}>
                                         <i className="bi bi-pencil-square"></i>
                                         <span className="estimate-write-btn-text">Estimate</span>
                                     </div>

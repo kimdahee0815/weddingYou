@@ -253,8 +253,8 @@ public class LikeController {
     Category1 category1 = data.getCategory1();
     String email = data.getEmail();
 
-    boolean isDefaultCategory = category1.toString().equals("카테고리") || category1.toString().equals("전체");
-    boolean isDefaultSort = sortBy.equals("정렬");
+    boolean isDefaultCategory = category1.toString().equals("All");
+    boolean isDefaultSort = sortBy.equals("Sort");
 
     List<likeDTO> likeList;
 
@@ -300,14 +300,14 @@ public class LikeController {
     if (sortBy == null) return;
 
     switch (sortBy) {
-        case "가나다순":
+        case "Alphabetical":
             sortByName(result);
             break;
-        case "인기순":
+        case "Most Popular":
             sortByLikeCount(result);
             break;
-        case "최신순":
-        case "정렬":
+        case "Latest":
+        case "Sort":
         default:
             sortByDate(result);
             break;

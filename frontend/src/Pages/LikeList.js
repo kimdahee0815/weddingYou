@@ -9,8 +9,6 @@ import Animation from "../Components/Animation";
 import axios from "axios";
 import Sidesection from "../Components/Sidesection";
 
-const category = ["Wedding Hall", "Studio", "Outfit", "Makeup", "Honeymoon", "Bouquet"];
-
 function LikeList() {
     const [wholeItems, setWholeItems] = useState([]);
     const [selectedItem, setSelectedItem] = useState("Category");
@@ -257,7 +255,7 @@ function LikeList() {
                                                         <button
                                                             class="dropdown-item"
                                                             type="button"
-                                                            onClick={() => handleItemClick("Wedding Hall")}
+                                                            onClick={() => handleItemClick("weddingHall")}
                                                         >
                                                             Wedding Hall
                                                         </button>
@@ -266,7 +264,7 @@ function LikeList() {
                                                         <button
                                                             class="dropdown-item"
                                                             type="button"
-                                                            onClick={() => handleItemClick("Studio")}
+                                                            onClick={() => handleItemClick("studio")}
                                                         >
                                                             Studio
                                                         </button>
@@ -275,7 +273,7 @@ function LikeList() {
                                                         <button
                                                             class="dropdown-item"
                                                             type="button"
-                                                            onClick={() => handleItemClick("Outfit")}
+                                                            onClick={() => handleItemClick("weddingOutfit")}
                                                         >
                                                             Outfit
                                                         </button>
@@ -284,7 +282,7 @@ function LikeList() {
                                                         <button
                                                             class="dropdown-item"
                                                             type="button"
-                                                            onClick={() => handleItemClick("Makeup")}
+                                                            onClick={() => handleItemClick("makeup")}
                                                         >
                                                             Makeup
                                                         </button>
@@ -293,7 +291,7 @@ function LikeList() {
                                                         <button
                                                             class="dropdown-item"
                                                             type="button"
-                                                            onClick={() => handleItemClick("Honeymoon")}
+                                                            onClick={() => handleItemClick("honeymoon")}
                                                         >
                                                             Honeymoon
                                                         </button>
@@ -302,7 +300,7 @@ function LikeList() {
                                                         <button
                                                             class="dropdown-item"
                                                             type="button"
-                                                            onClick={() => handleItemClick("Bouquet")}
+                                                            onClick={() => handleItemClick("bouquet")}
                                                         >
                                                             Bouquet
                                                         </button>
