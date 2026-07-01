@@ -199,55 +199,47 @@ div {
     overflow: hidden;
     /* border-bottom: 1px solid #eee; */
 }
-
-/**/
-/*임시로 만들ㄹ어본 작성버튼*/
 .estimate-write-btn {
+    position: absolute;
+    bottom: 70px;
+    right: 28px;
     width: 50px;
     height: 50px;
     border-radius: 20px;
-    background-color: rgba(64, 126, 241, 0.8);
-    bottom: 130px;
-    right: 130;
+    background-color: rgba(64, 126, 241, 0.9);
     display: flex;
-    justify-content: flex-end;
     align-items: center;
-    font-size: 26px;
+    overflow: hidden;
     color: white;
     z-index: 999;
-    margin-right: 5px;
-}
-.estimate-write-btn i {
-    z-index: 999;
-}
-
-.estimate-write-btn-overlay {
-    visibility: hidden;
-}
-
-.estimate-write-btn:hover .estimate-write-btn-overlay {
-    visibility: visible;
-
-    position: absolute;
-    height: 50px;
-    font-size: 20px;
-    background-color: rgb(64, 126, 241);
-    border-radius: 20px;
-    opacity: 0;
-    transition: all 0.4s;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     cursor: pointer;
-    color: transparent;
-    font-size: 20px;
-    z-index: 999;
-    opacity: 1;
-    width: 130px;
-    color: white;
+    white-space: nowrap;
+    transition: width 0.3s ease;
+}
 
-    /* white-space: nowrap; 
-     overflow: hidden; */
+.estimate-write-btn i {
+    min-width: 50px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    margin: 0; /* 혹시 남아있을 마진 초기화 */
+}
+
+.estimate-write-btn-text {
+    opacity: 0;
+    font-size: 1.4em;
+    margin-right: 15px;
+    transition: opacity 0.2s ease 0.1s;
+}
+
+.estimate-write-btn:hover {
+    width: 155px;
+}
+
+.estimate-write-btn:hover .estimate-write-btn-text {
+    opacity: 1;
 }
 
 .scrolltop {

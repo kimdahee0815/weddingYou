@@ -75,10 +75,10 @@ function SearchItems() {
                                 item.like?.some(
                                     (like) =>
                                         like.user?.email === sessionStorage.getItem("email") ||
-                                        like.planner?.email === sessionStorage.getItem("email")
+                                        like.planner?.email === sessionStorage.getItem("email"),
                                 ) || false,
-                        }))
-                    )
+                        })),
+                    ),
                 );
                 setFinish(true);
             } catch (error) {
@@ -127,9 +127,9 @@ function SearchItems() {
                                   likeCount: item.likeCount + (selectLikeState ? -1 : 1),
                                   isLiked: !selectLikeState,
                               }
-                            : item
-                    )
-                )
+                            : item,
+                    ),
+                ),
             );
 
             try {
@@ -157,14 +157,14 @@ function SearchItems() {
                                       likeCount: item.likeCount + (selectLikeState ? 1 : -1),
                                       isLiked: selectLikeState,
                                   }
-                                : item
-                        )
-                    )
+                                : item,
+                        ),
+                    ),
                 );
                 return false;
             }
         },
-        [selectLikeState, currentItem?.itemId]
+        [selectLikeState, currentItem?.itemId],
     );
 
     const handleLikeClick = async () => {
@@ -487,27 +487,12 @@ function SearchItems() {
                                 }}
                             >
                                 {window.sessionStorage.getItem("category") === "user" && (
-                                    <div>
-                                        <div className="estimate-write-btn">
-                                            <i
-                                                class="bi bi-pencil-square"
-                                                style={{ marginLeft: "50px", zIndex: "999" }}
-                                            ></i>
-                                            <div
-                                                className="estimate-write-btn-overlay"
-                                                onClick={() => {
-                                                    navigate("/estimateform");
-                                                }}
-                                                style={{
-                                                    marginRight: "-20px",
-                                                    marginLeft: "12px",
-                                                    zIndex: "999",
-                                                    height: "50px",
-                                                }}
-                                            >
-                                                <span>Write Estimate</span>
-                                            </div>
-                                        </div>
+                                    <div
+                                        className="estimate-write-btn"
+                                        onClick={() => navigate("/estimateform")}
+                                    >
+                                        <i className="bi bi-pencil-square"></i>
+                                        <span className="estimate-write-btn-text">Estimate</span>
                                     </div>
                                 )}
                                 <div
