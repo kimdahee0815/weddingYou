@@ -1,26 +1,25 @@
-.mypagecontainer{
-   padding-top:110px;
-    display:flex;
+.mypagecontainer {
+    padding-top: 110px;
+    display: flex;
     align-items: center;
     justify-content: center;
-    margin-top:10px
+    margin-top: 10px;
 }
 
+.update {
+    margin-top: 40px;
+}
 
-  .update{
-    margin-top:40px;
-  }
+.input-group {
+    width: 320px;
+}
 
-  .input-group{
-    width:320px;
-  }
-
-  .logout{
+.logout {
     margin-top: 20px;
-    width:150px;
-    margin-right:10px;
-  }
+    width: 200px;
+    margin-right: 10px;
+}
 
-  .deleteMember{
-    width:150px;
-  }
+.deleteMember {
+    width: 200px;
+}

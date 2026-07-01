@@ -1,16 +1,17 @@
-.myestimate{
-    display:flex;
+.myestimate {
+    display: flex;
     flex-direction: column;
+    align-items: center;
 }
 
-.myestimate p{
-    font-size:0.8em;
-    margin:0 auto;
-    margin-top:3px;
+.myestimate p {
+    font-size: 0.8em;
+    margin: 0 auto;
+    margin-top: 3px;
     font-weight: bold;
-    font-size:1em;
+    font-size: 1em;
 }
 
-.myestimate:hover{
-    cursor:pointer;
+.myestimate:hover {
+    cursor: pointer;
 }
