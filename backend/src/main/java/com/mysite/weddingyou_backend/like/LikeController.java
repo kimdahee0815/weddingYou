@@ -253,7 +253,7 @@ public class LikeController {
     Category1 category1 = data.getCategory1();
     String email = data.getEmail();
 
-    boolean isDefaultCategory = category1.toString().equals("All");
+    boolean isDefaultCategory = category1.toString().equals("All") || category1.toString().equals("Category");
     boolean isDefaultSort = sortBy.equals("Sort");
 
     List<likeDTO> likeList;
