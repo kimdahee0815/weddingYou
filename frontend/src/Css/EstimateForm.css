@@ -1,11 +1,9 @@
 /*공통 CSS*/
 :root {
-    --main-font-size : 20px;
+    --main-font-size: 20px;
 }
 
-
 /*공통 CSS끝*/
-
 
 .contentcontainer {
     width: 80%;
@@ -14,16 +12,13 @@
     margin-top: 100px;
 }
 
-.contentcontainer input[type=date] {
+.contentcontainer input[type="date"] {
     font-size: var(--main-font-size);
 }
 
 .contentcontainer h5 {
     font-weight: 600;
 }
-
-
-
 
 .contentbox {
     width: 100%;
@@ -37,7 +32,7 @@
     display: inline-block;
     width: 33%;
     /* background: cadetblue; */
-    padding:3px;
+    padding: 3px;
     font-size: var(--main-font-size);
 }
 
@@ -49,37 +44,32 @@
 }
 
 .label-design {
-    padding : 10px 20px;
+    padding: 10px 20px;
     border-radius: 5px;
     background: white;
     box-shadow: 1px 1px 1px #eee;
     border: 0.5px solid #eee;
-    width: 90%; 
+    width: 90%;
     float: left;
     transition: all 0.2s;
     position: relative;
 }
 
-
 .choosebox input[type="checkbox"]:checked + label {
     background: #eee;
-    color:black;
-    border: 1px solid rgb(201, 198, 198);
-   
-  }
-
-.choosebox input[type="radio"]:checked + label {
-    background: #eee;
-    color : black;
+    color: black;
     border: 1px solid rgb(201, 198, 198);
 }
 
-
+.choosebox input[type="radio"]:checked + label {
+    background: #eee;
+    color: black;
+    border: 1px solid rgb(201, 198, 198);
+}
 
 .borderBottom {
     border-bottom: 1px solid rgb(206, 206, 206);
 }
-
 
 .exampleimagebox {
     width: 100%;
@@ -108,7 +98,6 @@
     display: none;
 }
 
-
 .budget-input {
     direction: ltr;
     text-align: right;
@@ -116,7 +105,7 @@
 
 .Accordion-explanation {
     padding-bottom: 0px;
-    padding-top : 20px;
+    padding-top: 20px;
     padding-left: 15px;
     padding-right: 15px;
 }
@@ -140,9 +129,6 @@
     opacity: 1;
 }
 
-
-
-
 .budget-btn {
     width: 30%;
     height: 30px;
@@ -155,9 +141,7 @@
     justify-content: center;
     align-items: center;
     font-size: 14px;
-
 }
-
 
 .Accordion-explanation li {
     list-style: none;
@@ -169,16 +153,12 @@
     font-size: 24px;
 }
 
-
-
 .imageupload-btn {
     padding: 5px 20px;
     background: #eee;
-    color:black;
+    color: black;
     border-radius: 5px;
-    width: 152px;       
 }
-
 
 .imageupload-btn:hover {
     background: #dddddd;
@@ -188,7 +168,6 @@
     background: #dddddd;
 }
 
-
 .image-clear-btn {
     font-size: 12px;
     padding: 1px;
@@ -196,14 +175,13 @@
     text-align: center;
     width: 40px;
     background: #110606;
-    color:white;
+    color: white;
 }
 
 .badge {
     font-size: 12px;
     font-weight: 100;
 }
-
 
 .imagefilenamebox {
     padding: 3px;
@@ -216,9 +194,9 @@
     text-align: center;
     text-overflow: ellipsis;
     white-space: nowrap;
-    overflow: hidden; 
+    overflow: hidden;
     padding: 4px 10px;
-    color : white;
+    color: white;
     font-size: 15px;
     position: relative;
 }
@@ -228,9 +206,9 @@
     height: 100%;
     bottom: 0;
     right: 0;
-    border-radius:0px;
+    border-radius: 0px;
     position: absolute;
-    background: rgba(0,0,0,0.5);
+    background: rgba(0, 0, 0, 0.5);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -243,16 +221,14 @@
     opacity: 1;
 }
 
-
-.modal-title>span{
+.modal-title > span {
     font-size: 35px;
 }
 
-
-.ranking { 
+.ranking {
     font-size: 15px;
     position: absolute;
     top: 0;
     right: 15px;
-    color : black;
+    color: black;
 }
