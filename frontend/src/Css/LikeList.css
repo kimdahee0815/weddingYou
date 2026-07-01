@@ -4,9 +4,8 @@
 }
 
 .right-sort {
-    width: 60px;
     margin: 15px 30px 15px 15px;
-    
+
     float: right;
 }
 
@@ -23,8 +22,6 @@
 .margT {
     margin-top: 25px;
 }
-
-
 
 .likeListBtn1 {
     width: 25px;
