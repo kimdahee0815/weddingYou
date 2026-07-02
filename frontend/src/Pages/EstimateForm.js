@@ -401,9 +401,9 @@ const EstimateForm = () => {
                                     id="person"
                                     name="studio"
                                     type="radio"
-                                    value="인물중심"
+                                    value="SubjectFocused"
                                     onClick={studioSelect}
-                                    checked={studio === "인물중심"}
+                                    checked={studio === "SubjectFocused"}
                                     className="displaynone"
                                 />
                                 <label htmlFor="person" className="label-design w-100 cursor">
@@ -415,8 +415,8 @@ const EstimateForm = () => {
                                     id="background"
                                     name="studio"
                                     type="radio"
-                                    value="배경중심"
-                                    checked={studio === "배경중심"}
+                                    value="BackgroundFocused"
+                                    checked={studio === "BackgroundFocused"}
                                     onClick={studioSelect}
                                     className="displaynone"
                                 />
@@ -429,8 +429,8 @@ const EstimateForm = () => {
                                     id="balanced"
                                     name="studio"
                                     type="radio"
-                                    value="균형적인"
-                                    checked={studio === "균형적인"}
+                                    value="Balanced"
+                                    checked={studio === "Balanced"}
                                     onClick={studioSelect}
                                     className="displaynone"
                                 />
@@ -458,17 +458,17 @@ const EstimateForm = () => {
                         <h5>Bridal Dress (up to 3)</h5>
                         <div className="choosebox">
                             <input
-                                id="머메이드"
+                                id="Mermaid"
                                 type="checkbox"
                                 name="dress"
-                                value="머메이드"
+                                value="Mermaid"
                                 onChange={dresscheck}
                                 className="displaynone"
                             />
-                            <label htmlFor="머메이드" className="label-design w-100 cursor">
+                            <label htmlFor="Mermaid" className="label-design w-100 cursor">
                                 Mermaid
-                                {dress.includes("머메이드") ? (
-                                    <span className="ranking">#{dress.indexOf("머메이드") + 1}</span>
+                                {dress.includes("Mermaid") ? (
+                                    <span className="ranking">#{dress.indexOf("Mermaid") + 1}</span>
                                 ) : (
                                     ""
                                 )}
@@ -476,17 +476,17 @@ const EstimateForm = () => {
                         </div>
                         <div className="choosebox">
                             <input
-                                id="A라인"
+                                id="Aline"
                                 type="checkbox"
                                 name="dress"
-                                value="A라인"
+                                value="Aline"
                                 onChange={dresscheck}
                                 className="displaynone"
                             />
-                            <label htmlFor="A라인" className="label-design w-100 cursor">
+                            <label htmlFor="Aline" className="label-design w-100 cursor">
                                 A-Line
-                                {dress.includes("A라인") ? (
-                                    <span className="ranking">#{dress.indexOf("A라인") + 1}</span>
+                                {dress.includes("Aline") ? (
+                                    <span className="ranking">#{dress.indexOf("Aline") + 1}</span>
                                 ) : (
                                     ""
                                 )}
@@ -494,17 +494,17 @@ const EstimateForm = () => {
                         </div>
                         <div className="choosebox">
                             <input
-                                id="H라인"
+                                id="Hline"
                                 type="checkbox"
                                 name="dress"
-                                value="H라인"
+                                value="Hline"
                                 onChange={dresscheck}
                                 className="displaynone"
                             />
-                            <label htmlFor="H라인" className="label-design w-100 cursor">
+                            <label htmlFor="Hline" className="label-design w-100 cursor">
                                 H-Line
-                                {dress.includes("H라인") ? (
-                                    <span className="ranking">#{dress.indexOf("H라인") + 1}</span>
+                                {dress.includes("Hline") ? (
+                                    <span className="ranking">#{dress.indexOf("Hline") + 1}</span>
                                 ) : (
                                     ""
                                 )}
@@ -512,17 +512,17 @@ const EstimateForm = () => {
                         </div>
                         <div className="choosebox">
                             <input
-                                id="벨라인"
+                                id="BallGown"
                                 type="checkbox"
                                 name="dress"
-                                value="벨라인"
+                                value="BallGown"
                                 onChange={dresscheck}
                                 className="displaynone"
                             />
-                            <label htmlFor="벨라인" className="label-design w-100 cursor">
+                            <label htmlFor="BallGown" className="label-design w-100 cursor">
                                 Ball Gown
-                                {dress.includes("벨라인") ? (
-                                    <span className="ranking">#{dress.indexOf("벨라인") + 1}</span>
+                                {dress.includes("BallGown") ? (
+                                    <span className="ranking">#{dress.indexOf("BallGown") + 1}</span>
                                 ) : (
                                     ""
                                 )}
@@ -530,17 +530,17 @@ const EstimateForm = () => {
                         </div>
                         <div className="choosebox">
                             <input
-                                id="엠파이어"
+                                id="Empire"
                                 type="checkbox"
                                 name="dress"
-                                value="엠파이어"
+                                value="Empire"
                                 onChange={dresscheck}
                                 className="displaynone"
                             />
-                            <label htmlFor="엠파이어" className="label-design w-100 cursor">
+                            <label htmlFor="Empire" className="label-design w-100 cursor">
                                 Empire
-                                {dress.includes("엠파이어") ? (
-                                    <span className="ranking">#{dress.indexOf("엠파이어") + 1}</span>
+                                {dress.includes("Empire") ? (
+                                    <span className="ranking">#{dress.indexOf("Empire") + 1}</span>
                                 ) : (
                                     ""
                                 )}
@@ -548,17 +548,17 @@ const EstimateForm = () => {
                         </div>
                         <div className="choosebox">
                             <input
-                                id="프린세스"
+                                id="Princess"
                                 type="checkbox"
                                 name="dress"
-                                value="프린세스"
+                                value="Princess"
                                 onChange={dresscheck}
                                 className="displaynone"
                             />
-                            <label htmlFor="프린세스" className="label-design w-100 cursor">
+                            <label htmlFor="Princess" className="label-design w-100 cursor">
                                 Princess
-                                {dress.includes("프린세스") ? (
-                                    <span className="ranking">#{dress.indexOf("프린세스") + 1}</span>
+                                {dress.includes("Princess") ? (
+                                    <span className="ranking">#{dress.indexOf("Princess") + 1}</span>
                                 ) : (
                                     ""
                                 )}
@@ -580,17 +580,17 @@ const EstimateForm = () => {
                         <h5>Bridal Makeup (up to 3)</h5>
                         <div className="choosebox">
                             <input
-                                id="로맨틱한"
+                                id="Romantic"
                                 type="checkbox"
                                 name="makeup"
-                                value="로맨틱한"
+                                value="Romantic"
                                 onChange={makeupcheck}
                                 className="displaynone"
                             />
-                            <label htmlFor="로맨틱한" className="label-design w-100 cursor">
+                            <label htmlFor="Romantic" className="label-design w-100 cursor">
                                 Romantic
-                                {makeup.includes("로맨틱한") ? (
-                                    <span className="ranking">#{makeup.indexOf("로맨틱한") + 1}</span>
+                                {makeup.includes("Romantic") ? (
+                                    <span className="ranking">#{makeup.indexOf("Romantic") + 1}</span>
                                 ) : (
                                     ""
                                 )}
@@ -598,17 +598,17 @@ const EstimateForm = () => {
                         </div>
                         <div className="choosebox">
                             <input
-                                id="포인트"
+                                id="Point"
                                 type="checkbox"
                                 name="makeup"
-                                value="포인트"
+                                value="Point"
                                 onChange={makeupcheck}
                                 className="displaynone"
                             />
-                            <label htmlFor="포인트" className="label-design w-100 cursor">
+                            <label htmlFor="Point" className="label-design w-100 cursor">
                                 Point
-                                {makeup.includes("포인트") ? (
-                                    <span className="ranking">#{makeup.indexOf("포인트") + 1}</span>
+                                {makeup.includes("Point") ? (
+                                    <span className="ranking">#{makeup.indexOf("Point") + 1}</span>
                                 ) : (
                                     ""
                                 )}
@@ -616,17 +616,17 @@ const EstimateForm = () => {
                         </div>
                         <div className="choosebox">
                             <input
-                                id="내추럴"
+                                id="Natural"
                                 type="checkbox"
                                 name="makeup"
-                                value="내추럴"
+                                value="Natural"
                                 onChange={makeupcheck}
                                 className="displaynone"
                             />
-                            <label htmlFor="내추럴" className="label-design w-100 cursor">
+                            <label htmlFor="Natural" className="label-design w-100 cursor">
                                 Natural
-                                {makeup.includes("내추럴") ? (
-                                    <span className="ranking">#{makeup.indexOf("내추럴") + 1}</span>
+                                {makeup.includes("Natural") ? (
+                                    <span className="ranking">#{makeup.indexOf("Natural") + 1}</span>
                                 ) : (
                                     ""
                                 )}
@@ -634,17 +634,17 @@ const EstimateForm = () => {
                         </div>
                         <div className="choosebox">
                             <input
-                                id="스모키"
+                                id="Smoky"
                                 type="checkbox"
                                 name="makeup"
-                                value="스모키"
+                                value="Smoky"
                                 onChange={makeupcheck}
                                 className="displaynone"
                             />
-                            <label htmlFor="스모키" className="label-design w-100 cursor">
+                            <label htmlFor="Smoky" className="label-design w-100 cursor">
                                 Smoky
-                                {makeup.includes("스모키") ? (
-                                    <span className="ranking">#{makeup.indexOf("스모키") + 1}</span>
+                                {makeup.includes("Smoky") ? (
+                                    <span className="ranking">#{makeup.indexOf("Smoky") + 1}</span>
                                 ) : (
                                     ""
                                 )}
@@ -652,17 +652,17 @@ const EstimateForm = () => {
                         </div>
                         <div className="choosebox">
                             <input
-                                id="큐티"
+                                id="Cute"
                                 type="checkbox"
                                 name="makeup"
-                                value="큐티"
+                                value="Cute"
                                 onChange={makeupcheck}
                                 className="displaynone"
                             />
-                            <label htmlFor="큐티" className="label-design w-100 cursor">
+                            <label htmlFor="Cute" className="label-design w-100 cursor">
                                 Cute
-                                {makeup.includes("큐티") ? (
-                                    <span className="ranking">#{makeup.indexOf("큐티") + 1}</span>
+                                {makeup.includes("Cute") ? (
+                                    <span className="ranking">#{makeup.indexOf("Cute") + 1}</span>
                                 ) : (
                                     ""
                                 )}
@@ -670,17 +670,17 @@ const EstimateForm = () => {
                         </div>
                         <div className="choosebox">
                             <input
-                                id="러블리"
+                                id="Lovely"
                                 type="checkbox"
                                 name="makeup"
-                                value="러블리"
+                                value="Lovely"
                                 onChange={makeupcheck}
                                 className="displaynone"
                             />
-                            <label htmlFor="러블리" className="label-design w-100 cursor">
+                            <label htmlFor="Lovely" className="label-design w-100 cursor">
                                 Lovely
-                                {makeup.includes("러블리") ? (
-                                    <span className="ranking">#{makeup.indexOf("러블리") + 1}</span>
+                                {makeup.includes("Lovely") ? (
+                                    <span className="ranking">#{makeup.indexOf("Lovely") + 1}</span>
                                 ) : (
                                     ""
                                 )}

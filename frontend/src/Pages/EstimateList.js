@@ -164,49 +164,49 @@ const EstimateList = () => {
             let sortresult = getdata.sort((a, b) => b.viewcount - a.viewcount);
             return sortresult;
         } else if (sort === "Dress(Mermaid)") {
-            let sortresult = getdata.filter((e) => e.dress.includes("머메이드"));
+            let sortresult = getdata.filter((e) => e.dress.includes("Mermaid"));
             return sortresult;
         } else if (sort === "Dress(Ball Gown)") {
-            let sortresult = getdata.filter((e) => e.dress.includes("벨라인"));
+            let sortresult = getdata.filter((e) => e.dress.includes("BallGown"));
             return sortresult;
         } else if (sort === "Dress(H-Line)") {
-            let sortresult = getdata.filter((e) => e.dress.includes("H라인"));
+            let sortresult = getdata.filter((e) => e.dress.includes("Hline"));
             return sortresult;
         } else if (sort === "Dress(Princess)") {
-            let sortresult = getdata.filter((e) => e.dress.includes("프린세스"));
+            let sortresult = getdata.filter((e) => e.dress.includes("Princess"));
             return sortresult;
         } else if (sort === "Dress(Empire)") {
-            let sortresult = getdata.filter((e) => e.dress.includes("엠파이어"));
+            let sortresult = getdata.filter((e) => e.dress.includes("Empire"));
             return sortresult;
         } else if (sort === "Dress(A-Line)") {
-            let sortresult = getdata.filter((e) => e.dress.includes("A라인"));
+            let sortresult = getdata.filter((e) => e.dress.includes("Aline"));
             return sortresult;
         } else if (sort === "Makeup(Romantic)") {
-            let sortresult = getdata.filter((e) => e.makeup.includes("로맨틱"));
+            let sortresult = getdata.filter((e) => e.makeup.includes("Romantic"));
             return sortresult;
         } else if (sort === "Makeup(Point)") {
-            let sortresult = getdata.filter((e) => e.makeup.includes("포인트"));
+            let sortresult = getdata.filter((e) => e.makeup.includes("Point"));
             return sortresult;
         } else if (sort === "Makeup(Natural)") {
-            let sortresult = getdata.filter((e) => e.makeup.includes("내추럴"));
+            let sortresult = getdata.filter((e) => e.makeup.includes("Natural"));
             return sortresult;
         } else if (sort === "Makeup(Smoky)") {
-            let sortresult = getdata.filter((e) => e.makeup.includes("스모키"));
+            let sortresult = getdata.filter((e) => e.makeup.includes("Smoky"));
             return sortresult;
         } else if (sort === "Makeup(Cute)") {
-            let sortresult = getdata.filter((e) => e.makeup.includes("큐티"));
+            let sortresult = getdata.filter((e) => e.makeup.includes("Cute"));
             return sortresult;
         } else if (sort === "Makeup(Lovely)") {
-            let sortresult = getdata.filter((e) => e.makeup.includes("러블리"));
+            let sortresult = getdata.filter((e) => e.makeup.includes("Lovely"));
             return sortresult;
         } else if (sort === "Studio(Subject-Focused)") {
-            let sortresult = getdata.filter((e) => e.studio.includes("인물중심"));
+            let sortresult = getdata.filter((e) => e.studio.includes("SubjectFocused"));
             return sortresult;
         } else if (sort === "Studio(Background-Focused)") {
-            let sortresult = getdata.filter((e) => e.studio.includes("배경중심"));
+            let sortresult = getdata.filter((e) => e.studio.includes("BackgroundFocused"));
             return sortresult;
         } else if (sort === "Studio(Balanced)") {
-            let sortresult = getdata.filter((e) => e.studio.includes("균형적인"));
+            let sortresult = getdata.filter((e) => e.studio.includes("Balanced"));
             return sortresult;
         }
     };
@@ -297,7 +297,7 @@ const EstimateList = () => {
                         <div className="EstimateListSearchIcon">
                             <i class="bi bi-search"></i>
                         </div>
-                        <div className="캘린더">
+                        <div className="calendar">
                             <DatePicker
                                 selected={startDate}
                                 onChange={handleChange}

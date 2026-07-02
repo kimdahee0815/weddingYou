@@ -275,14 +275,13 @@ const EstimateModify = () => {
   };
 
   //serverimage previewimage 샂게
-  const serverimagedelete = (이미지) => {
-    //여기가 보여지는 부분 삭제
-    let 여부 = serverimage.indexOf(이미지);
+  const serverimagedelete = (image) => {
+    let idx = serverimage.indexOf(image);
     let copy = [...serverimage];
-    copy.splice(여부, 1);
+    copy.splice(idx, 1);
     setserverimage(copy);
     let copy2 = [...serverimagepath];
-    copy2.splice(여부, 1);
+    copy2.splice(idx, 1);
     setserverimagepath(copy2);
   };
 
@@ -503,9 +502,9 @@ const EstimateModify = () => {
                 id="person"
                 name="studio"
                 type="radio"
-                value="인물중심"
+                value="SubjectFocused"
                 onClick={studioSelect}
-                checked={studio === "인물중심"}
+                checked={studio === "SubjectFocused"}
                 className="displaynone"
               />
               <label htmlFor="person" className="label-design w-100 cursor">
@@ -517,8 +516,8 @@ const EstimateModify = () => {
                 id="background"
                 name="studio"
                 type="radio"
-                value="배경중심"
-                checked={studio === "배경중심"}
+                value="BackgroundFocused"
+                checked={studio === "BackgroundFocused"}
                 onClick={studioSelect}
                 className="displaynone"
               />
@@ -531,8 +530,8 @@ const EstimateModify = () => {
                 id="balanced"
                 name="studio"
                 type="radio"
-                value="균형적인"
-                checked={studio === "균형적인"}
+                value="Balanced"
+                checked={studio === "Balanced"}
                 onClick={studioSelect}
                 className="displaynone"
               />
@@ -559,19 +558,19 @@ const EstimateModify = () => {
             <h5>Bridal Dress (up to 3)</h5>
             <div className="choosebox">
               <input
-                id="머메이드"
+                id="Mermaid"
                 type="checkbox"
                 name="dress"
-                value="머메이드"
-                checked={dress.includes("머메이드")}
+                value="Mermaid"
+                checked={dress.includes("Mermaid")}
                 onChange={dresscheck}
                 className="displaynone"
               />
-              <label htmlFor="머메이드" className="label-design w-100 cursor">
+              <label htmlFor="Mermaid" className="label-design w-100 cursor">
                 Mermaid
-                {dress.includes("머메이드") ? (
+                {dress.includes("Mermaid") ? (
                   <span className="ranking">
-                    #{dress.indexOf("머메이드") + 1}
+                    #{dress.indexOf("Mermaid") + 1}
                   </span>
                 ) : (
                   ""
@@ -580,19 +579,19 @@ const EstimateModify = () => {
             </div>
             <div className="choosebox">
               <input
-                id="A라인"
+                id="Aline"
                 type="checkbox"
                 name="dress"
-                value="A라인"
-                checked={dress.includes("A라인")}
+                value="Aline"
+                checked={dress.includes("Aline")}
                 onChange={dresscheck}
                 className="displaynone"
               />
-              <label htmlFor="A라인" className="label-design w-100 cursor">
+              <label htmlFor="Aline" className="label-design w-100 cursor">
                 A-Line
-                {dress.includes("A라인") ? (
+                {dress.includes("Aline") ? (
                   <span className="ranking">
-                    #{dress.indexOf("A라인") + 1}
+                    #{dress.indexOf("Aline") + 1}
                   </span>
                 ) : (
                   ""
@@ -601,19 +600,19 @@ const EstimateModify = () => {
             </div>
             <div className="choosebox">
               <input
-                id="H라인"
+                id="Hline"
                 type="checkbox"
                 name="dress"
-                value="H라인"
-                checked={dress.includes("H라인")}
+                value="Hline"
+                checked={dress.includes("Hline")}
                 onChange={dresscheck}
                 className="displaynone"
               />
-              <label htmlFor="H라인" className="label-design w-100 cursor">
+              <label htmlFor="Hline" className="label-design w-100 cursor">
                 H-Line
-                {dress.includes("H라인") ? (
+                {dress.includes("Hline") ? (
                   <span className="ranking">
-                    #{dress.indexOf("H라인") + 1}
+                    #{dress.indexOf("Hline") + 1}
                   </span>
                 ) : (
                   ""
@@ -622,19 +621,19 @@ const EstimateModify = () => {
             </div>
             <div className="choosebox">
               <input
-                id="벨라인"
+                id="BallGown"
                 type="checkbox"
                 name="dress"
-                value="벨라인"
-                checked={dress.includes("벨라인")}
+                value="BallGown"
+                checked={dress.includes("BallGown")}
                 onChange={dresscheck}
                 className="displaynone"
               />
-              <label htmlFor="벨라인" className="label-design w-100 cursor">
+              <label htmlFor="BallGown" className="label-design w-100 cursor">
                 Ball Gown
-                {dress.includes("벨라인") ? (
+                {dress.includes("BallGown") ? (
                   <span className="ranking">
-                    #{dress.indexOf("벨라인") + 1}
+                    #{dress.indexOf("BallGown") + 1}
                   </span>
                 ) : (
                   ""
@@ -643,19 +642,19 @@ const EstimateModify = () => {
             </div>
             <div className="choosebox">
               <input
-                id="엠파이어"
+                id="Empire"
                 type="checkbox"
                 name="dress"
-                value="엠파이어"
-                checked={dress.includes("엠파이어")}
+                value="Empire"
+                checked={dress.includes("Empire")}
                 onChange={dresscheck}
                 className="displaynone"
               />
-              <label htmlFor="엠파이어" className="label-design w-100 cursor">
+              <label htmlFor="Empire" className="label-design w-100 cursor">
                 Empire
-                {dress.includes("엠파이어") ? (
+                {dress.includes("Empire") ? (
                   <span className="ranking">
-                    #{dress.indexOf("엠파이어") + 1}
+                    #{dress.indexOf("Empire") + 1}
                   </span>
                 ) : (
                   ""
@@ -664,19 +663,19 @@ const EstimateModify = () => {
             </div>
             <div className="choosebox">
               <input
-                id="프린세스"
+                id="Princess"
                 type="checkbox"
                 name="dress"
-                value="프린세스"
-                checked={dress.includes("프린세스")}
+                value="Princess"
+                checked={dress.includes("Princess")}
                 onChange={dresscheck}
                 className="displaynone"
               />
-              <label htmlFor="프린세스" className="label-design w-100 cursor">
+              <label htmlFor="Princess" className="label-design w-100 cursor">
                 Princess
-                {dress.includes("프린세스") ? (
+                {dress.includes("Princess") ? (
                   <span className="ranking">
-                    #{dress.indexOf("프린세스") + 1}
+                    #{dress.indexOf("Princess") + 1}
                   </span>
                 ) : (
                   ""
@@ -699,19 +698,19 @@ const EstimateModify = () => {
             <h5>Bridal Makeup (up to 3)</h5>
             <div className="choosebox">
               <input
-                id="로맨틱한"
+                id="Romantic"
                 type="checkbox"
                 name="makeup"
-                value="로맨틱한"
-                checked={makeup.includes("로맨틱한")}
+                value="Romantic"
+                checked={makeup.includes("Romantic")}
                 onChange={makeupcheck}
                 className="displaynone"
               />
-              <label htmlFor="로맨틱한" className="label-design w-100 cursor">
+              <label htmlFor="Romantic" className="label-design w-100 cursor">
                 Romantic
-                {makeup.includes("로맨틱한") ? (
+                {makeup.includes("Romantic") ? (
                   <span className="ranking">
-                    #{makeup.indexOf("로맨틱한") + 1}
+                    #{makeup.indexOf("Romantic") + 1}
                   </span>
                 ) : (
                   ""
@@ -720,19 +719,19 @@ const EstimateModify = () => {
             </div>
             <div className="choosebox">
               <input
-                id="포인트"
+                id="Point"
                 type="checkbox"
                 name="makeup"
-                value="포인트"
-                checked={makeup.includes("포인트")}
+                value="Point"
+                checked={makeup.includes("Point")}
                 onChange={makeupcheck}
                 className="displaynone"
               />
-              <label htmlFor="포인트" className="label-design w-100 cursor">
+              <label htmlFor="Point" className="label-design w-100 cursor">
                 Point
-                {makeup.includes("포인트") ? (
+                {makeup.includes("Point") ? (
                   <span className="ranking">
-                    #{makeup.indexOf("포인트") + 1}
+                    #{makeup.indexOf("Point") + 1}
                   </span>
                 ) : (
                   ""
@@ -741,19 +740,19 @@ const EstimateModify = () => {
             </div>
             <div className="choosebox">
               <input
-                id="내추럴"
+                id="Natural"
                 type="checkbox"
                 name="makeup"
-                value="내추럴"
-                checked={makeup.includes("내추럴")}
+                value="Natural"
+                checked={makeup.includes("Natural")}
                 onChange={makeupcheck}
                 className="displaynone"
               />
-              <label htmlFor="내추럴" className="label-design w-100 cursor">
+              <label htmlFor="Natural" className="label-design w-100 cursor">
                 Natural
-                {makeup.includes("내추럴") ? (
+                {makeup.includes("Natural") ? (
                   <span className="ranking">
-                    #{makeup.indexOf("내추럴") + 1}
+                    #{makeup.indexOf("Natural") + 1}
                   </span>
                 ) : (
                   ""
@@ -762,19 +761,19 @@ const EstimateModify = () => {
             </div>
             <div className="choosebox">
               <input
-                id="스모키"
+                id="Smoky"
                 type="checkbox"
                 name="makeup"
-                value="스모키"
-                checked={makeup.includes("스모키")}
+                value="Smoky"
+                checked={makeup.includes("Smoky")}
                 onChange={makeupcheck}
                 className="displaynone"
               />
-              <label htmlFor="스모키" className="label-design w-100 cursor">
+              <label htmlFor="Smoky" className="label-design w-100 cursor">
                 Smoky
-                {makeup.includes("스모키") ? (
+                {makeup.includes("Smoky") ? (
                   <span className="ranking">
-                    #{makeup.indexOf("스모키") + 1}
+                    #{makeup.indexOf("Smoky") + 1}
                   </span>
                 ) : (
                   ""
@@ -783,19 +782,19 @@ const EstimateModify = () => {
             </div>
             <div className="choosebox">
               <input
-                id="큐티"
+                id="Cute"
                 type="checkbox"
                 name="makeup"
-                value="큐티"
-                checked={makeup.includes("큐티")}
+                value="Cute"
+                checked={makeup.includes("Cute")}
                 onChange={makeupcheck}
                 className="displaynone"
               />
-              <label htmlFor="큐티" className="label-design w-100 cursor">
+              <label htmlFor="Cute" className="label-design w-100 cursor">
                 Cute
-                {makeup.includes("큐티") ? (
+                {makeup.includes("Cute") ? (
                   <span className="ranking">
-                    #{makeup.indexOf("큐티") + 1}
+                    #{makeup.indexOf("Cute") + 1}
                   </span>
                 ) : (
                   ""
@@ -804,19 +803,19 @@ const EstimateModify = () => {
             </div>
             <div className="choosebox">
               <input
-                id="러블리"
+                id="Lovely"
                 type="checkbox"
                 name="makeup"
-                value="러블리"
-                checked={makeup.includes("러블리")}
+                value="Lovely"
+                checked={makeup.includes("Lovely")}
                 onChange={makeupcheck}
                 className="displaynone"
               />
-              <label htmlFor="러블리" className="label-design w-100 cursor">
+              <label htmlFor="Lovely" className="label-design w-100 cursor">
                 Lovely
-                {makeup.includes("러블리") ? (
+                {makeup.includes("Lovely") ? (
                   <span className="ranking">
-                    #{makeup.indexOf("러블리") + 1}
+                    #{makeup.indexOf("Lovely") + 1}
                   </span>
                 ) : (
                   ""
