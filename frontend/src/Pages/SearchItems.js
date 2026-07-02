@@ -3,10 +3,11 @@ import "../Css/Home.css";
 import Footer from "../Components/Footer";
 import imgLogo from "../Assets/logo.png";
 import { useNavigate, useLocation } from "react-router-dom";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import axios from "axios";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectCoverflow, Navigation, Pagination } from "swiper/modules";
+import { Modal } from "bootstrap";
 import Animation from "../Components/Animation";
 import Sidesection from "../Components/Sidesection";
 import "swiper/css";
@@ -24,10 +25,23 @@ function SearchItems() {
     const [wholeItems, setWholeItems] = useState([]);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+    const [inputValue, setInputValue] = useState(keyword);
     const [searchedKeyword, setSearchedKeyWord] = useState(keyword);
     const [selectLikeState, setSelectLikeState] = useState(undefined);
 
     const [finish, setFinish] = useState(false);
+
+    // 드래그(스와이프) 중인지 추적하는 ref - 드래그 직후 클릭으로 모달이 열리는 걸 방지
+    const isDraggingRef = useRef(false);
+    // Bootstrap 모달 인스턴스를 직접 제어하기 위한 ref
+    const modalRef = useRef(null);
+
+    useEffect(() => {
+        const modalEl = document.getElementById("imgDetailModal");
+        if (modalEl) {
+            modalRef.current = new Modal(modalEl);
+        }
+    }, []);
 
     useEffect(() => {
         const userCheck = async () => {
@@ -52,12 +66,12 @@ function SearchItems() {
 
     const handleKeyPress = (event) => {
         if (event.key === "Enter") {
-            setSearchedKeyWord(searchedKeyword);
+            setSearchedKeyWord(inputValue);
         }
     };
 
     const handleChange = (e) => {
-        setSearchedKeyWord(e.target.value);
+        setInputValue(e.target.value);
     };
 
     useEffect(() => {
@@ -68,7 +82,7 @@ function SearchItems() {
                 });
                 setWholeItems(
                     englishCategory.map((category) =>
-                        items[category].map((item) => ({
+                        (items[category] || []).map((item) => ({
                             ...item,
                             likeCount: item.like?.length,
                             isLiked:
@@ -90,6 +104,9 @@ function SearchItems() {
     }, [searchedKeyword]);
 
     const showingDetail = (e) => {
+        // 드래그(스와이프) 직후 발생한 클릭이면 모달을 열지 않고 무시
+        if (isDraggingRef.current) return;
+
         let { bsItem: item } = e.target.dataset;
 
         item = JSON.parse(item);
@@ -99,6 +116,7 @@ function SearchItems() {
         } else {
             setSelectLikeState(false);
         }
+        modalRef.current?.show();
     };
 
     const gotoDetailInfo = (e) => {
@@ -237,7 +255,7 @@ function SearchItems() {
                             className="searchbar"
                             placeholder="Enter a search keyword!"
                             onKeyPress={handleKeyPress}
-                            value={searchedKeyword}
+                            value={inputValue}
                             onChange={handleChange}
                             autoComplete="off"
                         />
@@ -316,7 +334,7 @@ function SearchItems() {
                             className="searchbar"
                             placeholder="Enter a search keyword!"
                             onKeyPress={handleKeyPress}
-                            value={searchedKeyword}
+                            value={inputValue}
                             onChange={handleChange}
                             autoComplete="off"
                         />
@@ -398,7 +416,7 @@ function SearchItems() {
                                 style={{ marginTop: "130px" }}
                             >
                                 {englishCategory.map((category, categoryIndex) => (
-                                    <>
+                                    <div key={categoryIndex}>
                                         <h4 id={`scrollspyHeading${categoryIndex + 1}`}>
                                             <svg
                                                 xmlns="http://www.w3.org/2000/svg"
@@ -423,51 +441,65 @@ function SearchItems() {
                                             </svg>
                                         </h4>
                                         <br />
-                                        <Swiper
-                                            effect={"coverflow"}
-                                            grabCursor={true}
-                                            centeredSlides={true}
-                                            slidesPerView={2}
-                                            loop={true}
-                                            coverflowEffect={{
-                                                rotate: 50,
-                                                stretch: 0,
-                                                depth: 100,
-                                                modifier: 1,
-                                                slideShadows: false,
-                                            }}
-                                            modules={[EffectCoverflow, Navigation, Pagination]}
-                                            navigation
-                                            pagination={{ clickable: true }}
-                                            spaceBetween={-30}
-                                        >
-                                            {wholeItems[categoryIndex].map((item) => (
-                                                <SwiperSlide>
-                                                    <img
-                                                        src={item.itemImg}
-                                                        class="d-block w-75 center"
-                                                        alt="..."
-                                                        style={{
-                                                            width: "100px",
-                                                            height: "210px",
-                                                            cursor: "pointer",
-                                                        }}
-                                                        data-bs-toggle="modal"
-                                                        data-bs-target="#imgDetailModal"
-                                                        data-bs-item={JSON.stringify(item)}
-                                                        data-bs-category={category[categoryIndex]}
-                                                        onClick={showingDetail}
-                                                    />
-                                                    <br />
-                                                    <div className="itemName">
-                                                        {item.itemName} &nbsp;❤️ {item.likeCount}
-                                                    </div>
-                                                    <br />
-                                                </SwiperSlide>
-                                            ))}
-                                        </Swiper>
+                                        {wholeItems[categoryIndex]?.length !== 0 ? (
+                                            <Swiper
+                                                effect={"coverflow"}
+                                                grabCursor={true}
+                                                centeredSlides={true}
+                                                slidesPerView={2}
+                                                loop={true}
+                                                coverflowEffect={{
+                                                    rotate: 50,
+                                                    stretch: 0,
+                                                    depth: 100,
+                                                    modifier: 1,
+                                                    slideShadows: false,
+                                                }}
+                                                modules={[EffectCoverflow, Navigation, Pagination]}
+                                                navigation
+                                                pagination={{ clickable: true }}
+                                                spaceBetween={-30}
+                                                onTouchStart={() => {
+                                                    isDraggingRef.current = false;
+                                                }}
+                                                onSliderMove={() => {
+                                                    isDraggingRef.current = true;
+                                                }}
+                                                onTouchEnd={() => {
+                                                    // 클릭 이벤트가 먼저 처리될 시간을 준 뒤 플래그를 리셋
+                                                    setTimeout(() => {
+                                                        isDraggingRef.current = false;
+                                                    }, 100);
+                                                }}
+                                            >
+                                                {wholeItems[categoryIndex].map((item) => (
+                                                    <SwiperSlide key={item.itemId}>
+                                                        <img
+                                                            src={item.itemImg}
+                                                            class="d-block w-75 center"
+                                                            alt="..."
+                                                            style={{
+                                                                width: "100px",
+                                                                height: "210px",
+                                                                cursor: "pointer",
+                                                            }}
+                                                            data-bs-item={JSON.stringify(item)}
+                                                            data-bs-category={category[categoryIndex]}
+                                                            onClick={showingDetail}
+                                                        />
+                                                        <br />
+                                                        <div className="itemName">
+                                                            {item.itemName} &nbsp;❤️ {item.likeCount}
+                                                        </div>
+                                                        <br />
+                                                    </SwiperSlide>
+                                                ))}
+                                            </Swiper>
+                                        ) : (
+                                            <div style={{ fontSize: "1.3em" }}>No images yet!</div>
+                                        )}
                                         <hr />
-                                    </>
+                                    </div>
                                 ))}
                             </div>
                             <div

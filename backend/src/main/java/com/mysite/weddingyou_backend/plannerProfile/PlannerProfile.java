@@ -68,7 +68,7 @@ public class PlannerProfile {
     @Column(name = "planner_phoneNum", nullable = false)
    	private String plannerPhoneNum;
 
-    @Column(name = "planner_Introduction", columnDefinition = "TEXT")
+    @Column(name = "planner_Introduction", columnDefinition = "text")
     private String introduction;
   
     @Column(name = "planner_JoinDate")

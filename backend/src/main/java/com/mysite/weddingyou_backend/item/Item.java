@@ -38,10 +38,10 @@ public class Item {
 		@Column(name = "item_img")
     private String itemImg;
 
-		@Column(name="content",nullable=false, columnDefinition = "TEXT")
+		@Column(name="content",nullable=false, columnDefinition = "text")
 		private String content;
 	
-		@Column(name="img_content",nullable=false, columnDefinition = "TEXT")
+		@Column(name="img_content",nullable=false, columnDefinition = "text")
 		private String imgContent;
 	
 		@JsonManagedReference
