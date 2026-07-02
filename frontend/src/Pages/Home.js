@@ -54,7 +54,7 @@ function Home() {
     const scrollToHeading = (index) => {
         const element = document.getElementById(`scrollspyHeading${index + 1}`);
         if (element) {
-            const headerOffset = 150; // Account for fixed header + nav height
+            const headerOffset = 200; // Account for fixed header + nav height
             const elementPosition = element.getBoundingClientRect().top;
             const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
 
