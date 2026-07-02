@@ -286,73 +286,77 @@ public class EstimateController {
 	}
 	
 	//견적서 매칭원하는 플래너 삽입하기
-		@PostMapping(value = "/insert/matchingplanner")
-		public void updateData(
-		                       @RequestParam("id") Long id,
-								@RequestParam("plannermatching") String plannermatching)
-		                    		   throws Exception {
-		    
-			Estimate targetData = estimateService.getEstimateDetail(id);
-			
-			JSONParser parser = new JSONParser();
-			ArrayList<String> obj = (ArrayList<String>) parser.parse(plannermatching);
-			ArrayList<String> userList = (ArrayList<String>) parser.parse(targetData.getUserMatching());
-			
-			ArrayList<String> plannerList = null;
-			if(targetData.getPlannermatching()!=null) {
-				plannerList = (ArrayList<String>) parser.parse(targetData.getPlannermatching());
-			}
-			
-			if(!plannerList.containsAll(obj)) {
-				Estimate data = new Estimate();
-				data.setPlannermatching(plannermatching);
-				targetData.setPlannermatching(data.getPlannermatching());
-				
-				estimateService.save(targetData);
-				// System.out.println(obj);
-				// System.out.println(userList.contains(obj.get(obj.size() - 1)));
-				if(userList != null && userList.size() != 0 && userList.contains(obj.get(obj.size() - 1))){
-					List<Payment> targetPayments = paymentRepository.findByEstimateId(id);
-					Payment targetPayment = targetPayments.stream()
-					.filter(p -> p.getPlannerEmail().equals(obj.get(obj.size() - 1)) && p.getUserEmail().equals(targetData.getWriter())).findFirst().orElse(null);
-					if(targetPayments== null || targetPayment == null){
-						PlannerLogin planner = plannerLoginRepository.findByEmail(obj.get(obj.size() - 1));
-      			UserLogin user = userLoginRepository.findByEmail(targetData.getWriter());
+	@PostMapping(value = "/insert/matchingplanner")
+	public void updateData(
+                       		@RequestParam("id") Long id,
+                       		@RequestParam("plannermatching") String plannermatching)
+                    		   		throws Exception {
 
-						BigDecimal depositAmount;
-						int plannerCareerYears = planner.getPlannerCareerYears();
-      			if(plannerCareerYears >= 0 && plannerCareerYears <5) {
-        			depositAmount = new BigDecimal(50000);
-      			}else if(plannerCareerYears >= 5 && plannerCareerYears <15) {
-        			depositAmount = new BigDecimal(100000);
-      			}else {
-        			depositAmount = new BigDecimal(150000);
-      			}
-						
-						Payment payment = new Payment();
-        		payment.setPrice(depositAmount);
-        		payment.setQuantity(1);
-        		payment.setPaymentMethod("card");
-        		payment.setPaymentAmount(depositAmount);
-        		payment.setPaymentStatus("other");
-        		payment.setDepositAmount(depositAmount);
-        		payment.setDepositStatus("other");
-        		payment.setPaymentType("deposit");
-        		payment.setUserEmail(targetData.getWriter());
-        		payment.setPlannerEmail(obj.get(obj.size() - 1));
-        		payment.setEstimateId(targetData.getId());
-        		payment.setPaymentDate(null);
-        		payment.setDepositDate(null);
-        		payment.setPlanner(planner);
-        		payment.setUser(user);
-        		paymentService.savePayment(payment);
-					}
-				}
-			}else if(plannerList.size()!=0  && plannerList.containsAll(obj)){
-				throw new Exception("Duplicate entry!");
-			}
-			
+		Estimate targetData = estimateService.getEstimateDetail(id);
+
+		JSONParser parser = new JSONParser();
+
+		ArrayList<String> obj = (ArrayList<String>) parser.parse(
+			plannermatching != null ? plannermatching : "[]"
+		);
+		ArrayList<String> userList = (ArrayList<String>) parser.parse(
+			targetData.getUserMatching() != null ? targetData.getUserMatching() : "[]"
+		);
+
+		ArrayList<String> plannerList = new ArrayList<>(); // null 대신 빈 리스트로 초기화
+		if (targetData.getPlannermatching() != null) {
+			plannerList = (ArrayList<String>) parser.parse(targetData.getPlannermatching());
 		}
+
+		if (!plannerList.containsAll(obj)) {
+			Estimate data = new Estimate();
+			data.setPlannermatching(plannermatching);
+			targetData.setPlannermatching(data.getPlannermatching());
+			
+			estimateService.save(targetData);
+			// System.out.println(obj);
+			// System.out.println(userList.contains(obj.get(obj.size() - 1)));
+			if(userList != null && userList.size() != 0 && userList.contains(obj.get(obj.size() - 1))){
+				List<Payment> targetPayments = paymentRepository.findByEstimateId(id);
+				Payment targetPayment = targetPayments.stream()
+				.filter(p -> p.getPlannerEmail().equals(obj.get(obj.size() - 1)) && p.getUserEmail().equals(targetData.getWriter())).findFirst().orElse(null);
+				if(targetPayments== null || targetPayment == null){
+					PlannerLogin planner = plannerLoginRepository.findByEmail(obj.get(obj.size() - 1));
+					UserLogin user = userLoginRepository.findByEmail(targetData.getWriter());
+
+					BigDecimal depositAmount;
+					int plannerCareerYears = planner.getPlannerCareerYears();
+					if(plannerCareerYears >= 0 && plannerCareerYears <5) {
+						depositAmount = new BigDecimal(50000);
+					}else if(plannerCareerYears >= 5 && plannerCareerYears <15) {
+						depositAmount = new BigDecimal(100000);
+					}else {
+						depositAmount = new BigDecimal(150000);
+					}
+					
+					Payment payment = new Payment();
+					payment.setPrice(depositAmount);
+					payment.setQuantity(1);
+					payment.setPaymentMethod("card");
+					payment.setPaymentAmount(depositAmount);
+					payment.setPaymentStatus("other");
+					payment.setDepositAmount(depositAmount);
+					payment.setDepositStatus("other");
+					payment.setPaymentType("deposit");
+					payment.setUserEmail(targetData.getWriter());
+					payment.setPlannerEmail(obj.get(obj.size() - 1));
+					payment.setEstimateId(targetData.getId());
+					payment.setPaymentDate(null);
+					payment.setDepositDate(null);
+					payment.setPlanner(planner);
+					payment.setUser(user);
+					paymentService.savePayment(payment);
+				}
+			}
+		}else if(plannerList.size()!=0  && plannerList.containsAll(obj)){
+			throw new Exception("Duplicate entry!");
+		}
+	}
 
 				@GetMapping(value = "/users/detail")
 				public List<Estimate> getUserDetail(@RequestParam("userEmail") String userEmail) throws Exception {
