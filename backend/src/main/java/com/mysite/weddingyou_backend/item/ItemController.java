@@ -115,7 +115,7 @@ public class ItemController {
 
 			sortedItemsMap.put("weddingHall", weddingHallItems);
 			sortedItemsMap.put("studio", studioItems);
-			sortedItemsMap.put("clothes", dressItems);
+			sortedItemsMap.put("weddingOutfit", dressItems);
 			sortedItemsMap.put("makeup", makeupItems);
 			sortedItemsMap.put("honeymoon", honeymoonItems);
 			sortedItemsMap.put("bouquet", bouquetItems);

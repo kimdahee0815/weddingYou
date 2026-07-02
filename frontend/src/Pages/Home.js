@@ -154,9 +154,9 @@ function Home() {
                     items.map((item) =>
                         item.itemId === itemId
                             ? {
-                                  ...item,
-                                  likeCount: item.likeCount + (isLikedNow ? -1 : 1),
-                                  isLiked: !isLikedNow,
+                                    ...item,
+                                    likeCount: item.likeCount + (isLikedNow ? -1 : 1),
+                                    isLiked: !isLikedNow,
                               }
                             : item,
                     ),
